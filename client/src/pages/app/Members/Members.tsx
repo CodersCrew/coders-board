@@ -1,0 +1,104 @@
+import React, { useState } from 'react';
+import { DeleteOutlined, MoreOutlined, PlusOutlined } from '@ant-design/icons';
+import { Avatar, Dropdown, Input, Menu, Table } from 'antd';
+import { ColumnsType } from 'antd/lib/table';
+
+import { AddMemberModal } from './AddMemberModal';
+import { MembersQuery, useMembersQuery } from './Members.apollo';
+import { Box, Button, Icon, Paragraph } from '@/components/atoms';
+import { Card, PageHeader } from '@/components/molecules';
+import { RoleSelect } from '@/components/selects';
+import { useToggle } from '@/hooks/useToggle';
+import { UserRole } from '@/typings/graphql';
+
+type Columns = ColumnsType<MembersQuery['users'][number]>;
+
+const Members = () => {
+  const { on: isModalOpen, setOn: openModal, setOff: closeModal } = useToggle(false);
+  const [search, setSearch] = useState('');
+  const [role, setRole] = useState<UserRole | undefined>();
+  const { loading, data } = useMembersQuery({ variables: { search, role } });
+
+  const menu = (
+    <Menu>
+      <Menu.Item danger icon={<Icon icon={DeleteOutlined} />}>
+        Remove member
+      </Menu.Item>
+    </Menu>
+  );
+
+  const columns: Columns = [
+    {
+      title: 'Full name',
+      dataIndex: 'firstName',
+      width: 216,
+      fixed: true,
+      render: (_, { firstName, lastName, image }) => (
+        <Box px={4} display="flex" alignItems="center">
+          <Avatar size="small" src={image} />
+          <Paragraph ml={12}>
+            {firstName} {lastName}
+          </Paragraph>
+        </Box>
+      ),
+    },
+    {
+      title: 'CodersCrew email',
+      dataIndex: 'primaryEmail',
+      width: 280,
+    },
+    {
+      title: 'Private email',
+      dataIndex: 'recoveryEmail',
+      width: 280,
+    },
+    {
+      align: 'right',
+      fixed: 'right',
+      render: () => {
+        return (
+          <Dropdown overlay={menu} trigger={['click']}>
+            <Button type="link" icon={<Icon icon={MoreOutlined} color="text.secondary" />} />
+          </Dropdown>
+        );
+      },
+    },
+  ];
+
+  return (
+    <>
+      <PageHeader title="Members" subTitle="Search and filter for all of the CodersCrew members" />
+      <Card m={24} p={24} display="flex">
+        <Box width={240}>
+          <Input.Search placeholder="Search for members..." loading={loading} onSearch={setSearch} />
+        </Box>
+        <RoleSelect
+          loading={loading}
+          placeholder="Select member role"
+          onSelect={setRole}
+          allowClear
+          style={{ width: 240, marginLeft: 24 }}
+        />
+        <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={openModal}>
+          Add member
+        </Button>
+      </Card>
+      <Box maxWidth="100%" overflow="auto" p={24} pt={0}>
+        <Card>
+          <Table
+            loading={loading}
+            dataSource={data?.users || []}
+            columns={columns}
+            rowKey="id"
+            size="small"
+            pagination={{ pageSize: 10 }}
+            scroll={{ x: 'max-content' }}
+          />
+        </Card>
+      </Box>
+      <AddMemberModal visible={isModalOpen} onCancel={closeModal} />
+    </>
+  );
+};
+
+export default Members;

@@ -1,0 +1,9 @@
+query authMe {
+	me {
+		id
+    image
+  	firstName
+    lastName
+    role
+  }
+}

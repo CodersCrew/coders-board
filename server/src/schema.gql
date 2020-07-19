@@ -1,0 +1,141 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type UserPosition {
+  id: ID!
+  from: Date!
+  to: Date
+  notes: String
+  user: User!
+  position: Position!
+  teamMember: TeamMember!
+}
+
+"""Date custom scalar type"""
+scalar Date
+
+type Position {
+  id: ID!
+  name: String!
+  description: String!
+  isActive: Boolean!
+  team: Position
+  users: [UserPosition!]!
+}
+
+type Team {
+  id: ID!
+  googleId: String!
+  name: String!
+  image: String!
+  description: String!
+  email: String!
+  color: String!
+  kind: TeamKind!
+  parent: Team
+  children: [Team!]!
+  positions: [Team!]!
+  members: [Team!]!
+}
+
+enum TeamKind {
+  TASKFORCE
+  GUILD
+  CLAN
+  SQUAD
+  CHAPTER
+  MANAGEMENT
+}
+
+type TeamMember {
+  id: ID!
+  googleId: String!
+  user: User!
+  team: Team!
+  role: TeamRole!
+  positions: [UserPosition!]!
+}
+
+enum TeamRole {
+  OWNER
+  MANAGER
+  MEMBER
+}
+
+type User {
+  id: ID!
+  firstName: String!
+  lastName: String!
+  primaryEmail: String!
+  recoveryEmail: String!
+  phone: String!
+  image: String!
+  googleId: String!
+  status: UserStatus!
+  role: UserRole!
+  teams: [TeamMember!]!
+  positions: [UserPosition!]!
+}
+
+enum UserStatus {
+  PENDING
+  ACTIVE
+  INACTIVE
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+type Query {
+  user(id: String!): User!
+  me: User!
+  users(search: String, role: UserRole): [User!]!
+  positions(search: String, teamId: ID, global: Boolean): [Position!]!
+  teams(search: String, parentId: ID, kind: TeamKind): [Team!]!
+  teamMembers(nested: Boolean = true, teamId: ID!, role: TeamRole): [TeamMember!]!
+}
+
+type Mutation {
+  createUser(data: CreateUserInput!): User!
+  deleteUser(id: String!): Boolean!
+  migrateGoogleUsers: [User!]!
+  createPosition(data: CreatePositionInput!): Position!
+  deletePosition(id: String!): Boolean!
+  createTeam(data: CreateTeamInput!): Team!
+  deleteTeam(id: String!): Boolean!
+  createTeamMember(data: CreateTeamMemberInput!): TeamMember!
+  deleteTeamMember(id: String!): Boolean!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  password: String!
+  primaryEmail: String!
+  recoveryEmail: String!
+}
+
+input CreatePositionInput {
+  name: String!
+  description: String = ""
+  teamId: ID
+}
+
+input CreateTeamInput {
+  name: String!
+  email: String!
+  kind: TeamKind!
+  image: String
+  description: String
+  color: String
+  parentId: ID
+}
+
+input CreateTeamMemberInput {
+  userId: ID!
+  teamId: ID!
+  role: TeamRole
+}

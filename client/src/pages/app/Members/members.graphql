@@ -1,0 +1,11 @@
+query members($search: String $role: UserRole) {
+	users(search: $search role: $role) {
+		id
+    image
+    firstName
+    lastName
+    primaryEmail
+    recoveryEmail
+    role
+  }
+}
