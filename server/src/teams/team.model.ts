@@ -67,7 +67,7 @@ export class Team {
     team => team.children,
     { nullable: true },
   )
-  parent?: Team;
+  parent?: Promise<Team>;
 
   @Column({ nullable: true })
   parentId?: string;
@@ -77,7 +77,7 @@ export class Team {
     type => Team,
     team => team.parent,
   )
-  children: Team[];
+  children: Promise<Team[]>;
 
   @Field(type => [Position])
   @OneToMany(

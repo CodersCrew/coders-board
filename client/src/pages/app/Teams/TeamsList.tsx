@@ -35,7 +35,7 @@ export const TeamsList: CFC<TeamsListProps> = ({ loading, data = [], title }) =>
       </Title>
       <Grid>
         {data.map(item => (
-          <Link to={`/app/team/${item.id}`}>
+          <Link key={item.id} to={`/app/teams/${item.id}/members`}>
             <Card hoverable cover={<img alt={item.name} src={item.image} />} p={16}>
               <CardMeta
                 title={<Title level={4}>{item.name}</Title>}

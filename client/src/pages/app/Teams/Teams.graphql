@@ -1,4 +1,3 @@
-
 fragment teamsListFields on Team {
   id
   name

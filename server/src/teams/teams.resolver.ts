@@ -4,6 +4,7 @@ import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/g
 import { AdminGuard } from '../common/guards/admin.guard';
 import { AuthGuard } from '../common/guards/auth.guard';
 import { CreateTeamInput } from './dto/create-team.input';
+import { GetTeamArgs } from './dto/get-team.args';
 import { GetTeamsArgs } from './dto/get-teams.args';
 import { Team } from './team.model';
 import { TeamsService } from './teams.service';
@@ -36,6 +37,11 @@ export class TeamsResolver {
   @Query(returns => [Team], { name: 'teams' })
   getTeams(@Args() args?: GetTeamsArgs) {
     return this.teamsService.findAll(args);
+  }
+
+  @Query(returns => Team, { name: 'team' })
+  getTeam(@Args() args: GetTeamArgs) {
+    return this.teamsService.findByIdOrThrow(args.id);
   }
 
   @Mutation(returns => Team)

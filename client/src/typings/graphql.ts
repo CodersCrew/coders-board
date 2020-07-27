@@ -107,6 +107,7 @@ export type Query = {
   users: Array<User>;
   positions: Array<Position>;
   teams: Array<Team>;
+  team: Team;
   teamMembers: Array<TeamMember>;
 };
 
@@ -129,6 +130,10 @@ export type QueryTeamsArgs = {
   search?: Maybe<Scalars['String']>;
   parentId?: Maybe<Scalars['ID']>;
   kind?: Maybe<TeamKind>;
+};
+
+export type QueryTeamArgs = {
+  id: Scalars['ID'];
 };
 
 export type QueryTeamMembersArgs = {
@@ -217,6 +222,8 @@ export const GraphQLOperations = {
     authMe: 'authMe',
     members: 'members',
     teams: 'teams',
+    teamChildren: 'teamChildren',
+    team: 'team',
   },
   Mutation: {
     createMember: 'createMember',

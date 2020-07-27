@@ -1,0 +1,20 @@
+query team($id: ID!) {
+  team(id: $id) {
+    id
+    name
+    image
+    description
+    color
+    kind
+    parent {
+      id
+      name
+    }
+    children {
+      id
+    }
+    members {
+			id
+    }
+  }
+}

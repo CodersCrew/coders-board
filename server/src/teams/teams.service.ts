@@ -17,12 +17,16 @@ export class TeamsService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  getParent(teamId: string) {
-    return this.findById(teamId);
+  async getParent(teamId: string) {
+    const team = await this.findByIdOrThrow(teamId);
+    return team.parent;
   }
 
-  getChildren(teamId: string) {
-    return this.teamRepository.find({ parentId: teamId });
+  async getChildren(teamId: string) {
+    const team = await this.findByIdOrThrow(teamId);
+    const children = await team.children;
+    console.log(children);
+    return children || [];
   }
 
   async getPositions(teamId: string) {
@@ -83,7 +87,7 @@ export class TeamsService {
       name: parent ? `${parent.name} | ${input.name}` : input.name,
     });
 
-    return this.teamRepository.save({ ...input, googleId, parent });
+    return this.teamRepository.save({ ...input, googleId, parent: Promise.resolve(parent) });
   }
 
   async delete(teamId: string): Promise<boolean> {

@@ -3,7 +3,9 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import AppLayout from './pages/app/AppLayout';
 import Members from './pages/app/Members';
-import Team from './pages/app/Team';
+import TeamChildren from './pages/app/team/TeamChildren';
+import TeamLayout from './pages/app/team/TeamLayout';
+import TeamMembers from './pages/app/team/TeamMembers';
 import Teams from './pages/app/Teams';
 import Login from './pages/Login';
 import LoginFailure from './pages/LoginFailure';
@@ -22,7 +24,10 @@ export const Routing = () => {
           <Route path="app" element={<AppLayout />}>
             <Route path="members" element={<Members />} />
             <Route path="teams" element={<Teams />} />
-            <Route path="team/:id" element={<Team />} />
+            <Route path="teams/:id" element={<TeamLayout />}>
+              <Route path="members" element={<TeamMembers />} />
+              <Route path="children" element={<TeamChildren />} />
+            </Route>
             <Route path="*" element={<NotFound />} />
           </Route>
           <Route path="*" element={<NotFound />} />

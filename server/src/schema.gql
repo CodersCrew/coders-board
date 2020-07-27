@@ -95,6 +95,7 @@ type Query {
   users(search: String, role: UserRole): [User!]!
   positions(search: String, teamId: ID, global: Boolean): [Position!]!
   teams(search: String, parentId: ID, kind: TeamKind): [Team!]!
+  team(id: ID!): Team!
   teamMembers(nested: Boolean = true, teamId: ID!, role: TeamRole): [TeamMember!]!
 }
 
