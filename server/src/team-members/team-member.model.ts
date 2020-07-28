@@ -1,17 +1,9 @@
-import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
+import { ModelBase } from '../common/ModelBase';
+import { MemberPosition } from '../member-positions/member-position.model';
 import { Team } from '../teams/team.model';
-import { UserPosition } from '../user-positions/user-position.model';
 import { User } from '../users/user.model';
 
 export enum TeamRole {
@@ -26,11 +18,7 @@ registerEnumType(TeamRole, {
 
 @ObjectType()
 @Entity()
-export class TeamMember {
-  @Field(type => ID)
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class TeamMember extends ModelBase {
   @Field()
   @Column({ unique: true })
   googleId: string;
@@ -59,19 +47,10 @@ export class TeamMember {
   @Column({ type: 'enum', enum: TeamRole, default: TeamRole.MEMBER })
   role: TeamRole;
 
-  @Field(type => [UserPosition])
+  @Field(type => [MemberPosition])
   @OneToMany(
-    type => UserPosition,
+    type => MemberPosition,
     userPosition => userPosition.teamMember,
   )
-  positions: Promise<UserPosition[]>;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
+  positions: Promise<MemberPosition[]>;
 }

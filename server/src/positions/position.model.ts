@@ -1,25 +1,13 @@
-import { Field, ID, ObjectType } from '@nestjs/graphql';
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Field, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
+import { ModelBase } from '../common/ModelBase';
+import { MemberPosition } from '../member-positions/member-position.model';
 import { Team } from '../teams/team.model';
-import { UserPosition } from '../user-positions/user-position.model';
 
 @ObjectType()
 @Entity()
-export class Position {
-  @Field(type => ID)
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class Position extends ModelBase {
   @Field()
   @Column()
   name: string;
@@ -43,19 +31,10 @@ export class Position {
   @Column({ nullable: true })
   teamId: string;
 
-  @Field(type => [UserPosition])
+  @Field(type => [MemberPosition])
   @OneToMany(
-    type => UserPosition,
-    userPosition => userPosition.position,
+    type => MemberPosition,
+    memberPosition => memberPosition.position,
   )
-  users: Promise<UserPosition[]>;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
+  users: Promise<MemberPosition[]>;
 }

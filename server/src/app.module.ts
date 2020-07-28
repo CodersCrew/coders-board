@@ -8,13 +8,11 @@ import { DateScalar } from './common/scalars/date.scalar';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { GsuiteModule } from './gsuite/gsuite.module';
+import { MemberPositionsModule } from './member-positions/member-positions.module';
 import { PositionsModule } from './positions/positions.module';
-import { SkillsModule } from './skills/skills.module';
 import { TeamMembersModule } from './team-members/team-members.module';
 import { TeamsModule } from './teams/teams.module';
 import { TypeOrmConfigService } from './typeorm-config.service';
-import { UserPositionsModule } from './user-positions/user-positions.module';
-import { UserSkillsModule } from './user-skills/user-skills.module';
 import { UsersModule } from './users/users.module';
 
 @Module({
@@ -34,9 +32,7 @@ import { UsersModule } from './users/users.module';
     TeamsModule,
     TeamMembersModule,
     PositionsModule,
-    UserPositionsModule,
-    SkillsModule,
-    UserSkillsModule,
+    MemberPositionsModule,
     GsuiteModule,
   ],
   controllers: [],

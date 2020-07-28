@@ -1,16 +1,9 @@
-import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Column, Entity, OneToMany } from 'typeorm';
 
+import { ModelBase } from '../common/ModelBase';
+import { MemberPosition } from '../member-positions/member-position.model';
 import { TeamMember } from '../team-members/team-member.model';
-import { UserPosition } from '../user-positions/user-position.model';
 
 export enum UserStatus {
   PENDING = 'pending',
@@ -33,11 +26,7 @@ registerEnumType(UserRole, {
 
 @ObjectType()
 @Entity()
-export class User {
-  @Field(type => ID)
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class User extends ModelBase {
   @Field()
   @Column()
   firstName: string;
@@ -81,19 +70,6 @@ export class User {
   )
   teams: TeamMember[];
 
-  @Field(type => [UserPosition])
-  @OneToMany(
-    type => UserPosition,
-    userPosition => userPosition.user,
-  )
-  positions: UserPosition[];
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
+  @Field(type => [MemberPosition])
+  positions: MemberPosition[];
 }

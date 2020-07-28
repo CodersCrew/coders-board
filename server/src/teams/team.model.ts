@@ -1,15 +1,7 @@
-import { Field, ID, ObjectType, registerEnumType } from '@nestjs/graphql';
-import {
-  Column,
-  CreateDateColumn,
-  DeleteDateColumn,
-  Entity,
-  ManyToOne,
-  OneToMany,
-  PrimaryGeneratedColumn,
-  UpdateDateColumn,
-} from 'typeorm';
+import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
+import { ModelBase } from '../common/ModelBase';
 import { Position } from '../positions/position.model';
 import { TeamMember } from '../team-members/team-member.model';
 
@@ -28,11 +20,7 @@ registerEnumType(TeamKind, {
 
 @ObjectType()
 @Entity()
-export class Team {
-  @Field(type => ID)
-  @PrimaryGeneratedColumn('uuid')
-  id: string;
-
+export class Team extends ModelBase {
   @Field()
   @Column({ unique: true })
   googleId: string;
@@ -92,13 +80,4 @@ export class Team {
     teamMamber => teamMamber.team,
   )
   members: Promise<TeamMember[]>;
-
-  @CreateDateColumn()
-  createdAt: Date;
-
-  @UpdateDateColumn()
-  updatedAt: Date;
-
-  @DeleteDateColumn()
-  deletedAt: Date;
 }

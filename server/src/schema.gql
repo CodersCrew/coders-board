@@ -2,26 +2,19 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type UserPosition {
+type TeamMember {
   id: ID!
-  from: Date!
-  to: Date
-  notes: String
+  googleId: String!
   user: User!
-  position: Position!
-  teamMember: TeamMember!
+  team: Team!
+  role: TeamRole!
+  positions: [MemberPosition!]!
 }
 
-"""Date custom scalar type"""
-scalar Date
-
-type Position {
-  id: ID!
-  name: String!
-  description: String!
-  isActive: Boolean!
-  team: Position
-  users: [UserPosition!]!
+enum TeamRole {
+  OWNER
+  MANAGER
+  MEMBER
 }
 
 type Team {
@@ -48,20 +41,26 @@ enum TeamKind {
   MANAGEMENT
 }
 
-type TeamMember {
+type Position {
   id: ID!
-  googleId: String!
-  user: User!
-  team: Team!
-  role: TeamRole!
-  positions: [UserPosition!]!
+  name: String!
+  description: String!
+  isActive: Boolean!
+  team: Position
+  users: [MemberPosition!]!
 }
 
-enum TeamRole {
-  OWNER
-  MANAGER
-  MEMBER
+type MemberPosition {
+  id: ID!
+  from: Date!
+  to: Date
+  notes: String
+  position: Position!
+  teamMember: TeamMember!
 }
+
+"""Date custom scalar type"""
+scalar Date
 
 type User {
   id: ID!
@@ -75,7 +74,7 @@ type User {
   status: UserStatus!
   role: UserRole!
   teams: [TeamMember!]!
-  positions: [UserPosition!]!
+  positions: [MemberPosition!]!
 }
 
 enum UserStatus {
@@ -93,6 +92,7 @@ type Query {
   user(id: String!): User!
   me: User!
   users(search: String, role: UserRole): [User!]!
+  memberPositions(teamMemberId: String = "true"): [MemberPosition!]!
   positions(search: String, teamId: ID, global: Boolean): [Position!]!
   teams(search: String, parentId: ID, kind: TeamKind): [Team!]!
   team(id: ID!): Team!
@@ -103,6 +103,9 @@ type Mutation {
   createUser(data: CreateUserInput!): User!
   deleteUser(id: String!): Boolean!
   migrateGoogleUsers: [User!]!
+  createMemberPosition(data: CreateMemberPositionInput!): MemberPosition!
+  updateMemberPosition(data: UpdateMemberPositionInput!): MemberPosition!
+  deleteMemberPosition(id: String!): Boolean!
   createPosition(data: CreatePositionInput!): Position!
   deletePosition(id: String!): Boolean!
   createTeam(data: CreateTeamInput!): Team!
@@ -117,6 +120,23 @@ input CreateUserInput {
   password: String!
   primaryEmail: String!
   recoveryEmail: String!
+}
+
+input CreateMemberPositionInput {
+  teamMemberId: ID!
+  positionId: ID!
+  from: Date!
+  to: Date
+  notes: String
+}
+
+input UpdateMemberPositionInput {
+  id: ID!
+  teamMemberId: ID
+  positionId: ID
+  from: Date
+  to: Date
+  notes: String
 }
 
 input CreatePositionInput {
