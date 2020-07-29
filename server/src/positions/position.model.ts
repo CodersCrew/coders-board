@@ -16,9 +16,9 @@ export class Position extends ModelBase {
   @Column({ default: '' })
   description: string;
 
-  @Field()
-  @Column({ default: true })
-  isActive: boolean;
+  @Field({ nullable: true })
+  @Column({ default: '', nullable: true })
+  image?: string;
 
   @Field(type => Team, { nullable: true })
   @ManyToOne(

@@ -45,7 +45,7 @@ type Position {
   id: ID!
   name: String!
   description: String!
-  isActive: Boolean!
+  image: String
   team: Position
   users: [MemberPosition!]!
 }
@@ -142,6 +142,7 @@ input UpdateMemberPositionInput {
 input CreatePositionInput {
   name: String!
   description: String = ""
+  image: String
   teamId: ID
 }
 

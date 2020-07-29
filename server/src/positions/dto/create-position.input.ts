@@ -15,6 +15,11 @@ export class CreatePositionInput implements Partial<Position> {
   @IsString()
   description?: string;
 
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsString()
+  image?: string;
+
   @Field(type => ID, { nullable: true })
   @IsOptional()
   @IsUUID()

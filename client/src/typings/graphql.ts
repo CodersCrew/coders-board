@@ -11,26 +11,21 @@ export type Scalars = {
   Date: any;
 };
 
-export type UserPosition = {
-  __typename?: 'UserPosition';
+export type TeamMember = {
+  __typename?: 'TeamMember';
   id: Scalars['ID'];
-  from: Scalars['Date'];
-  to?: Maybe<Scalars['Date']>;
-  notes?: Maybe<Scalars['String']>;
+  googleId: Scalars['String'];
   user: User;
-  position: Position;
-  teamMember: TeamMember;
+  team: Team;
+  role: TeamRole;
+  positions: Array<MemberPosition>;
 };
 
-export type Position = {
-  __typename?: 'Position';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  description: Scalars['String'];
-  isActive: Scalars['Boolean'];
-  team?: Maybe<Position>;
-  users: Array<UserPosition>;
-};
+export enum TeamRole {
+  Owner = 'OWNER',
+  Manager = 'MANAGER',
+  Member = 'MEMBER',
+}
 
 export type Team = {
   __typename?: 'Team';
@@ -57,21 +52,25 @@ export enum TeamKind {
   Management = 'MANAGEMENT',
 }
 
-export type TeamMember = {
-  __typename?: 'TeamMember';
+export type Position = {
+  __typename?: 'Position';
   id: Scalars['ID'];
-  googleId: Scalars['String'];
-  user: User;
-  team: Team;
-  role: TeamRole;
-  positions: Array<UserPosition>;
+  name: Scalars['String'];
+  description: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
+  team?: Maybe<Position>;
+  users: Array<MemberPosition>;
 };
 
-export enum TeamRole {
-  Owner = 'OWNER',
-  Manager = 'MANAGER',
-  Member = 'MEMBER',
-}
+export type MemberPosition = {
+  __typename?: 'MemberPosition';
+  id: Scalars['ID'];
+  from: Scalars['Date'];
+  to?: Maybe<Scalars['Date']>;
+  notes?: Maybe<Scalars['String']>;
+  position: Position;
+  teamMember: TeamMember;
+};
 
 export type User = {
   __typename?: 'User';
@@ -86,7 +85,7 @@ export type User = {
   status: UserStatus;
   role: UserRole;
   teams: Array<TeamMember>;
-  positions: Array<UserPosition>;
+  positions: Array<MemberPosition>;
 };
 
 export enum UserStatus {
@@ -105,6 +104,7 @@ export type Query = {
   user: User;
   me: User;
   users: Array<User>;
+  memberPositions: Array<MemberPosition>;
   positions: Array<Position>;
   teams: Array<Team>;
   team: Team;
@@ -118,6 +118,10 @@ export type QueryUserArgs = {
 export type QueryUsersArgs = {
   search?: Maybe<Scalars['String']>;
   role?: Maybe<UserRole>;
+};
+
+export type QueryMemberPositionsArgs = {
+  teamMemberId?: Maybe<Scalars['String']>;
 };
 
 export type QueryPositionsArgs = {
@@ -147,6 +151,9 @@ export type Mutation = {
   createUser: User;
   deleteUser: Scalars['Boolean'];
   migrateGoogleUsers: Array<User>;
+  createMemberPosition: MemberPosition;
+  updateMemberPosition: MemberPosition;
+  deleteMemberPosition: Scalars['Boolean'];
   createPosition: Position;
   deletePosition: Scalars['Boolean'];
   createTeam: Team;
@@ -160,6 +167,18 @@ export type MutationCreateUserArgs = {
 };
 
 export type MutationDeleteUserArgs = {
+  id: Scalars['String'];
+};
+
+export type MutationCreateMemberPositionArgs = {
+  data: CreateMemberPositionInput;
+};
+
+export type MutationUpdateMemberPositionArgs = {
+  data: UpdateMemberPositionInput;
+};
+
+export type MutationDeleteMemberPositionArgs = {
   id: Scalars['String'];
 };
 
@@ -195,9 +214,27 @@ export type CreateUserInput = {
   recoveryEmail: Scalars['String'];
 };
 
+export type CreateMemberPositionInput = {
+  teamMemberId: Scalars['ID'];
+  positionId: Scalars['ID'];
+  from: Scalars['Date'];
+  to?: Maybe<Scalars['Date']>;
+  notes?: Maybe<Scalars['String']>;
+};
+
+export type UpdateMemberPositionInput = {
+  id: Scalars['ID'];
+  teamMemberId?: Maybe<Scalars['ID']>;
+  positionId?: Maybe<Scalars['ID']>;
+  from?: Maybe<Scalars['Date']>;
+  to?: Maybe<Scalars['Date']>;
+  notes?: Maybe<Scalars['String']>;
+};
+
 export type CreatePositionInput = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
   teamId?: Maybe<Scalars['ID']>;
 };
 
@@ -219,14 +256,17 @@ export type CreateTeamMemberInput = {
 
 export const GraphQLOperations = {
   Query: {
+    teamSelectTeams: 'teamSelectTeams',
     authMe: 'authMe',
     members: 'members',
+    positions: 'positions',
     teams: 'teams',
     teamChildren: 'teamChildren',
     team: 'team',
   },
   Mutation: {
     createMember: 'createMember',
+    createPosition: 'createPosition',
   },
   Fragment: {
     teamsListFields: 'teamsListFields',

@@ -1,0 +1,13 @@
+query positions {
+	positions {
+    id
+    name
+    description
+    image
+    team {
+      id
+      name
+      image
+    }
+  }
+}

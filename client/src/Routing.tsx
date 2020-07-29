@@ -3,6 +3,7 @@ import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import AppLayout from './pages/app/AppLayout';
 import Members from './pages/app/Members';
+import Positions from './pages/app/Positions';
 import TeamChildren from './pages/app/team/TeamChildren';
 import TeamLayout from './pages/app/team/TeamLayout';
 import TeamMembers from './pages/app/team/TeamMembers';
@@ -24,6 +25,7 @@ export const Routing = () => {
           <Route path="app" element={<AppLayout />}>
             <Route path="members" element={<Members />} />
             <Route path="teams" element={<Teams />} />
+            <Route path="positions" element={<Positions />} />
             <Route path="teams/:id" element={<TeamLayout />}>
               <Route path="members" element={<TeamMembers />} />
               <Route path="children" element={<TeamChildren />} />
