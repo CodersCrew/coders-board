@@ -18,7 +18,9 @@ const styledSystem = compose(space, color, fontSize);
 const shouldForwardProp = omitProps(styledSystem.propNames);
 
 export const Icon: CFC<IconProps> = ({ icon, ...props }) => {
-  const StyledIcon = styled(icon, { shouldForwardProp })(styledSystem);
+  const StyledIcon = styled(icon, { shouldForwardProp })(p => ({
+    '&.anticon[role="img"]': styledSystem(p),
+  }));
 
   return <StyledIcon {...props} />;
 };

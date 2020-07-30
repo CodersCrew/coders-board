@@ -1,0 +1,11 @@
+mutation createPosition($data: CreatePositionInput!) {
+  createPosition(data: $data) {
+    id
+  }
+}
+
+mutation updatePosition($data: UpdatePositionInput!) {
+  updatePosition(data: $data) {
+    id
+  }
+}

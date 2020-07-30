@@ -32,6 +32,7 @@ module.exports = {
     'react/jsx-curly-newline': 0,
     'react/jsx-filename-extension': [2, { extensions: ['.ts', '.tsx'] }],
     'react/jsx-one-expression-per-line': 0,
+    'react/jsx-indent': 0,
     'react/destructuring-assignment': 0,
     '@typescript-eslint/explicit-module-boundary-types': 0,
     '@typescript-eslint/ban-types': 0,
@@ -56,8 +57,16 @@ module.exports = {
       2,
       {
         groups: [
+          // Side effect imports.
+          ['^\\u0000'],
           // Packages. `react` related packages come first.
           ['^react', '^@?\\w'],
+          // Absolute imports and other imports such as Vue-style `@/foo`.
+          // Anything that does not start with a dot.
+          ['^[^.]'],
+          // Relative imports.
+          // Anything that starts with a dot.
+          ['^\\.'],
         ],
       },
     ],

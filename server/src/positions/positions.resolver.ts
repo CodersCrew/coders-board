@@ -1,9 +1,10 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AuthGuard } from '../common/guards/auth.guard';
 import { CreatePositionInput } from './dto/create-position.input';
 import { GetPositionsArgs } from './dto/get-positions.args';
+import { UpdatePositionInput } from './dto/update-position.input';
 import { Position } from './position.model';
 import { PositionsService } from './positions.service';
 
@@ -27,8 +28,13 @@ export class PositionsResolver {
     return this.positionsService.create(input);
   }
 
+  @Mutation(returns => Position)
+  updatePosition(@Args('data') input: UpdatePositionInput) {
+    return this.positionsService.update(input);
+  }
+
   @Mutation(returns => Boolean)
-  deletePosition(@Args('id') positionId: string) {
+  deletePosition(@Args('id', { type: () => ID }) positionId: string) {
     return this.positionsService.delete(positionId);
   }
 }

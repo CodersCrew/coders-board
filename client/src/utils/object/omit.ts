@@ -1,4 +1,9 @@
-export const omit = (originalObject: Record<string, unknown> = {}, keysToOmit: string[] = []) => {
+export const omit = <T extends Record<string, unknown>, K extends [...(keyof T)[]]>(
+  originalObject: T,
+  keysToOmit: K,
+): {
+  [K2 in Exclude<keyof T, K[number]>]: T[K2];
+} => {
   const clonedObject = { ...originalObject };
 
   // eslint-disable-next-line no-restricted-syntax

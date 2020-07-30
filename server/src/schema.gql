@@ -107,7 +107,8 @@ type Mutation {
   updateMemberPosition(data: UpdateMemberPositionInput!): MemberPosition!
   deleteMemberPosition(id: String!): Boolean!
   createPosition(data: CreatePositionInput!): Position!
-  deletePosition(id: String!): Boolean!
+  updatePosition(data: UpdatePositionInput!): Position!
+  deletePosition(id: ID!): Boolean!
   createTeam(data: CreateTeamInput!): Team!
   deleteTeam(id: String!): Boolean!
   createTeamMember(data: CreateTeamMemberInput!): TeamMember!
@@ -142,6 +143,14 @@ input UpdateMemberPositionInput {
 input CreatePositionInput {
   name: String!
   description: String = ""
+  image: String
+  teamId: ID
+}
+
+input UpdatePositionInput {
+  id: ID!
+  name: String
+  description: String
   image: String
   teamId: ID
 }

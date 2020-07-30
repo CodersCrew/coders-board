@@ -1,5 +1,0 @@
-mutation createPosition($data: CreatePositionInput!) {
-  createPosition(data: $data) {
-    id
-  }
-}

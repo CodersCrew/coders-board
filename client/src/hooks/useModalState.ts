@@ -1,28 +1,35 @@
-import { useState } from 'react';
+import { useSetState } from 'react-use';
 
-type State = {
+type State<T> = {
   visible: boolean;
   mounted: boolean;
+  data: T | null;
 };
 
-export const useModalState = () => {
-  const [state, setState] = useState<State>({ visible: false, mounted: false });
+export const useModalState = <T>() => {
+  const [state, setState] = useSetState<State<T>>({ visible: false, mounted: false, data: null });
 
   const handleClose = () => {
-    setState({ visible: false, mounted: true });
+    setState({ visible: false });
     setTimeout(() => {
-      setState({ visible: false, mounted: false });
+      setState({ mounted: false, data: null });
     }, 600);
   };
 
-  const handleOpen = () => {
-    setState({ visible: true, mounted: true });
+  const handleOpen = (data?: T) => {
+    setState({ visible: true, mounted: true, data: data ?? null });
   };
 
   return {
-    isMounted: state.mounted,
     isVisible: state.visible,
+    isMounted: state.mounted,
+    data: state.data,
     open: handleOpen,
     close: handleClose,
+    props: {
+      onCancel: handleClose,
+      visible: state.visible,
+      data: state.data,
+    },
   };
 };

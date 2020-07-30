@@ -10,6 +10,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { brackets } from '../common/utils/brackets';
 import { CreatePositionInput } from './dto/create-position.input';
 import { GetPositionsArgs } from './dto/get-positions.args';
+import { UpdatePositionInput } from './dto/update-position.input';
 import { Position } from './position.model';
 import { PositionRepository } from './position.repository';
 
@@ -62,16 +63,16 @@ export class PositionsService {
   }
 
   async create(input: CreatePositionInput): Promise<Position> {
-    try {
-      const position = await this.positionRepository.save(input);
-      return position;
-    } catch (ex) {
-      if (ex.code === '23503') {
-        throw new NotFoundException("Team with provided id doesn't exist");
-      }
+    return this.positionRepository.save(input);
+  }
 
-      throw ex;
-    }
+  async update({ id, ...input }: UpdatePositionInput): Promise<Position> {
+    const position = await this.findByIdOrThrow(id);
+
+    return this.positionRepository.save({
+      ...position,
+      ...input,
+    });
   }
 
   async delete(positionId: string): Promise<boolean> {

@@ -97,7 +97,7 @@ const radii = {
   small: 4,
 };
 
-const breakpoints = {
+export const breakpoints = {
   default: '0px',
   xs: '480px',
   sm: '576px',

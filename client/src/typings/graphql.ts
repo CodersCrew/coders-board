@@ -155,6 +155,7 @@ export type Mutation = {
   updateMemberPosition: MemberPosition;
   deleteMemberPosition: Scalars['Boolean'];
   createPosition: Position;
+  updatePosition: Position;
   deletePosition: Scalars['Boolean'];
   createTeam: Team;
   deleteTeam: Scalars['Boolean'];
@@ -186,8 +187,12 @@ export type MutationCreatePositionArgs = {
   data: CreatePositionInput;
 };
 
+export type MutationUpdatePositionArgs = {
+  data: UpdatePositionInput;
+};
+
 export type MutationDeletePositionArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 export type MutationCreateTeamArgs = {
@@ -238,6 +243,14 @@ export type CreatePositionInput = {
   teamId?: Maybe<Scalars['ID']>;
 };
 
+export type UpdatePositionInput = {
+  id: Scalars['ID'];
+  name?: Maybe<Scalars['String']>;
+  description?: Maybe<Scalars['String']>;
+  image?: Maybe<Scalars['String']>;
+  teamId?: Maybe<Scalars['ID']>;
+};
+
 export type CreateTeamInput = {
   name: Scalars['String'];
   email: Scalars['String'];
@@ -267,6 +280,8 @@ export const GraphQLOperations = {
   Mutation: {
     createMember: 'createMember',
     createPosition: 'createPosition',
+    updatePosition: 'updatePosition',
+    deletePosition: 'deletePosition',
   },
   Fragment: {
     teamsListFields: 'teamsListFields',
