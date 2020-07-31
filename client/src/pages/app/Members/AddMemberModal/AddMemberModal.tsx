@@ -4,9 +4,10 @@ import { ModalProps } from 'antd/lib/modal';
 import { Formik, FormikConfig, useFormikContext } from 'formik';
 import { Form, Input } from 'formik-antd';
 
-import { useCreateMemberMutation } from './AddMemberModal.apollo';
 import { CFC } from '@/typings/components';
 import { CreateUserInput, GraphQLOperations } from '@/typings/graphql';
+
+import { useCreateMemberMutation } from './AddMemberModal.apollo';
 
 type FormValues = Omit<CreateUserInput, 'password'>;
 
@@ -17,13 +18,6 @@ type AddMemberModalProps = ModalProps & {
 };
 
 type AddMemberModalComponentProps = AddMemberModalProps;
-
-const fields: Record<keyof FormValues, keyof FormValues> = {
-  firstName: 'firstName',
-  lastName: 'lastName',
-  primaryEmail: 'primaryEmail',
-  recoveryEmail: 'recoveryEmail',
-};
 
 export const AddMemberModalComponent: CFC<AddMemberModalComponentProps> = props => {
   const { submitForm, isSubmitting } = useFormikContext<FormValues>();
@@ -36,17 +30,17 @@ export const AddMemberModalComponent: CFC<AddMemberModalComponentProps> = props 
       okButtonProps={{ onClick: submitForm, children: 'Add member', loading: isSubmitting }}
     >
       <Form layout="vertical" colon>
-        <Form.Item name={fields.firstName} label="First name" required>
-          <Input name={fields.firstName} placeholder="Enter first name..." />
+        <Form.Item name="firstName" label="First name" required>
+          <Input name="firstName" placeholder="Enter first name..." />
         </Form.Item>
-        <Form.Item name={fields.lastName} label="Last name" required>
-          <Input name={fields.lastName} placeholder="Enter last name..." />
+        <Form.Item name="lastName" label="Last name" required>
+          <Input name="lastName" placeholder="Enter last name..." />
         </Form.Item>
-        <Form.Item name={fields.primaryEmail} label="CodersCrew email" required>
-          <Input name={fields.primaryEmail} placeholder="Enter CodersCrew email..." />
+        <Form.Item name="primaryEmail" label="CodersCrew email" required>
+          <Input name="primaryEmail" placeholder="Enter CodersCrew email..." />
         </Form.Item>
-        <Form.Item name={fields.recoveryEmail} label="Private email" required>
-          <Input name={fields.recoveryEmail} placeholder="Enter private email..." />
+        <Form.Item name="recoveryEmail" label="Private email" required>
+          <Input name="recoveryEmail" placeholder="Enter private email..." />
         </Form.Item>
       </Form>
     </Modal>

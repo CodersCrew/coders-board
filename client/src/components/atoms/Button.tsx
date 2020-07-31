@@ -11,4 +11,4 @@ const styledSystem = compose(space);
 
 const shouldForwardProp = omitProps(styledSystem.propNames);
 
-export const Button = styled(AntButton, { shouldForwardProp })<ButtonProps>(space);
+export const Button = styled(AntButton, { shouldForwardProp })<ButtonProps>(styledSystem);

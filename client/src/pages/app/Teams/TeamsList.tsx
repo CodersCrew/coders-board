@@ -2,10 +2,11 @@ import React from 'react';
 import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-import { TeamsListFieldsFragment } from './Teams.apollo';
 import { Paragraph, Title } from '@/components/atoms';
 import { Card, CardMeta } from '@/components/molecules';
 import { CFC } from '@/typings/components';
+
+import { TeamsListFieldsFragment } from './Teams.apollo';
 
 type TeamsListProps = {
   loading: boolean;

@@ -17,7 +17,13 @@ export const useModalState = <T>() => {
   };
 
   const handleOpen = (data?: T) => {
-    setState({ visible: true, mounted: true, data: data ?? null });
+    let modalData = data ?? null;
+
+    if (data && 'target' in data) {
+      modalData = null;
+    }
+
+    setState({ visible: true, mounted: true, data: modalData });
   };
 
   return {
@@ -26,10 +32,5 @@ export const useModalState = <T>() => {
     data: state.data,
     open: handleOpen,
     close: handleClose,
-    props: {
-      onCancel: handleClose,
-      visible: state.visible,
-      data: state.data,
-    },
   };
 };

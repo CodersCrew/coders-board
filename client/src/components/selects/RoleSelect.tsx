@@ -4,6 +4,7 @@ import { SelectProps } from 'antd/lib/select';
 
 import { CFC } from '@/typings/components';
 import { UserRole } from '@/typings/graphql';
+import { selectToFormikSelect } from '@/utils/forms';
 
 type Option = { value: UserRole; label: string };
 
@@ -23,3 +24,5 @@ export const RoleSelect: CFC<RoleSelectProps> = props => {
 
   return <Select {...props} onChange={handleChange} options={options} />;
 };
+
+export const FormikRoleSelect = selectToFormikSelect(RoleSelect);

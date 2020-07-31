@@ -4,7 +4,6 @@
 
 type TeamMember {
   id: ID!
-  googleId: String!
   user: User!
   team: Team!
   role: TeamRole!
@@ -52,15 +51,17 @@ type Position {
 
 type MemberPosition {
   id: ID!
-  from: Date!
-  to: Date
+  from: DateTime!
+  to: DateTime
   notes: String
   position: Position!
   teamMember: TeamMember!
 }
 
-"""Date custom scalar type"""
-scalar Date
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
 
 type User {
   id: ID!
@@ -91,7 +92,7 @@ enum UserRole {
 type Query {
   user(id: String!): User!
   me: User!
-  users(search: String, role: UserRole): [User!]!
+  users(search: String, role: UserRole, ids: [ID!]): [User!]!
   memberPositions(teamMemberId: String = "true"): [MemberPosition!]!
   positions(search: String, teamId: ID, global: Boolean): [Position!]!
   teams(search: String, parentId: ID, kind: TeamKind): [Team!]!
@@ -101,18 +102,18 @@ type Query {
 
 type Mutation {
   createUser(data: CreateUserInput!): User!
-  deleteUser(id: String!): Boolean!
+  deleteUser(id: ID!): Boolean!
   migrateGoogleUsers: [User!]!
   createMemberPosition(data: CreateMemberPositionInput!): MemberPosition!
   updateMemberPosition(data: UpdateMemberPositionInput!): MemberPosition!
-  deleteMemberPosition(id: String!): Boolean!
+  deleteMemberPosition(id: ID!): Boolean!
   createPosition(data: CreatePositionInput!): Position!
   updatePosition(data: UpdatePositionInput!): Position!
   deletePosition(id: ID!): Boolean!
   createTeam(data: CreateTeamInput!): Team!
-  deleteTeam(id: String!): Boolean!
+  deleteTeam(id: ID!): Boolean!
   createTeamMember(data: CreateTeamMemberInput!): TeamMember!
-  deleteTeamMember(id: String!): Boolean!
+  deleteTeamMember(id: ID!): Boolean!
 }
 
 input CreateUserInput {
@@ -126,8 +127,8 @@ input CreateUserInput {
 input CreateMemberPositionInput {
   teamMemberId: ID!
   positionId: ID!
-  from: Date!
-  to: Date
+  from: DateTime!
+  to: DateTime
   notes: String
 }
 
@@ -135,8 +136,8 @@ input UpdateMemberPositionInput {
   id: ID!
   teamMemberId: ID
   positionId: ID
-  from: Date
-  to: Date
+  from: DateTime
+  to: DateTime
   notes: String
 }
 

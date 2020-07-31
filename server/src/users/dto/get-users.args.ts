@@ -1,5 +1,5 @@
-import { ArgsType, Field } from '@nestjs/graphql';
-import { IsEnum, IsOptional, IsString } from 'class-validator';
+import { ArgsType, Field, ID } from '@nestjs/graphql';
+import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 
 import { UserRole } from '../user.model';
 
@@ -14,4 +14,9 @@ export class GetUsersArgs {
   @IsOptional()
   @IsEnum(UserRole)
   role?: UserRole;
+
+  @Field(type => [ID], { nullable: true })
+  @IsOptional()
+  @IsUUID('all', { each: true })
+  ids?: string[];
 }

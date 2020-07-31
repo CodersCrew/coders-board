@@ -7,6 +7,7 @@ import Positions from './pages/app/Positions';
 import TeamChildren from './pages/app/team/TeamChildren';
 import TeamLayout from './pages/app/team/TeamLayout';
 import TeamMembers from './pages/app/team/TeamMembers';
+import TeamPositions from './pages/app/team/TeamPositions';
 import Teams from './pages/app/Teams';
 import Login from './pages/Login';
 import LoginFailure from './pages/LoginFailure';
@@ -29,6 +30,7 @@ export const Routing = () => {
             <Route path="teams/:id" element={<TeamLayout />}>
               <Route path="members" element={<TeamMembers />} />
               <Route path="children" element={<TeamChildren />} />
+              <Route path="positions" element={<TeamPositions />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Route>

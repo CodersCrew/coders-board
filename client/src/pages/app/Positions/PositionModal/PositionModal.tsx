@@ -3,11 +3,10 @@ import { Formik, FormikConfig, useFormikContext } from 'formik';
 import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
-import { Modal } from '@/components/molecules';
+import { Modal, ModalProps } from '@/components/molecules';
 import { FormikTeamSelect } from '@/components/selects/TeamSelect';
 import { CFC } from '@/typings/components';
 import { CreatePositionInput, GraphQLOperations } from '@/typings/graphql';
-import { DataModalProps } from '@/typings/modals';
 import { getInitialValuesFromSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
@@ -17,7 +16,10 @@ type FormValues = CreatePositionInput;
 
 type FormConfig = FormikConfig<FormValues>;
 
-type PositionModalProps = DataModalProps<FormValues>;
+type PositionModalProps = ModalProps & {
+  onCancel: () => void;
+  data: (FormValues & { id: string }) | null;
+};
 
 const PositionModalComponent: CFC<PositionModalProps> = ({ data, ...props }) => {
   const { isSubmitting, submitForm } = useFormikContext<FormValues>();

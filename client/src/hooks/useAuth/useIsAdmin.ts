@@ -1,5 +1,6 @@
-import { useAuth } from './useAuth';
 import { UserRole } from '@/typings/graphql';
+
+import { useAuth } from './useAuth';
 
 export const useIsAdmin = () => {
   const { data } = useAuth();

@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { UserId } from '../common/decorators/user-id.decorator';
 import { AdminGuard } from '../common/guards/admin.guard';
@@ -37,7 +37,7 @@ export class UsersResolver {
 
   @Mutation(returns => Boolean)
   @UseGuards(AdminGuard)
-  deleteUser(@Args('id') id: string) {
+  deleteUser(@Args('id', { type: () => ID }) id: string) {
     return this.usersService.delete(id);
   }
 

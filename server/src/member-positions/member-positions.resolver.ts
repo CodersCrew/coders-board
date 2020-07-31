@@ -1,4 +1,4 @@
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { Position } from '../positions/position.model';
 import { TeamMember } from '../team-members/team-member.model';
@@ -38,7 +38,7 @@ export class MemberPositionsResolver {
   }
 
   @Mutation(returns => Boolean)
-  deleteMemberPosition(@Args('id') memberPositionId: string) {
+  deleteMemberPosition(@Args('id', { type: () => ID }) memberPositionId: string) {
     return this.memberPositionsService.delete(memberPositionId);
   }
 }

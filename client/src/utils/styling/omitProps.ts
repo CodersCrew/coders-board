@@ -1,6 +1,5 @@
-export const omitProps = (propsToOmit: string[] = [], except?: string[]) => {
-  const toOmit = except ? propsToOmit.filter(p => !except.includes(p)) : propsToOmit;
-  const regex = new RegExp(`^(${toOmit.join('|')})$`);
+export const omitProps = (propsToOmit: string[] = []) => {
+  const regex = new RegExp(`^(${propsToOmit.join('|')})$`);
 
   return (propName: string) => !regex.test(propName);
 };

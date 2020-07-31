@@ -1,0 +1,26 @@
+query teamPositions($teamId: ID!) {
+  teamMembers(teamId: $teamId) {
+    id
+    role
+    user {
+      id
+      firstName
+      lastName
+      image
+    }
+    positions {
+			id
+      from
+      to
+      notes
+      position {
+				id
+        name
+      }
+    }
+  }
+}
+
+mutation deleteTeamPosition($id: ID!) {
+  deleteMemberPosition(id: $id)
+}

@@ -1,0 +1,10 @@
+mutation createTeamPosition($data: CreateMemberPositionInput!) {
+	createMemberPosition(data: $data) {
+		id
+  }
+}
+mutation updateTeamPosition($data: UpdateMemberPositionInput!) {
+	updateMemberPosition(data: $data) {
+		id
+  }
+}

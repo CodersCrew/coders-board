@@ -4,7 +4,6 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 
 import { AuthModule } from './auth/auth.module';
-import { DateScalar } from './common/scalars/date.scalar';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { GsuiteModule } from './gsuite/gsuite.module';
@@ -36,6 +35,5 @@ import { UsersModule } from './users/users.module';
     GsuiteModule,
   ],
   controllers: [],
-  providers: [DateScalar],
 })
 export class AppModule {}

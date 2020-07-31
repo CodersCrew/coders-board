@@ -2,9 +2,10 @@ import React from 'react';
 import { Link, useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-import { useTeamChildrenQuery } from './TeamChildren.apollo';
 import { Paragraph, Title } from '@/components/atoms';
 import { Card, CardMeta } from '@/components/molecules';
+
+import { useTeamChildrenQuery } from './TeamChildren.apollo';
 
 const Grid = styled.div({
   display: 'grid',

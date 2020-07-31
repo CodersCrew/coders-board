@@ -1,3 +1,5 @@
+import '@/config/globalConfig';
+
 import React from 'react';
 import ReactDOM from 'react-dom';
 
@@ -6,11 +8,11 @@ import { Routing } from './Routing';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
-  <React.StrictMode>
-    <Providers>
-      <Routing />
-    </Providers>
-  </React.StrictMode>,
+  // <React.StrictMode>
+  <Providers>
+    <Routing />
+  </Providers>,
+  // </React.StrictMode>,
   document.getElementById('root'),
 );
 

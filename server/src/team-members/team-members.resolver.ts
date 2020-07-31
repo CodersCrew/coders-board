@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AuthGuard } from '../common/guards/auth.guard';
 import { Team } from '../teams/team.model';
@@ -35,7 +35,7 @@ export class TeamMembersResolver {
   }
 
   @Mutation(returns => Boolean)
-  deleteTeamMember(@Args('id') teamMemberId: string) {
+  deleteTeamMember(@Args('id', { type: () => ID }) teamMemberId: string) {
     return this.teamMembersService.delete(teamMemberId);
   }
 }

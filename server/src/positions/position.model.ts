@@ -17,7 +17,7 @@ export class Position extends ModelBase {
   description: string;
 
   @Field({ nullable: true })
-  @Column({ default: '', nullable: true })
+  @Column({ nullable: true })
   image?: string;
 
   @Field(type => Team, { nullable: true })

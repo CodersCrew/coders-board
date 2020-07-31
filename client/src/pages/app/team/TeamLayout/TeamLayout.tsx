@@ -5,10 +5,11 @@ import { Tabs } from 'antd';
 import { BreadcrumbProps } from 'antd/lib/breadcrumb';
 import { TabsProps } from 'antd/lib/tabs';
 
-import { useTeamQuery } from './TeamLayout.apollo';
 import { PageHeader } from '@/components/molecules';
 import { TeamKind } from '@/typings/graphql';
 import { breadcrumbItemRender } from '@/utils/breadcrumbItemRender';
+
+import { useTeamQuery } from './TeamLayout.apollo';
 
 const StyledPageHeader = styled(PageHeader)({
   '.ant-avatar': {
@@ -52,6 +53,7 @@ const TeamLayout = () => {
     <Tabs activeKey={location.pathname.split('/').pop()} onChange={handleItemChange}>
       <Tabs.TabPane tab="Members" key="members" />
       {children.length && <Tabs.TabPane tab={kind === TeamKind.Guild ? 'Clans' : 'Chapters'} key="children" />}
+      <Tabs.TabPane tab="Positions" key="positions" />
     </Tabs>
   );
 

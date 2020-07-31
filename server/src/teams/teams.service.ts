@@ -25,7 +25,6 @@ export class TeamsService {
   async getChildren(teamId: string) {
     const team = await this.findByIdOrThrow(teamId);
     const children = await team.children;
-    console.log(children);
     return children || [];
   }
 

@@ -12,9 +12,17 @@ type SidebarProps = SiderProps & {
   collapsed: boolean;
 };
 
-export const Sidebar: CFC<SidebarProps> = props => {
+const useSelectedKeys = () => {
   const location = useLocation();
+  const regexResult = /\/app\/(\w*)\/?/.exec(location.pathname);
+  const selectedKey = regexResult && regexResult[1];
+
+  return selectedKey ? [selectedKey] : [];
+};
+
+export const Sidebar: CFC<SidebarProps> = props => {
   const navigate = useNavigate();
+  const selectedKeys = useSelectedKeys();
 
   const handleItemClick: MenuProps['onClick'] = ({ key }) => {
     navigate(`/app/${key}`);
@@ -23,12 +31,7 @@ export const Sidebar: CFC<SidebarProps> = props => {
   return (
     <Layout.Sider trigger={null} collapsible {...props}>
       <Box height={32} backgroundColor="rgba(255, 255, 255, 0.2)" margin={16} />
-      <Menu
-        theme="dark"
-        mode="inline"
-        onClick={handleItemClick}
-        selectedKeys={[location.pathname.replace('/app/', '')]}
-      >
+      <Menu theme="dark" mode="inline" onClick={handleItemClick} selectedKeys={selectedKeys}>
         <Menu.Item key="members" icon={<ContactsOutlined />}>
           Members
         </Menu.Item>

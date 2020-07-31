@@ -7,6 +7,7 @@ import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
 import { User } from './user.model';
 import { UserRepository } from './user.repository';
+import { createGravatar } from './users.utils';
 
 @Injectable()
 export class UsersService {
@@ -32,8 +33,12 @@ export class UsersService {
     return this.userRepository.findOne({ googleId });
   }
 
-  findAll({ role, search }: GetUsersArgs): Promise<User[]> {
+  findAll({ role, search, ids }: GetUsersArgs): Promise<User[]> {
     const query = this.userRepository.createQueryBuilder('user');
+
+    if (ids) {
+      query.andWhereInIds(ids);
+    }
 
     if (role) {
       query.andWhere('user.role = :role', { role });
@@ -85,7 +90,12 @@ export class UsersService {
           }),
         );
       } else {
-        result.push(await this.userRepository.save(user));
+        result.push(
+          await this.userRepository.save({
+            ...user,
+            image: user.image || createGravatar(user.primaryEmail),
+          }),
+        );
       }
     }
 

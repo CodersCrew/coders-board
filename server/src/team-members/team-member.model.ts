@@ -19,10 +19,6 @@ registerEnumType(TeamRole, {
 @ObjectType()
 @Entity()
 export class TeamMember extends ModelBase {
-  @Field()
-  @Column({ unique: true })
-  googleId: string;
-
   @Field(type => User)
   @ManyToOne(
     type => User,

@@ -1,0 +1,20 @@
+query teamMembers($teamId: ID!) {
+  teamMembers(teamId: $teamId) {
+    id
+    role
+    user {
+      id
+      firstName
+      lastName
+      image
+    }
+    positions {
+      id
+      to
+      position {
+        id
+        name
+      }
+    }
+  }
+}

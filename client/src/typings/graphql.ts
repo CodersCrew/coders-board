@@ -7,14 +7,13 @@ export type Scalars = {
   Boolean: boolean;
   Int: number;
   Float: number;
-  /** Date custom scalar type */
-  Date: any;
+  /** A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format. */
+  DateTime: any;
 };
 
 export type TeamMember = {
   __typename?: 'TeamMember';
   id: Scalars['ID'];
-  googleId: Scalars['String'];
   user: User;
   team: Team;
   role: TeamRole;
@@ -65,8 +64,8 @@ export type Position = {
 export type MemberPosition = {
   __typename?: 'MemberPosition';
   id: Scalars['ID'];
-  from: Scalars['Date'];
-  to?: Maybe<Scalars['Date']>;
+  from: Scalars['DateTime'];
+  to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
   position: Position;
   teamMember: TeamMember;
@@ -118,6 +117,7 @@ export type QueryUserArgs = {
 export type QueryUsersArgs = {
   search?: Maybe<Scalars['String']>;
   role?: Maybe<UserRole>;
+  ids?: Maybe<Array<Scalars['ID']>>;
 };
 
 export type QueryMemberPositionsArgs = {
@@ -168,7 +168,7 @@ export type MutationCreateUserArgs = {
 };
 
 export type MutationDeleteUserArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 export type MutationCreateMemberPositionArgs = {
@@ -180,7 +180,7 @@ export type MutationUpdateMemberPositionArgs = {
 };
 
 export type MutationDeleteMemberPositionArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 export type MutationCreatePositionArgs = {
@@ -200,7 +200,7 @@ export type MutationCreateTeamArgs = {
 };
 
 export type MutationDeleteTeamArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 export type MutationCreateTeamMemberArgs = {
@@ -208,7 +208,7 @@ export type MutationCreateTeamMemberArgs = {
 };
 
 export type MutationDeleteTeamMemberArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 export type CreateUserInput = {
@@ -222,8 +222,8 @@ export type CreateUserInput = {
 export type CreateMemberPositionInput = {
   teamMemberId: Scalars['ID'];
   positionId: Scalars['ID'];
-  from: Scalars['Date'];
-  to?: Maybe<Scalars['Date']>;
+  from: Scalars['DateTime'];
+  to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
 };
 
@@ -231,8 +231,8 @@ export type UpdateMemberPositionInput = {
   id: Scalars['ID'];
   teamMemberId?: Maybe<Scalars['ID']>;
   positionId?: Maybe<Scalars['ID']>;
-  from?: Maybe<Scalars['Date']>;
-  to?: Maybe<Scalars['Date']>;
+  from?: Maybe<Scalars['DateTime']>;
+  to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
 };
 
@@ -269,19 +269,27 @@ export type CreateTeamMemberInput = {
 
 export const GraphQLOperations = {
   Query: {
+    positionSelectPositions: 'positionSelectPositions',
     teamSelectTeams: 'teamSelectTeams',
+    userSelectUsers: 'userSelectUsers',
     authMe: 'authMe',
     members: 'members',
     positions: 'positions',
     teams: 'teams',
     teamChildren: 'teamChildren',
     team: 'team',
+    teamMembers: 'teamMembers',
+    teamPositions: 'teamPositions',
   },
   Mutation: {
     createMember: 'createMember',
+    deletePosition: 'deletePosition',
     createPosition: 'createPosition',
     updatePosition: 'updatePosition',
-    deletePosition: 'deletePosition',
+    createTeamMember: 'createTeamMember',
+    deleteTeamPosition: 'deleteTeamPosition',
+    createTeamPosition: 'createTeamPosition',
+    updateTeamPosition: 'updateTeamPosition',
   },
   Fragment: {
     teamsListFields: 'teamsListFields',

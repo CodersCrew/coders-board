@@ -53,7 +53,9 @@ const Positions = () => {
           ))}
         </CardsGrid>
       </Box>
-      {positionModal.isMounted && <PositionModal {...positionModal.props} />}
+      {positionModal.isMounted && (
+        <PositionModal visible={positionModal.isVisible} data={positionModal.data} onCancel={positionModal.close} />
+      )}
     </>
   );
 };

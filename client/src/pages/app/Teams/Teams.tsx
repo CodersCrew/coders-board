@@ -1,9 +1,10 @@
 import React from 'react';
 
-import { useTeamsQuery } from './Teams.apollo';
-import { TeamsList } from './TeamsList';
 import { Box } from '@/components/atoms';
 import { PageHeader } from '@/components/molecules';
+
+import { useTeamsQuery } from './Teams.apollo';
+import { TeamsList } from './TeamsList';
 
 const Teams = () => {
   const { loading, data } = useTeamsQuery();

@@ -1,0 +1,3 @@
+mutation deleteTeamPosition($id: ID!) {
+  deleteMemberPosition(id: $id)
+}

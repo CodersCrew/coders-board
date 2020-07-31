@@ -53,20 +53,45 @@ export class TeamMembersService {
       this.teamsService.findByIdOrThrow(teamId),
     ]);
 
-    const googleId = await this.gsuiteService.createMember({
+    if (team.parentId) {
+      try {
+        await this.teamMemberRepository.findOneOrFail({ where: { teamId: team.parentId, userId } });
+      } catch {
+        throw new BadRequestException('User must be a member of parent team before he can join its child team');
+      }
+    }
+
+    await this.gsuiteService.createMember({
       googleGroupId: team.googleId,
       userEmail: user.primaryEmail,
       role,
     });
 
-    return this.teamMemberRepository.save({ user: Promise.resolve(user), team: Promise.resolve(team), role, googleId });
+    return this.teamMemberRepository.save({ userId, teamId, role });
   }
 
   async delete(teamMemberId: string): Promise<boolean> {
     const teamMember = await this.findByIdOrThrow(teamMemberId);
-    const team = await this.teamsService.findByIdOrThrow(teamMember.teamId);
+    const team = await teamMember.team;
+    const user = await teamMember.user;
 
-    await this.gsuiteService.deleteMember({ googleGroupId: team.googleId, googleMemberId: teamMember.googleId });
+    if (!team.parentId) {
+      const children = await team.children;
+
+      for (const childTeam of children) {
+        const memberInChildTeam = await this.teamMemberRepository.findOne({
+          where: { teamId: childTeam.id, userId: teamMember.userId },
+        });
+
+        if (memberInChildTeam) {
+          throw new BadRequestException(
+            'You cannot remove member of parent team if he is also a member of its child team',
+          );
+        }
+      }
+    }
+
+    await this.gsuiteService.deleteMember({ googleGroupId: team.googleId, googleUserId: user.googleId });
     await this.teamMemberRepository.delete(teamMemberId);
 
     return true;

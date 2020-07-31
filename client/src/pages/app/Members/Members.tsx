@@ -3,13 +3,14 @@ import { DeleteOutlined, MoreOutlined, PlusOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown, Input, Menu, Table } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 
-import { AddMemberModal } from './AddMemberModal';
-import { MembersQuery, useMembersQuery } from './Members.apollo';
 import { Box, Button, Icon, Paragraph } from '@/components/atoms';
 import { Card, PageHeader } from '@/components/molecules';
 import { RoleSelect } from '@/components/selects';
 import { useToggle } from '@/hooks/useToggle';
 import { UserRole } from '@/typings/graphql';
+
+import { AddMemberModal } from './AddMemberModal';
+import { MembersQuery, useMembersQuery } from './Members.apollo';
 
 type Columns = ColumnsType<MembersQuery['users'][number]>;
 
@@ -91,7 +92,6 @@ const Members = () => {
             columns={columns}
             rowKey="id"
             size="small"
-            pagination={{ pageSize: 10 }}
             scroll={{ x: 'max-content' }}
           />
         </Card>

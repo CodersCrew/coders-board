@@ -40,16 +40,18 @@ export class GsuiteService {
       maxResults: 500,
     });
 
-    return response.data.users.map(user => ({
-      firstName: user.name.givenName,
-      lastName: user.name.familyName,
-      googleId: user.id,
-      image: user.thumbnailPhotoUrl,
-      primaryEmail: user.primaryEmail,
-      recoveryEmail: user.recoveryEmail,
-      role: user.isAdmin ? UserRole.ADMIN : UserRole.USER,
-      status: UserStatus.ACTIVE,
-    }));
+    return response.data.users
+      .filter(user => !user.orgUnitPath.includes('Bots'))
+      .map(user => ({
+        firstName: user.name.givenName,
+        lastName: user.name.familyName,
+        googleId: user.id,
+        image: user.thumbnailPhotoUrl,
+        primaryEmail: user.primaryEmail,
+        recoveryEmail: user.recoveryEmail,
+        role: user.isAdmin ? UserRole.ADMIN : UserRole.USER,
+        status: UserStatus.ACTIVE,
+      }));
   }
 
   async createUser(input: CreateUserParams): Promise<string> {
@@ -108,8 +110,8 @@ export class GsuiteService {
     return response.data.id;
   }
 
-  async deleteMember({ googleGroupId, googleMemberId }: DeleteMemberParams): Promise<boolean> {
-    await this.admin.members.delete({ groupKey: googleGroupId, memberKey: googleMemberId });
+  async deleteMember({ googleGroupId, googleUserId }: DeleteMemberParams): Promise<boolean> {
+    await this.admin.members.delete({ groupKey: googleGroupId, memberKey: googleUserId });
 
     return true;
   }

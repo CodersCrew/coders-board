@@ -1,6 +1,7 @@
 import styled from '@emotion/styled';
 import { Card as AntCard } from 'antd';
 import { CardProps as AntCardProps } from 'antd/lib/card';
+import { omit, without } from 'lodash';
 import {
   border,
   BorderProps,
@@ -18,7 +19,6 @@ import {
   SpaceProps,
 } from 'styled-system';
 
-import { omit } from '@/utils/object';
 import { omitProps } from '@/utils/styling';
 
 export type CardProps = AntCardProps &
@@ -32,11 +32,9 @@ export type CardProps = AntCardProps &
 const mainCardSystem = compose(margin, shadow, border);
 const cardBodySystem = compose(padding, flexbox, position);
 const splitSystem = layout;
+const styledSystemPropNames = [...mainCardSystem.propNames, ...cardBodySystem.propNames, ...splitSystem.propNames];
 
-const shouldForwardProp = omitProps(
-  [...mainCardSystem.propNames, ...cardBodySystem.propNames, ...splitSystem.propNames],
-  ['size'],
-);
+const shouldForwardProp = omitProps(without(styledSystemPropNames, 'size'));
 
 export const Card = styled(AntCard, { shouldForwardProp })<CardProps>(props => {
   const { display, ...layoutProps } = omit(splitSystem(props), ['size']);

@@ -1,5 +1,5 @@
 import { UseGuards } from '@nestjs/common';
-import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AdminGuard } from '../common/guards/admin.guard';
 import { AuthGuard } from '../common/guards/auth.guard';
@@ -52,7 +52,7 @@ export class TeamsResolver {
 
   @Mutation(returns => Boolean)
   @UseGuards(AdminGuard)
-  deleteTeam(@Args('id') teamId: string) {
+  deleteTeam(@Args('id', { type: () => ID }) teamId: string) {
     return this.teamsService.delete(teamId);
   }
 }

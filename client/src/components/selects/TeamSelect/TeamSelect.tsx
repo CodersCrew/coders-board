@@ -1,10 +1,11 @@
 import React from 'react';
 import { Select } from 'antd';
 import { SelectProps } from 'antd/lib/select';
-import { useField } from 'formik';
+
+import { CFC } from '@/typings/components';
+import { selectToFormikSelect } from '@/utils/forms';
 
 import { useTeamSelectTeamsQuery } from './TeamSelect.apollo';
-import { CFC } from '@/typings/components';
 
 type ValueType = string | undefined;
 
@@ -24,8 +25,4 @@ export const TeamSelect: CFC<TeamSelectProps> = props => {
   return <Select {...props} loading={loading} onChange={handleChange} options={options} optionFilterProp="label" />;
 };
 
-export const FormikTeamSelect: CFC<TeamSelectProps & { name: string }> = ({ name, ...props }) => {
-  const [field, , helpers] = useField<ValueType>(name);
-
-  return <TeamSelect onSelect={v => helpers.setValue(v)} onBlur={field.onBlur} value={field.value} {...props} />;
-};
+export const FormikTeamSelect = selectToFormikSelect(TeamSelect);

@@ -6,14 +6,14 @@ import { MemberPosition } from '../member-positions/member-position.model';
 import { TeamMember } from '../team-members/team-member.model';
 
 export enum UserStatus {
-  PENDING = 'pending',
-  ACTIVE = 'active',
-  INACTIVE = 'inactive',
+  PENDING = 'PENDING',
+  ACTIVE = 'ACTIVE',
+  INACTIVE = 'INACTIVE',
 }
 
 export enum UserRole {
-  ADMIN = 'admin',
-  USER = 'user',
+  ADMIN = 'ADMIN',
+  USER = 'USER',
 }
 
 registerEnumType(UserStatus, {
