@@ -20,7 +20,3 @@ query teamPositions($teamId: ID!) {
     }
   }
 }
-
-mutation deleteTeamPosition($id: ID!) {
-  deleteMemberPosition(id: $id)
-}

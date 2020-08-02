@@ -1,15 +1,6 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useEffectOnce } from 'react-use';
+import { Navigate } from 'react-router-dom';
 
-const LoginSuccess = () => {
-  const navigate = useNavigate();
-
-  useEffectOnce(() => {
-    navigate('/app/members');
-  });
-
-  return <div>LoginSuccess page</div>;
-};
+const LoginSuccess = () => <Navigate to="/app/members" />;
 
 export default LoginSuccess;

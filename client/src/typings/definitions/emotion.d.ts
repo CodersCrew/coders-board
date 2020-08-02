@@ -44,6 +44,7 @@ declare module '@emotion/react' {
         light: string;
         body: string;
         component: string;
+        dark: string;
       };
       border: {
         base: string;

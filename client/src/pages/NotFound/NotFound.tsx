@@ -1,5 +1,5 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
+import { Navigate, useNavigate } from 'react-router-dom';
 
 import { Button, Title } from '@/components/atoms';
 import { useAuth } from '@/hooks/useAuth';
@@ -8,15 +8,17 @@ const NotFound = () => {
   const { isAuthorized } = useAuth();
   const navigate = useNavigate();
 
-  const handleClick = () => {
-    navigate(isAuthorized ? '/app/members' : '/login');
-  };
+  if (!isAuthorized) {
+    return <Navigate to="/login" />;
+  }
+
+  const handleClick = () => navigate('/app/members');
 
   return (
     <div>
       <Title>404 Not found</Title>
       <Button type="primary" onClick={handleClick}>
-        {isAuthorized ? 'Back to dashboard' : 'Back to login page'}
+        Back to dashboard
       </Button>
     </div>
   );

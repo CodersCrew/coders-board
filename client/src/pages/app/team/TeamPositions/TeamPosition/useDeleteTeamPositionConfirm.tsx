@@ -7,7 +7,7 @@ import { confirmModal } from '@/components/molecules';
 import { GraphQLOperations } from '@/typings/graphql';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
-import { useDeleteTeamPositionMutation } from '../TeamPositions.apollo';
+import { useDeleteTeamPositionMutation } from './TeamPosition.apollo';
 
 type Params = {
   positionName: string;

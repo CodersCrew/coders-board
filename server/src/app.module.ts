@@ -4,13 +4,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 
 import { AuthModule } from './auth/auth.module';
+import { ChapterModule } from './chapter/chapter.module';
+import { ClanModule } from './clan/clan.module';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { GsuiteModule } from './gsuite/gsuite.module';
-import { MemberPositionsModule } from './member-positions/member-positions.module';
+import { GuildMemberModule } from './guild-member/guild-member.module';
+import { GuildPositionModule } from './guild-position/guild-position.module';
+import { GuildModule } from './guild/guild.module';
 import { PositionsModule } from './positions/positions.module';
-import { TeamMembersModule } from './team-members/team-members.module';
-import { TeamsModule } from './teams/teams.module';
+import { SquadMemberModule } from './squad-member/squad-member.module';
+import { SquadPositionModule } from './squad-position/squad-position.module';
+import { SquadModule } from './squad/squad.module';
 import { TypeOrmConfigService } from './typeorm-config.service';
 import { UsersModule } from './users/users.module';
 
@@ -28,11 +33,16 @@ import { UsersModule } from './users/users.module';
     }),
     UsersModule,
     AuthModule,
-    TeamsModule,
-    TeamMembersModule,
     PositionsModule,
-    MemberPositionsModule,
     GsuiteModule,
+    SquadMemberModule,
+    SquadPositionModule,
+    GuildPositionModule,
+    GuildMemberModule,
+    GuildModule,
+    ClanModule,
+    SquadModule,
+    ChapterModule,
   ],
   controllers: [],
 })

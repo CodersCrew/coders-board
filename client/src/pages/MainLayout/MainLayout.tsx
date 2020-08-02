@@ -3,6 +3,8 @@ import { Outlet } from 'react-router-dom';
 
 import { useAuth } from '@/hooks/useAuth';
 
+import { LoadingScreen } from './LoadingScreen';
+
 const MainLayout = () => {
   const [initialized, setInitialized] = useState(false);
   const { loading } = useAuth();
@@ -13,7 +15,7 @@ const MainLayout = () => {
     }
   }, [loading]);
 
-  return initialized ? <Outlet /> : <div>Loading...</div>;
+  return initialized ? <Outlet /> : <LoadingScreen />;
 };
 
 export default MainLayout;

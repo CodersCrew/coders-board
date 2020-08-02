@@ -7,3 +7,7 @@ query authMe {
     role
   }
 }
+
+mutation signOut {
+	signOut
+}

@@ -104,6 +104,7 @@ type Mutation {
   createUser(data: CreateUserInput!): User!
   deleteUser(id: ID!): Boolean!
   migrateGoogleUsers: [User!]!
+  signOut: Boolean!
   createMemberPosition(data: CreateMemberPositionInput!): MemberPosition!
   updateMemberPosition(data: UpdateMemberPositionInput!): MemberPosition!
   deleteMemberPosition(id: ID!): Boolean!

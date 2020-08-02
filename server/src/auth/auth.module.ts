@@ -5,6 +5,7 @@ import { PassportModule } from '@nestjs/passport';
 import { ConfigService } from '../config/config.service';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
+import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
 
@@ -20,7 +21,7 @@ import { GoogleStrategy } from './google.strategy';
     }),
     UsersModule,
   ],
-  providers: [AuthService, GoogleStrategy],
+  providers: [AuthResolver, AuthService, GoogleStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

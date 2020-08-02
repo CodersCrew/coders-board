@@ -1,16 +1,22 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
 import { ContactsOutlined, PartitionOutlined, TeamOutlined } from '@ant-design/icons';
+import styled from '@emotion/styled';
 import { Layout, Menu } from 'antd';
 import { SiderProps } from 'antd/lib/layout';
 import { MenuProps } from 'antd/lib/menu';
 
-import { Box } from '@/components/atoms';
 import { CFC } from '@/typings/components';
 
 type SidebarProps = SiderProps & {
   collapsed: boolean;
 };
+
+const Logo = styled.img({
+  width: 'calc(100% - 32px)',
+  height: 32,
+  margin: 16,
+});
 
 const useSelectedKeys = () => {
   const location = useLocation();
@@ -28,9 +34,11 @@ export const Sidebar: CFC<SidebarProps> = props => {
     navigate(`/app/${key}`);
   };
 
+  const logoSrc = `/logo-${props.collapsed ? 'short' : 'long'}.svg`;
+
   return (
     <Layout.Sider trigger={null} collapsible {...props}>
-      <Box height={32} backgroundColor="rgba(255, 255, 255, 0.2)" margin={16} />
+      <Logo src={logoSrc} alt="CodersBoard logo" />
       <Menu theme="dark" mode="inline" onClick={handleItemClick} selectedKeys={selectedKeys}>
         <Menu.Item key="members" icon={<ContactsOutlined />}>
           Members

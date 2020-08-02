@@ -5,7 +5,7 @@ import { Avatar, Tooltip } from 'antd';
 import { pick } from 'lodash';
 
 import { Card, CardMeta } from '@/components/molecules';
-import { useIsAdmin } from '@/hooks/useAuth';
+import { useAuthorizedUser } from '@/hooks/useAuth';
 import { CFC } from '@/typings/components';
 import { WithId } from '@/typings/enhancers';
 import { CreatePositionInput } from '@/typings/graphql';
@@ -29,7 +29,7 @@ const StyledCard = styled(Card)({
 });
 
 export const Position: CFC<PositionProps> = props => {
-  const { isAdmin } = useIsAdmin();
+  const { isAdmin } = useAuthorizedUser();
   const { deletePositionConfirm } = useDeletePositionConfirm(pick(props, ['id', 'name']));
 
   const openUpdateModal = () => {

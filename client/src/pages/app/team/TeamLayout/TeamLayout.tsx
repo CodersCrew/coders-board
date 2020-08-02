@@ -6,8 +6,8 @@ import { BreadcrumbProps } from 'antd/lib/breadcrumb';
 import { TabsProps } from 'antd/lib/tabs';
 
 import { PageHeader } from '@/components/molecules';
-import { TeamKind } from '@/typings/graphql';
 import { breadcrumbItemRender } from '@/utils/breadcrumbItemRender';
+import { canHaveChildren, getChildrenName } from '@/utils/platform';
 
 import { useTeamQuery } from './TeamLayout.apollo';
 
@@ -26,7 +26,7 @@ const TeamLayout = () => {
 
   if (!data) return null;
 
-  const { children, name, image, description, kind, parent } = data.team;
+  const { name, image, description, kind, parent } = data.team;
 
   const routes: BreadcrumbProps['routes'] = [];
 
@@ -52,7 +52,7 @@ const TeamLayout = () => {
   const footer = (
     <Tabs activeKey={location.pathname.split('/').pop()} onChange={handleItemChange}>
       <Tabs.TabPane tab="Members" key="members" />
-      {children.length && <Tabs.TabPane tab={kind === TeamKind.Guild ? 'Clans' : 'Chapters'} key="children" />}
+      {canHaveChildren(kind) && <Tabs.TabPane tab={getChildrenName(kind)} key="children" />}
       <Tabs.TabPane tab="Positions" key="positions" />
     </Tabs>
   );

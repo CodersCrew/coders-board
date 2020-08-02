@@ -151,6 +151,7 @@ export type Mutation = {
   createUser: User;
   deleteUser: Scalars['Boolean'];
   migrateGoogleUsers: Array<User>;
+  signOut: Scalars['Boolean'];
   createMemberPosition: MemberPosition;
   updateMemberPosition: MemberPosition;
   deleteMemberPosition: Scalars['Boolean'];
@@ -282,6 +283,7 @@ export const GraphQLOperations = {
     teamPositions: 'teamPositions',
   },
   Mutation: {
+    signOut: 'signOut',
     createMember: 'createMember',
     deletePosition: 'deletePosition',
     createPosition: 'createPosition',
