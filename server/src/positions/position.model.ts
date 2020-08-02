@@ -1,13 +1,28 @@
-import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Field, ID, ObjectType } from '@nestjs/graphql';
+import { Column, Entity, ManyToOne } from 'typeorm';
 
-import { ModelBase } from '../common/ModelBase';
-import { MemberPosition } from '../member-positions/member-position.model';
-import { Team } from '../teams/team.model';
+import { Clan } from '../clans/clan.model';
+import { BaseModel } from '../common/models/Base.model';
+import { Guild } from '../guilds/guild.model';
+
+@ObjectType()
+export class Area {
+  @Field(type => ID)
+  id: string;
+
+  @Field()
+  name: string;
+
+  @Field()
+  description: string;
+
+  @Field()
+  image: string;
+}
 
 @ObjectType()
 @Entity()
-export class Position extends ModelBase {
+export class Position extends BaseModel {
   @Field()
   @Column()
   name: string;
@@ -20,21 +35,18 @@ export class Position extends ModelBase {
   @Column({ nullable: true })
   image?: string;
 
-  @Field(type => Team, { nullable: true })
-  @ManyToOne(
-    type => Team,
-    team => team.positions,
-    { nullable: true },
-  )
-  team: Promise<Team>;
+  @ManyToOne(type => Clan, { nullable: true })
+  clan?: Promise<Clan>;
 
   @Column({ nullable: true })
-  teamId: string;
+  clanId?: string;
 
-  @Field(type => [MemberPosition])
-  @OneToMany(
-    type => MemberPosition,
-    memberPosition => memberPosition.position,
-  )
-  users: Promise<MemberPosition[]>;
+  @ManyToOne(type => Guild, { nullable: true })
+  guild?: Promise<Guild>;
+
+  @Column({ nullable: true })
+  guildId?: string;
+
+  @Field(type => Area, { nullable: true })
+  area?: Area;
 }

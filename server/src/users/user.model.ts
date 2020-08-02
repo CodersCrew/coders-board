@@ -1,9 +1,9 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Column, Entity, OneToMany } from 'typeorm';
 
-import { ModelBase } from '../common/ModelBase';
-import { MemberPosition } from '../member-positions/member-position.model';
-import { TeamMember } from '../team-members/team-member.model';
+import { BaseModel } from '../common/models/Base.model';
+import { GuildMember } from '../guild-members/guild-member.model';
+import { SquadMember } from '../squad-members/squad-member.model';
 
 export enum UserStatus {
   PENDING = 'PENDING',
@@ -26,7 +26,7 @@ registerEnumType(UserRole, {
 
 @ObjectType()
 @Entity()
-export class User extends ModelBase {
+export class User extends BaseModel {
   @Field()
   @Column()
   firstName: string;
@@ -63,13 +63,17 @@ export class User extends ModelBase {
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;
 
-  @Field(type => [TeamMember])
+  @Field(type => [GuildMember])
   @OneToMany(
-    type => TeamMember,
-    teamMamber => teamMamber.user,
+    type => GuildMember,
+    guildMember => guildMember.user,
   )
-  teams: TeamMember[];
+  guilds: Promise<GuildMember[]>;
 
-  @Field(type => [MemberPosition])
-  positions: MemberPosition[];
+  @Field(type => [SquadMember])
+  @OneToMany(
+    type => SquadMember,
+    squadMember => squadMember.user,
+  )
+  squads: Promise<SquadMember[]>;
 }

@@ -2,12 +2,55 @@
 # THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
 # ------------------------------------------------------
 
-type TeamMember {
+type Guild {
   id: ID!
-  user: User!
-  team: Team!
+  name: String!
+  description: String!
+  email: String!
+  googleId: String!
+  color: String!
+  image: String!
+  clans: [Clan!]!
+  members: [GuildMember!]!
+}
+
+type Clan {
+  id: ID!
+  name: String!
+  description: String!
+  email: String!
+  googleId: String!
+  image: String!
+  guild: Guild!
+  positions: [GuildPosition!]!
+}
+
+type GuildPosition {
+  id: ID!
+  from: DateTime!
+  to: DateTime
+  kind: GuildPositionKind!
+  member: GuildMember!
+  clan: Clan
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+enum GuildPositionKind {
+  MEMBER
+  LEADER
+  EXPERT
+}
+
+type GuildMember {
+  id: ID!
   role: TeamRole!
-  positions: [MemberPosition!]!
+  user: User!
+  guild: Guild!
+  positions: [GuildPosition!]!
 }
 
 enum TeamRole {
@@ -16,28 +59,33 @@ enum TeamRole {
   MEMBER
 }
 
-type Team {
+type Squad {
   id: ID!
-  googleId: String!
   name: String!
-  image: String!
   description: String!
   email: String!
+  googleId: String!
   color: String!
-  kind: TeamKind!
-  parent: Team
-  children: [Team!]!
-  positions: [Team!]!
-  members: [Team!]!
+  image: String!
+  members: [SquadMember!]!
+  chapters: [Chapter!]!
 }
 
-enum TeamKind {
-  TASKFORCE
-  GUILD
-  CLAN
-  SQUAD
-  CHAPTER
-  MANAGEMENT
+type Chapter {
+  id: ID!
+  name: String!
+  description: String!
+  email: String!
+  googleId: String!
+  squad: Squad!
+  positions: [SquadPosition!]!
+}
+
+type Area {
+  id: ID!
+  name: String!
+  description: String!
+  image: String!
 }
 
 type Position {
@@ -45,23 +93,26 @@ type Position {
   name: String!
   description: String!
   image: String
-  team: Position
-  users: [MemberPosition!]!
+  area: Area
 }
 
-type MemberPosition {
+type SquadPosition {
   id: ID!
   from: DateTime!
   to: DateTime
   notes: String
+  member: SquadMember!
+  chapter: Chapter
   position: Position!
-  teamMember: TeamMember!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
+type SquadMember {
+  id: ID!
+  role: TeamRole!
+  positions: [SquadPosition!]!
+  squad: Squad!
+  user: User!
+}
 
 type User {
   id: ID!
@@ -74,8 +125,8 @@ type User {
   googleId: String!
   status: UserStatus!
   role: UserRole!
-  teams: [TeamMember!]!
-  positions: [MemberPosition!]!
+  guilds: [GuildMember!]!
+  squads: [SquadMember!]!
 }
 
 enum UserStatus {
@@ -93,11 +144,6 @@ type Query {
   user(id: String!): User!
   me: User!
   users(search: String, role: UserRole, ids: [ID!]): [User!]!
-  memberPositions(teamMemberId: String = "true"): [MemberPosition!]!
-  positions(search: String, teamId: ID, global: Boolean): [Position!]!
-  teams(search: String, parentId: ID, kind: TeamKind): [Team!]!
-  team(id: ID!): Team!
-  teamMembers(nested: Boolean = true, teamId: ID!, role: TeamRole): [TeamMember!]!
 }
 
 type Mutation {
@@ -105,16 +151,6 @@ type Mutation {
   deleteUser(id: ID!): Boolean!
   migrateGoogleUsers: [User!]!
   signOut: Boolean!
-  createMemberPosition(data: CreateMemberPositionInput!): MemberPosition!
-  updateMemberPosition(data: UpdateMemberPositionInput!): MemberPosition!
-  deleteMemberPosition(id: ID!): Boolean!
-  createPosition(data: CreatePositionInput!): Position!
-  updatePosition(data: UpdatePositionInput!): Position!
-  deletePosition(id: ID!): Boolean!
-  createTeam(data: CreateTeamInput!): Team!
-  deleteTeam(id: ID!): Boolean!
-  createTeamMember(data: CreateTeamMemberInput!): TeamMember!
-  deleteTeamMember(id: ID!): Boolean!
 }
 
 input CreateUserInput {
@@ -123,52 +159,4 @@ input CreateUserInput {
   password: String!
   primaryEmail: String!
   recoveryEmail: String!
-}
-
-input CreateMemberPositionInput {
-  teamMemberId: ID!
-  positionId: ID!
-  from: DateTime!
-  to: DateTime
-  notes: String
-}
-
-input UpdateMemberPositionInput {
-  id: ID!
-  teamMemberId: ID
-  positionId: ID
-  from: DateTime
-  to: DateTime
-  notes: String
-}
-
-input CreatePositionInput {
-  name: String!
-  description: String = ""
-  image: String
-  teamId: ID
-}
-
-input UpdatePositionInput {
-  id: ID!
-  name: String
-  description: String
-  image: String
-  teamId: ID
-}
-
-input CreateTeamInput {
-  name: String!
-  email: String!
-  kind: TeamKind!
-  image: String
-  description: String
-  color: String
-  parentId: ID
-}
-
-input CreateTeamMemberInput {
-  userId: ID!
-  teamId: ID!
-  role: TeamRole
 }

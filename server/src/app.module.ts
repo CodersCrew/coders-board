@@ -4,18 +4,18 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 
 import { AuthModule } from './auth/auth.module';
-import { ChapterModule } from './chapter/chapter.module';
-import { ClanModule } from './clan/clan.module';
+import { ChaptersModule } from './chapters/chapters.module';
+import { ClansModule } from './clans/clans.module';
 import { ConfigModule } from './config/config.module';
 import { ConfigService } from './config/config.service';
 import { GsuiteModule } from './gsuite/gsuite.module';
-import { GuildMemberModule } from './guild-member/guild-member.module';
-import { GuildPositionModule } from './guild-position/guild-position.module';
-import { GuildModule } from './guild/guild.module';
+import { GuildMembersModule } from './guild-members/guild-members.module';
+import { GuildPositionsModule } from './guild-positions/guild-positions.module';
+import { GuildsModule } from './guilds/guilds.module';
 import { PositionsModule } from './positions/positions.module';
-import { SquadMemberModule } from './squad-member/squad-member.module';
-import { SquadPositionModule } from './squad-position/squad-position.module';
-import { SquadModule } from './squad/squad.module';
+import { SquadMembersModule } from './squad-members/squad-members.module';
+import { SquadPositionsModule } from './squad-positions/squad-positions.module';
+import { SquadsModule } from './squads/squads.module';
 import { TypeOrmConfigService } from './typeorm-config.service';
 import { UsersModule } from './users/users.module';
 
@@ -35,14 +35,14 @@ import { UsersModule } from './users/users.module';
     AuthModule,
     PositionsModule,
     GsuiteModule,
-    SquadMemberModule,
-    SquadPositionModule,
-    GuildPositionModule,
-    GuildMemberModule,
-    GuildModule,
-    ClanModule,
-    SquadModule,
-    ChapterModule,
+    ChaptersModule,
+    ClansModule,
+    GuildsModule,
+    GuildMembersModule,
+    GuildPositionsModule,
+    SquadsModule,
+    SquadMembersModule,
+    SquadPositionsModule,
   ],
   controllers: [],
 })
