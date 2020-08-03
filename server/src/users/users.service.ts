@@ -69,7 +69,7 @@ export class UsersService {
   async delete(userId: string): Promise<boolean> {
     const userRecord = await this.findByIdOrThrow(userId);
 
-    await this.gsuiteService.deleteUser(userRecord.googleId);
+    await this.gsuiteService.deleteUser({ id: userRecord.googleId });
     await this.userRepository.delete(userId);
 
     return true;

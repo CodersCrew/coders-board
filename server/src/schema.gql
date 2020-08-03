@@ -21,7 +21,7 @@ type Clan {
   email: String!
   googleId: String!
   image: String!
-  guild: Guild!
+  guild: [Guild!]!
   positions: [GuildPosition!]!
 }
 
@@ -77,7 +77,7 @@ type Chapter {
   description: String!
   email: String!
   googleId: String!
-  squad: Squad!
+  squad: [Squad!]!
   positions: [SquadPosition!]!
 }
 
@@ -144,6 +144,14 @@ type Query {
   user(id: String!): User!
   me: User!
   users(search: String, role: UserRole, ids: [ID!]): [User!]!
+  chapters(search: String): [Chapter!]!
+  chapter(id: ID!): Chapter!
+  clans(search: String): [Clan!]!
+  clan(id: ID!): Clan!
+  guilds(search: String): [Guild!]!
+  guild(id: ID!): Guild!
+  squads(search: String): [Squad!]!
+  squad(id: ID!): Squad!
 }
 
 type Mutation {
@@ -151,6 +159,18 @@ type Mutation {
   deleteUser(id: ID!): Boolean!
   migrateGoogleUsers: [User!]!
   signOut: Boolean!
+  createChapter(data: CreateChapterInput!): Chapter!
+  updateChapter(data: UpdateChapterInput!): Chapter!
+  deleteChapter(id: ID!): Boolean!
+  createClan(data: CreateClanInput!): Clan!
+  updateClan(data: UpdateClanInput!): Clan!
+  deleteClan(id: ID!): Boolean!
+  createGuild(data: CreateGuildInput!): Guild!
+  updateGuild(data: UpdateGuildInput!): Guild!
+  deleteGuild(id: ID!): Boolean!
+  createSquad(data: CreateSquadInput!): Squad!
+  updateSquad(data: UpdateSquadInput!): Squad!
+  deleteSquad(id: ID!): Boolean!
 }
 
 input CreateUserInput {
@@ -159,4 +179,70 @@ input CreateUserInput {
   password: String!
   primaryEmail: String!
   recoveryEmail: String!
+}
+
+input CreateChapterInput {
+  name: String!
+  email: String!
+  squadId: ID!
+  description: String = ""
+}
+
+input UpdateChapterInput {
+  name: String!
+  email: String!
+  squadId: ID!
+  description: String = ""
+  id: ID!
+}
+
+input CreateClanInput {
+  name: String!
+  email: String!
+  image: String!
+  guildId: ID!
+  description: String = ""
+}
+
+input UpdateClanInput {
+  name: String!
+  email: String!
+  image: String!
+  guildId: ID!
+  description: String = ""
+  id: ID!
+}
+
+input CreateGuildInput {
+  name: String!
+  email: String!
+  image: String!
+  color: String!
+  description: String = ""
+}
+
+input UpdateGuildInput {
+  name: String!
+  email: String!
+  image: String!
+  color: String!
+  description: String = ""
+  id: ID!
+}
+
+input CreateSquadInput {
+  name: String!
+  email: String!
+  image: String!
+  color: String!
+  description: String = ""
+}
+
+input UpdateSquadInput {
+  name: String!
+  email: String!
+  image: String!
+  color: String!
+  description: String = ""
+  id: ID!
 }

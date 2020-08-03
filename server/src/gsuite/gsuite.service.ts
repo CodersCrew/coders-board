@@ -8,7 +8,12 @@ import { UserRole, UserStatus } from '../users/user.model';
 import { CreateGroupParams } from './interfaces/create-group.params';
 import { CreateMemberParams } from './interfaces/create-member.params';
 import { CreateUserParams } from './interfaces/create-user.params';
+import { DeleteGroupParams } from './interfaces/delete-group.params';
 import { DeleteMemberParams } from './interfaces/delete-member.params';
+import { DeleteUserParams } from './interfaces/delete-user.params';
+import { UpdateGroupParams } from './interfaces/update-group.params';
+import { UpdateMemberParams } from './interfaces/update-member.params';
+import { UpdateUserParams } from './interfaces/update-user.params';
 
 @Injectable()
 export class GsuiteService {
@@ -77,8 +82,14 @@ export class GsuiteService {
     return response.data.id;
   }
 
-  async deleteUser(googleId: string): Promise<boolean> {
-    await this.admin.users.delete({ userKey: googleId });
+  async updateUser({ id, ...input }: UpdateUserParams): Promise<boolean> {
+    await this.admin.users.update({ userKey: id, requestBody: input });
+
+    return true;
+  }
+
+  async deleteUser({ id }: DeleteUserParams): Promise<boolean> {
+    await this.admin.users.delete({ userKey: id });
 
     return true;
   }
@@ -95,23 +106,46 @@ export class GsuiteService {
     return response.data.id;
   }
 
-  async deleteGroup(teamId: string): Promise<boolean> {
-    await this.admin.groups.delete({ groupKey: teamId });
+  async updateGroup({ id, ...input }: UpdateGroupParams): Promise<boolean> {
+    await this.admin.groups.update({
+      groupKey: id,
+      requestBody: {
+        name: input.name,
+        description: input.description,
+        email: input.email,
+      },
+    });
 
     return true;
   }
 
-  async createMember({ googleGroupId, userEmail, role }: CreateMemberParams) {
+  async deleteGroup({ id }: DeleteGroupParams): Promise<boolean> {
+    await this.admin.groups.delete({ groupKey: id });
+
+    return true;
+  }
+
+  async createMember({ groupId, userId, role }: CreateMemberParams): Promise<string> {
     const response = await this.admin.members.insert({
-      groupKey: googleGroupId,
-      requestBody: { email: userEmail, role },
+      groupKey: groupId,
+      requestBody: { id: userId, role },
     });
 
     return response.data.id;
   }
 
-  async deleteMember({ googleGroupId, googleUserId }: DeleteMemberParams): Promise<boolean> {
-    await this.admin.members.delete({ groupKey: googleGroupId, memberKey: googleUserId });
+  async updateMember({ groupId, userId, role }: UpdateMemberParams): Promise<boolean> {
+    await this.admin.members.update({
+      groupKey: groupId,
+      memberKey: userId,
+      requestBody: { role },
+    });
+
+    return true;
+  }
+
+  async deleteMember({ groupId, userId }: DeleteMemberParams): Promise<boolean> {
+    await this.admin.members.delete({ groupKey: groupId, memberKey: userId });
 
     return true;
   }
