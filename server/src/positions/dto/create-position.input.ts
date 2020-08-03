@@ -13,7 +13,7 @@ export class CreatePositionInput implements Partial<Position> {
   @Field({ nullable: true, defaultValue: '' })
   @IsOptional()
   @IsString()
-  description?: string;
+  description: string;
 
   @Field({ nullable: true })
   @IsOptional()
@@ -23,5 +23,10 @@ export class CreatePositionInput implements Partial<Position> {
   @Field(type => ID, { nullable: true })
   @IsOptional()
   @IsUUID()
-  teamId?: string;
+  clanId?: string;
+
+  @Field(type => ID, { nullable: true })
+  @IsOptional()
+  @IsUUID()
+  guildId?: string;
 }

@@ -1,5 +1,7 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
+import { AuthGuard } from '../common/guards/auth.guard';
 import { GuildPosition } from '../guild-positions/guild-position.model';
 import { Guild } from '../guilds/guild.model';
 import { Clan } from './clan.model';
@@ -11,6 +13,7 @@ import { GetClansArgs } from './dto/get-clans.args';
 import { UpdateClanInput } from './dto/update-clan.input';
 
 @Resolver(of => Clan)
+@UseGuards(AuthGuard)
 export class ClansResolver {
   constructor(private readonly clansService: ClansService) {}
 

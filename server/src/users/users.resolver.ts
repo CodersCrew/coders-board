@@ -42,7 +42,7 @@ export class UsersResolver {
   }
 
   @Mutation(returns => [User])
-  @UseGuards(AdminGuard)
+  // @UseGuards(AdminGuard)
   migrateGoogleUsers() {
     return this.usersService.migrateGoogleUsers();
   }

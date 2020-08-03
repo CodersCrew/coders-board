@@ -20,6 +20,8 @@ export class Area {
   image: string;
 }
 
+export const areaKeys: (keyof Area)[] = ['id', 'name', 'description', 'image'];
+
 @ObjectType()
 @Entity()
 export class Position extends BaseModel {

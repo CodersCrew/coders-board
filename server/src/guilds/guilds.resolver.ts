@@ -1,6 +1,8 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { Clan } from '../clans/clan.model';
+import { AuthGuard } from '../common/guards/auth.guard';
 import { GuildMember } from '../guild-members/guild-member.model';
 import { CreateGuildInput } from './dto/create-guild.input';
 import { DeleteGuildArgs } from './dto/delete-guild.args';
@@ -11,6 +13,7 @@ import { Guild } from './guild.model';
 import { GuildsService } from './guilds.service';
 
 @Resolver(of => Guild)
+@UseGuards(AuthGuard)
 export class GuildsResolver {
   constructor(private readonly guildsService: GuildsService) {}
 

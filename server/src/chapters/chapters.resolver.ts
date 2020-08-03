@@ -1,5 +1,7 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
+import { AuthGuard } from '../common/guards/auth.guard';
 import { SquadPosition } from '../squad-positions/squad-position.model';
 import { Squad } from '../squads/squad.model';
 import { Chapter } from './chapter.model';
@@ -11,6 +13,7 @@ import { GetChaptersArgs } from './dto/get-chapters.args';
 import { UpdateChapterInput } from './dto/update-chapter.input';
 
 @Resolver(of => Chapter)
+@UseGuards(AuthGuard)
 export class ChaptersResolver {
   constructor(private readonly chaptersService: ChaptersService) {}
 

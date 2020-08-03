@@ -1,6 +1,8 @@
+import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { Chapter } from '../chapters/chapter.model';
+import { AuthGuard } from '../common/guards/auth.guard';
 import { SquadMember } from '../squad-members/squad-member.model';
 import { CreateSquadInput } from './dto/create-squad.input';
 import { DeleteSquadArgs } from './dto/delete-squad.args';
@@ -11,6 +13,7 @@ import { Squad } from './squad.model';
 import { SquadsService } from './squads.service';
 
 @Resolver(of => Squad)
+@UseGuards(AuthGuard)
 export class SquadsResolver {
   constructor(private readonly squadsService: SquadsService) {}
 

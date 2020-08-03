@@ -150,6 +150,7 @@ type Query {
   clan(id: ID!): Clan!
   guilds(search: String): [Guild!]!
   guild(id: ID!): Guild!
+  positions(search: String, guildId: ID, clanId: ID): [Position!]!
   squads(search: String): [Squad!]!
   squad(id: ID!): Squad!
 }
@@ -168,6 +169,9 @@ type Mutation {
   createGuild(data: CreateGuildInput!): Guild!
   updateGuild(data: UpdateGuildInput!): Guild!
   deleteGuild(id: ID!): Boolean!
+  createPosition(data: CreatePositionInput!): Position!
+  updatePosition(data: UpdatePositionInput!): Position!
+  deletePosition(id: ID!): Boolean!
   createSquad(data: CreateSquadInput!): Squad!
   updateSquad(data: UpdateSquadInput!): Squad!
   deleteSquad(id: ID!): Boolean!
@@ -227,6 +231,23 @@ input UpdateGuildInput {
   image: String!
   color: String!
   description: String = ""
+  id: ID!
+}
+
+input CreatePositionInput {
+  name: String!
+  description: String = ""
+  image: String
+  clanId: ID
+  guildId: ID
+}
+
+input UpdatePositionInput {
+  name: String!
+  description: String = ""
+  image: String
+  clanId: ID
+  guildId: ID
   id: ID!
 }
 

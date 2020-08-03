@@ -1,5 +1,5 @@
 import { ArgsType, Field, ID } from '@nestjs/graphql';
-import { IsBoolean, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 @ArgsType()
 export class GetPositionsArgs {
@@ -11,10 +11,10 @@ export class GetPositionsArgs {
   @Field(type => ID, { nullable: true })
   @IsOptional()
   @IsUUID()
-  teamId?: string;
+  guildId?: string;
 
-  @Field({ nullable: true })
+  @Field(type => ID, { nullable: true })
   @IsOptional()
-  @IsBoolean()
-  global?: boolean;
+  @IsUUID()
+  clanId?: string;
 }

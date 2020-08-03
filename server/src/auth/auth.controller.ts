@@ -29,7 +29,8 @@ export class AuthController {
           httpOnly: true,
         })
         .redirect(`${this.configService.values.CLIENT_URL}/login/success`);
-    } catch {
+    } catch (ex) {
+      console.error(ex);
       return res.redirect(`${this.configService.values.CLIENT_URL}/login/failure`);
     }
 
