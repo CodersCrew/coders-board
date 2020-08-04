@@ -29,6 +29,7 @@ type GuildPosition {
   id: ID!
   from: DateTime!
   to: DateTime
+  notes: String
   kind: GuildPositionKind!
   member: GuildMember!
   clan: Clan
@@ -50,7 +51,7 @@ type GuildMember {
   role: TeamRole!
   user: User!
   guild: Guild!
-  positions: [GuildPosition!]!
+  positions: GuildPosition!
 }
 
 enum TeamRole {
@@ -109,7 +110,7 @@ type SquadPosition {
 type SquadMember {
   id: ID!
   role: TeamRole!
-  positions: [SquadPosition!]!
+  positions: SquadPosition!
   squad: Squad!
   user: User!
 }
@@ -118,6 +119,7 @@ type User {
   id: ID!
   firstName: String!
   lastName: String!
+  fullName: String!
   primaryEmail: String!
   recoveryEmail: String!
   phone: String!
@@ -148,9 +150,12 @@ type Query {
   chapter(id: ID!): Chapter!
   clans(search: String): [Clan!]!
   clan(id: ID!): Clan!
+  guildMembers(guildId: String!): [GuildMember!]!
+  guildPositions(guildId: String!, memberId: String): [GuildPosition!]!
   guilds(search: String): [Guild!]!
   guild(id: ID!): Guild!
   positions(search: String, guildId: ID, clanId: ID): [Position!]!
+  squadMembers(squadId: String!): [SquadMember!]!
   squads(search: String): [Squad!]!
   squad(id: ID!): Squad!
 }
@@ -166,12 +171,21 @@ type Mutation {
   createClan(data: CreateClanInput!): Clan!
   updateClan(data: UpdateClanInput!): Clan!
   deleteClan(id: ID!): Boolean!
+  createGuildMember(data: CreateGuildMemberInput!): GuildMember!
+  updateGuildMember(data: UpdateGuildMemberInput!): GuildMember!
+  deleteGuildMember(id: ID!): Boolean!
+  createGuildPosition(data: CreateGuildPositionInput!): GuildPosition!
+  updateGuildPosition(data: UpdateGuildPositionInput!): GuildPosition!
+  deleteGuildPosition(id: ID!): Boolean!
   createGuild(data: CreateGuildInput!): Guild!
   updateGuild(data: UpdateGuildInput!): Guild!
   deleteGuild(id: ID!): Boolean!
   createPosition(data: CreatePositionInput!): Position!
   updatePosition(data: UpdatePositionInput!): Position!
   deletePosition(id: ID!): Boolean!
+  createSquadMember(data: CreateSquadMemberInput!): SquadMember!
+  updateSquadMember(data: UpdateSquadMemberInput!): SquadMember!
+  deleteSquadMember(id: ID!): Boolean!
   createSquad(data: CreateSquadInput!): Squad!
   updateSquad(data: UpdateSquadInput!): Squad!
   deleteSquad(id: ID!): Boolean!
@@ -217,6 +231,34 @@ input UpdateClanInput {
   id: ID!
 }
 
+input CreateGuildMemberInput {
+  role: TeamRole!
+  userId: ID!
+  guildId: ID!
+}
+
+input UpdateGuildMemberInput {
+  id: ID!
+  role: TeamRole!
+}
+
+input CreateGuildPositionInput {
+  from: DateTime!
+  kind: GuildPositionKind!
+  memberId: ID!
+  to: DateTime
+  notes: String
+  clanId: ID
+}
+
+input UpdateGuildPositionInput {
+  id: ID!
+  from: DateTime!
+  kind: GuildPositionKind!
+  to: DateTime
+  notes: String
+}
+
 input CreateGuildInput {
   name: String!
   email: String!
@@ -249,6 +291,17 @@ input UpdatePositionInput {
   clanId: ID
   guildId: ID
   id: ID!
+}
+
+input CreateSquadMemberInput {
+  role: TeamRole!
+  userId: ID!
+  squadId: ID!
+}
+
+input UpdateSquadMemberInput {
+  id: ID!
+  role: TeamRole!
 }
 
 input CreateSquadInput {

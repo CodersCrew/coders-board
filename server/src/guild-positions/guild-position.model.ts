@@ -25,6 +25,10 @@ export class GuildPosition extends BaseModel {
   @Column({ nullable: true })
   to?: Date;
 
+  @Field({ nullable: true })
+  @Column({ type: 'text', nullable: true })
+  notes?: string;
+
   @Field(type => GuildPositionKind)
   @Column({ type: 'enum', enum: GuildPositionKind, default: GuildPositionKind.MEMBER })
   kind: GuildPositionKind;

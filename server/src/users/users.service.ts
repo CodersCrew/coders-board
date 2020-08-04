@@ -17,6 +17,11 @@ export class UsersService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
+  async getFullName(id: string) {
+    const user = await this.findByIdOrThrow(id);
+    return `${user.firstName} ${user.lastName}`;
+  }
+
   findById(id: string): Promise<User | null> {
     if (!id) return null;
 

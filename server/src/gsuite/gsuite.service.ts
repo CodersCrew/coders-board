@@ -11,6 +11,7 @@ import { CreateUserParams } from './interfaces/create-user.params';
 import { DeleteGroupParams } from './interfaces/delete-group.params';
 import { DeleteMemberParams } from './interfaces/delete-member.params';
 import { DeleteUserParams } from './interfaces/delete-user.params';
+import { HasMemberParams } from './interfaces/has-member.params';
 import { UpdateGroupParams } from './interfaces/update-group.params';
 import { UpdateMemberParams } from './interfaces/update-member.params';
 import { UpdateUserParams } from './interfaces/update-user.params';
@@ -125,13 +126,19 @@ export class GsuiteService {
     return true;
   }
 
-  async createMember({ groupId, userId, role }: CreateMemberParams): Promise<string> {
-    const response = await this.admin.members.insert({
+  async hasMember({ groupId, userId }: HasMemberParams): Promise<boolean> {
+    const { data } = await this.admin.members.hasMember({ groupKey: groupId, memberKey: userId });
+
+    return data.isMember;
+  }
+
+  async createMember({ groupId, userId, role }: CreateMemberParams): Promise<boolean> {
+    await this.admin.members.insert({
       groupKey: groupId,
       requestBody: { id: userId, role },
     });
 
-    return response.data.id;
+    return true;
   }
 
   async updateMember({ groupId, userId, role }: UpdateMemberParams): Promise<boolean> {

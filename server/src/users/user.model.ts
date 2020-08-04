@@ -36,6 +36,9 @@ export class User extends BaseModel {
   lastName: string;
 
   @Field()
+  fullName: string;
+
+  @Field()
   @Column({ unique: true })
   primaryEmail: string;
 
