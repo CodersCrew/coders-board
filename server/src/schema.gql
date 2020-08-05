@@ -105,6 +105,7 @@ type SquadPosition {
   member: SquadMember!
   chapter: Chapter
   position: Position!
+  clan: Chapter
 }
 
 type SquadMember {
@@ -156,6 +157,7 @@ type Query {
   guild(id: ID!): Guild!
   positions(search: String, guildId: ID, clanId: ID): [Position!]!
   squadMembers(squadId: String!): [SquadMember!]!
+  squadPositions(squadId: String!, memberId: String): [SquadPosition!]!
   squads(search: String): [Squad!]!
   squad(id: ID!): Squad!
 }
@@ -186,6 +188,9 @@ type Mutation {
   createSquadMember(data: CreateSquadMemberInput!): SquadMember!
   updateSquadMember(data: UpdateSquadMemberInput!): SquadMember!
   deleteSquadMember(id: ID!): Boolean!
+  createSquadPosition(data: CreateSquadPositionInput!): SquadPosition!
+  updateSquadPosition(data: UpdateSquadPositionInput!): SquadPosition!
+  deleteSquadPosition(id: ID!): Boolean!
   createSquad(data: CreateSquadInput!): Squad!
   updateSquad(data: UpdateSquadInput!): Squad!
   deleteSquad(id: ID!): Boolean!
@@ -254,7 +259,6 @@ input CreateGuildPositionInput {
 input UpdateGuildPositionInput {
   id: ID!
   from: DateTime!
-  kind: GuildPositionKind!
   to: DateTime
   notes: String
 }
@@ -302,6 +306,22 @@ input CreateSquadMemberInput {
 input UpdateSquadMemberInput {
   id: ID!
   role: TeamRole!
+}
+
+input CreateSquadPositionInput {
+  from: DateTime!
+  memberId: ID!
+  positionId: ID!
+  to: DateTime
+  notes: String
+  chapterId: ID
+}
+
+input UpdateSquadPositionInput {
+  id: ID!
+  from: DateTime!
+  to: DateTime
+  notes: String
 }
 
 input CreateSquadInput {
