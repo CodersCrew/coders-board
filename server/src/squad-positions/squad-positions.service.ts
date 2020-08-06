@@ -110,7 +110,6 @@ export class SquadPositionsService {
 
     const isActive = squadPositions.some(({ to }) => !to);
     const isMember = await this.gsuiteService.hasMember({ groupId, userId });
-    console.log(isActive, isMember);
 
     if (isActive && !isMember) {
       await this.gsuiteService.createMember({ groupId, userId, role: TeamRole.MEMBER });

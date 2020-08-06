@@ -2,12 +2,16 @@ import React from 'react';
 import { BrowserRouter, Route, Routes } from 'react-router-dom';
 
 import AppLayout from './pages/app/AppLayout';
+import GuildClans from './pages/app/guild/GuildClans';
+import GuildLayout from './pages/app/guild/GuildLayout';
+import GuildMembers from './pages/app/guild/GuildMembers';
+import GuildPositions from './pages/app/guild/GuildPositions';
 import Members from './pages/app/Members';
 import Positions from './pages/app/Positions';
-import TeamChildren from './pages/app/team/TeamChildren';
-import TeamLayout from './pages/app/team/TeamLayout';
-import TeamMembers from './pages/app/team/TeamMembers';
-import TeamPositions from './pages/app/team/TeamPositions';
+import SquadChapters from './pages/app/squad/SquadChapters';
+import SquadLayout from './pages/app/squad/SquadLayout';
+import SquadMembers from './pages/app/squad/SquadMembers';
+import SquadPositions from './pages/app/squad/SquadPositions';
 import Teams from './pages/app/Teams';
 import Login from './pages/Login';
 import LoginFailure from './pages/LoginFailure';
@@ -27,10 +31,15 @@ export const Routing = () => {
             <Route path="members" element={<Members />} />
             <Route path="teams" element={<Teams />} />
             <Route path="positions" element={<Positions />} />
-            <Route path="teams/:id" element={<TeamLayout />}>
-              <Route path="members" element={<TeamMembers />} />
-              <Route path="children" element={<TeamChildren />} />
-              <Route path="positions" element={<TeamPositions />} />
+            <Route path="guild/:id" element={<GuildLayout />}>
+              <Route path="members" element={<GuildMembers />} />
+              <Route path="clans" element={<GuildClans />} />
+              <Route path="positions" element={<GuildPositions />} />
+            </Route>
+            <Route path="squad/:id" element={<SquadLayout />}>
+              <Route path="members" element={<SquadMembers />} />
+              <Route path="chapters" element={<SquadChapters />} />
+              <Route path="positions" element={<SquadPositions />} />
             </Route>
             <Route path="*" element={<NotFound />} />
           </Route>

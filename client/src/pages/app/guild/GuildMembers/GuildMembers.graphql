@@ -1,0 +1,23 @@
+query guildMembers($guildId: ID!) {
+  guildMembers(guildId: $guildId) {
+    id
+    role
+    user {
+      id
+      fullName
+      image
+    }
+    positions(active: true) {
+      id
+      kind
+      clan {
+        id
+        name
+      }
+    }
+  }
+}
+
+mutation deleteGuildMember($id: ID!) {
+  deleteGuildMember(id: $id)
+}

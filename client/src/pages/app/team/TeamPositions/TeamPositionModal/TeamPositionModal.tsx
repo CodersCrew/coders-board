@@ -10,13 +10,13 @@ import { FormikPositionSelect } from '@/components/selects/PositionSelect';
 import { FormikUserSelect } from '@/components/selects/UserSelect';
 import { CFC } from '@/typings/components';
 import { YupSchema } from '@/typings/forms';
-import { CreateMemberPositionInput, GraphQLOperations } from '@/typings/graphql';
+// import { CreateMemberPositionInput, GraphQLOperations } from '@/typings/graphql';
 import { getInitialValuesFromSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
-import { useCreateTeamPositionMutation, useUpdateTeamPositionMutation } from './TeamPositionModal.apollo';
+// import { useCreateTeamPositionMutation, useUpdateTeamPositionMutation } from './TeamPositionModal.apollo';
 
-type FormValues = CreateMemberPositionInput;
+type FormValues = any;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -100,11 +100,11 @@ const TeamPositionModalComponent: CFC<TeamPositionModalProps> = ({
 };
 
 export const TeamPositionModal: CFC<TeamPositionModalProps> = props => {
-  const refetch = {
-    refetchQueries: [GraphQLOperations.Query.teamMembers, GraphQLOperations.Query.teamPositions],
-  };
-  const [createPosition] = useCreateTeamPositionMutation(refetch);
-  const [updatePosition] = useUpdateTeamPositionMutation(refetch);
+  // const refetch = {
+  // refetchQueries: [GraphQLOperations.Query.teamMembers, GraphQLOperations.Query.teamPositions],
+  // };
+  // const [createPosition] = useCreateTeamPositionMutation(refetch);
+  // const [updatePosition] = useUpdateTeamPositionMutation(refetch);
 
   const validationSchema: YupSchema<FormValues> = yup.object({
     from: yup.date().required().default(null),
@@ -121,11 +121,11 @@ export const TeamPositionModal: CFC<TeamPositionModalProps> = props => {
     messages.loading();
 
     try {
-      if (props.data?.id) {
-        await updatePosition({ variables: { data: { ...values, id: props.data.id } } });
-      } else {
-        await createPosition({ variables: { data: values } });
-      }
+      // if (props.data?.id) {
+      //   await updatePosition({ variables: { data: { ...values, id: props.data.id } } });
+      // } else {
+      //   await createPosition({ variables: { data: values } });
+      // }
 
       props.onCancel();
       messages.success();

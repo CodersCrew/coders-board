@@ -7,11 +7,7 @@ import * as Types from '../../../typings/graphql';
 export type PositionsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type PositionsQuery = { __typename?: 'Query' } & {
-  positions: Array<
-    { __typename?: 'Position' } & Pick<Types.Position, 'id' | 'name' | 'description' | 'image'> & {
-        team?: Types.Maybe<{ __typename?: 'Position' } & Pick<Types.Position, 'id' | 'name' | 'image'>>;
-      }
-  >;
+  positions: Array<{ __typename?: 'Position' } & Pick<Types.Position, 'id' | 'name' | 'description' | 'image'>>;
 };
 
 export const PositionsDocument = gql`
@@ -21,11 +17,6 @@ export const PositionsDocument = gql`
       name
       description
       image
-      team {
-        id
-        name
-        image
-      }
     }
   }
 `;

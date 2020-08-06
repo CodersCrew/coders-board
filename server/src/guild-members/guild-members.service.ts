@@ -24,9 +24,16 @@ export class GuildMembersService {
     return guildMember.guild;
   }
 
-  async getPositions(id: string) {
+  async getPositions(id: string, isActive?: boolean) {
     const guildMember = await this.findByIdOrThrow(id);
-    return guildMember.positions;
+    const positions = await guildMember.positions;
+
+    if (typeof isActive !== 'undefined') {
+      console.log(isActive, positions);
+      return positions.filter(position => (isActive ? !position.to : position.to));
+    }
+
+    return positions;
   }
 
   findById(id: string): Promise<GuildMember | null> {

@@ -19,8 +19,8 @@ export const UserSelect: CFC<UserSelectProps> = ({ idsToOmit, ids, idMapper, ...
   const { data, loading } = useUserSelectUsersQuery({ variables: { ids } });
 
   let options =
-    data?.users.map(({ id, firstName, lastName }) => ({
-      label: `${firstName} ${lastName}`,
+    data?.users.map(({ id, fullName }) => ({
+      label: fullName,
       value: idMapper ? idMapper[id] : id,
     })) || [];
 

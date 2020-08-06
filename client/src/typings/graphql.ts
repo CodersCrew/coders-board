@@ -11,13 +11,59 @@ export type Scalars = {
   DateTime: any;
 };
 
-export type TeamMember = {
-  __typename?: 'TeamMember';
+export type Guild = {
+  __typename?: 'Guild';
   id: Scalars['ID'];
-  user: User;
-  team: Team;
+  name: Scalars['String'];
+  description: Scalars['String'];
+  email: Scalars['String'];
+  googleId: Scalars['String'];
+  color: Scalars['String'];
+  image: Scalars['String'];
+  clans: Array<Clan>;
+  members: Array<GuildMember>;
+};
+
+export type Clan = {
+  __typename?: 'Clan';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  email: Scalars['String'];
+  googleId: Scalars['String'];
+  image: Scalars['String'];
+  guild: Array<Guild>;
+  positions: Array<GuildPosition>;
+};
+
+export type GuildPosition = {
+  __typename?: 'GuildPosition';
+  id: Scalars['ID'];
+  from: Scalars['DateTime'];
+  to?: Maybe<Scalars['DateTime']>;
+  notes?: Maybe<Scalars['String']>;
+  kind: GuildPositionKind;
+  member: GuildMember;
+  clan?: Maybe<Clan>;
+};
+
+export enum GuildPositionKind {
+  Member = 'MEMBER',
+  Leader = 'LEADER',
+  Expert = 'EXPERT',
+}
+
+export type GuildMember = {
+  __typename?: 'GuildMember';
+  id: Scalars['ID'];
   role: TeamRole;
-  positions: Array<MemberPosition>;
+  user: User;
+  guild: Guild;
+  positions: Array<GuildPosition>;
+};
+
+export type GuildMemberPositionsArgs = {
+  active?: Maybe<Scalars['Boolean']>;
 };
 
 export enum TeamRole {
@@ -26,30 +72,37 @@ export enum TeamRole {
   Member = 'MEMBER',
 }
 
-export type Team = {
-  __typename?: 'Team';
+export type Squad = {
+  __typename?: 'Squad';
   id: Scalars['ID'];
-  googleId: Scalars['String'];
   name: Scalars['String'];
-  image: Scalars['String'];
   description: Scalars['String'];
   email: Scalars['String'];
+  googleId: Scalars['String'];
   color: Scalars['String'];
-  kind: TeamKind;
-  parent?: Maybe<Team>;
-  children: Array<Team>;
-  positions: Array<Team>;
-  members: Array<Team>;
+  image: Scalars['String'];
+  members: Array<SquadMember>;
+  chapters: Array<Chapter>;
 };
 
-export enum TeamKind {
-  Taskforce = 'TASKFORCE',
-  Guild = 'GUILD',
-  Clan = 'CLAN',
-  Squad = 'SQUAD',
-  Chapter = 'CHAPTER',
-  Management = 'MANAGEMENT',
-}
+export type Chapter = {
+  __typename?: 'Chapter';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  email: Scalars['String'];
+  googleId: Scalars['String'];
+  squad: Array<Squad>;
+  positions: Array<SquadPosition>;
+};
+
+export type Area = {
+  __typename?: 'Area';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  image: Scalars['String'];
+};
 
 export type Position = {
   __typename?: 'Position';
@@ -57,18 +110,28 @@ export type Position = {
   name: Scalars['String'];
   description: Scalars['String'];
   image?: Maybe<Scalars['String']>;
-  team?: Maybe<Position>;
-  users: Array<MemberPosition>;
+  area?: Maybe<Area>;
 };
 
-export type MemberPosition = {
-  __typename?: 'MemberPosition';
+export type SquadPosition = {
+  __typename?: 'SquadPosition';
   id: Scalars['ID'];
   from: Scalars['DateTime'];
   to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
+  member: SquadMember;
+  chapter?: Maybe<Chapter>;
   position: Position;
-  teamMember: TeamMember;
+  clan?: Maybe<Chapter>;
+};
+
+export type SquadMember = {
+  __typename?: 'SquadMember';
+  id: Scalars['ID'];
+  role: TeamRole;
+  positions: SquadPosition;
+  squad: Squad;
+  user: User;
 };
 
 export type User = {
@@ -76,6 +139,7 @@ export type User = {
   id: Scalars['ID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
+  fullName: Scalars['String'];
   primaryEmail: Scalars['String'];
   recoveryEmail: Scalars['String'];
   phone: Scalars['String'];
@@ -83,8 +147,8 @@ export type User = {
   googleId: Scalars['String'];
   status: UserStatus;
   role: UserRole;
-  teams: Array<TeamMember>;
-  positions: Array<MemberPosition>;
+  guilds: Array<GuildMember>;
+  squads: Array<SquadMember>;
 };
 
 export enum UserStatus {
@@ -103,11 +167,19 @@ export type Query = {
   user: User;
   me: User;
   users: Array<User>;
-  memberPositions: Array<MemberPosition>;
+  chapters: Array<Chapter>;
+  chapter: Chapter;
+  clans: Array<Clan>;
+  clan: Clan;
+  guildMembers: Array<GuildMember>;
+  guildPositions: Array<GuildPosition>;
+  guilds: Array<Guild>;
+  guild: Guild;
   positions: Array<Position>;
-  teams: Array<Team>;
-  team: Team;
-  teamMembers: Array<TeamMember>;
+  squadMembers: Array<SquadMember>;
+  squadPositions: Array<SquadPosition>;
+  squads: Array<Squad>;
+  squad: Squad;
 };
 
 export type QueryUserArgs = {
@@ -120,30 +192,61 @@ export type QueryUsersArgs = {
   ids?: Maybe<Array<Scalars['ID']>>;
 };
 
-export type QueryMemberPositionsArgs = {
-  teamMemberId?: Maybe<Scalars['String']>;
+export type QueryChaptersArgs = {
+  search?: Maybe<Scalars['String']>;
+};
+
+export type QueryChapterArgs = {
+  id: Scalars['ID'];
+};
+
+export type QueryClansArgs = {
+  search?: Maybe<Scalars['String']>;
+  guildId: Scalars['ID'];
+};
+
+export type QueryClanArgs = {
+  id: Scalars['ID'];
+};
+
+export type QueryGuildMembersArgs = {
+  guildId: Scalars['ID'];
+};
+
+export type QueryGuildPositionsArgs = {
+  guildId: Scalars['ID'];
+  memberId?: Maybe<Scalars['String']>;
+};
+
+export type QueryGuildsArgs = {
+  search?: Maybe<Scalars['String']>;
+};
+
+export type QueryGuildArgs = {
+  id: Scalars['ID'];
 };
 
 export type QueryPositionsArgs = {
   search?: Maybe<Scalars['String']>;
-  teamId?: Maybe<Scalars['ID']>;
-  global?: Maybe<Scalars['Boolean']>;
+  guildId?: Maybe<Scalars['ID']>;
+  clanId?: Maybe<Scalars['ID']>;
 };
 
-export type QueryTeamsArgs = {
+export type QuerySquadMembersArgs = {
+  squadId: Scalars['ID'];
+};
+
+export type QuerySquadPositionsArgs = {
+  squadId: Scalars['ID'];
+  memberId?: Maybe<Scalars['String']>;
+};
+
+export type QuerySquadsArgs = {
   search?: Maybe<Scalars['String']>;
-  parentId?: Maybe<Scalars['ID']>;
-  kind?: Maybe<TeamKind>;
 };
 
-export type QueryTeamArgs = {
+export type QuerySquadArgs = {
   id: Scalars['ID'];
-};
-
-export type QueryTeamMembersArgs = {
-  nested?: Maybe<Scalars['Boolean']>;
-  teamId: Scalars['ID'];
-  role?: Maybe<TeamRole>;
 };
 
 export type Mutation = {
@@ -152,16 +255,33 @@ export type Mutation = {
   deleteUser: Scalars['Boolean'];
   migrateGoogleUsers: Array<User>;
   signOut: Scalars['Boolean'];
-  createMemberPosition: MemberPosition;
-  updateMemberPosition: MemberPosition;
-  deleteMemberPosition: Scalars['Boolean'];
+  createChapter: Chapter;
+  updateChapter: Chapter;
+  deleteChapter: Scalars['Boolean'];
+  createClan: Clan;
+  updateClan: Clan;
+  deleteClan: Scalars['Boolean'];
+  createGuildMember: GuildMember;
+  updateGuildMember: GuildMember;
+  deleteGuildMember: Scalars['Boolean'];
+  createGuildPosition: GuildPosition;
+  updateGuildPosition: GuildPosition;
+  deleteGuildPosition: Scalars['Boolean'];
+  createGuild: Guild;
+  updateGuild: Guild;
+  deleteGuild: Scalars['Boolean'];
   createPosition: Position;
   updatePosition: Position;
   deletePosition: Scalars['Boolean'];
-  createTeam: Team;
-  deleteTeam: Scalars['Boolean'];
-  createTeamMember: TeamMember;
-  deleteTeamMember: Scalars['Boolean'];
+  createSquadMember: SquadMember;
+  updateSquadMember: SquadMember;
+  deleteSquadMember: Scalars['Boolean'];
+  createSquadPosition: SquadPosition;
+  updateSquadPosition: SquadPosition;
+  deleteSquadPosition: Scalars['Boolean'];
+  createSquad: Squad;
+  updateSquad: Squad;
+  deleteSquad: Scalars['Boolean'];
 };
 
 export type MutationCreateUserArgs = {
@@ -172,15 +292,63 @@ export type MutationDeleteUserArgs = {
   id: Scalars['ID'];
 };
 
-export type MutationCreateMemberPositionArgs = {
-  data: CreateMemberPositionInput;
+export type MutationCreateChapterArgs = {
+  data: CreateChapterInput;
 };
 
-export type MutationUpdateMemberPositionArgs = {
-  data: UpdateMemberPositionInput;
+export type MutationUpdateChapterArgs = {
+  data: UpdateChapterInput;
 };
 
-export type MutationDeleteMemberPositionArgs = {
+export type MutationDeleteChapterArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationCreateClanArgs = {
+  data: CreateClanInput;
+};
+
+export type MutationUpdateClanArgs = {
+  data: UpdateClanInput;
+};
+
+export type MutationDeleteClanArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationCreateGuildMemberArgs = {
+  data: CreateGuildMemberInput;
+};
+
+export type MutationUpdateGuildMemberArgs = {
+  data: UpdateGuildMemberInput;
+};
+
+export type MutationDeleteGuildMemberArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationCreateGuildPositionArgs = {
+  data: CreateGuildPositionInput;
+};
+
+export type MutationUpdateGuildPositionArgs = {
+  data: UpdateGuildPositionInput;
+};
+
+export type MutationDeleteGuildPositionArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationCreateGuildArgs = {
+  data: CreateGuildInput;
+};
+
+export type MutationUpdateGuildArgs = {
+  data: UpdateGuildInput;
+};
+
+export type MutationDeleteGuildArgs = {
   id: Scalars['ID'];
 };
 
@@ -196,19 +364,39 @@ export type MutationDeletePositionArgs = {
   id: Scalars['ID'];
 };
 
-export type MutationCreateTeamArgs = {
-  data: CreateTeamInput;
+export type MutationCreateSquadMemberArgs = {
+  data: CreateSquadMemberInput;
 };
 
-export type MutationDeleteTeamArgs = {
+export type MutationUpdateSquadMemberArgs = {
+  data: UpdateSquadMemberInput;
+};
+
+export type MutationDeleteSquadMemberArgs = {
   id: Scalars['ID'];
 };
 
-export type MutationCreateTeamMemberArgs = {
-  data: CreateTeamMemberInput;
+export type MutationCreateSquadPositionArgs = {
+  data: CreateSquadPositionInput;
 };
 
-export type MutationDeleteTeamMemberArgs = {
+export type MutationUpdateSquadPositionArgs = {
+  data: UpdateSquadPositionInput;
+};
+
+export type MutationDeleteSquadPositionArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationCreateSquadArgs = {
+  data: CreateSquadInput;
+};
+
+export type MutationUpdateSquadArgs = {
+  data: UpdateSquadInput;
+};
+
+export type MutationDeleteSquadArgs = {
   id: Scalars['ID'];
 };
 
@@ -220,67 +408,157 @@ export type CreateUserInput = {
   recoveryEmail: Scalars['String'];
 };
 
-export type CreateMemberPositionInput = {
-  teamMemberId: Scalars['ID'];
-  positionId: Scalars['ID'];
+export type CreateChapterInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  squadId: Scalars['ID'];
+  description?: Maybe<Scalars['String']>;
+};
+
+export type UpdateChapterInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  squadId: Scalars['ID'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+};
+
+export type CreateClanInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  image: Scalars['String'];
+  guildId: Scalars['ID'];
+  description?: Maybe<Scalars['String']>;
+};
+
+export type UpdateClanInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  image: Scalars['String'];
+  guildId: Scalars['ID'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+};
+
+export type CreateGuildMemberInput = {
+  role: TeamRole;
+  userId: Scalars['ID'];
+  guildId: Scalars['ID'];
+};
+
+export type UpdateGuildMemberInput = {
+  id: Scalars['ID'];
+  role: TeamRole;
+};
+
+export type CreateGuildPositionInput = {
+  from: Scalars['DateTime'];
+  kind: GuildPositionKind;
+  memberId: Scalars['ID'];
+  to?: Maybe<Scalars['DateTime']>;
+  notes?: Maybe<Scalars['String']>;
+  clanId?: Maybe<Scalars['ID']>;
+};
+
+export type UpdateGuildPositionInput = {
+  id: Scalars['ID'];
   from: Scalars['DateTime'];
   to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
 };
 
-export type UpdateMemberPositionInput = {
+export type CreateGuildInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  image: Scalars['String'];
+  color: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+};
+
+export type UpdateGuildInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  image: Scalars['String'];
+  color: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
-  teamMemberId?: Maybe<Scalars['ID']>;
-  positionId?: Maybe<Scalars['ID']>;
-  from?: Maybe<Scalars['DateTime']>;
-  to?: Maybe<Scalars['DateTime']>;
-  notes?: Maybe<Scalars['String']>;
 };
 
 export type CreatePositionInput = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   image?: Maybe<Scalars['String']>;
-  teamId?: Maybe<Scalars['ID']>;
+  clanId?: Maybe<Scalars['ID']>;
+  guildId?: Maybe<Scalars['ID']>;
 };
 
 export type UpdatePositionInput = {
-  id: Scalars['ID'];
-  name?: Maybe<Scalars['String']>;
+  name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   image?: Maybe<Scalars['String']>;
-  teamId?: Maybe<Scalars['ID']>;
+  clanId?: Maybe<Scalars['ID']>;
+  guildId?: Maybe<Scalars['ID']>;
+  id: Scalars['ID'];
 };
 
-export type CreateTeamInput = {
+export type CreateSquadMemberInput = {
+  role: TeamRole;
+  userId: Scalars['ID'];
+  squadId: Scalars['ID'];
+};
+
+export type UpdateSquadMemberInput = {
+  id: Scalars['ID'];
+  role: TeamRole;
+};
+
+export type CreateSquadPositionInput = {
+  from: Scalars['DateTime'];
+  memberId: Scalars['ID'];
+  positionId: Scalars['ID'];
+  to?: Maybe<Scalars['DateTime']>;
+  notes?: Maybe<Scalars['String']>;
+  chapterId?: Maybe<Scalars['ID']>;
+};
+
+export type UpdateSquadPositionInput = {
+  id: Scalars['ID'];
+  from: Scalars['DateTime'];
+  to?: Maybe<Scalars['DateTime']>;
+  notes?: Maybe<Scalars['String']>;
+};
+
+export type CreateSquadInput = {
   name: Scalars['String'];
   email: Scalars['String'];
-  kind: TeamKind;
-  image?: Maybe<Scalars['String']>;
+  image: Scalars['String'];
+  color: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  color?: Maybe<Scalars['String']>;
-  parentId?: Maybe<Scalars['ID']>;
 };
 
-export type CreateTeamMemberInput = {
-  userId: Scalars['ID'];
-  teamId: Scalars['ID'];
-  role?: Maybe<TeamRole>;
+export type UpdateSquadInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  image: Scalars['String'];
+  color: Scalars['String'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
 };
 
 export const GraphQLOperations = {
   Query: {
+    clansSelectClans: 'clansSelectClans',
     positionSelectPositions: 'positionSelectPositions',
-    teamSelectTeams: 'teamSelectTeams',
     userSelectUsers: 'userSelectUsers',
     authMe: 'authMe',
     members: 'members',
     positions: 'positions',
     teams: 'teams',
-    teamChildren: 'teamChildren',
-    team: 'team',
-    teamMembers: 'teamMembers',
-    teamPositions: 'teamPositions',
+    clans: 'clans',
+    guildLayoutGuild: 'guildLayoutGuild',
+    guildMembers: 'guildMembers',
+    guildPositions: 'guildPositions',
+    guildMembersIds: 'guildMembersIds',
   },
   Mutation: {
     signOut: 'signOut',
@@ -288,12 +566,11 @@ export const GraphQLOperations = {
     deletePosition: 'deletePosition',
     createPosition: 'createPosition',
     updatePosition: 'updatePosition',
-    createTeamMember: 'createTeamMember',
-    deleteTeamPosition: 'deleteTeamPosition',
-    createTeamPosition: 'createTeamPosition',
-    updateTeamPosition: 'updateTeamPosition',
-  },
-  Fragment: {
-    teamsListFields: 'teamsListFields',
+    createGuildMember: 'createGuildMember',
+    updateGuildMember: 'updateGuildMember',
+    deleteGuildMember: 'deleteGuildMember',
+    deleteGuildPosition: 'deleteGuildPosition',
+    createGuildPosition: 'createGuildPosition',
+    updateGuildPosition: 'updateGuildPosition',
   },
 };

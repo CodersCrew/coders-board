@@ -51,7 +51,7 @@ type GuildMember {
   role: TeamRole!
   user: User!
   guild: Guild!
-  positions: GuildPosition!
+  positions(active: Boolean): [GuildPosition!]!
 }
 
 enum TeamRole {
@@ -149,15 +149,15 @@ type Query {
   users(search: String, role: UserRole, ids: [ID!]): [User!]!
   chapters(search: String): [Chapter!]!
   chapter(id: ID!): Chapter!
-  clans(search: String): [Clan!]!
+  clans(search: String, guildId: ID!): [Clan!]!
   clan(id: ID!): Clan!
-  guildMembers(guildId: String!): [GuildMember!]!
-  guildPositions(guildId: String!, memberId: String): [GuildPosition!]!
+  guildMembers(guildId: ID!): [GuildMember!]!
+  guildPositions(guildId: ID!, memberId: String): [GuildPosition!]!
   guilds(search: String): [Guild!]!
   guild(id: ID!): Guild!
   positions(search: String, guildId: ID, clanId: ID): [Position!]!
-  squadMembers(squadId: String!): [SquadMember!]!
-  squadPositions(squadId: String!, memberId: String): [SquadPosition!]!
+  squadMembers(squadId: ID!): [SquadMember!]!
+  squadPositions(squadId: ID!, memberId: String): [SquadPosition!]!
   squads(search: String): [Squad!]!
   squad(id: ID!): Squad!
 }

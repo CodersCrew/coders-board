@@ -1,20 +1,17 @@
-fragment teamsListFields on Team {
-  id
-  name
-  image
-  description
-  children {
-    id
-  }
-}
 query teams {
-  squads: teams(kind: SQUAD) {
-    ...teamsListFields
+  guilds {
+    id
+    name
+    description
+    color
+    image
   }
-  guilds: teams(kind: GUILD) {
-    ...teamsListFields
-  }
-  taskforces: teams(kind: TASKFORCE) {
-    ...teamsListFields
+
+  squads {
+    id
+    name
+    color
+    description
+    image
   }
 }

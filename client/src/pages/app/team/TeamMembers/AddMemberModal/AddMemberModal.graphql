@@ -1,5 +1,0 @@
-mutation createTeamMember($data: CreateTeamMemberInput!) {
-  createTeamMember(data: $data) {
-    id
-  }
-}

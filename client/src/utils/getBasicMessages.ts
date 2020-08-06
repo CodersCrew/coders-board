@@ -25,8 +25,8 @@ export const getBasicMessages = (name: string, state: 'create' | 'update' | 'del
   }
 
   return {
-    loading: () => message.loading(messages.loading, 0),
-    success: () => message.success(messages.success),
-    failure: () => message.error(messages.failure),
+    loading: (text?: string) => message.loading(text ?? messages.loading, 0),
+    success: (text?: string) => message.success(text ?? messages.success),
+    failure: (text?: string) => message.error(text ?? messages.failure),
   };
 };

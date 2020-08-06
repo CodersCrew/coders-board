@@ -1,2 +1,1 @@
-export * from './getTeamName';
-export * from './categorization';
+export * from './naming';

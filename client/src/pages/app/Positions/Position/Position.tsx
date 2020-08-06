@@ -35,12 +35,13 @@ export const Position: CFC<PositionProps> = props => {
   const openUpdateModal = () => {
     props.openEditModal({
       ...pick(props, ['id', 'name', 'description', 'image']),
-      teamId: props.team?.id,
+      // teamId: props.team?.id,
     });
   };
 
-  const image = props.image || props.team?.image || undefined;
-  const tooltipTitle = props.team ? `Related to "${props.team.name}" team` : 'Unrelated';
+  const image = props.image || undefined;
+  // const tooltipTitle = props.team ? `Related to "${props.team.name}" team` : 'Unrelated';
+  const tooltipTitle = 'Unrelated';
   const actions = isAdmin
     ? [
         <DeleteOutlined key="delete" onClick={deletePositionConfirm} />,

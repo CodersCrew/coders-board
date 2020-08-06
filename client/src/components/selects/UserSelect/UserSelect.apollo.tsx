@@ -9,15 +9,14 @@ export type UserSelectUsersQueryVariables = Types.Exact<{
 }>;
 
 export type UserSelectUsersQuery = { __typename?: 'Query' } & {
-  users: Array<{ __typename?: 'User' } & Pick<Types.User, 'id' | 'firstName' | 'lastName'>>;
+  users: Array<{ __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName'>>;
 };
 
 export const UserSelectUsersDocument = gql`
   query userSelectUsers($ids: [ID!]) {
     users(ids: $ids) {
       id
-      firstName
-      lastName
+      fullName
     }
   }
 `;

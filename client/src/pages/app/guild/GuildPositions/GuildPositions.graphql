@@ -1,0 +1,30 @@
+query guildPositions($guildId: ID!) {
+  guildPositions(guildId: $guildId) {
+    id
+    from
+    to
+    notes
+    kind
+    member {
+      id
+      user {
+        id
+        fullName
+        image
+      }
+    }
+    clan {
+      id
+      name
+    }
+  }
+}
+
+query guildMembersIds($guildId: ID!) {
+  guildMembers(guildId: $guildId) {
+    id
+    user {
+      id
+    }
+  }
+}

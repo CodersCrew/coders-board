@@ -13,9 +13,8 @@ const Teams = () => {
     <>
       <PageHeader title="Teams" subTitle="All teams in CodersCrew you can be a part of" />
       <Box p={24}>
-        <TeamsList loading={loading} data={data?.guilds} title="Guilds" />
-        <TeamsList loading={loading} data={data?.squads} title="Squads" />
-        <TeamsList loading={loading} data={data?.taskforces} title="Task Forces" />
+        <TeamsList loading={loading} data={data?.guilds} type="guild" title="Guilds" />
+        <TeamsList loading={loading} data={data?.squads} type="squad" title="Squads" />
       </Box>
     </>
   );

@@ -1,0 +1,10 @@
+mutation createGuildMember($data: CreateGuildMemberInput!) {
+  createGuildMember(data: $data) {
+    id
+  }
+}
+mutation updateGuildMember($data: UpdateGuildMemberInput!) {
+  updateGuildMember(data: $data) {
+    id
+  }
+}

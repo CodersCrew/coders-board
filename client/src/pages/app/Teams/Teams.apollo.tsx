@@ -4,43 +4,30 @@ import * as ApolloReactHooks from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
-export type TeamsListFieldsFragment = { __typename?: 'Team' } & Pick<
-  Types.Team,
-  'id' | 'name' | 'image' | 'description'
-> & { children: Array<{ __typename?: 'Team' } & Pick<Types.Team, 'id'>> };
-
 export type TeamsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type TeamsQuery = { __typename?: 'Query' } & {
-  squads: Array<{ __typename?: 'Team' } & TeamsListFieldsFragment>;
-  guilds: Array<{ __typename?: 'Team' } & TeamsListFieldsFragment>;
-  taskforces: Array<{ __typename?: 'Team' } & TeamsListFieldsFragment>;
+  guilds: Array<{ __typename?: 'Guild' } & Pick<Types.Guild, 'id' | 'name' | 'description' | 'color' | 'image'>>;
+  squads: Array<{ __typename?: 'Squad' } & Pick<Types.Squad, 'id' | 'name' | 'color' | 'description' | 'image'>>;
 };
 
-export const TeamsListFieldsFragmentDoc = gql`
-  fragment teamsListFields on Team {
-    id
-    name
-    image
-    description
-    children {
-      id
-    }
-  }
-`;
 export const TeamsDocument = gql`
   query teams {
-    squads: teams(kind: SQUAD) {
-      ...teamsListFields
+    guilds {
+      id
+      name
+      description
+      color
+      image
     }
-    guilds: teams(kind: GUILD) {
-      ...teamsListFields
-    }
-    taskforces: teams(kind: TASKFORCE) {
-      ...teamsListFields
+    squads {
+      id
+      name
+      color
+      description
+      image
     }
   }
-  ${TeamsListFieldsFragmentDoc}
 `;
 
 /**

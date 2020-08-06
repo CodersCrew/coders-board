@@ -1,5 +1,5 @@
-import { ArgsType, Field } from '@nestjs/graphql';
-import { IsOptional, IsString } from 'class-validator';
+import { ArgsType, Field, ID } from '@nestjs/graphql';
+import { IsOptional, IsString, IsUUID } from 'class-validator';
 
 @ArgsType()
 export class GetClansArgs {
@@ -7,4 +7,9 @@ export class GetClansArgs {
   @IsOptional()
   @IsString()
   search?: string;
+
+  @Field(type => ID)
+  @IsOptional()
+  @IsUUID()
+  guildId: string;
 }

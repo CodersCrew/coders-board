@@ -1,0 +1,11 @@
+mutation createGuildPosition($data: CreateGuildPositionInput!) {
+  createGuildPosition(data: $data) {
+    id
+  }
+}
+
+mutation updateGuildPosition($data: UpdateGuildPositionInput!) {
+  updateGuildPosition(data: $data) {
+    id
+  }
+}

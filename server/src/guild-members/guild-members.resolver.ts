@@ -24,9 +24,9 @@ export class GuildMembersResolver {
     return this.guildMembersService.getGuild(guildMember.id);
   }
 
-  @ResolveField('positions', returns => GuildPosition)
-  async getPositions(@Parent() guildMember: GuildMember) {
-    return this.guildMembersService.getPositions(guildMember.id);
+  @ResolveField('positions', returns => [GuildPosition])
+  async getPositions(@Parent() guildMember: GuildMember, @Args('active', { nullable: true }) active?: boolean) {
+    return this.guildMembersService.getPositions(guildMember.id, active);
   }
 
   @Query(returns => [GuildMember], { name: 'guildMembers' })

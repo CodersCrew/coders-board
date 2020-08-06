@@ -1,0 +1,8 @@
+query clans($guildId: ID!) {
+  clans(guildId: $guildId) {
+    id
+    name
+    description
+    image
+  }
+}

@@ -8,13 +8,14 @@ import { FormikTeamRoleSelect } from '@/components/selects/TeamRoleSelect';
 import { FormikUserSelect } from '@/components/selects/UserSelect';
 import { CFC } from '@/typings/components';
 import { YupSchema } from '@/typings/forms';
-import { CreateTeamMemberInput, GraphQLOperations, TeamRole } from '@/typings/graphql';
+// import { CreateTeamMemberInput, GraphQLOperations, TeamRole } from '@/typings/graphql';
+import { TeamRole } from '@/typings/graphql';
 import { getInitialValuesFromSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
-import { useCreateTeamMemberMutation } from './AddMemberModal.apollo';
+// import { useCreateTeamMemberMutation } from './AddMemberModal.apollo';
 
-type FormValues = Omit<CreateTeamMemberInput, 'teamId'>;
+type FormValues = any;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -58,8 +59,8 @@ const AddMemberModalComponent: CFC<AddMemberModalComponentProps> = ({ currentMem
   );
 };
 
-export const AddMemberModal: CFC<AddMemberModalProps> = ({ teamId, ...props }) => {
-  const [createTeamMember] = useCreateTeamMemberMutation({ refetchQueries: [GraphQLOperations.Query.teamMembers] });
+export const AddMemberModal: CFC<AddMemberModalProps> = props => {
+  // const [createTeamMember] = useCreateTeamMemberMutation({ refetchQueries: [GraphQLOperations.Query.teamMembers] });
 
   const validationSchema: YupSchema<FormValues> = yup.object({
     userId: yup.string().required(),
@@ -73,7 +74,7 @@ export const AddMemberModal: CFC<AddMemberModalProps> = ({ teamId, ...props }) =
     messages.loading();
 
     try {
-      await createTeamMember({ variables: { data: { ...values, teamId } } });
+      // await createTeamMember({ variables: { data: { ...values, teamId } } });
 
       props.onCancel();
       messages.success();

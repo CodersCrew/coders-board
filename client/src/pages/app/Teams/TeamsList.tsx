@@ -1,17 +1,18 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import styled from '@emotion/styled';
 
-import { Paragraph, Title } from '@/components/atoms';
-import { Card, CardMeta } from '@/components/molecules';
+import { Title } from '@/components/atoms';
 import { CFC } from '@/typings/components';
+import { down } from '@/utils/styling';
 
-import { TeamsListFieldsFragment } from './Teams.apollo';
+import { Team } from './Team';
+import { TeamObject } from './Team.types';
 
 type TeamsListProps = {
   loading: boolean;
   title: string;
-  data?: TeamsListFieldsFragment[];
+  data?: TeamObject[];
+  type: 'squad' | 'guild';
 };
 
 const TeamListWrapper = styled.div({
@@ -23,10 +24,26 @@ const TeamListWrapper = styled.div({
 const Grid = styled.div({
   display: 'grid',
   gridGap: 24,
-  gridTemplateColumns: 'repeat(4, 1fr)',
+  gridTemplateColumns: 'repeat(5, 1fr)',
+
+  [down('xxl')]: {
+    gridTemplateColumns: 'repeat(4, 1fr)',
+  },
+
+  [down('xl')]: {
+    gridTemplateColumns: 'repeat(3, 1fr)',
+  },
+
+  [down('lg')]: {
+    gridTemplateColumns: 'repeat(2, 1fr)',
+  },
+
+  [down('sm')]: {
+    gridTemplateColumns: 'repeat(1, 1fr)',
+  },
 });
 
-export const TeamsList: CFC<TeamsListProps> = ({ loading, data = [], title }) => {
+export const TeamsList: CFC<TeamsListProps> = ({ loading, data = [], title, type }) => {
   if (!loading && !data.length) return null;
 
   return (
@@ -36,14 +53,7 @@ export const TeamsList: CFC<TeamsListProps> = ({ loading, data = [], title }) =>
       </Title>
       <Grid>
         {data.map(item => (
-          <Link key={item.id} to={`/app/teams/${item.id}/members`}>
-            <Card hoverable cover={<img alt={item.name} src={item.image} />} p={16}>
-              <CardMeta
-                title={<Title level={4}>{item.name}</Title>}
-                description={<Paragraph ellipsis={{ rows: 4 }}>{item.description}</Paragraph>}
-              />
-            </Card>
-          </Link>
+          <Team key={item.id} type={type} {...item} />
         ))}
       </Grid>
     </TeamListWrapper>

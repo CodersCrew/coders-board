@@ -4,21 +4,21 @@ import { useTheme } from '@emotion/react';
 
 import { Icon } from '@/components/atoms';
 import { confirmModal } from '@/components/molecules';
-import { GraphQLOperations } from '@/typings/graphql';
+// import { GraphQLOperations } from '@/typings/graphql';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
-import { useDeleteTeamPositionMutation } from './TeamPosition.apollo';
+// import { useDeleteTeamPositionMutation } from './TeamPosition.apollo';
 
 type Params = {
   positionName: string;
   id: string;
 };
 
-export const useDeleteTeamPositionConfirm = ({ id, positionName }: Params) => {
+export const useDeleteTeamPositionConfirm = ({ positionName }: Params) => {
   const { colors } = useTheme();
-  const [deletePosition] = useDeleteTeamPositionMutation({
-    refetchQueries: [GraphQLOperations.Query.teamMembers, GraphQLOperations.Query.teamPositions],
-  });
+  // const [deletePosition] = useDeleteTeamPositionMutation({
+  // refetchQueries: [GraphQLOperations.Query.teamMembers, GraphQLOperations.Query.teamPositions],
+  // });
 
   const messages = getBasicMessages('team position', 'delete');
 
@@ -32,7 +32,7 @@ export const useDeleteTeamPositionConfirm = ({ id, positionName }: Params) => {
         onOk: async () => {
           try {
             messages.loading();
-            await deletePosition({ variables: { id } });
+            // await deletePosition({ variables: { id } });
             messages.success();
           } catch (ex) {
             console.log(ex);

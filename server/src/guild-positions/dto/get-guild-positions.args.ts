@@ -1,9 +1,9 @@
-import { ArgsType, Field } from '@nestjs/graphql';
+import { ArgsType, Field, ID } from '@nestjs/graphql';
 import { IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
 @ArgsType()
 export class GetGuildPositionsArgs {
-  @Field()
+  @Field(type => ID)
   @IsNotEmpty()
   @IsUUID()
   guildId: string;

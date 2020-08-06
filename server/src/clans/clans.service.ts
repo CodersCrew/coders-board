@@ -41,8 +41,12 @@ export class ClansService {
     return this.clanRepository.findOneOrFail(id);
   }
 
-  findAll({ search }: GetClansArgs): Promise<Clan[]> {
+  findAll({ search, guildId }: GetClansArgs): Promise<Clan[]> {
     const query = this.clanRepository.createQueryBuilder('clan');
+
+    if (guildId) {
+      query.andWhere('clan.guildId = :guildId', { guildId });
+    }
 
     if (search) {
       const searchQuery = brackets(

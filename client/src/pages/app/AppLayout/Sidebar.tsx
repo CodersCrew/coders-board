@@ -21,7 +21,12 @@ const Logo = styled.img({
 const useSelectedKeys = () => {
   const location = useLocation();
   const regexResult = /\/app\/(\w*)\/?/.exec(location.pathname);
-  const selectedKey = regexResult && regexResult[1];
+
+  let selectedKey = regexResult ? regexResult[1] : '';
+
+  if (['squad', 'guild'].includes(selectedKey)) {
+    selectedKey = 'teams';
+  }
 
   return selectedKey ? [selectedKey] : [];
 };

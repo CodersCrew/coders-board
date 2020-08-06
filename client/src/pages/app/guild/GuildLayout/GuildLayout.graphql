@@ -1,0 +1,8 @@
+query guildLayoutGuild($id: ID!) {
+  guild(id: $id) {
+    id
+    name
+    description
+    image
+  }
+}

@@ -1,7 +1,6 @@
 query userSelectUsers($ids: [ID!]) {
   users(ids: $ids) {
     id
-    firstName
-    lastName
+    fullName
   }
 }
