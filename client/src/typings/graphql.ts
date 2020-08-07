@@ -72,6 +72,23 @@ export enum TeamRole {
   Member = 'MEMBER',
 }
 
+export type Area = {
+  __typename?: 'Area';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  image: Scalars['String'];
+};
+
+export type Position = {
+  __typename?: 'Position';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
+  area?: Maybe<Area>;
+};
+
 export type Squad = {
   __typename?: 'Squad';
   id: Scalars['ID'];
@@ -96,23 +113,6 @@ export type Chapter = {
   positions: Array<SquadPosition>;
 };
 
-export type Area = {
-  __typename?: 'Area';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  description: Scalars['String'];
-  image: Scalars['String'];
-};
-
-export type Position = {
-  __typename?: 'Position';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  description: Scalars['String'];
-  image?: Maybe<Scalars['String']>;
-  area?: Maybe<Area>;
-};
-
 export type SquadPosition = {
   __typename?: 'SquadPosition';
   id: Scalars['ID'];
@@ -129,9 +129,13 @@ export type SquadMember = {
   __typename?: 'SquadMember';
   id: Scalars['ID'];
   role: TeamRole;
-  positions: SquadPosition;
+  positions: Array<SquadPosition>;
   squad: Squad;
   user: User;
+};
+
+export type SquadMemberPositionsArgs = {
+  active?: Maybe<Scalars['Boolean']>;
 };
 
 export type User = {
@@ -167,8 +171,6 @@ export type Query = {
   user: User;
   me: User;
   users: Array<User>;
-  chapters: Array<Chapter>;
-  chapter: Chapter;
   clans: Array<Clan>;
   clan: Clan;
   guildMembers: Array<GuildMember>;
@@ -176,6 +178,8 @@ export type Query = {
   guilds: Array<Guild>;
   guild: Guild;
   positions: Array<Position>;
+  chapters: Array<Chapter>;
+  chapter: Chapter;
   squadMembers: Array<SquadMember>;
   squadPositions: Array<SquadPosition>;
   squads: Array<Squad>;
@@ -192,17 +196,9 @@ export type QueryUsersArgs = {
   ids?: Maybe<Array<Scalars['ID']>>;
 };
 
-export type QueryChaptersArgs = {
-  search?: Maybe<Scalars['String']>;
-};
-
-export type QueryChapterArgs = {
-  id: Scalars['ID'];
-};
-
 export type QueryClansArgs = {
   search?: Maybe<Scalars['String']>;
-  guildId: Scalars['ID'];
+  guildId?: Maybe<Scalars['ID']>;
 };
 
 export type QueryClanArgs = {
@@ -232,6 +228,15 @@ export type QueryPositionsArgs = {
   clanId?: Maybe<Scalars['ID']>;
 };
 
+export type QueryChaptersArgs = {
+  search?: Maybe<Scalars['String']>;
+  squadId?: Maybe<Scalars['ID']>;
+};
+
+export type QueryChapterArgs = {
+  id: Scalars['ID'];
+};
+
 export type QuerySquadMembersArgs = {
   squadId: Scalars['ID'];
 };
@@ -255,9 +260,6 @@ export type Mutation = {
   deleteUser: Scalars['Boolean'];
   migrateGoogleUsers: Array<User>;
   signOut: Scalars['Boolean'];
-  createChapter: Chapter;
-  updateChapter: Chapter;
-  deleteChapter: Scalars['Boolean'];
   createClan: Clan;
   updateClan: Clan;
   deleteClan: Scalars['Boolean'];
@@ -273,6 +275,9 @@ export type Mutation = {
   createPosition: Position;
   updatePosition: Position;
   deletePosition: Scalars['Boolean'];
+  createChapter: Chapter;
+  updateChapter: Chapter;
+  deleteChapter: Scalars['Boolean'];
   createSquadMember: SquadMember;
   updateSquadMember: SquadMember;
   deleteSquadMember: Scalars['Boolean'];
@@ -292,18 +297,6 @@ export type MutationDeleteUserArgs = {
   id: Scalars['ID'];
 };
 
-export type MutationCreateChapterArgs = {
-  data: CreateChapterInput;
-};
-
-export type MutationUpdateChapterArgs = {
-  data: UpdateChapterInput;
-};
-
-export type MutationDeleteChapterArgs = {
-  id: Scalars['ID'];
-};
-
 export type MutationCreateClanArgs = {
   data: CreateClanInput;
 };
@@ -314,6 +307,7 @@ export type MutationUpdateClanArgs = {
 
 export type MutationDeleteClanArgs = {
   id: Scalars['ID'];
+  guildId: Scalars['ID'];
 };
 
 export type MutationCreateGuildMemberArgs = {
@@ -326,6 +320,7 @@ export type MutationUpdateGuildMemberArgs = {
 
 export type MutationDeleteGuildMemberArgs = {
   id: Scalars['ID'];
+  guildId: Scalars['ID'];
 };
 
 export type MutationCreateGuildPositionArgs = {
@@ -338,6 +333,7 @@ export type MutationUpdateGuildPositionArgs = {
 
 export type MutationDeleteGuildPositionArgs = {
   id: Scalars['ID'];
+  guildId: Scalars['ID'];
 };
 
 export type MutationCreateGuildArgs = {
@@ -364,6 +360,19 @@ export type MutationDeletePositionArgs = {
   id: Scalars['ID'];
 };
 
+export type MutationCreateChapterArgs = {
+  data: CreateChapterInput;
+};
+
+export type MutationUpdateChapterArgs = {
+  data: UpdateChapterInput;
+};
+
+export type MutationDeleteChapterArgs = {
+  id: Scalars['ID'];
+  squadId: Scalars['ID'];
+};
+
 export type MutationCreateSquadMemberArgs = {
   data: CreateSquadMemberInput;
 };
@@ -374,6 +383,7 @@ export type MutationUpdateSquadMemberArgs = {
 
 export type MutationDeleteSquadMemberArgs = {
   id: Scalars['ID'];
+  squadId: Scalars['ID'];
 };
 
 export type MutationCreateSquadPositionArgs = {
@@ -386,6 +396,7 @@ export type MutationUpdateSquadPositionArgs = {
 
 export type MutationDeleteSquadPositionArgs = {
   id: Scalars['ID'];
+  squadId: Scalars['ID'];
 };
 
 export type MutationCreateSquadArgs = {
@@ -406,21 +417,6 @@ export type CreateUserInput = {
   password: Scalars['String'];
   primaryEmail: Scalars['String'];
   recoveryEmail: Scalars['String'];
-};
-
-export type CreateChapterInput = {
-  name: Scalars['String'];
-  email: Scalars['String'];
-  squadId: Scalars['ID'];
-  description?: Maybe<Scalars['String']>;
-};
-
-export type UpdateChapterInput = {
-  name: Scalars['String'];
-  email: Scalars['String'];
-  squadId: Scalars['ID'];
-  description?: Maybe<Scalars['String']>;
-  id: Scalars['ID'];
 };
 
 export type CreateClanInput = {
@@ -449,12 +445,14 @@ export type CreateGuildMemberInput = {
 export type UpdateGuildMemberInput = {
   id: Scalars['ID'];
   role: TeamRole;
+  guildId: Scalars['ID'];
 };
 
 export type CreateGuildPositionInput = {
   from: Scalars['DateTime'];
   kind: GuildPositionKind;
   memberId: Scalars['ID'];
+  guildId: Scalars['ID'];
   to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
   clanId?: Maybe<Scalars['ID']>;
@@ -463,6 +461,7 @@ export type CreateGuildPositionInput = {
 export type UpdateGuildPositionInput = {
   id: Scalars['ID'];
   from: Scalars['DateTime'];
+  guildId: Scalars['ID'];
   to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
 };
@@ -501,6 +500,21 @@ export type UpdatePositionInput = {
   id: Scalars['ID'];
 };
 
+export type CreateChapterInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  squadId: Scalars['ID'];
+  description?: Maybe<Scalars['String']>;
+};
+
+export type UpdateChapterInput = {
+  name: Scalars['String'];
+  email: Scalars['String'];
+  squadId: Scalars['ID'];
+  description?: Maybe<Scalars['String']>;
+  id: Scalars['ID'];
+};
+
 export type CreateSquadMemberInput = {
   role: TeamRole;
   userId: Scalars['ID'];
@@ -510,6 +524,7 @@ export type CreateSquadMemberInput = {
 export type UpdateSquadMemberInput = {
   id: Scalars['ID'];
   role: TeamRole;
+  squadId: Scalars['ID'];
 };
 
 export type CreateSquadPositionInput = {
@@ -519,6 +534,7 @@ export type CreateSquadPositionInput = {
   to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
   chapterId?: Maybe<Scalars['ID']>;
+  squadId: Scalars['ID'];
 };
 
 export type UpdateSquadPositionInput = {
@@ -526,6 +542,7 @@ export type UpdateSquadPositionInput = {
   from: Scalars['DateTime'];
   to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
+  squadId: Scalars['ID'];
 };
 
 export type CreateSquadInput = {
@@ -547,30 +564,42 @@ export type UpdateSquadInput = {
 
 export const GraphQLOperations = {
   Query: {
-    clansSelectClans: 'clansSelectClans',
+    chapterSelectChapters: 'chapterSelectChapters',
+    clanSelectClans: 'clanSelectClans',
     positionSelectPositions: 'positionSelectPositions',
     userSelectUsers: 'userSelectUsers',
-    authMe: 'authMe',
-    members: 'members',
+    clans: 'clans',
+    guild: 'guild',
+    guildMembers: 'guildMembers',
+    guildMembersIds: 'guildMembersIds',
+    guildPositions: 'guildPositions',
+    chapters: 'chapters',
+    squad: 'squad',
+    squadMembers: 'squadMembers',
+    squadMembersIds: 'squadMembersIds',
+    squadPositions: 'squadPositions',
+    me: 'me',
+    users: 'users',
     positions: 'positions',
     teams: 'teams',
-    clans: 'clans',
-    guildLayoutGuild: 'guildLayoutGuild',
-    guildMembers: 'guildMembers',
-    guildPositions: 'guildPositions',
-    guildMembersIds: 'guildMembersIds',
   },
   Mutation: {
-    signOut: 'signOut',
-    createMember: 'createMember',
-    deletePosition: 'deletePosition',
-    createPosition: 'createPosition',
-    updatePosition: 'updatePosition',
     createGuildMember: 'createGuildMember',
     updateGuildMember: 'updateGuildMember',
     deleteGuildMember: 'deleteGuildMember',
-    deleteGuildPosition: 'deleteGuildPosition',
     createGuildPosition: 'createGuildPosition',
     updateGuildPosition: 'updateGuildPosition',
+    deleteGuildPosition: 'deleteGuildPosition',
+    createSquadMember: 'createSquadMember',
+    updateSquadMember: 'updateSquadMember',
+    deleteSquadMember: 'deleteSquadMember',
+    createSquadPosition: 'createSquadPosition',
+    updateSquadPosition: 'updateSquadPosition',
+    deleteSquadPosition: 'deleteSquadPosition',
+    signOut: 'signOut',
+    createUser: 'createUser',
+    deletePosition: 'deletePosition',
+    createPosition: 'createPosition',
+    updatePosition: 'updatePosition',
   },
 };

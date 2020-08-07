@@ -1,0 +1,6 @@
+query clanSelectClans($guildId: ID!) {
+  clans(guildId: $guildId) {
+    id
+    name
+  }
+}

@@ -1,9 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, OneToMany } from 'typeorm';
 
-import { Chapter } from '../chapters/chapter.model';
 import { TeamModel } from '../common/models/Team.model';
-import { SquadMember } from '../squad-members/squad-member.model';
+import { Chapter } from './chapters/chapter.model';
+import { SquadMember } from './squad-members/squad-member.model';
 
 @ObjectType()
 @Entity()

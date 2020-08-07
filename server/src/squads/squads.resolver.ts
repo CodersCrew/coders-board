@@ -1,19 +1,23 @@
-import { UseGuards } from '@nestjs/common';
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { Chapter } from '../chapters/chapter.model';
-import { AuthGuard } from '../common/guards/auth.guard';
-import { SquadMember } from '../squad-members/squad-member.model';
+import { TeamKind } from '../common/decorators/team-kind.decorator';
+import { TeamRole } from '../common/enums/team-role.enum';
+import { AdminGuard } from '../common/guards/admin.guard';
+import { AuthorizedGuard } from '../common/guards/authorized.guard';
+import { TeamRoleGuard } from '../common/guards/team-role.guard';
+import { Chapter } from './chapters/chapter.model';
 import { CreateSquadInput } from './dto/create-squad.input';
 import { DeleteSquadArgs } from './dto/delete-squad.args';
 import { GetSquadArgs } from './dto/get-squad.args';
 import { GetSquadsArgs } from './dto/get-squads.args';
 import { UpdateSquadInput } from './dto/update-squad.input';
+import { SquadMember } from './squad-members/squad-member.model';
 import { Squad } from './squad.model';
 import { SquadsService } from './squads.service';
 
 @Resolver(of => Squad)
-@UseGuards(AuthGuard)
+@TeamKind('squad')
+@AuthorizedGuard()
 export class SquadsResolver {
   constructor(private readonly squadsService: SquadsService) {}
 
@@ -38,16 +42,19 @@ export class SquadsResolver {
   }
 
   @Mutation(returns => Squad)
+  @AdminGuard()
   createSquad(@Args('data') input: CreateSquadInput) {
     return this.squadsService.create(input);
   }
 
   @Mutation(returns => Squad)
+  @TeamRoleGuard(TeamRole.MANAGER, 'data.id')
   updateSquad(@Args('data') input: UpdateSquadInput) {
     return this.squadsService.update(input);
   }
 
   @Mutation(returns => Boolean)
+  @TeamRoleGuard(TeamRole.OWNER, 'id')
   deleteSquad(@Args() args: DeleteSquadArgs) {
     return this.squadsService.delete(args.id);
   }

@@ -6,19 +6,20 @@ import { ColumnsType } from 'antd/lib/table';
 import { Box, Button, Icon, Paragraph } from '@/components/atoms';
 import { Card, PageHeader } from '@/components/molecules';
 import { RoleSelect } from '@/components/selects';
+import { UseUsers, useUsers } from '@/graphql/users';
 import { useToggle } from '@/hooks/useToggle';
 import { UserRole } from '@/typings/graphql';
 
 import { AddMemberModal } from './AddMemberModal';
-import { MembersQuery, useMembersQuery } from './Members.apollo';
 
-type Columns = ColumnsType<MembersQuery['users'][number]>;
+type Member = UseUsers['item'];
+type Columns = ColumnsType<Member>;
 
 const Members = () => {
-  const { on: isModalOpen, setOn: openModal, setOff: closeModal } = useToggle(false);
+  const memberModalToggle = useToggle(false);
   const [search, setSearch] = useState('');
   const [role, setRole] = useState<UserRole | undefined>();
-  const { loading, data } = useMembersQuery({ variables: { search, role } });
+  const users = useUsers({ search, role });
 
   const menu = (
     <Menu>
@@ -71,24 +72,24 @@ const Members = () => {
       <PageHeader title="Members" subTitle="Search and filter for all of the CodersCrew members" />
       <Card m={24} p={24} display="flex">
         <Box width={240}>
-          <Input.Search placeholder="Search for members..." loading={loading} onSearch={setSearch} />
+          <Input.Search placeholder="Search for members..." loading={users.loading} onSearch={setSearch} />
         </Box>
         <RoleSelect
-          loading={loading}
+          loading={users.loading}
           placeholder="Select member role"
           onSelect={setRole}
           allowClear
           style={{ width: 240, marginLeft: 24 }}
         />
-        <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={openModal}>
+        <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={memberModalToggle.setOn}>
           Add member
         </Button>
       </Card>
       <Box maxWidth="100%" overflow="auto" p={24} pt={0}>
         <Card>
           <Table
-            loading={loading}
-            dataSource={data?.users || []}
+            loading={users.loading}
+            dataSource={users.data}
             columns={columns}
             rowKey="id"
             size="small"
@@ -96,7 +97,7 @@ const Members = () => {
           />
         </Card>
       </Box>
-      <AddMemberModal visible={isModalOpen} onCancel={closeModal} />
+      <AddMemberModal visible={memberModalToggle.on} onCancel={memberModalToggle.setOff} />
     </>
   );
 };

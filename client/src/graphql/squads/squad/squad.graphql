@@ -1,0 +1,8 @@
+query squad($id: ID!) {
+  squad(id: $id) {
+    id
+    name
+    description
+    image
+  }
+}

@@ -1,0 +1,43 @@
+query guildMembers($guildId: ID!) {
+  guildMembers(guildId: $guildId) {
+    id
+    role
+    user {
+      id
+      fullName
+      image
+    }
+    positions(active: true) {
+      id
+      kind
+      clan {
+        id
+        name
+      }
+    }
+  }
+}
+
+query guildMembersIds($guildId: ID!) {
+  guildMembers(guildId: $guildId) {
+    id
+    user {
+      id
+    }
+  }
+}
+
+mutation createGuildMember($data: CreateGuildMemberInput!) {
+  createGuildMember(data: $data) {
+    id
+  }
+}
+mutation updateGuildMember($data: UpdateGuildMemberInput!) {
+  updateGuildMember(data: $data) {
+    id
+  }
+}
+
+mutation deleteGuildMember($id: ID! $guildId: ID!) {
+  deleteGuildMember(id: $id guildId: $guildId)
+}

@@ -1,0 +1,8 @@
+query guild($id: ID!) {
+  guild(id: $id) {
+    id
+    name
+    description
+    image
+  }
+}

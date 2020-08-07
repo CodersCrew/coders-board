@@ -1,0 +1,65 @@
+import React from 'react';
+import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import styled from '@emotion/styled';
+import { Tabs } from 'antd';
+import { BreadcrumbProps } from 'antd/lib/breadcrumb';
+import { TabsProps } from 'antd/lib/tabs';
+
+import { PageHeader } from '@/components/molecules';
+import { useSquad } from '@/graphql/squads';
+import { breadcrumbItemRender } from '@/utils/breadcrumbItemRender';
+
+const StyledPageHeader = styled(PageHeader)({
+  '.ant-avatar': {
+    width: 72,
+    height: 40,
+  },
+});
+
+const SquadLayout = () => {
+  const params = useParams();
+  const location = useLocation();
+  const navigate = useNavigate();
+  const squad = useSquad({ squadId: params.id });
+
+  if (!squad.data) return null;
+
+  const fullName = `${squad.data.name} Squad`;
+
+  const routes: BreadcrumbProps['routes'] = [
+    {
+      path: '/app/teams',
+      breadcrumbName: 'Teams',
+    },
+    {
+      path: location.pathname,
+      breadcrumbName: fullName,
+    },
+  ];
+
+  const handleItemChange: TabsProps['onChange'] = activeKey => navigate(activeKey);
+
+  const footer = (
+    <Tabs activeKey={location.pathname.split('/').pop()} onChange={handleItemChange}>
+      <Tabs.TabPane tab="Members" key="members" />
+      <Tabs.TabPane tab="Chapters" key="chapters" />
+      <Tabs.TabPane tab="Positions" key="positions" />
+    </Tabs>
+  );
+
+  return (
+    <>
+      <StyledPageHeader
+        title={fullName}
+        breadcrumb={{ routes, itemRender: breadcrumbItemRender }}
+        avatar={{ src: squad.data.image, shape: 'square' }}
+        footer={footer}
+      >
+        {squad.data.description}
+      </StyledPageHeader>
+      <Outlet />
+    </>
+  );
+};
+
+export default SquadLayout;

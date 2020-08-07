@@ -2,7 +2,7 @@ import React from 'react';
 import { Navigate, useNavigate } from 'react-router-dom';
 
 import { Button, Title } from '@/components/atoms';
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/graphql/users';
 
 const NotFound = () => {
   const { isAuthorized } = useAuth();

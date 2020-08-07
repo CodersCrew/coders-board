@@ -6,22 +6,22 @@ import { ColumnsType } from 'antd/lib/table';
 
 import { Box, Button, Icon, Paragraph, Spin } from '@/components/atoms';
 import { Card } from '@/components/molecules';
+import { UseGuildMembers, useGuildMembers } from '@/graphql/guilds';
 import { useModalState } from '@/hooks/useModalState';
 import { TeamRole } from '@/typings/graphql';
 import { parseGuildPositionKind } from '@/utils/platform';
 
 import { GuildMemberModal, GuildMemberModalProps } from './GuildMemberModal';
-import { GuildMembersQuery, useGuildMembersQuery } from './GuildMembers.apollo';
 import { useDeleteGuildMemberConfirm } from './useDeleteGuildMemberConfirm';
 
-type Member = GuildMembersQuery['guildMembers'][number];
+type Member = UseGuildMembers['item'];
 type Columns = ColumnsType<Member>;
 
 const GuildMembers = () => {
-  const { id } = useParams();
+  const params = useParams();
   const navigate = useNavigate();
-  const { deleteGuildMemberConfirm } = useDeleteGuildMemberConfirm();
-  const { data, loading } = useGuildMembersQuery({ variables: { guildId: id } });
+  const deleteGuildMemberConfirm = useDeleteGuildMemberConfirm(params.id);
+  const guildMembers = useGuildMembers({ guildId: params.id });
   const guildMemberModal = useModalState<GuildMemberModalProps['data']>();
 
   const menu = (member: Member) => (
@@ -102,13 +102,9 @@ const GuildMembers = () => {
     },
   ];
 
-  const dataSource = data?.guildMembers || [];
-
-  const currentMembersIds = dataSource.map(({ user }) => user.id);
-
   return (
     <>
-      <Spin spinning={loading} tip="Loading member actions">
+      <Spin spinning={guildMembers.loading} tip="Loading member actions">
         <Box p={24} display="flex">
           <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={() => guildMemberModal.open()}>
             Add member
@@ -118,8 +114,8 @@ const GuildMembers = () => {
       <Box maxWidth="100%" overflow="auto" p={24} pt={0}>
         <Card>
           <Table
-            loading={loading}
-            dataSource={dataSource}
+            loading={guildMembers.loading}
+            dataSource={guildMembers.data}
             columns={columns}
             rowKey="id"
             size="small"
@@ -130,11 +126,10 @@ const GuildMembers = () => {
       </Box>
       {guildMemberModal.isMounted && (
         <GuildMemberModal
-          guildId={id}
+          guildId={params.id}
           onCancel={guildMemberModal.close}
           visible={guildMemberModal.isVisible}
           data={guildMemberModal.data}
-          currentMembersIds={currentMembersIds}
         />
       )}
     </>

@@ -1,0 +1,293 @@
+import { gql } from '@apollo/client';
+import * as ApolloReactCommon from '@apollo/client';
+import * as ApolloReactHooks from '@apollo/client';
+
+import * as Types from '../../../typings/graphql';
+
+export type SquadMembersQueryVariables = Types.Exact<{
+  squadId: Types.Scalars['ID'];
+}>;
+
+export type SquadMembersQuery = { __typename?: 'Query' } & {
+  squadMembers: Array<
+    { __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id' | 'role'> & {
+        user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName' | 'image'>;
+        positions: Array<
+          { __typename?: 'SquadPosition' } & Pick<Types.SquadPosition, 'id'> & {
+              position: { __typename?: 'Position' } & Pick<Types.Position, 'id' | 'name'>;
+              chapter?: Types.Maybe<{ __typename?: 'Chapter' } & Pick<Types.Chapter, 'id' | 'name'>>;
+            }
+        >;
+      }
+  >;
+};
+
+export type SquadMembersIdsQueryVariables = Types.Exact<{
+  squadId: Types.Scalars['ID'];
+}>;
+
+export type SquadMembersIdsQuery = { __typename?: 'Query' } & {
+  squadMembers: Array<
+    { __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id'> & {
+        user: { __typename?: 'User' } & Pick<Types.User, 'id'>;
+      }
+  >;
+};
+
+export type CreateSquadMemberMutationVariables = Types.Exact<{
+  data: Types.CreateSquadMemberInput;
+}>;
+
+export type CreateSquadMemberMutation = { __typename?: 'Mutation' } & {
+  createSquadMember: { __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id'>;
+};
+
+export type UpdateSquadMemberMutationVariables = Types.Exact<{
+  data: Types.UpdateSquadMemberInput;
+}>;
+
+export type UpdateSquadMemberMutation = { __typename?: 'Mutation' } & {
+  updateSquadMember: { __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id'>;
+};
+
+export type DeleteSquadMemberMutationVariables = Types.Exact<{
+  id: Types.Scalars['ID'];
+  squadId: Types.Scalars['ID'];
+}>;
+
+export type DeleteSquadMemberMutation = { __typename?: 'Mutation' } & Pick<Types.Mutation, 'deleteSquadMember'>;
+
+export const SquadMembersDocument = gql`
+  query squadMembers($squadId: ID!) {
+    squadMembers(squadId: $squadId) {
+      id
+      role
+      user {
+        id
+        fullName
+        image
+      }
+      positions(active: true) {
+        id
+        position {
+          id
+          name
+        }
+        chapter {
+          id
+          name
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useSquadMembersQuery__
+ *
+ * To run a query within a React component, call `useSquadMembersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSquadMembersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSquadMembersQuery({
+ *   variables: {
+ *      squadId: // value for 'squadId'
+ *   },
+ * });
+ */
+export function useSquadMembersQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<SquadMembersQuery, SquadMembersQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<SquadMembersQuery, SquadMembersQueryVariables>(SquadMembersDocument, baseOptions);
+}
+export function useSquadMembersLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SquadMembersQuery, SquadMembersQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<SquadMembersQuery, SquadMembersQueryVariables>(
+    SquadMembersDocument,
+    baseOptions,
+  );
+}
+export type SquadMembersQueryHookResult = ReturnType<typeof useSquadMembersQuery>;
+export type SquadMembersLazyQueryHookResult = ReturnType<typeof useSquadMembersLazyQuery>;
+export type SquadMembersQueryResult = ApolloReactCommon.QueryResult<SquadMembersQuery, SquadMembersQueryVariables>;
+export const SquadMembersIdsDocument = gql`
+  query squadMembersIds($squadId: ID!) {
+    squadMembers(squadId: $squadId) {
+      id
+      user {
+        id
+      }
+    }
+  }
+`;
+
+/**
+ * __useSquadMembersIdsQuery__
+ *
+ * To run a query within a React component, call `useSquadMembersIdsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSquadMembersIdsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSquadMembersIdsQuery({
+ *   variables: {
+ *      squadId: // value for 'squadId'
+ *   },
+ * });
+ */
+export function useSquadMembersIdsQuery(
+  baseOptions?: ApolloReactHooks.QueryHookOptions<SquadMembersIdsQuery, SquadMembersIdsQueryVariables>,
+) {
+  return ApolloReactHooks.useQuery<SquadMembersIdsQuery, SquadMembersIdsQueryVariables>(
+    SquadMembersIdsDocument,
+    baseOptions,
+  );
+}
+export function useSquadMembersIdsLazyQuery(
+  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SquadMembersIdsQuery, SquadMembersIdsQueryVariables>,
+) {
+  return ApolloReactHooks.useLazyQuery<SquadMembersIdsQuery, SquadMembersIdsQueryVariables>(
+    SquadMembersIdsDocument,
+    baseOptions,
+  );
+}
+export type SquadMembersIdsQueryHookResult = ReturnType<typeof useSquadMembersIdsQuery>;
+export type SquadMembersIdsLazyQueryHookResult = ReturnType<typeof useSquadMembersIdsLazyQuery>;
+export type SquadMembersIdsQueryResult = ApolloReactCommon.QueryResult<
+  SquadMembersIdsQuery,
+  SquadMembersIdsQueryVariables
+>;
+export const CreateSquadMemberDocument = gql`
+  mutation createSquadMember($data: CreateSquadMemberInput!) {
+    createSquadMember(data: $data) {
+      id
+    }
+  }
+`;
+export type CreateSquadMemberMutationFn = ApolloReactCommon.MutationFunction<
+  CreateSquadMemberMutation,
+  CreateSquadMemberMutationVariables
+>;
+
+/**
+ * __useCreateSquadMemberMutation__
+ *
+ * To run a mutation, you first call `useCreateSquadMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useCreateSquadMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [createSquadMemberMutation, { data, loading, error }] = useCreateSquadMemberMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useCreateSquadMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSquadMemberMutation, CreateSquadMemberMutationVariables>,
+) {
+  return ApolloReactHooks.useMutation<CreateSquadMemberMutation, CreateSquadMemberMutationVariables>(
+    CreateSquadMemberDocument,
+    baseOptions,
+  );
+}
+export type CreateSquadMemberMutationHookResult = ReturnType<typeof useCreateSquadMemberMutation>;
+export type CreateSquadMemberMutationResult = ApolloReactCommon.MutationResult<CreateSquadMemberMutation>;
+export type CreateSquadMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  CreateSquadMemberMutation,
+  CreateSquadMemberMutationVariables
+>;
+export const UpdateSquadMemberDocument = gql`
+  mutation updateSquadMember($data: UpdateSquadMemberInput!) {
+    updateSquadMember(data: $data) {
+      id
+    }
+  }
+`;
+export type UpdateSquadMemberMutationFn = ApolloReactCommon.MutationFunction<
+  UpdateSquadMemberMutation,
+  UpdateSquadMemberMutationVariables
+>;
+
+/**
+ * __useUpdateSquadMemberMutation__
+ *
+ * To run a mutation, you first call `useUpdateSquadMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useUpdateSquadMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [updateSquadMemberMutation, { data, loading, error }] = useUpdateSquadMemberMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useUpdateSquadMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSquadMemberMutation, UpdateSquadMemberMutationVariables>,
+) {
+  return ApolloReactHooks.useMutation<UpdateSquadMemberMutation, UpdateSquadMemberMutationVariables>(
+    UpdateSquadMemberDocument,
+    baseOptions,
+  );
+}
+export type UpdateSquadMemberMutationHookResult = ReturnType<typeof useUpdateSquadMemberMutation>;
+export type UpdateSquadMemberMutationResult = ApolloReactCommon.MutationResult<UpdateSquadMemberMutation>;
+export type UpdateSquadMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  UpdateSquadMemberMutation,
+  UpdateSquadMemberMutationVariables
+>;
+export const DeleteSquadMemberDocument = gql`
+  mutation deleteSquadMember($id: ID!, $squadId: ID!) {
+    deleteSquadMember(id: $id, squadId: $squadId)
+  }
+`;
+export type DeleteSquadMemberMutationFn = ApolloReactCommon.MutationFunction<
+  DeleteSquadMemberMutation,
+  DeleteSquadMemberMutationVariables
+>;
+
+/**
+ * __useDeleteSquadMemberMutation__
+ *
+ * To run a mutation, you first call `useDeleteSquadMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useDeleteSquadMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [deleteSquadMemberMutation, { data, loading, error }] = useDeleteSquadMemberMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      squadId: // value for 'squadId'
+ *   },
+ * });
+ */
+export function useDeleteSquadMemberMutation(
+  baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteSquadMemberMutation, DeleteSquadMemberMutationVariables>,
+) {
+  return ApolloReactHooks.useMutation<DeleteSquadMemberMutation, DeleteSquadMemberMutationVariables>(
+    DeleteSquadMemberDocument,
+    baseOptions,
+  );
+}
+export type DeleteSquadMemberMutationHookResult = ReturnType<typeof useDeleteSquadMemberMutation>;
+export type DeleteSquadMemberMutationResult = ApolloReactCommon.MutationResult<DeleteSquadMemberMutation>;
+export type DeleteSquadMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+  DeleteSquadMemberMutation,
+  DeleteSquadMemberMutationVariables
+>;

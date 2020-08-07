@@ -1,0 +1,17 @@
+query users($search: String $role: UserRole) {
+	users(search: $search role: $role) {
+		id
+    image
+    firstName
+    lastName
+    primaryEmail
+    recoveryEmail
+    role
+  }
+}
+
+mutation createUser($data: CreateUserInput!) {
+  createUser(data: $data) {
+    id
+  }
+}

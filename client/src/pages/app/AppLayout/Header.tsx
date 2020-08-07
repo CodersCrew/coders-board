@@ -5,7 +5,7 @@ import { Dropdown, Layout, Menu } from 'antd';
 import { BasicProps } from 'antd/lib/layout/layout';
 
 import { Avatar, Icon, Paragraph } from '@/components/atoms';
-import { useAuthorizedUser } from '@/hooks/useAuth';
+import { useAuthorizedUser } from '@/graphql/users';
 import { CFC } from '@/typings/components';
 
 type HeaderProps = BasicProps & {
@@ -31,11 +31,11 @@ const UserDropdownContent = styled.div({
 });
 
 export const Header: CFC<HeaderProps> = ({ isSidebarCollapsed, toggleSidebar, ...props }) => {
-  const { profileImage, fullName, authMutations } = useAuthorizedUser();
+  const authorizedUser = useAuthorizedUser();
 
   const menu = (
     <Menu>
-      <Menu.Item key="logout" onClick={authMutations.logout}>
+      <Menu.Item key="logout" onClick={authorizedUser.logout}>
         <LogoutOutlined />
         Logout
       </Menu.Item>
@@ -50,8 +50,8 @@ export const Header: CFC<HeaderProps> = ({ isSidebarCollapsed, toggleSidebar, ..
       })}
       <Dropdown overlay={menu} trigger={['click']}>
         <UserDropdownContent>
-          <Avatar src={profileImage} />
-          <Paragraph ml={8}>{fullName}</Paragraph>
+          <Avatar src={authorizedUser.image} />
+          <Paragraph ml={8}>{authorizedUser.fullName}</Paragraph>
           <Icon icon={DownOutlined} ml={8} />
         </UserDropdownContent>
       </Dropdown>

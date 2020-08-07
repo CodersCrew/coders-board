@@ -4,10 +4,9 @@
     "paths": {
       "@/components/*": ["src/components/*"],
       "@/config/*": ["src/config/*"],
+      "@/graphql/*": ["src/graphql/*"],
       "@/hooks/*": ["src/hooks/*"],
       "@/pages/*": ["src/pages/*"],
-      "@/services/*": ["src/services/*"],
-      "@/store/*": ["src/store/*"],
       "@/typings/*": ["src/typings/*"],
       "@/utils/*": ["src/utils/*"]
     }

@@ -1,0 +1,6 @@
+query chapterSelectChapters($squadId: ID!) {
+  chapters(squadId: $squadId) {
+    id
+    name
+  }
+}

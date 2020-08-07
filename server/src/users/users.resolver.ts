@@ -1,15 +1,15 @@
-import { UseGuards } from '@nestjs/common';
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { UserId } from '../common/decorators/user-id.decorator';
 import { AdminGuard } from '../common/guards/admin.guard';
-import { AuthGuard } from '../common/guards/auth.guard';
+import { AuthorizedGuard } from '../common/guards/authorized.guard';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
 import { User } from './user.model';
 import { UsersService } from './users.service';
 
 @Resolver(of => User)
+@AuthorizedGuard()
 export class UsersResolver {
   constructor(private usersService: UsersService) {}
 
@@ -24,7 +24,6 @@ export class UsersResolver {
   }
 
   @Query(returns => User, { name: 'me' })
-  @UseGuards(AuthGuard)
   getMe(@UserId() userId: string) {
     return this.usersService.findById(userId);
   }
@@ -35,19 +34,19 @@ export class UsersResolver {
   }
 
   @Mutation(returns => User)
-  @UseGuards(AdminGuard)
+  @AdminGuard()
   createUser(@Args('data') input: CreateUserInput) {
     return this.usersService.create(input);
   }
 
   @Mutation(returns => Boolean)
-  @UseGuards(AdminGuard)
+  @AdminGuard()
   deleteUser(@Args('id', { type: () => ID }) id: string) {
     return this.usersService.delete(id);
   }
 
   @Mutation(returns => [User])
-  // @UseGuards(AdminGuard)
+  @AdminGuard()
   migrateGoogleUsers() {
     return this.usersService.migrateGoogleUsers();
   }

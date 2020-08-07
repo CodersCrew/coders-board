@@ -3,7 +3,7 @@ import { Outlet, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Layout } from 'antd';
 
-import { useAuth } from '@/hooks/useAuth';
+import { useAuth } from '@/graphql/users';
 import { useToggle } from '@/hooks/useToggle';
 
 import { Header } from './Header';
@@ -18,19 +18,19 @@ const StyledContent = styled(Content)(({ theme }) => ({
 }));
 
 const AppLayout = () => {
-  const { on: isSidebarCollapsed, toggle: toggleSidebar } = useToggle(false);
-  const { isAuthorized } = useAuth();
+  const sidebarToggle = useToggle(false);
+  const auth = useAuth();
   const navigate = useNavigate();
 
-  if (!isAuthorized) {
+  if (!auth.isAuthorized) {
     navigate('/login');
   }
 
   return (
     <Layout>
-      <Sidebar collapsed={isSidebarCollapsed} />
+      <Sidebar collapsed={sidebarToggle.on} />
       <Layout>
-        <Header isSidebarCollapsed={isSidebarCollapsed} toggleSidebar={toggleSidebar} />
+        <Header isSidebarCollapsed={sidebarToggle.on} toggleSidebar={sidebarToggle.toggle} />
         <StyledContent>
           <Outlet />
         </StyledContent>

@@ -1,0 +1,12 @@
+query me {
+	me {
+		id
+    image
+  	fullName
+    role
+  }
+}
+
+mutation signOut {
+	signOut
+}

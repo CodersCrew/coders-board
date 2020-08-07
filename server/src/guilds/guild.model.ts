@@ -1,9 +1,9 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { GuildMember } from 'src/guild-members/guild-member.model';
 import { Column, Entity, OneToMany } from 'typeorm';
 
-import { Clan } from '../clans/clan.model';
 import { TeamModel } from '../common/models/Team.model';
+import { Clan } from './clans/clan.model';
+import { GuildMember } from './guild-members/guild-member.model';
 
 @ObjectType()
 @Entity()

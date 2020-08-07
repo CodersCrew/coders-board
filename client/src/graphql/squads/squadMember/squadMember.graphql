@@ -1,0 +1,46 @@
+query squadMembers($squadId: ID!) {
+  squadMembers(squadId: $squadId) {
+    id
+    role
+    user {
+      id
+      fullName
+      image
+    }
+    positions(active: true) {
+      id
+      position {
+        id
+        name
+      }
+      chapter {
+        id
+        name
+      }
+    }
+  }
+}
+
+query squadMembersIds($squadId: ID!) {
+  squadMembers(squadId: $squadId) {
+    id
+    user {
+      id
+    }
+  }
+}
+
+mutation createSquadMember($data: CreateSquadMemberInput!) {
+  createSquadMember(data: $data) {
+    id
+  }
+}
+mutation updateSquadMember($data: UpdateSquadMemberInput!) {
+  updateSquadMember(data: $data) {
+    id
+  }
+}
+
+mutation deleteSquadMember($id: ID! $squadId: ID!) {
+  deleteSquadMember(id: $id squadId: $squadId)
+}

@@ -2,8 +2,8 @@ import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Column, Entity, OneToMany } from 'typeorm';
 
 import { BaseModel } from '../common/models/Base.model';
-import { GuildMember } from '../guild-members/guild-member.model';
-import { SquadMember } from '../squad-members/squad-member.model';
+import { GuildMember } from '../guilds/guild-members/guild-member.model';
+import { SquadMember } from '../squads/squad-members/squad-member.model';
 
 export enum UserStatus {
   PENDING = 'PENDING',

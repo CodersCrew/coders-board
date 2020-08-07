@@ -5,7 +5,7 @@ import { Avatar, Tooltip } from 'antd';
 import { pick } from 'lodash';
 
 import { Card, CardMeta } from '@/components/molecules';
-import { useAuthorizedUser } from '@/hooks/useAuth';
+import { useAuthorizedUser } from '@/graphql/users';
 import { CFC } from '@/typings/components';
 import { WithId } from '@/typings/enhancers';
 import { CreatePositionInput } from '@/typings/graphql';
