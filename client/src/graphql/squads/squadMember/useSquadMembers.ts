@@ -16,12 +16,14 @@ export type UseSquadMembers = {
 };
 
 export const useSquadMembers = (params?: UseSquadMembers['params']) => {
-  const refetch = { refetchQueries: [GraphQLOperations.Query.squadMembers, GraphQLOperations.Query.squadPositions] };
+  const mutationConfig = {
+    refetchQueries: [GraphQLOperations.Query.squadMembers, GraphQLOperations.Query.squadPositions],
+  };
 
   const [fetchMembers, { data, loading, error }] = useSquadMembersLazyQuery();
-  const [createMember] = useCreateSquadMemberMutation(refetch);
-  const [updateMember] = useUpdateSquadMemberMutation(refetch);
-  const [deleteMember] = useDeleteSquadMemberMutation(refetch);
+  const [createMember] = useCreateSquadMemberMutation(mutationConfig);
+  const [updateMember] = useUpdateSquadMemberMutation(mutationConfig);
+  const [deleteMember] = useDeleteSquadMemberMutation(mutationConfig);
 
   useEffect(() => {
     if (params?.squadId) {

@@ -1,17 +1,15 @@
-import React, { ComponentProps } from 'react';
+import React from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 
 import { Box, Button } from '@/components/atoms';
 import { PageHeader } from '@/components/molecules';
+import { usePositions } from '@/graphql/positions';
 import { useModalState } from '@/hooks/useModalState';
 import { down } from '@/utils/styling';
 
 import { Position } from './Position';
-import { PositionModal } from './PositionModal';
-import { usePositionsQuery } from './Positions.apollo';
-
-type PositionModalState = ComponentProps<typeof PositionModal>['data'];
+import { PositionModal, PositionModalProps } from './PositionModal';
 
 const CardsGrid = styled.div({
   display: 'grid',
@@ -32,8 +30,8 @@ const CardsGrid = styled.div({
 });
 
 const Positions = () => {
-  const { data } = usePositionsQuery();
-  const positionModal = useModalState<PositionModalState>();
+  const positions = usePositions();
+  const positionModal = useModalState<PositionModalProps['data']>();
 
   return (
     <>
@@ -48,7 +46,7 @@ const Positions = () => {
       />
       <Box m={24}>
         <CardsGrid>
-          {data?.positions.map(position => (
+          {positions.data.map(position => (
             <Position key={position.id} openEditModal={positionModal.open} {...position} />
           ))}
         </CardsGrid>

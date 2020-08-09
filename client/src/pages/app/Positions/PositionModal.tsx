@@ -5,20 +5,20 @@ import * as yup from 'yup';
 
 import { Modal, ModalProps } from '@/components/molecules';
 import { FormikTeamSelect } from '@/components/selects/TeamSelect';
+import { usePositions } from '@/graphql/positions';
 import { CFC } from '@/typings/components';
-import { CreatePositionInput, GraphQLOperations } from '@/typings/graphql';
+import { WithId } from '@/typings/enhancers';
+import { CreatePositionInput } from '@/typings/graphql';
 import { getInitialValuesFromSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
-
-import { useCreatePositionMutation, useUpdatePositionMutation } from './PositionModal.apollo';
 
 type FormValues = CreatePositionInput;
 
 type FormConfig = FormikConfig<FormValues>;
 
-type PositionModalProps = ModalProps & {
+export type PositionModalProps = ModalProps & {
   onCancel: () => void;
-  data: (FormValues & { id: string }) | null;
+  data: WithId<FormValues> | null;
 };
 
 const PositionModalComponent: CFC<PositionModalProps> = ({ data, ...props }) => {
@@ -53,8 +53,7 @@ const PositionModalComponent: CFC<PositionModalProps> = ({ data, ...props }) => 
 };
 
 export const PositionModal: CFC<PositionModalProps> = props => {
-  const [createPosition] = useCreatePositionMutation({ refetchQueries: [GraphQLOperations.Query.positions] });
-  const [updatePosition] = useUpdatePositionMutation({ refetchQueries: [GraphQLOperations.Query.positions] });
+  const positions = usePositions();
 
   const validationSchema = yup.object({
     name: yup.string().required().default(''),
@@ -70,9 +69,9 @@ export const PositionModal: CFC<PositionModalProps> = props => {
 
     try {
       if (props.data?.id) {
-        await updatePosition({ variables: { data: { ...values, id: props.data.id } } });
+        await positions.update({ variables: { data: { ...values, id: props.data.id } } });
       } else {
-        await createPosition({ variables: { data: values } });
+        await positions.create({ variables: { data: values } });
       }
 
       props.onCancel();

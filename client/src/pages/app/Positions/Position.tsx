@@ -5,18 +5,15 @@ import { Avatar, Tooltip } from 'antd';
 import { pick } from 'lodash';
 
 import { Card, CardMeta } from '@/components/molecules';
+import { UsePositions } from '@/graphql/positions';
 import { useAuthorizedUser } from '@/graphql/users';
 import { CFC } from '@/typings/components';
-import { WithId } from '@/typings/enhancers';
-import { CreatePositionInput } from '@/typings/graphql';
 
-import { PositionsQuery } from '../Positions.apollo';
+import { PositionModalProps } from './PositionModal';
 import { useDeletePositionConfirm } from './useDeletePositionConfirm';
 
-type Position = PositionsQuery['positions'][number];
-
-export type PositionProps = Position & {
-  openEditModal: (data?: WithId<CreatePositionInput>) => void;
+export type PositionProps = UsePositions['item'] & {
+  openEditModal: (data?: PositionModalProps['data']) => void;
 };
 
 const StyledCard = styled(Card)({
@@ -30,12 +27,11 @@ const StyledCard = styled(Card)({
 
 export const Position: CFC<PositionProps> = props => {
   const { isAdmin } = useAuthorizedUser();
-  const { deletePositionConfirm } = useDeletePositionConfirm(pick(props, ['id', 'name']));
+  const deletePositionConfirm = useDeletePositionConfirm(pick(props, ['id', 'name']));
 
   const openUpdateModal = () => {
     props.openEditModal({
       ...pick(props, ['id', 'name', 'description', 'image']),
-      // teamId: props.team?.id,
     });
   };
 

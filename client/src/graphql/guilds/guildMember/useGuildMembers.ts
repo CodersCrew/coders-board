@@ -16,12 +16,14 @@ export type UseGuildMembers = {
 };
 
 export const useGuildMembers = (params?: UseGuildMembers['params']) => {
-  const refetch = { refetchQueries: [GraphQLOperations.Query.guildMembers, GraphQLOperations.Query.guildMembersIds] };
+  const mutationConfig = {
+    refetchQueries: [GraphQLOperations.Query.guildMembers, GraphQLOperations.Query.guildMembersIds],
+  };
 
   const [fetchMembers, { data, loading, error }] = useGuildMembersLazyQuery();
-  const [createMember] = useCreateGuildMemberMutation(refetch);
-  const [updateMember] = useUpdateGuildMemberMutation(refetch);
-  const [deleteMember] = useDeleteGuildMemberMutation(refetch);
+  const [createMember] = useCreateGuildMemberMutation(mutationConfig);
+  const [updateMember] = useUpdateGuildMemberMutation(mutationConfig);
+  const [deleteMember] = useDeleteGuildMemberMutation(mutationConfig);
 
   useEffect(() => {
     if (params?.guildId) {

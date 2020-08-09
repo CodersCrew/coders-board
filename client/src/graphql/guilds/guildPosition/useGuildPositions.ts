@@ -16,12 +16,14 @@ export type UseGuildPositions = {
 };
 
 export const useGuildPositions = (params?: UseGuildPositions['params']) => {
-  const refetch = { refetchQueries: [GraphQLOperations.Query.guildMembers, GraphQLOperations.Query.guildPositions] };
+  const mutationConfig = {
+    refetchQueries: [GraphQLOperations.Query.guildMembers, GraphQLOperations.Query.guildPositions],
+  };
 
   const [fetchPositions, { data, loading, error }] = useGuildPositionsLazyQuery();
-  const [createPosition] = useCreateGuildPositionMutation(refetch);
-  const [updatePosition] = useUpdateGuildPositionMutation(refetch);
-  const [deletePosition] = useDeleteGuildPositionMutation(refetch);
+  const [createPosition] = useCreateGuildPositionMutation(mutationConfig);
+  const [updatePosition] = useUpdateGuildPositionMutation(mutationConfig);
+  const [deletePosition] = useDeleteGuildPositionMutation(mutationConfig);
 
   useEffect(() => {
     if (params?.guildId) {

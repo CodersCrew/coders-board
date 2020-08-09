@@ -1,3 +1,12 @@
+query positions {
+	positions {
+    id
+    name
+    description
+    image
+  }
+}
+
 mutation createPosition($data: CreatePositionInput!) {
   createPosition(data: $data) {
     id
@@ -8,4 +17,8 @@ mutation updatePosition($data: UpdatePositionInput!) {
   updatePosition(data: $data) {
     id
   }
+}
+
+mutation deletePosition($id: ID!) {
+  deletePosition(id: $id)
 }
