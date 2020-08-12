@@ -2,12 +2,12 @@ import React from 'react';
 import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 import { Avatar, Tooltip } from 'antd';
-import { pick } from 'lodash';
 
 import { Card, CardMeta } from '@/components/molecules';
 import { UsePositions } from '@/graphql/positions';
 import { useAuthorizedUser } from '@/graphql/users';
 import { CFC } from '@/typings/components';
+import { pick } from '@/utils/objects';
 
 import { PositionModalProps } from './PositionModal';
 import { useDeletePositionConfirm } from './useDeletePositionConfirm';
@@ -32,12 +32,16 @@ export const Position: CFC<PositionProps> = props => {
   const openUpdateModal = () => {
     props.openEditModal({
       ...pick(props, ['id', 'name', 'description', 'image']),
+      guildId: props.guild?.id,
+      clanId: props.clan?.id,
     });
   };
 
-  const image = props.image || undefined;
-  // const tooltipTitle = props.team ? `Related to "${props.team.name}" team` : 'Unrelated';
-  const tooltipTitle = 'Unrelated';
+  const area = props.clan ?? props.guild ?? null;
+  const image = props.image || area?.image || undefined;
+  // eslint-disable-next-line no-underscore-dangle
+  const tooltipTitle = area ? `Related to ${area.name} ${area.__typename === 'Clan' ? 'clan' : 'guild'}` : 'Unrelated';
+
   const actions = isAdmin
     ? [
         <DeleteOutlined key="delete" onClick={deletePositionConfirm} />,

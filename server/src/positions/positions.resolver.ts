@@ -1,11 +1,13 @@
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
 import { AuthorizedGuard } from '../common/guards/authorized.guard';
+import { Clan } from '../guilds/clans/clan.model';
+import { Guild } from '../guilds/guild.model';
 import { CreatePositionInput } from './dto/create-position.input';
 import { DeletePositionArgs } from './dto/delete-position.args';
 import { GetPositionsArgs } from './dto/get-positions.args';
 import { UpdatePositionInput } from './dto/update-position.input';
-import { Area, Position } from './position.model';
+import { Position } from './position.model';
 import { PositionsService } from './positions.service';
 
 @Resolver(of => Position)
@@ -13,14 +15,14 @@ import { PositionsService } from './positions.service';
 export class PositionsResolver {
   constructor(private positionsService: PositionsService) {}
 
-  @ResolveField('area', returns => Area, { nullable: true })
-  async getArea(@Parent() position: Position) {
-    return this.positionsService.getArea(position.id);
+  @ResolveField('guild', returns => Guild, { nullable: true })
+  async getGuild(@Parent() position: Position) {
+    return this.positionsService.getGuild(position);
   }
 
-  @ResolveField('image', returns => String, { nullable: true })
-  async getImage(@Parent() position: Position) {
-    return this.positionsService.getImage(position.id);
+  @ResolveField('clan', returns => Clan, { nullable: true })
+  async getClan(@Parent() position: Position) {
+    return this.positionsService.getClan(position);
   }
 
   @Query(returns => [Position], { name: 'positions' })

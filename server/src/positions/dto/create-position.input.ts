@@ -15,17 +15,17 @@ export class CreatePositionInput implements Partial<Position> {
   @IsString()
   description: string;
 
-  @Field({ nullable: true })
+  @Field({ nullable: true, defaultValue: '' })
   @IsOptional()
   @IsString()
   image?: string;
 
-  @Field(type => ID, { nullable: true })
+  @Field(type => ID, { nullable: true, defaultValue: null })
   @IsOptional()
   @IsUUID()
   clanId?: string;
 
-  @Field(type => ID, { nullable: true })
+  @Field(type => ID, { nullable: true, defaultValue: null })
   @IsOptional()
   @IsUUID()
   guildId?: string;

@@ -4,6 +4,16 @@ query positions {
     name
     description
     image
+    clan {
+      id
+      name
+      image
+    }
+    guild {
+      id
+      name
+      image
+    }
   }
 }
 

@@ -60,19 +60,13 @@ enum TeamRole {
   MEMBER
 }
 
-type Area {
-  id: ID!
-  name: String!
-  description: String!
-  image: String!
-}
-
 type Position {
   id: ID!
   name: String!
   description: String!
   image: String
-  area: Area
+  clan: Clan
+  guild: Guild
 }
 
 type Squad {
@@ -271,17 +265,17 @@ input UpdateGuildInput {
 input CreatePositionInput {
   name: String!
   description: String = ""
-  image: String
-  clanId: ID
-  guildId: ID
+  image: String = ""
+  clanId: ID = null
+  guildId: ID = null
 }
 
 input UpdatePositionInput {
   name: String!
   description: String = ""
-  image: String
-  clanId: ID
-  guildId: ID
+  image: String = ""
+  clanId: ID = null
+  guildId: ID = null
   id: ID!
 }
 

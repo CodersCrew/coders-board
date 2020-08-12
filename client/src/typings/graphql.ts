@@ -72,21 +72,14 @@ export enum TeamRole {
   Member = 'MEMBER',
 }
 
-export type Area = {
-  __typename?: 'Area';
-  id: Scalars['ID'];
-  name: Scalars['String'];
-  description: Scalars['String'];
-  image: Scalars['String'];
-};
-
 export type Position = {
   __typename?: 'Position';
   id: Scalars['ID'];
   name: Scalars['String'];
   description: Scalars['String'];
   image?: Maybe<Scalars['String']>;
-  area?: Maybe<Area>;
+  clan?: Maybe<Clan>;
+  guild?: Maybe<Guild>;
 };
 
 export type Squad = {
@@ -566,6 +559,7 @@ export const GraphQLOperations = {
   Query: {
     chapterSelectChapters: 'chapterSelectChapters',
     clanSelectClans: 'clanSelectClans',
+    guildSelectGuilds: 'guildSelectGuilds',
     positionSelectPositions: 'positionSelectPositions',
     userSelectUsers: 'userSelectUsers',
     clans: 'clans',

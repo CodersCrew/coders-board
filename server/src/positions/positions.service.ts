@@ -1,12 +1,11 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { pick } from 'lodash';
 
 import { brackets } from '../common/utils/brackets';
 import { CreatePositionInput } from './dto/create-position.input';
 import { GetPositionsArgs } from './dto/get-positions.args';
 import { UpdatePositionInput } from './dto/update-position.input';
-import { Area, areaKeys, Position } from './position.model';
+import { Position } from './position.model';
 import { PositionRepository } from './position.repository';
 
 @Injectable()
@@ -16,38 +15,12 @@ export class PositionsService {
     private readonly positionRepository: PositionRepository,
   ) {}
 
-  async getArea(id: string): Promise<Area | null> {
-    const position = await this.findByIdOrThrow(id);
-
-    if (position.guildId) {
-      const guild = await position.guild;
-      return pick(guild, areaKeys);
-    }
-
-    if (position.clanId) {
-      const clan = await position.clan;
-      return pick(clan, areaKeys);
-    }
-
-    return null;
+  getGuild(position: Position) {
+    return position.guild;
   }
 
-  async getImage(id: string): Promise<string | null> {
-    const position = await this.findByIdOrThrow(id);
-
-    if (position.image) return position.image;
-
-    if (position.guildId) {
-      const guild = await position.guild;
-      return guild.image;
-    }
-
-    if (position.clanId) {
-      const clan = await position.clan;
-      return clan.image;
-    }
-
-    return null;
+  getClan(position: Position) {
+    return position.clan;
   }
 
   findById(id: string): Promise<Position | null> {
@@ -88,6 +61,7 @@ export class PositionsService {
 
   async update({ id, ...input }: UpdatePositionInput): Promise<Position> {
     const position = await this.findByIdOrThrow(id);
+    console.log(input);
 
     return this.positionRepository.save({ ...position, ...input });
   }
