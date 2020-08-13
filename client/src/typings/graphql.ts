@@ -33,6 +33,7 @@ export type Clan = {
   googleId: Scalars['String'];
   image: Scalars['String'];
   guild: Array<Guild>;
+  guildId: Scalars['String'];
   positions: Array<GuildPosition>;
 };
 
@@ -44,7 +45,9 @@ export type GuildPosition = {
   notes?: Maybe<Scalars['String']>;
   kind: GuildPositionKind;
   member: GuildMember;
+  memberId: Scalars['String'];
   clan?: Maybe<Clan>;
+  clanId: Scalars['String'];
 };
 
 export enum GuildPositionKind {
@@ -58,7 +61,9 @@ export type GuildMember = {
   id: Scalars['ID'];
   role: TeamRole;
   user: User;
+  userId: Scalars['String'];
   guild: Guild;
+  guildId: Scalars['String'];
   positions: Array<GuildPosition>;
 };
 
@@ -79,7 +84,9 @@ export type Position = {
   description: Scalars['String'];
   image?: Maybe<Scalars['String']>;
   clan?: Maybe<Clan>;
+  clanId: Scalars['String'];
   guild?: Maybe<Guild>;
+  guildId: Scalars['String'];
 };
 
 export type Squad = {
@@ -103,6 +110,7 @@ export type Chapter = {
   email: Scalars['String'];
   googleId: Scalars['String'];
   squad: Array<Squad>;
+  squadId: Scalars['String'];
   positions: Array<SquadPosition>;
 };
 
@@ -113,8 +121,11 @@ export type SquadPosition = {
   to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
   member: SquadMember;
+  memberId: Scalars['String'];
   chapter?: Maybe<Chapter>;
+  chapterId: Scalars['String'];
   position: Position;
+  positionId: Scalars['String'];
   clan?: Maybe<Chapter>;
 };
 
@@ -124,7 +135,9 @@ export type SquadMember = {
   role: TeamRole;
   positions: Array<SquadPosition>;
   squad: Squad;
+  squadId: Scalars['String'];
   user: User;
+  userId: Scalars['String'];
 };
 
 export type SquadMemberPositionsArgs = {

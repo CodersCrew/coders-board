@@ -28,6 +28,7 @@ export class SquadMember extends BaseModel {
   )
   squad: Promise<Squad>;
 
+  @Field()
   @Column()
   squadId: string;
 
@@ -38,6 +39,7 @@ export class SquadMember extends BaseModel {
   )
   user: Promise<User>;
 
+  @Field()
   @Column()
   userId: string;
 }

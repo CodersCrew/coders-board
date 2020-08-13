@@ -6,4 +6,7 @@ export type PageHeaderProps = AntPageHeaderProps;
 
 export const PageHeader = styled(AntPageHeader)<PageHeaderProps>(({ theme }) => ({
   backgroundColor: theme.colors.background.component,
+  position: 'sticky',
+  top: 0,
+  zIndex: 100,
 }));

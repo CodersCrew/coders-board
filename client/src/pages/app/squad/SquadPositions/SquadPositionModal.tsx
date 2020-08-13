@@ -16,6 +16,8 @@ import { CreateSquadPositionInput } from '@/typings/graphql';
 import { getInitialValuesFromSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
+import { useSquadContext } from '../SquadContext';
+
 type FormValues = Omit<CreateSquadPositionInput, 'squadId'>;
 
 type FormConfig = FormikConfig<FormValues>;
@@ -23,10 +25,10 @@ type FormConfig = FormikConfig<FormValues>;
 export type SquadPositionModalProps = ModalProps & {
   onCancel: () => void;
   data: (FormValues & { id: string }) | null;
-  squadId: string;
 };
 
-const SquadPositionModalComponent: CFC<SquadPositionModalProps> = ({ data, squadId, ...props }) => {
+const SquadPositionModalComponent: CFC<SquadPositionModalProps> = ({ data, ...props }) => {
+  const { squadId } = useSquadContext();
   const formik = useFormikContext<FormValues>();
   const squadMembersIds = useSquadMembersIds({ squadId });
 
@@ -112,6 +114,7 @@ const SquadPositionModalComponent: CFC<SquadPositionModalProps> = ({ data, squad
 };
 
 export const SquadPositionModal: CFC<SquadPositionModalProps> = props => {
+  const { squadId } = useSquadContext();
   const squadPositions = useSquadPositions();
 
   const validationSchema: YupSchema<FormValues> = yup.object({
@@ -132,10 +135,10 @@ export const SquadPositionModal: CFC<SquadPositionModalProps> = props => {
     try {
       if (props.data?.id) {
         await squadPositions.update({
-          variables: { data: { ...pick(values, ['from', 'to', 'notes']), id: props.data.id, squadId: props.squadId } },
+          variables: { data: { ...pick(values, ['from', 'to', 'notes']), id: props.data.id, squadId } },
         });
       } else {
-        await squadPositions.create({ variables: { data: { ...values, squadId: props.squadId } } });
+        await squadPositions.create({ variables: { data: { ...values, squadId } } });
       }
 
       props.onCancel();

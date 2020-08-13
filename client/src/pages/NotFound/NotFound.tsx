@@ -5,10 +5,10 @@ import { Button, Title } from '@/components/atoms';
 import { useAuth } from '@/graphql/users';
 
 const NotFound = () => {
-  const { isAuthorized } = useAuth();
+  const auth = useAuth();
   const navigate = useNavigate();
 
-  if (!isAuthorized) {
+  if (!auth.isAuthorized) {
     return <Navigate to="/login" />;
   }
 

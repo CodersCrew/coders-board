@@ -21,6 +21,7 @@ export class GuildMember extends BaseModel {
   )
   user: Promise<User>;
 
+  @Field()
   @Column()
   userId: string;
 
@@ -31,6 +32,7 @@ export class GuildMember extends BaseModel {
   )
   guild: Promise<Guild>;
 
+  @Field()
   @Column()
   guildId: string;
 

@@ -4,6 +4,16 @@ query me {
     image
   	fullName
     role
+		guilds {
+			id
+      role
+			guildId
+    }
+    squads {
+			id
+      role
+			squadId
+    }
   }
 }
 

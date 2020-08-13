@@ -8,6 +8,7 @@ import { UseGuildPositions } from '@/graphql/guilds';
 import { CFC } from '@/typings/components';
 import { parseGuildPositionKind } from '@/utils/platform';
 
+import { useGuildContext } from '../GuildContext';
 import { GuildPositionModalProps } from './GuildPositionModal';
 import { useDeleteGuildPositionConfirm } from './useDeleteGuildPositionConfirm';
 
@@ -19,10 +20,8 @@ type GuildPositionProps = UseGuildPositions['item'] & {
 const formaDate = (date: Moment) => moment(date).format('MMMM YYYY');
 
 export const GuildPosition: CFC<GuildPositionProps> = props => {
-  const deleteGuildPositionConfirm = useDeleteGuildPositionConfirm({
-    ...pick(props, ['id', 'kind']),
-    guildId: props.member.guild.id,
-  });
+  const { guildRole } = useGuildContext();
+  const deleteGuildPositionConfirm = useDeleteGuildPositionConfirm(pick(props, ['id', 'kind']));
 
   const openUpdateModal = () => {
     props.openModal({
@@ -37,14 +36,18 @@ export const GuildPosition: CFC<GuildPositionProps> = props => {
 
   return (
     <List.Item
-      actions={[
-        <Button key="update" type="link" onClick={openUpdateModal}>
-          Update
-        </Button>,
-        <Button key="delete" danger type="link" onClick={deleteGuildPositionConfirm}>
-          Delete
-        </Button>,
-      ]}
+      actions={
+        guildRole.isManager
+          ? [
+              <Button key="update" type="link" onClick={openUpdateModal}>
+                Update
+              </Button>,
+              <Button key="delete" danger type="link" onClick={deleteGuildPositionConfirm}>
+                Delete
+              </Button>,
+            ]
+          : []
+      }
     >
       <List.Item.Meta
         avatar={<Avatar src={props.member.user.image} />}

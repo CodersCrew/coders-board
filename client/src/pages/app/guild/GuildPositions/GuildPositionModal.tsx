@@ -17,6 +17,8 @@ import { getInitialValuesFromSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 import { pick } from '@/utils/objects';
 
+import { useGuildContext } from '../GuildContext';
+
 type FormValues = Omit<CreateGuildPositionInput, 'guildId'>;
 
 type FormConfig = FormikConfig<FormValues>;
@@ -24,11 +26,11 @@ type FormConfig = FormikConfig<FormValues>;
 export type GuildPositionModalProps = ModalProps & {
   onCancel: () => void;
   data: (FormValues & { id: string }) | null;
-  guildId: string;
 };
 
-const GuildPositionModalComponent: CFC<GuildPositionModalProps> = ({ data, guildId, ...props }) => {
+const GuildPositionModalComponent: CFC<GuildPositionModalProps> = ({ data, ...props }) => {
   const formik = useFormikContext<FormValues>();
+  const { guildId } = useGuildContext();
   const guildMambersIds = useGuildMembersIds({ guildId });
   const title = data?.id ? 'Edit position' : 'Add position';
   const okText = data?.id ? 'Update position' : 'Add position';
@@ -100,6 +102,7 @@ const GuildPositionModalComponent: CFC<GuildPositionModalProps> = ({ data, guild
 
 export const GuildPositionModal: CFC<GuildPositionModalProps> = props => {
   const guildPositions = useGuildPositions();
+  const { guildId } = useGuildContext();
 
   const validationSchema: YupSchema<FormValues> = yup.object({
     from: yup.date().required().default(null),
@@ -119,10 +122,10 @@ export const GuildPositionModal: CFC<GuildPositionModalProps> = props => {
     try {
       if (props.data?.id) {
         await guildPositions.update({
-          variables: { data: { ...pick(values, ['from', 'to', 'notes']), id: props.data.id, guildId: props.guildId } },
+          variables: { data: { ...pick(values, ['from', 'to', 'notes']), id: props.data.id, guildId } },
         });
       } else {
-        await guildPositions.create({ variables: { data: { ...values, guildId: props.guildId } } });
+        await guildPositions.create({ variables: { data: { ...values, guildId } } });
       }
 
       props.onCancel();

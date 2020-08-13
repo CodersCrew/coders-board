@@ -1,5 +1,4 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { List } from 'antd';
 import { get, groupBy } from 'lodash';
 
@@ -9,6 +8,7 @@ import { UseGuildPositions, useGuildPositions } from '@/graphql/guilds';
 import { useModalState } from '@/hooks/useModalState';
 import { useQueryParam } from '@/hooks/useQueryParam';
 
+import { useGuildContext } from '../GuildContext';
 import { EmptyPositions } from './EmptyPositions';
 import { FiltersCard } from './FiltersCard';
 import { GuildPosition } from './GuildPosition';
@@ -26,7 +26,7 @@ const filterPositions = (positions: UseGuildPositions['item'][], search: string)
 };
 
 const GuildPositions = () => {
-  const { id: guildId } = useParams();
+  const { guildId } = useGuildContext();
   const guildPositions = useGuildPositions({ guildId });
   const guildPositionModal = useModalState<GuildPositionModalProps['data']>();
   const [search, setSearch] = useQueryParam('search', false);
@@ -53,7 +53,7 @@ const GuildPositions = () => {
     <Spin spinning={guildPositions.loading} tip="Loading member actions">
       <FiltersCard search={search} onSearch={setSearch} openModal={guildPositionModal.open} />
       {!guildPositions.loading && (
-        <Box maxWidth="100%" overflow="auto" p={24} pt={0}>
+        <Box maxWidth="100%" overflow="auto" mt={32}>
           {filteredPositionItems.length === 0 && (
             <EmptyPositions positionsCount={guildPositions.count} openModal={guildPositionModal.open} />
           )}
@@ -67,7 +67,6 @@ const GuildPositions = () => {
           visible={guildPositionModal.isVisible}
           onCancel={guildPositionModal.close}
           data={guildPositionModal.data}
-          guildId={guildId}
         />
       )}
     </Spin>

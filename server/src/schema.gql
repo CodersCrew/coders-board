@@ -22,6 +22,7 @@ type Clan {
   googleId: String!
   image: String!
   guild: [Guild!]!
+  guildId: String!
   positions: [GuildPosition!]!
 }
 
@@ -32,7 +33,9 @@ type GuildPosition {
   notes: String
   kind: GuildPositionKind!
   member: GuildMember!
+  memberId: String!
   clan: Clan
+  clanId: String!
 }
 
 """
@@ -50,7 +53,9 @@ type GuildMember {
   id: ID!
   role: TeamRole!
   user: User!
+  userId: String!
   guild: Guild!
+  guildId: String!
   positions(active: Boolean): [GuildPosition!]!
 }
 
@@ -66,7 +71,9 @@ type Position {
   description: String!
   image: String
   clan: Clan
+  clanId: String!
   guild: Guild
+  guildId: String!
 }
 
 type Squad {
@@ -88,6 +95,7 @@ type Chapter {
   email: String!
   googleId: String!
   squad: [Squad!]!
+  squadId: String!
   positions: [SquadPosition!]!
 }
 
@@ -97,8 +105,11 @@ type SquadPosition {
   to: DateTime
   notes: String
   member: SquadMember!
+  memberId: String!
   chapter: Chapter
+  chapterId: String!
   position: Position!
+  positionId: String!
   clan: Chapter
 }
 
@@ -107,7 +118,9 @@ type SquadMember {
   role: TeamRole!
   positions(active: Boolean): [SquadPosition!]!
   squad: Squad!
+  squadId: String!
   user: User!
+  userId: String!
 }
 
 type User {

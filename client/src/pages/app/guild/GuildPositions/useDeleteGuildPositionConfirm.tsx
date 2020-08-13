@@ -9,15 +9,17 @@ import { GuildPositionKind } from '@/typings/graphql';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 import { parseGuildPositionKind } from '@/utils/platform';
 
+import { useGuildContext } from '../GuildContext';
+
 type Params = {
   kind: GuildPositionKind;
   id: string;
-  guildId: string;
 };
 
-export const useDeleteGuildPositionConfirm = ({ kind, id, guildId }: Params) => {
+export const useDeleteGuildPositionConfirm = ({ kind, id }: Params) => {
   const { colors } = useTheme();
   const guildPositions = useGuildPositions();
+  const { guildId } = useGuildContext();
 
   const messages = getBasicMessages('team position', 'delete');
 

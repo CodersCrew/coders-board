@@ -1,15 +1,17 @@
 import React from 'react';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Tabs } from 'antd';
 import { BreadcrumbProps } from 'antd/lib/breadcrumb';
 import { TabsProps } from 'antd/lib/tabs';
 
-import { PageHeader } from '@/components/molecules';
+import { Page } from '@/components/molecules';
 import { useGuild } from '@/graphql/guilds';
 import { breadcrumbItemRender } from '@/utils/breadcrumbItemRender';
 
-const StyledPageHeader = styled(PageHeader)({
+import { GuildContextProvider, useGuildContext } from './GuildContext';
+
+const StyledPageHeader = styled(Page.Header)({
   '.ant-avatar': {
     width: 72,
     height: 40,
@@ -17,10 +19,10 @@ const StyledPageHeader = styled(PageHeader)({
 });
 
 const GuildLayout = () => {
-  const params = useParams();
+  const { guildId } = useGuildContext();
   const location = useLocation();
   const navigate = useNavigate();
-  const guild = useGuild({ guildId: params.id });
+  const guild = useGuild({ guildId });
 
   if (!guild.data) return null;
 
@@ -48,7 +50,7 @@ const GuildLayout = () => {
   );
 
   return (
-    <>
+    <Page>
       <StyledPageHeader
         title={fullName}
         breadcrumb={{ routes, itemRender: breadcrumbItemRender }}
@@ -57,9 +59,15 @@ const GuildLayout = () => {
       >
         {guild.data.description}
       </StyledPageHeader>
-      <Outlet />
-    </>
+      <Page.Content>
+        <Outlet />
+      </Page.Content>
+    </Page>
   );
 };
 
-export default GuildLayout;
+export default () => (
+  <GuildContextProvider>
+    <GuildLayout />
+  </GuildContextProvider>
+);

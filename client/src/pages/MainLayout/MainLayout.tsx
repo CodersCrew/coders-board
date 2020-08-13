@@ -7,13 +7,13 @@ import { LoadingScreen } from './LoadingScreen';
 
 const MainLayout = () => {
   const [initialized, setInitialized] = useState(false);
-  const { loading } = useAuth();
+  const auth = useAuth();
 
   useEffect(() => {
-    if (!loading && !initialized) {
+    if (!auth.loading && !initialized) {
       setInitialized(true);
     }
-  }, [loading]);
+  }, [auth.loading]);
 
   return initialized ? <Outlet /> : <LoadingScreen />;
 };

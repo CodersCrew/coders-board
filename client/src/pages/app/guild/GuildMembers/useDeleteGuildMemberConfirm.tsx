@@ -7,14 +7,17 @@ import { confirmModal } from '@/components/molecules';
 import { useGuildMembers } from '@/graphql/guilds';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
+import { useGuildContext } from '../GuildContext';
+
 type Params = {
   fullName: string;
   id: string;
 };
 
-export const useDeleteGuildMemberConfirm = (guildId: string) => {
+export const useDeleteGuildMemberConfirm = () => {
   const { colors } = useTheme();
   const guildMembers = useGuildMembers();
+  const { guildId } = useGuildContext();
 
   const messages = getBasicMessages('member', 'delete');
 

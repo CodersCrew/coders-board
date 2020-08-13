@@ -28,6 +28,7 @@ export class SquadPosition extends BaseModel {
   )
   member: Promise<SquadMember>;
 
+  @Field()
   @Column()
   memberId: string;
 
@@ -39,6 +40,7 @@ export class SquadPosition extends BaseModel {
   )
   chapter?: Promise<Chapter>;
 
+  @Field()
   @Column({ nullable: true })
   chapterId?: string;
 
@@ -46,6 +48,7 @@ export class SquadPosition extends BaseModel {
   @ManyToOne(type => Position)
   position: Promise<Position>;
 
+  @Field()
   @Column()
   positionId: string;
 }

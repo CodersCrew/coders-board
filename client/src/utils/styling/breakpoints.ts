@@ -1,6 +1,6 @@
 import { breakpoints } from '@/config/theme';
 
-type BreakpointKey = keyof typeof breakpoints;
+export type BreakpointKey = keyof typeof breakpoints;
 
 export const down = (x: BreakpointKey) => `@media (max-width: ${breakpoints[x]})`;
 

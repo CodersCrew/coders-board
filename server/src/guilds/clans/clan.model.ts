@@ -19,6 +19,7 @@ export class Clan extends TeamModel {
   )
   guild: Promise<Guild>;
 
+  @Field()
   @Column()
   guildId: string;
 

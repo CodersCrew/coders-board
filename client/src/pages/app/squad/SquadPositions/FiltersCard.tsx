@@ -6,6 +6,8 @@ import { Box, Button } from '@/components/atoms';
 import { Card } from '@/components/molecules';
 import { CFC } from '@/typings/components';
 
+import { useSquadContext } from '../SquadContext';
+
 type FiltersCardProps = {
   onSearch: (value: string) => void;
   search: string;
@@ -13,14 +15,18 @@ type FiltersCardProps = {
 };
 
 export const FiltersCard: CFC<FiltersCardProps> = ({ search, onSearch, openModal }) => {
+  const { squadRole } = useSquadContext();
+
   return (
-    <Card m={24} p={24} display="flex">
+    <Card p={24} display="flex">
       <Box width={240}>
         <Input.Search placeholder="Search..." onSearch={onSearch} defaultValue={search} />
       </Box>
-      <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={() => openModal()}>
-        Add position
-      </Button>
+      {squadRole.isManager && (
+        <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={() => openModal()}>
+          Add position
+        </Button>
+      )}
     </Card>
   );
 };

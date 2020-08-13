@@ -2,8 +2,8 @@ import React from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 
-import { Box, Button } from '@/components/atoms';
-import { PageHeader } from '@/components/molecules';
+import { Button } from '@/components/atoms';
+import { Page } from '@/components/molecules';
 import { usePositions } from '@/graphql/positions';
 import { useModalState } from '@/hooks/useModalState';
 import { down } from '@/utils/styling';
@@ -34,8 +34,8 @@ const Positions = () => {
   const positionModal = useModalState<PositionModalProps['data']>();
 
   return (
-    <>
-      <PageHeader
+    <Page>
+      <Page.Header
         title="Positions"
         subTitle="Find out all positions available across CodersCrew"
         extra={[
@@ -44,17 +44,17 @@ const Positions = () => {
           </Button>,
         ]}
       />
-      <Box m={24}>
+      <Page.Content>
         <CardsGrid>
           {positions.data.map(position => (
             <Position key={position.id} openEditModal={positionModal.open} {...position} />
           ))}
         </CardsGrid>
-      </Box>
+      </Page.Content>
       {positionModal.isMounted && (
         <PositionModal visible={positionModal.isVisible} data={positionModal.data} onCancel={positionModal.close} />
       )}
-    </>
+    </Page>
   );
 };
 

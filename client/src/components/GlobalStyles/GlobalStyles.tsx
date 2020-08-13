@@ -26,7 +26,8 @@ export const GlobalStyles = () => {
           background: ${theme.colors.background.dark};
         }
 
-        .ant-menu-dark .ant-menu-item:hover {
+        .ant-menu-dark .ant-menu-item:hover,
+        .ant-dropdown-menu-dark {
           background: ${lighten(0.1, theme.colors.background.dark)};
         }
       `}

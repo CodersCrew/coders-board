@@ -1,21 +1,21 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import styled from '@emotion/styled';
 
 import { Paragraph, Title } from '@/components/atoms';
 import { Card, CardMeta } from '@/components/molecules';
 import { useClans } from '@/graphql/guilds';
 
+import { useGuildContext } from './GuildContext';
+
 const Grid = styled.div({
   display: 'grid',
   gridGap: 24,
   gridTemplateColumns: 'repeat(4, 1fr)',
-  margin: 32,
 });
 
 const GuildClans = () => {
-  const params = useParams();
-  const clans = useClans({ guildId: params.id });
+  const { guildId } = useGuildContext();
+  const clans = useClans({ guildId });
 
   return (
     <Grid>

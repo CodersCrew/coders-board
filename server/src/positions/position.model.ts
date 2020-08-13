@@ -24,6 +24,7 @@ export class Position extends BaseModel {
   @ManyToOne(type => Clan, { nullable: true })
   clan?: Promise<Clan>;
 
+  @Field()
   @Column({ nullable: true })
   clanId?: string;
 
@@ -31,6 +32,7 @@ export class Position extends BaseModel {
   @ManyToOne(type => Guild, { nullable: true })
   guild?: Promise<Guild>;
 
+  @Field()
   @Column({ nullable: true })
   guildId?: string;
 }

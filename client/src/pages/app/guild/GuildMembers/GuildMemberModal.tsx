@@ -12,18 +12,20 @@ import { CreateGuildMemberInput, TeamRole } from '@/typings/graphql';
 import { getInitialValuesFromSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
+import { useGuildContext } from '../GuildContext';
+
 type FormValues = Omit<CreateGuildMemberInput, 'guildId'>;
 
 type FormConfig = FormikConfig<FormValues>;
 
 export type GuildMemberModalProps = ModalProps & {
   onCancel: () => void;
-  guildId: string;
   data: (FormValues & { id: string }) | null;
 };
 
-const GuildMemberModalComponent: CFC<GuildMemberModalProps> = ({ guildId, data, ...props }) => {
+const GuildMemberModalComponent: CFC<GuildMemberModalProps> = ({ data, ...props }) => {
   const formik = useFormikContext<FormValues>();
+  const { guildId } = useGuildContext();
   const guildMambersIds = useGuildMembersIds({ guildId });
 
   const title = data ? 'Update guild member' : 'Add new guild member';
@@ -62,6 +64,7 @@ const GuildMemberModalComponent: CFC<GuildMemberModalProps> = ({ guildId, data, 
 
 export const GuildMemberModal: CFC<GuildMemberModalProps> = props => {
   const guildMembers = useGuildMembers();
+  const { guildId } = useGuildContext();
 
   const validationSchema: YupSchema<FormValues> = yup.object({
     userId: yup.string().required(),
@@ -77,10 +80,10 @@ export const GuildMemberModal: CFC<GuildMemberModalProps> = props => {
     try {
       if (props.data) {
         await guildMembers.update({
-          variables: { data: { role: values.role, id: props.data.id, guildId: props.guildId } },
+          variables: { data: { role: values.role, id: props.data.id, guildId } },
         });
       } else {
-        await guildMembers.create({ variables: { data: { ...values, guildId: props.guildId } } });
+        await guildMembers.create({ variables: { data: { ...values, guildId } } });
       }
 
       props.onCancel();

@@ -1,15 +1,17 @@
 import React from 'react';
-import { Outlet, useLocation, useNavigate, useParams } from 'react-router-dom';
+import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Tabs } from 'antd';
 import { BreadcrumbProps } from 'antd/lib/breadcrumb';
 import { TabsProps } from 'antd/lib/tabs';
 
-import { PageHeader } from '@/components/molecules';
+import { Page } from '@/components/molecules';
 import { useSquad } from '@/graphql/squads';
 import { breadcrumbItemRender } from '@/utils/breadcrumbItemRender';
 
-const StyledPageHeader = styled(PageHeader)({
+import { SquadContextProvider, useSquadContext } from './SquadContext';
+
+const StyledPageHeader = styled(Page.Header)({
   '.ant-avatar': {
     width: 72,
     height: 40,
@@ -17,10 +19,10 @@ const StyledPageHeader = styled(PageHeader)({
 });
 
 const SquadLayout = () => {
-  const params = useParams();
+  const { squadId } = useSquadContext();
   const location = useLocation();
   const navigate = useNavigate();
-  const squad = useSquad({ squadId: params.id });
+  const squad = useSquad({ squadId });
 
   if (!squad.data) return null;
 
@@ -48,7 +50,7 @@ const SquadLayout = () => {
   );
 
   return (
-    <>
+    <Page>
       <StyledPageHeader
         title={fullName}
         breadcrumb={{ routes, itemRender: breadcrumbItemRender }}
@@ -57,9 +59,15 @@ const SquadLayout = () => {
       >
         {squad.data.description}
       </StyledPageHeader>
-      <Outlet />
-    </>
+      <Page.Content>
+        <Outlet />
+      </Page.Content>
+    </Page>
   );
 };
 
-export default SquadLayout;
+export default () => (
+  <SquadContextProvider>
+    <SquadLayout />
+  </SquadContextProvider>
+);

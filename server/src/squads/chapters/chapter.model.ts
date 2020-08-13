@@ -15,6 +15,7 @@ export class Chapter extends TeamModel {
   )
   squad: Promise<Squad>;
 
+  @Field()
   @Column()
   squadId: string;
 

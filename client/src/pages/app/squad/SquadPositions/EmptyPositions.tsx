@@ -6,12 +6,16 @@ import { Button } from '@/components/atoms';
 import { Card } from '@/components/molecules';
 import { CFC } from '@/typings/components';
 
+import { useSquadContext } from '../SquadContext';
+
 type EmptyPositionsProps = {
   openModal: () => void;
   positionsCount: number;
 };
 
 export const EmptyPositions: CFC<EmptyPositionsProps> = ({ openModal, positionsCount }) => {
+  const { squadRole } = useSquadContext();
+
   return (
     <Card>
       <Empty
@@ -20,7 +24,7 @@ export const EmptyPositions: CFC<EmptyPositionsProps> = ({ openModal, positionsC
           positionsCount ? 'No positions for specified search criteria' : "You don't have any positions in this squad"
         }
       >
-        {!positionsCount && (
+        {!positionsCount && squadRole.isManager && (
           <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={() => openModal()}>
             Add position
           </Button>

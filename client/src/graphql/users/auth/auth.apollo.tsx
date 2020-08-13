@@ -7,7 +7,10 @@ import * as Types from '../../../typings/graphql';
 export type MeQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type MeQuery = { __typename?: 'Query' } & {
-  me: { __typename?: 'User' } & Pick<Types.User, 'id' | 'image' | 'fullName' | 'role'>;
+  me: { __typename?: 'User' } & Pick<Types.User, 'id' | 'image' | 'fullName' | 'role'> & {
+      guilds: Array<{ __typename?: 'GuildMember' } & Pick<Types.GuildMember, 'id' | 'role' | 'guildId'>>;
+      squads: Array<{ __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id' | 'role' | 'squadId'>>;
+    };
 };
 
 export type SignOutMutationVariables = Types.Exact<{ [key: string]: never }>;
@@ -21,6 +24,16 @@ export const MeDocument = gql`
       image
       fullName
       role
+      guilds {
+        id
+        role
+        guildId
+      }
+      squads {
+        id
+        role
+        squadId
+      }
     }
   }
 `;

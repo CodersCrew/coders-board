@@ -7,13 +7,16 @@ import { confirmModal } from '@/components/molecules';
 import { useSquadMembers } from '@/graphql/squads';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
+import { useSquadContext } from '../SquadContext';
+
 type Params = {
   fullName: string;
   id: string;
 };
 
-export const useDeleteSquadMemberConfirm = (squadId: string) => {
+export const useDeleteSquadMemberConfirm = () => {
   const theme = useTheme();
+  const { squadId } = useSquadContext();
   const squadMembers = useSquadMembers();
 
   const messages = getBasicMessages('member', 'delete');

@@ -7,6 +7,7 @@ import { Button } from '@/components/atoms';
 import { UseSquadPositions } from '@/graphql/squads';
 import { CFC } from '@/typings/components';
 
+import { useSquadContext } from '../SquadContext';
 import { SquadPositionModalProps } from './SquadPositionModal';
 import { useDeleteSquadPositionConfirm } from './useDeleteSquadPositionConfirm';
 
@@ -18,10 +19,11 @@ type SquadPositionProps = UseSquadPositions['item'] & {
 const formaDate = (date: Moment) => moment(date).format('MMMM YYYY');
 
 export const SquadPosition: CFC<SquadPositionProps> = props => {
+  const { squadRole } = useSquadContext();
+
   const deleteSquadPositionConfirm = useDeleteSquadPositionConfirm({
     id: props.id,
     positionName: props.position.name,
-    squadId: props.member.squad.id,
   });
 
   const openUpdateModal = () => {
@@ -37,14 +39,18 @@ export const SquadPosition: CFC<SquadPositionProps> = props => {
 
   return (
     <List.Item
-      actions={[
-        <Button key="update" type="link" onClick={openUpdateModal}>
-          Update
-        </Button>,
-        <Button key="delete" danger type="link" onClick={deleteSquadPositionConfirm}>
-          Delete
-        </Button>,
-      ]}
+      actions={
+        squadRole
+          ? [
+              <Button key="update" type="link" onClick={openUpdateModal}>
+                Update
+              </Button>,
+              <Button key="delete" danger type="link" onClick={deleteSquadPositionConfirm}>
+                Delete
+              </Button>,
+            ]
+          : []
+      }
     >
       <List.Item.Meta
         avatar={<Avatar src={props.member.user.image} />}

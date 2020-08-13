@@ -40,6 +40,7 @@ export class GuildPosition extends BaseModel {
   )
   member: Promise<GuildMember>;
 
+  @Field()
   @Column()
   memberId: string;
 
@@ -51,6 +52,7 @@ export class GuildPosition extends BaseModel {
   )
   clan?: Promise<Clan>;
 
+  @Field()
   @Column({ nullable: true })
   clanId?: string;
 }

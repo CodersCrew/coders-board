@@ -1,8 +1,4 @@
-import { MeQuery, useMeQuery } from './auth.apollo';
-
-export type UseAuth = {
-  data: MeQuery['me'];
-};
+import { useMeQuery } from './auth.apollo';
 
 export const useAuth = () => {
   const { loading, data, error } = useMeQuery();
@@ -11,7 +7,6 @@ export const useAuth = () => {
 
   return {
     isAuthorized: Boolean(me),
-    data: me,
     loading,
     error,
   };

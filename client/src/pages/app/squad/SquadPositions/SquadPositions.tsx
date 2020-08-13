@@ -1,5 +1,4 @@
 import React from 'react';
-import { useParams } from 'react-router-dom';
 import { List } from 'antd';
 import { get, groupBy } from 'lodash';
 
@@ -9,6 +8,7 @@ import { UseSquadPositions, useSquadPositions } from '@/graphql/squads';
 import { useModalState } from '@/hooks/useModalState';
 import { useQueryParam } from '@/hooks/useQueryParam';
 
+import { useSquadContext } from '../SquadContext';
 import { EmptyPositions } from './EmptyPositions';
 import { FiltersCard } from './FiltersCard';
 import { SquadPosition } from './SquadPosition';
@@ -26,8 +26,8 @@ const filterPositions = (positions: UseSquadPositions['item'][], search: string)
 };
 
 const SquadPositions = () => {
-  const params = useParams();
-  const squadPositions = useSquadPositions({ squadId: params.id });
+  const { squadId } = useSquadContext();
+  const squadPositions = useSquadPositions({ squadId });
   const squadPositionModal = useModalState<SquadPositionModalProps['data']>();
   const [search, setSearch] = useQueryParam('search', false);
 
@@ -57,7 +57,7 @@ const SquadPositions = () => {
     <Spin spinning={squadPositions.loading} tip="Loading member actions">
       <FiltersCard search={search} onSearch={setSearch} openModal={squadPositionModal.open} />
       {!squadPositions.loading && (
-        <Box maxWidth="100%" overflow="auto" p={24} pt={0}>
+        <Box maxWidth="100%" overflow="auto" mt={32}>
           {filteredPositionItems.length === 0 && (
             <EmptyPositions positionsCount={squadPositions.count} openModal={squadPositionModal.open} />
           )}
@@ -71,7 +71,6 @@ const SquadPositions = () => {
           visible={squadPositionModal.isVisible}
           onCancel={squadPositionModal.close}
           data={squadPositionModal.data}
-          squadId={params.id}
         />
       )}
     </Spin>

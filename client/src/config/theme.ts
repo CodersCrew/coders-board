@@ -1,4 +1,3 @@
-import { Theme } from '@emotion/react';
 import { transparentize } from 'polished';
 
 const colors = {
@@ -108,7 +107,7 @@ export const breakpoints = {
   xxl: '1600px',
 };
 
-export const theme: Theme = {
+export const theme = {
   space: [] as (string | number)[],
   colors,
   fonts,
@@ -119,3 +118,5 @@ export const theme: Theme = {
   radii,
   breakpoints,
 };
+
+export type ConfigTheme = typeof theme;
