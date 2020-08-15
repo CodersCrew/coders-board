@@ -22,17 +22,17 @@ export class SquadMembersResolver {
 
   @ResolveField('user', returns => User)
   async getUser(@Parent() squadMember: SquadMember) {
-    return this.squadMembersService.getUser(squadMember.id);
+    return this.squadMembersService.getUser(squadMember);
   }
 
   @ResolveField('squad', returns => Squad)
   async getSquad(@Parent() squadMember: SquadMember) {
-    return this.squadMembersService.getSquad(squadMember.id);
+    return this.squadMembersService.getSquad(squadMember);
   }
 
   @ResolveField('positions', returns => [SquadPosition])
   async getPositions(@Parent() squadMember: SquadMember, @Args('active', { nullable: true }) active?: boolean) {
-    return this.squadMembersService.getPositions(squadMember.id, active);
+    return this.squadMembersService.getPositions(squadMember, active);
   }
 
   @Query(returns => [SquadMember], { name: 'squadMembers' })

@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { TeamRole } from '../../common/enums/team-role.enum';
+import { resolveAsyncRelation } from '../../common/utils';
 import { GsuiteService } from '../../gsuite/gsuite.service';
 import { Chapter } from '../chapters/chapter.model';
 import { SquadMember } from '../squad-members/squad-member.model';
@@ -17,15 +18,8 @@ export class SquadPositionsService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  async getMember(id: string) {
-    const squadPosition = await this.findByIdOrThrow(id);
-    return squadPosition.member;
-  }
-
-  async getChapter(id: string) {
-    const squadPosition = await this.findByIdOrThrow(id);
-    return squadPosition.chapter;
-  }
+  getMember = resolveAsyncRelation<SquadPosition, 'member'>('member', this.findByIdOrThrow);
+  getChapter = resolveAsyncRelation<SquadPosition, 'chapter'>('chapter', this.findByIdOrThrow);
 
   findById(id: string): Promise<SquadPosition | null> {
     if (!id) return null;
@@ -88,8 +82,8 @@ export class SquadPositionsService {
       where: { id },
       relations: ['member', 'chapter'],
     });
-    const chapter = await this.getChapter(id);
-    const member = await this.getMember(id);
+    const chapter = await this.getChapter(squadPosition);
+    const member = await this.getMember(squadPosition);
 
     await this.squadPositionRepository.delete(id);
 
@@ -103,12 +97,14 @@ export class SquadPositionsService {
     return true;
   }
 
-  async updateInGoogle({ memberId, chapterId, id }: SquadPosition, chapter?: Chapter, member?: SquadMember) {
+  async updateInGoogle(squadPosition: SquadPosition, chapter?: Chapter, member?: SquadMember) {
+    const { memberId, chapterId } = squadPosition;
+
     if (!chapterId) return true;
 
     const squadPositions = await this.squadPositionRepository.find({ where: { memberId, chapterId } });
-    const { googleId: groupId } = chapter || (await this.getChapter(id));
-    const memberRecord = member || (await this.getMember(id));
+    const { googleId: groupId } = chapter || (await this.getChapter(squadPosition));
+    const memberRecord = member || (await this.getMember(squadPosition));
     const { googleId: userId } = await memberRecord.user;
 
     const isActive = squadPositions.some(({ to }) => !to);

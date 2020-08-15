@@ -23,12 +23,12 @@ export class SquadsResolver {
 
   @ResolveField('chapters', returns => [Chapter])
   async getChapters(@Parent() squad: Squad) {
-    return this.squadsService.getChapters(squad.id);
+    return this.squadsService.getChapters(squad);
   }
 
   @ResolveField('members', returns => [SquadMember])
   getMembers(@Parent() squad: Squad) {
-    return this.squadsService.getMembers(squad.id);
+    return this.squadsService.getMembers(squad);
   }
 
   @Query(returns => [Squad], { name: 'squads' })

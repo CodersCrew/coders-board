@@ -22,12 +22,12 @@ export class ChaptersResolver {
 
   @ResolveField('squad', returns => [Squad])
   async getSquad(@Parent() chapter: Chapter) {
-    return this.chaptersService.getSquad(chapter.id);
+    return this.chaptersService.getSquad(chapter);
   }
 
   @ResolveField('positions', returns => [SquadPosition])
   getPositions(@Parent() chapter: Chapter) {
-    return this.chaptersService.getPositions(chapter.id);
+    return this.chaptersService.getPositions(chapter);
   }
 
   @Query(returns => [Chapter], { name: 'chapters' })

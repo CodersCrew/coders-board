@@ -2,7 +2,7 @@ import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
 import { PassportModule } from '@nestjs/passport';
 
-import { ConfigService } from '../config/config.service';
+import { env } from '../common/env';
 import { UsersModule } from '../users/users.module';
 import { AuthController } from './auth.controller';
 import { AuthResolver } from './auth.resolver';
@@ -12,12 +12,9 @@ import { GoogleStrategy } from './google.strategy';
 @Module({
   imports: [
     PassportModule,
-    JwtModule.registerAsync({
-      inject: [ConfigService],
-      useFactory: (configService: ConfigService) => ({
-        secret: configService.values.JWT_SECRET,
-        signOptions: { expiresIn: '2d' },
-      }),
+    JwtModule.register({
+      secret: env.JWT_SECRET,
+      signOptions: { expiresIn: '2d' },
     }),
     UsersModule,
   ],

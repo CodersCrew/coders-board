@@ -1,5 +1,5 @@
 import { Field, ObjectType } from '@nestjs/graphql';
-import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
+import { Column, Entity, Index, ManyToOne, OneToMany } from 'typeorm';
 
 import { TeamRole } from '../../common/enums/team-role.enum';
 import { BaseModel } from '../../common/models/Base.model';
@@ -9,6 +9,7 @@ import { Squad } from '../squad.model';
 
 @ObjectType()
 @Entity()
+@Index('squad_user_ids', ({ squadId, userId }: SquadMember) => [squadId, userId], { unique: true })
 export class SquadMember extends BaseModel {
   @Field(type => TeamRole)
   @Column({ type: 'enum', enum: TeamRole, default: TeamRole.MEMBER })

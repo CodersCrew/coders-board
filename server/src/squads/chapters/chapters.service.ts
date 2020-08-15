@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Injectable } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { isEqual, pick } from 'lodash';
 
+import { resolveAsyncRelation } from '../../common/utils';
 import { brackets } from '../../common/utils/brackets';
 import { GsuiteService } from '../../gsuite/gsuite.service';
 import { UpdateGroupParams } from '../../gsuite/interfaces/update-group.params';
@@ -19,15 +20,9 @@ export class ChaptersService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  async getSquad(id: string) {
-    const chapter = await this.findByIdOrThrow(id);
-    return chapter.squad;
-  }
+  getSquad = resolveAsyncRelation<Chapter, 'squad'>('squad', this.findByIdOrThrow);
 
-  async getPositions(id: string) {
-    const chapter = await this.findByIdOrThrow(id);
-    return chapter.positions;
-  }
+  getPositions = resolveAsyncRelation<Chapter, 'positions'>('positions', this.findByIdOrThrow);
 
   findById(id: string): Promise<Chapter | null> {
     if (!id) return null;
@@ -62,7 +57,7 @@ export class ChaptersService {
   async create(input: CreateChapterInput): Promise<Chapter> {
     const googleId = await this.gsuiteService.createGroup(input);
     const chapter = await this.chapterRepository.save({ ...input, googleId });
-    const squad = await this.getSquad(chapter.id);
+    const squad = await this.getSquad(chapter);
 
     await this.gsuiteService.updateGroup({ ...input, name: `${squad.name} | ${chapter.name}`, id: googleId });
 
@@ -75,7 +70,7 @@ export class ChaptersService {
     const googlePropNames: (keyof Omit<UpdateGroupParams, 'id'>)[] = ['name', 'description', 'email'];
 
     if (!isEqual(pick(input, googlePropNames), pick(chapter, googlePropNames))) {
-      const squad = await chapter.squad;
+      const squad = await this.getSquad(chapter);
 
       await this.gsuiteService.updateGroup({ ...input, id: chapter.googleId, name: `${squad.name} | ${input.name}` });
     }

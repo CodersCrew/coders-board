@@ -1,5 +1,6 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 
+import { resolveAsyncRelation } from '../../common/utils';
 import { GsuiteService } from '../../gsuite/gsuite.service';
 import { CreateSquadMemberInput } from './dto/create-squad-member.input';
 import { GetSquadMembersArgs } from './dto/get-squad-members.args';
@@ -14,19 +15,14 @@ export class SquadMembersService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  async getUser(id: string) {
-    const squadMember = await this.findByIdOrThrow(id);
-    return squadMember.user;
-  }
+  getUser = resolveAsyncRelation<SquadMember, 'user'>('user', this.findByIdOrThrow);
+  getSquad = resolveAsyncRelation<SquadMember, 'squad'>('squad', this.findByIdOrThrow);
 
-  async getSquad(id: string) {
-    const squadMember = await this.findByIdOrThrow(id);
-    return squadMember.squad;
-  }
-
-  async getPositions(id: string, isActive?: boolean) {
-    const squadMember = await this.findByIdOrThrow(id);
-    const positions = await squadMember.positions;
+  async getPositions(squadMember: SquadMember, isActive?: boolean) {
+    const positions = await resolveAsyncRelation<SquadMember, 'positions'>(
+      'positions',
+      this.findByIdOrThrow,
+    )(squadMember);
 
     if (typeof isActive !== 'undefined') {
       return positions.filter(position => (isActive ? !position.to : position.to));
@@ -57,8 +53,8 @@ export class SquadMembersService {
 
   async create(input: CreateSquadMemberInput) {
     const squadMember = await this.squadMemberRepository.save(input);
-    const squad = await this.getSquad(squadMember.id);
-    const user = await this.getUser(squadMember.id);
+    const squad = await this.getSquad(squadMember);
+    const user = await this.getUser(squadMember);
 
     try {
       await this.gsuiteService.createMember({
@@ -75,8 +71,8 @@ export class SquadMembersService {
 
   async update({ id, squadId, ...input }: UpdateSquadMemberInput) {
     const squadMember = await this.squadMemberRepository.findOneOrFail({ where: { id, squadId } });
-    const squad = await this.getSquad(squadMember.id);
-    const user = await this.getUser(squadMember.id);
+    const squad = await this.getSquad(squadMember);
+    const user = await this.getUser(squadMember);
 
     await this.gsuiteService.updateMember({
       groupId: squad.googleId,
@@ -98,8 +94,8 @@ export class SquadMembersService {
       throw new ConflictException('You cannot remove squad member with attached positions');
     }
 
-    const squad = await this.getSquad(squadMember.id);
-    const user = await this.getUser(squadMember.id);
+    const squad = await this.getSquad(squadMember);
+    const user = await this.getUser(squadMember);
 
     await this.gsuiteService.deleteMember({ groupId: squad.googleId, userId: user.googleId });
     await this.squadMemberRepository.delete(id);

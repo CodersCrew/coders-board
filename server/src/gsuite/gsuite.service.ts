@@ -2,7 +2,7 @@ import { Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { admin_directory_v1, google } from 'googleapis';
 
-import { ConfigService } from '../config/config.service';
+import { env } from '../common/env';
 import { UserRole, UserStatus } from '../users/user.model';
 import { CreateGroupParams } from './interfaces/create-group.params';
 import { CreateMemberParams } from './interfaces/create-member.params';
@@ -17,7 +17,7 @@ import { UpdateUserParams } from './interfaces/update-user.params';
 
 @Injectable()
 export class GsuiteService {
-  constructor(private readonly configService: ConfigService) {
+  constructor() {
     this.initialize();
   }
 
@@ -26,17 +26,17 @@ export class GsuiteService {
   async initialize() {
     const auth = new google.auth.GoogleAuth({
       clientOptions: {
-        subject: this.configService.values.GSUITE_SUBJECT,
+        subject: env.GSUITE_SUBJECT,
       },
       credentials: {
-        client_email: this.configService.values.GOOGLE_CLIENT_EMAIL,
-        private_key: this.configService.values.GOOGLE_PRIVATE_KEY,
+        client_email: env.GOOGLE_CLIENT_EMAIL,
+        private_key: env.GOOGLE_PRIVATE_KEY,
       },
       scopes: [
         'https://www.googleapis.com/auth/admin.directory.user',
         'https://www.googleapis.com/auth/admin.directory.group',
       ],
-      projectId: this.configService.values.GOOGLE_PROJECT_ID,
+      projectId: env.GOOGLE_PROJECT_ID,
     });
 
     this.admin = google.admin({
@@ -47,7 +47,7 @@ export class GsuiteService {
 
   async findAllUsers() {
     const response = await this.admin.users.list({
-      customer: this.configService.values.GSUITE_CUSTOMER_ID,
+      customer: env.GSUITE_CUSTOMER_ID,
       maxResults: 500,
     });
 

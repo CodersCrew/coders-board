@@ -1,4 +1,4 @@
-export type EnvConfig = {
+export type EnvVariables = {
   NODE_ENV: 'development' | 'test' | 'production';
 
   PORT: number;

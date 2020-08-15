@@ -61,7 +61,6 @@ export class PositionsService {
 
   async update({ id, ...input }: UpdatePositionInput): Promise<Position> {
     const position = await this.findByIdOrThrow(id);
-    console.log(input);
 
     return this.positionRepository.save({ ...position, ...input });
   }

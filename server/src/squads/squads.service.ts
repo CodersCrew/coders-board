@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Injectable } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { isEqual, pick } from 'lodash';
 
+import { resolveAsyncRelation } from '../common/utils';
 import { brackets } from '../common/utils/brackets';
 import { GsuiteService } from '../gsuite/gsuite.service';
 import { UpdateGroupParams } from '../gsuite/interfaces/update-group.params';
@@ -19,15 +20,8 @@ export class SquadsService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  async getChapters(id: string) {
-    const squad = await this.findByIdOrThrow(id);
-    return squad.chapters;
-  }
-
-  async getMembers(id: string) {
-    const squad = await this.findByIdOrThrow(id);
-    return squad.members;
-  }
+  getChapters = resolveAsyncRelation<Squad, 'chapters'>('chapters', this.findByIdOrThrow);
+  getMembers = resolveAsyncRelation<Squad, 'members'>('members', this.findByIdOrThrow);
 
   findById(id: string): Promise<Squad | null> {
     if (!id) return null;
@@ -76,13 +70,13 @@ export class SquadsService {
   async delete(id: string): Promise<boolean> {
     const squad = await this.findByIdOrThrow(id);
 
-    const members = await squad.members;
+    const members = await this.getMembers(squad);
 
     if (members.length) {
       throw new ConflictException('You cannot remove a squad with members');
     }
 
-    const chapters = await squad.chapters;
+    const chapters = await this.getChapters(squad);
 
     if (chapters.length) {
       throw new ConflictException('You cannot remove a squad with chapters');

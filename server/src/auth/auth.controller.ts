@@ -2,13 +2,13 @@ import { Controller, Get, Req, Res, UseGuards } from '@nestjs/common';
 import { AuthGuard } from '@nestjs/passport';
 import { Response } from 'express';
 
-import { ConfigService } from '../config/config.service';
+import { env } from '../common/env';
 import { AuthService } from './auth.service';
 import { OAuthRequest } from './auth.types';
 
 @Controller('auth')
 export class AuthController {
-  constructor(private readonly authService: AuthService, private readonly configService: ConfigService) {}
+  constructor(private readonly authService: AuthService) {}
 
   @Get('google')
   @UseGuards(AuthGuard('google'))
@@ -20,7 +20,7 @@ export class AuthController {
   async googleLoginCallback(@Req() req: OAuthRequest, @Res() res: Response) {
     try {
       const token = await this.authService.authorizeGoogleUser(req.user);
-      const { TOKEN_COOKIE_NAME, TOKEN_PREFIX } = this.configService.values;
+      const { TOKEN_COOKIE_NAME, TOKEN_PREFIX } = env;
 
       res
         .status(200)

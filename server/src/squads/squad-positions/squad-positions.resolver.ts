@@ -21,12 +21,12 @@ export class SquadPositionsResolver {
 
   @ResolveField('member', returns => SquadMember)
   async getMember(@Parent() squadPosition: SquadPosition) {
-    return this.squadPositionsService.getMember(squadPosition.id);
+    return this.squadPositionsService.getMember(squadPosition);
   }
 
   @ResolveField('clan', returns => Chapter, { nullable: true })
   async getChapter(@Parent() squadPosition: SquadPosition) {
-    return this.squadPositionsService.getChapter(squadPosition.id);
+    return this.squadPositionsService.getChapter(squadPosition);
   }
 
   @Query(returns => [SquadPosition], { name: 'squadPositions' })

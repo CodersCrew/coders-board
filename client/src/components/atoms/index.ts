@@ -1,3 +1,4 @@
+export * from './AppLogo';
 export * from './Avatar';
 export * from './Box';
 export * from './Button';

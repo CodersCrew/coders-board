@@ -18,16 +18,13 @@ const Logo = styled.img({
   height: 80,
 });
 
-const LoadingText = styled(Paragraph)(({ theme }) => ({
-  fontSize: theme.fontSizes.h3,
-  color: theme.colors.text.white,
-}));
-
 export const LoadingScreen = () => {
   return (
     <Container>
       <Logo src="/logo-long.svg" />
-      <LoadingText>Loading</LoadingText>
+      <Paragraph fontSize="h3" color="text.white">
+        Loading
+      </Paragraph>
       <Spin mt={40} size="large" />
     </Container>
   );

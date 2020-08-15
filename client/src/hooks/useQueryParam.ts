@@ -20,5 +20,6 @@ export function useQueryParam<T>(name: string, isArray: boolean): [T, (data: T) 
     navigate({ search: query ? `?${query}` : '' });
   };
 
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   return [value as any, setValue];
 }
