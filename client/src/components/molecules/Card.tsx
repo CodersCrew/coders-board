@@ -38,6 +38,7 @@ const shouldForwardProp = omitProps(without(styledSystemPropNames, 'size'));
 
 export const Card = styled(AntCard, { shouldForwardProp })<CardProps>(props => {
   const { display, ...layoutProps } = omit(splitSystem(props), ['size']);
+  console.log(props, mainCardSystem(props));
 
   return {
     ...layoutProps,

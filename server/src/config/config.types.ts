@@ -2,7 +2,6 @@ export type EnvConfig = {
   NODE_ENV: 'development' | 'test' | 'production';
 
   PORT: number;
-  CLIENT_URL: string;
 
   // database
   DATABASE_SYNC: boolean;
@@ -21,6 +20,9 @@ export type EnvConfig = {
   // google auth
   GOOGLE_CLIENT_ID: string;
   GOOGLE_CLIENT_SECRET: string;
+  GOOGLE_CLIENT_EMAIL: string;
+  GOOGLE_PRIVATE_KEY: string;
+  GOOGLE_PROJECT_ID: string;
 
   // gsuite
   GSUITE_CUSTOMER_ID: string;

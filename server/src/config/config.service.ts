@@ -1,6 +1,6 @@
-import * as Joi from '@hapi/joi';
+import Joi from '@hapi/joi';
 import { Injectable } from '@nestjs/common';
-import * as dotenv from 'dotenv';
+import dotenv from 'dotenv';
 
 import { EnvConfig } from './config.types';
 import { requiredInProduction } from './config.utils';
@@ -18,14 +18,13 @@ export class ConfigService {
 
   isProduction = process.env.NODE_ENV === 'production';
 
-  private validateInput(envConfig: dotenv.DotenvParseOutput): EnvConfig {
+  private validateInput(envConfig: NodeJS.ProcessEnv): EnvConfig {
     const envVarsSchema: Joi.ObjectSchema<EnvConfig> = Joi.object({
       NODE_ENV: Joi.string()
         .valid('development', 'test', 'production')
         .default('development'),
 
       PORT: Joi.number().required(),
-      CLIENT_URL: Joi.string().required(),
 
       // database
       DATABASE_SYNC: Joi.boolean().required(),
@@ -44,6 +43,9 @@ export class ConfigService {
       // google auth
       GOOGLE_CLIENT_ID: Joi.string().required(),
       GOOGLE_CLIENT_SECRET: Joi.string().required(),
+      GOOGLE_CLIENT_EMAIL: Joi.string().required(),
+      GOOGLE_PRIVATE_KEY: Joi.string().required(),
+      GOOGLE_PROJECT_ID: Joi.string().required(),
 
       // gsuite
       GSUITE_CUSTOMER_ID: Joi.string().required(),

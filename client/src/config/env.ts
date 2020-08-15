@@ -1,7 +1,7 @@
-const createEnvVariable = <T extends string>(name: string, oneOf?: T[]): T => {
+const createEnvVariable = <T extends string>(name: string, required = true, oneOf?: T[]): T => {
   const envVariableValue = process.env[name] as T;
 
-  if (!envVariableValue) {
+  if (required && !envVariableValue) {
     throw new Error(`To run the app you need to provide the ${name} environment variable`);
   }
 
@@ -16,6 +16,10 @@ const createEnvVariable = <T extends string>(name: string, oneOf?: T[]): T => {
   return envVariableValue;
 };
 
-export const SERVER_URL = createEnvVariable('REACT_APP_SERVER_URL');
+export const SERVER_URL = createEnvVariable('REACT_APP_SERVER_URL', false);
 
-export const NODE_ENV = createEnvVariable<'development' | 'test' | 'production'>('NODE_ENV');
+export const NODE_ENV = createEnvVariable<'development' | 'test' | 'production'>('NODE_ENV', true, [
+  'development',
+  'test',
+  'production',
+]);

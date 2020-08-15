@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
@@ -38,24 +37,15 @@ export const ClanSelectClansDocument = gql`
  * });
  */
 export function useClanSelectClansQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<ClanSelectClansQuery, ClanSelectClansQueryVariables>,
+  baseOptions?: Apollo.QueryHookOptions<ClanSelectClansQuery, ClanSelectClansQueryVariables>,
 ) {
-  return ApolloReactHooks.useQuery<ClanSelectClansQuery, ClanSelectClansQueryVariables>(
-    ClanSelectClansDocument,
-    baseOptions,
-  );
+  return Apollo.useQuery<ClanSelectClansQuery, ClanSelectClansQueryVariables>(ClanSelectClansDocument, baseOptions);
 }
 export function useClanSelectClansLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ClanSelectClansQuery, ClanSelectClansQueryVariables>,
+  baseOptions?: Apollo.LazyQueryHookOptions<ClanSelectClansQuery, ClanSelectClansQueryVariables>,
 ) {
-  return ApolloReactHooks.useLazyQuery<ClanSelectClansQuery, ClanSelectClansQueryVariables>(
-    ClanSelectClansDocument,
-    baseOptions,
-  );
+  return Apollo.useLazyQuery<ClanSelectClansQuery, ClanSelectClansQueryVariables>(ClanSelectClansDocument, baseOptions);
 }
 export type ClanSelectClansQueryHookResult = ReturnType<typeof useClanSelectClansQuery>;
 export type ClanSelectClansLazyQueryHookResult = ReturnType<typeof useClanSelectClansLazyQuery>;
-export type ClanSelectClansQueryResult = ApolloReactCommon.QueryResult<
-  ClanSelectClansQuery,
-  ClanSelectClansQueryVariables
->;
+export type ClanSelectClansQueryResult = Apollo.QueryResult<ClanSelectClansQuery, ClanSelectClansQueryVariables>;

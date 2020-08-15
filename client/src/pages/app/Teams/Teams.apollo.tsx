@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
@@ -45,14 +44,12 @@ export const TeamsDocument = gql`
  *   },
  * });
  */
-export function useTeamsQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<TeamsQuery, TeamsQueryVariables>) {
-  return ApolloReactHooks.useQuery<TeamsQuery, TeamsQueryVariables>(TeamsDocument, baseOptions);
+export function useTeamsQuery(baseOptions?: Apollo.QueryHookOptions<TeamsQuery, TeamsQueryVariables>) {
+  return Apollo.useQuery<TeamsQuery, TeamsQueryVariables>(TeamsDocument, baseOptions);
 }
-export function useTeamsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<TeamsQuery, TeamsQueryVariables>,
-) {
-  return ApolloReactHooks.useLazyQuery<TeamsQuery, TeamsQueryVariables>(TeamsDocument, baseOptions);
+export function useTeamsLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<TeamsQuery, TeamsQueryVariables>) {
+  return Apollo.useLazyQuery<TeamsQuery, TeamsQueryVariables>(TeamsDocument, baseOptions);
 }
 export type TeamsQueryHookResult = ReturnType<typeof useTeamsQuery>;
 export type TeamsLazyQueryHookResult = ReturnType<typeof useTeamsLazyQuery>;
-export type TeamsQueryResult = ApolloReactCommon.QueryResult<TeamsQuery, TeamsQueryVariables>;
+export type TeamsQueryResult = Apollo.QueryResult<TeamsQuery, TeamsQueryVariables>;

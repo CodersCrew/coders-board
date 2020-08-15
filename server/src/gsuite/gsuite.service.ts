@@ -1,7 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { admin_directory_v1, google } from 'googleapis';
-import * as path from 'path';
 
 import { ConfigService } from '../config/config.service';
 import { UserRole, UserStatus } from '../users/user.model';
@@ -25,13 +24,19 @@ export class GsuiteService {
   admin: admin_directory_v1.Admin;
 
   async initialize() {
-    const auth = new google.auth.JWT({
-      keyFile: path.resolve(__dirname, '../../jwt.keys.json'),
+    const auth = new google.auth.GoogleAuth({
+      clientOptions: {
+        subject: this.configService.values.GSUITE_SUBJECT,
+      },
+      credentials: {
+        client_email: this.configService.values.GOOGLE_CLIENT_EMAIL,
+        private_key: this.configService.values.GOOGLE_PRIVATE_KEY,
+      },
       scopes: [
         'https://www.googleapis.com/auth/admin.directory.user',
         'https://www.googleapis.com/auth/admin.directory.group',
       ],
-      subject: this.configService.values.GSUITE_SUBJECT,
+      projectId: this.configService.values.GOOGLE_PROJECT_ID,
     });
 
     this.admin = google.admin({

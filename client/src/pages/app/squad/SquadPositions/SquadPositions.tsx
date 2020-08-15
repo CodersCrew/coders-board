@@ -3,14 +3,13 @@ import { List } from 'antd';
 import { get, groupBy } from 'lodash';
 
 import { Box, Spin, Title } from '@/components/atoms';
-import { Card } from '@/components/molecules';
+import { Card, FiltersCard } from '@/components/molecules';
 import { UseSquadPositions, useSquadPositions } from '@/graphql/squads';
 import { useModalState } from '@/hooks/useModalState';
 import { useQueryParam } from '@/hooks/useQueryParam';
 
 import { useSquadContext } from '../SquadContext';
 import { EmptyPositions } from './EmptyPositions';
-import { FiltersCard } from './FiltersCard';
 import { SquadPosition } from './SquadPosition';
 import { SquadPositionModal, SquadPositionModalProps } from './SquadPositionModal';
 
@@ -55,7 +54,10 @@ const SquadPositions = () => {
 
   return (
     <Spin spinning={squadPositions.loading} tip="Loading member actions">
-      <FiltersCard search={search} onSearch={setSearch} openModal={squadPositionModal.open} />
+      <FiltersCard
+        search={{ value: search, onSearch: setSearch }}
+        addButton={{ label: 'Add position', onClick: squadPositionModal.open }}
+      />
       {!squadPositions.loading && (
         <Box maxWidth="100%" overflow="auto" mt={32}>
           {filteredPositionItems.length === 0 && (

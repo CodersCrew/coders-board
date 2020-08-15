@@ -1,9 +1,9 @@
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { TeamRole } from 'src/common/enums/team-role.enum';
-import { TeamRoleGuard } from 'src/common/guards/team-role.guard';
 
 import { TeamKind } from '../../common/decorators/team-kind.decorator';
+import { TeamRole } from '../../common/enums/team-role.enum';
 import { AuthorizedGuard } from '../../common/guards/authorized.guard';
+import { TeamRoleGuard } from '../../common/guards/team-role.guard';
 import { Chapter } from '../chapters/chapter.model';
 import { SquadMember } from '../squad-members/squad-member.model';
 import { CreateSquadPositionInput } from './dto/create-squad-position.input';

@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
@@ -91,27 +90,18 @@ export const SquadPositionsDocument = gql`
  * });
  */
 export function useSquadPositionsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<SquadPositionsQuery, SquadPositionsQueryVariables>,
+  baseOptions?: Apollo.QueryHookOptions<SquadPositionsQuery, SquadPositionsQueryVariables>,
 ) {
-  return ApolloReactHooks.useQuery<SquadPositionsQuery, SquadPositionsQueryVariables>(
-    SquadPositionsDocument,
-    baseOptions,
-  );
+  return Apollo.useQuery<SquadPositionsQuery, SquadPositionsQueryVariables>(SquadPositionsDocument, baseOptions);
 }
 export function useSquadPositionsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SquadPositionsQuery, SquadPositionsQueryVariables>,
+  baseOptions?: Apollo.LazyQueryHookOptions<SquadPositionsQuery, SquadPositionsQueryVariables>,
 ) {
-  return ApolloReactHooks.useLazyQuery<SquadPositionsQuery, SquadPositionsQueryVariables>(
-    SquadPositionsDocument,
-    baseOptions,
-  );
+  return Apollo.useLazyQuery<SquadPositionsQuery, SquadPositionsQueryVariables>(SquadPositionsDocument, baseOptions);
 }
 export type SquadPositionsQueryHookResult = ReturnType<typeof useSquadPositionsQuery>;
 export type SquadPositionsLazyQueryHookResult = ReturnType<typeof useSquadPositionsLazyQuery>;
-export type SquadPositionsQueryResult = ApolloReactCommon.QueryResult<
-  SquadPositionsQuery,
-  SquadPositionsQueryVariables
->;
+export type SquadPositionsQueryResult = Apollo.QueryResult<SquadPositionsQuery, SquadPositionsQueryVariables>;
 export const CreateSquadPositionDocument = gql`
   mutation createSquadPosition($data: CreateSquadPositionInput!) {
     createSquadPosition(data: $data) {
@@ -119,7 +109,7 @@ export const CreateSquadPositionDocument = gql`
     }
   }
 `;
-export type CreateSquadPositionMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateSquadPositionMutationFn = Apollo.MutationFunction<
   CreateSquadPositionMutation,
   CreateSquadPositionMutationVariables
 >;
@@ -142,16 +132,16 @@ export type CreateSquadPositionMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateSquadPositionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<CreateSquadPositionMutation, CreateSquadPositionMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<CreateSquadPositionMutation, CreateSquadPositionMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<CreateSquadPositionMutation, CreateSquadPositionMutationVariables>(
+  return Apollo.useMutation<CreateSquadPositionMutation, CreateSquadPositionMutationVariables>(
     CreateSquadPositionDocument,
     baseOptions,
   );
 }
 export type CreateSquadPositionMutationHookResult = ReturnType<typeof useCreateSquadPositionMutation>;
-export type CreateSquadPositionMutationResult = ApolloReactCommon.MutationResult<CreateSquadPositionMutation>;
-export type CreateSquadPositionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateSquadPositionMutationResult = Apollo.MutationResult<CreateSquadPositionMutation>;
+export type CreateSquadPositionMutationOptions = Apollo.BaseMutationOptions<
   CreateSquadPositionMutation,
   CreateSquadPositionMutationVariables
 >;
@@ -162,7 +152,7 @@ export const UpdateSquadPositionDocument = gql`
     }
   }
 `;
-export type UpdateSquadPositionMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateSquadPositionMutationFn = Apollo.MutationFunction<
   UpdateSquadPositionMutation,
   UpdateSquadPositionMutationVariables
 >;
@@ -185,16 +175,16 @@ export type UpdateSquadPositionMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateSquadPositionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateSquadPositionMutation, UpdateSquadPositionMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<UpdateSquadPositionMutation, UpdateSquadPositionMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<UpdateSquadPositionMutation, UpdateSquadPositionMutationVariables>(
+  return Apollo.useMutation<UpdateSquadPositionMutation, UpdateSquadPositionMutationVariables>(
     UpdateSquadPositionDocument,
     baseOptions,
   );
 }
 export type UpdateSquadPositionMutationHookResult = ReturnType<typeof useUpdateSquadPositionMutation>;
-export type UpdateSquadPositionMutationResult = ApolloReactCommon.MutationResult<UpdateSquadPositionMutation>;
-export type UpdateSquadPositionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateSquadPositionMutationResult = Apollo.MutationResult<UpdateSquadPositionMutation>;
+export type UpdateSquadPositionMutationOptions = Apollo.BaseMutationOptions<
   UpdateSquadPositionMutation,
   UpdateSquadPositionMutationVariables
 >;
@@ -203,7 +193,7 @@ export const DeleteSquadPositionDocument = gql`
     deleteSquadPosition(id: $id, squadId: $squadId)
   }
 `;
-export type DeleteSquadPositionMutationFn = ApolloReactCommon.MutationFunction<
+export type DeleteSquadPositionMutationFn = Apollo.MutationFunction<
   DeleteSquadPositionMutation,
   DeleteSquadPositionMutationVariables
 >;
@@ -227,16 +217,16 @@ export type DeleteSquadPositionMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useDeleteSquadPositionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteSquadPositionMutation, DeleteSquadPositionMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<DeleteSquadPositionMutation, DeleteSquadPositionMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<DeleteSquadPositionMutation, DeleteSquadPositionMutationVariables>(
+  return Apollo.useMutation<DeleteSquadPositionMutation, DeleteSquadPositionMutationVariables>(
     DeleteSquadPositionDocument,
     baseOptions,
   );
 }
 export type DeleteSquadPositionMutationHookResult = ReturnType<typeof useDeleteSquadPositionMutation>;
-export type DeleteSquadPositionMutationResult = ApolloReactCommon.MutationResult<DeleteSquadPositionMutation>;
-export type DeleteSquadPositionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type DeleteSquadPositionMutationResult = Apollo.MutationResult<DeleteSquadPositionMutation>;
+export type DeleteSquadPositionMutationOptions = Apollo.BaseMutationOptions<
   DeleteSquadPositionMutation,
   DeleteSquadPositionMutationVariables
 >;

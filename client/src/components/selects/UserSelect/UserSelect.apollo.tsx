@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
@@ -38,24 +37,15 @@ export const UserSelectUsersDocument = gql`
  * });
  */
 export function useUserSelectUsersQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<UserSelectUsersQuery, UserSelectUsersQueryVariables>,
+  baseOptions?: Apollo.QueryHookOptions<UserSelectUsersQuery, UserSelectUsersQueryVariables>,
 ) {
-  return ApolloReactHooks.useQuery<UserSelectUsersQuery, UserSelectUsersQueryVariables>(
-    UserSelectUsersDocument,
-    baseOptions,
-  );
+  return Apollo.useQuery<UserSelectUsersQuery, UserSelectUsersQueryVariables>(UserSelectUsersDocument, baseOptions);
 }
 export function useUserSelectUsersLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<UserSelectUsersQuery, UserSelectUsersQueryVariables>,
+  baseOptions?: Apollo.LazyQueryHookOptions<UserSelectUsersQuery, UserSelectUsersQueryVariables>,
 ) {
-  return ApolloReactHooks.useLazyQuery<UserSelectUsersQuery, UserSelectUsersQueryVariables>(
-    UserSelectUsersDocument,
-    baseOptions,
-  );
+  return Apollo.useLazyQuery<UserSelectUsersQuery, UserSelectUsersQueryVariables>(UserSelectUsersDocument, baseOptions);
 }
 export type UserSelectUsersQueryHookResult = ReturnType<typeof useUserSelectUsersQuery>;
 export type UserSelectUsersLazyQueryHookResult = ReturnType<typeof useUserSelectUsersLazyQuery>;
-export type UserSelectUsersQueryResult = ApolloReactCommon.QueryResult<
-  UserSelectUsersQuery,
-  UserSelectUsersQueryVariables
->;
+export type UserSelectUsersQueryResult = Apollo.QueryResult<UserSelectUsersQuery, UserSelectUsersQueryVariables>;

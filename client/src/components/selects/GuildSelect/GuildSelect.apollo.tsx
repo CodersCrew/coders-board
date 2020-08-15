@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
@@ -35,24 +34,21 @@ export const GuildSelectGuildsDocument = gql`
  * });
  */
 export function useGuildSelectGuildsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<GuildSelectGuildsQuery, GuildSelectGuildsQueryVariables>,
+  baseOptions?: Apollo.QueryHookOptions<GuildSelectGuildsQuery, GuildSelectGuildsQueryVariables>,
 ) {
-  return ApolloReactHooks.useQuery<GuildSelectGuildsQuery, GuildSelectGuildsQueryVariables>(
+  return Apollo.useQuery<GuildSelectGuildsQuery, GuildSelectGuildsQueryVariables>(
     GuildSelectGuildsDocument,
     baseOptions,
   );
 }
 export function useGuildSelectGuildsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GuildSelectGuildsQuery, GuildSelectGuildsQueryVariables>,
+  baseOptions?: Apollo.LazyQueryHookOptions<GuildSelectGuildsQuery, GuildSelectGuildsQueryVariables>,
 ) {
-  return ApolloReactHooks.useLazyQuery<GuildSelectGuildsQuery, GuildSelectGuildsQueryVariables>(
+  return Apollo.useLazyQuery<GuildSelectGuildsQuery, GuildSelectGuildsQueryVariables>(
     GuildSelectGuildsDocument,
     baseOptions,
   );
 }
 export type GuildSelectGuildsQueryHookResult = ReturnType<typeof useGuildSelectGuildsQuery>;
 export type GuildSelectGuildsLazyQueryHookResult = ReturnType<typeof useGuildSelectGuildsLazyQuery>;
-export type GuildSelectGuildsQueryResult = ApolloReactCommon.QueryResult<
-  GuildSelectGuildsQuery,
-  GuildSelectGuildsQueryVariables
->;
+export type GuildSelectGuildsQueryResult = Apollo.QueryResult<GuildSelectGuildsQuery, GuildSelectGuildsQueryVariables>;

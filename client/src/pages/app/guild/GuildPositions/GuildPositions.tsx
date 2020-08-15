@@ -3,14 +3,13 @@ import { List } from 'antd';
 import { get, groupBy } from 'lodash';
 
 import { Box, Spin, Title } from '@/components/atoms';
-import { Card } from '@/components/molecules';
+import { Card, FiltersCard } from '@/components/molecules';
 import { UseGuildPositions, useGuildPositions } from '@/graphql/guilds';
 import { useModalState } from '@/hooks/useModalState';
 import { useQueryParam } from '@/hooks/useQueryParam';
 
 import { useGuildContext } from '../GuildContext';
 import { EmptyPositions } from './EmptyPositions';
-import { FiltersCard } from './FiltersCard';
 import { GuildPosition } from './GuildPosition';
 import { GuildPositionModal, GuildPositionModalProps } from './GuildPositionModal';
 
@@ -26,7 +25,7 @@ const filterPositions = (positions: UseGuildPositions['item'][], search: string)
 };
 
 const GuildPositions = () => {
-  const { guildId } = useGuildContext();
+  const { guildId, guildRole } = useGuildContext();
   const guildPositions = useGuildPositions({ guildId });
   const guildPositionModal = useModalState<GuildPositionModalProps['data']>();
   const [search, setSearch] = useQueryParam('search', false);
@@ -51,7 +50,10 @@ const GuildPositions = () => {
 
   return (
     <Spin spinning={guildPositions.loading} tip="Loading member actions">
-      <FiltersCard search={search} onSearch={setSearch} openModal={guildPositionModal.open} />
+      <FiltersCard
+        search={{ value: search, onSearch: setSearch }}
+        addButton={guildRole.isManager && { label: 'Add position', onClick: guildPositionModal.open }}
+      />
       {!guildPositions.loading && (
         <Box maxWidth="100%" overflow="auto" mt={32}>
           {filteredPositionItems.length === 0 && (

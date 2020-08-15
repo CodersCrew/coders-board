@@ -1,9 +1,8 @@
 import React from 'react';
-import { PlusOutlined } from '@ant-design/icons';
 import { Table } from 'antd';
 
-import { Box, Button, Spin } from '@/components/atoms';
-import { Card } from '@/components/molecules';
+import { Box } from '@/components/atoms';
+import { Card, FiltersCard } from '@/components/molecules';
 import { useGuildMembers } from '@/graphql/guilds';
 import { useModalState } from '@/hooks/useModalState';
 
@@ -19,15 +18,7 @@ const GuildMembers = () => {
 
   return (
     <>
-      {guildRole.isManager && (
-        <Spin spinning={guildMembers.loading} tip="Loading member actions">
-          <Box display="flex" pb={24}>
-            <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={() => guildMemberModal.open()}>
-              Add member
-            </Button>
-          </Box>
-        </Spin>
-      )}
+      <FiltersCard addButton={guildRole.isManager && { label: 'Add member', onClick: guildMemberModal.open }} />
       <Box maxWidth="100%" overflow="auto">
         <Card>
           <Table

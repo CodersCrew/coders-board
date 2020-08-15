@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
@@ -87,27 +86,18 @@ export const GuildPositionsDocument = gql`
  * });
  */
 export function useGuildPositionsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<GuildPositionsQuery, GuildPositionsQueryVariables>,
+  baseOptions?: Apollo.QueryHookOptions<GuildPositionsQuery, GuildPositionsQueryVariables>,
 ) {
-  return ApolloReactHooks.useQuery<GuildPositionsQuery, GuildPositionsQueryVariables>(
-    GuildPositionsDocument,
-    baseOptions,
-  );
+  return Apollo.useQuery<GuildPositionsQuery, GuildPositionsQueryVariables>(GuildPositionsDocument, baseOptions);
 }
 export function useGuildPositionsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GuildPositionsQuery, GuildPositionsQueryVariables>,
+  baseOptions?: Apollo.LazyQueryHookOptions<GuildPositionsQuery, GuildPositionsQueryVariables>,
 ) {
-  return ApolloReactHooks.useLazyQuery<GuildPositionsQuery, GuildPositionsQueryVariables>(
-    GuildPositionsDocument,
-    baseOptions,
-  );
+  return Apollo.useLazyQuery<GuildPositionsQuery, GuildPositionsQueryVariables>(GuildPositionsDocument, baseOptions);
 }
 export type GuildPositionsQueryHookResult = ReturnType<typeof useGuildPositionsQuery>;
 export type GuildPositionsLazyQueryHookResult = ReturnType<typeof useGuildPositionsLazyQuery>;
-export type GuildPositionsQueryResult = ApolloReactCommon.QueryResult<
-  GuildPositionsQuery,
-  GuildPositionsQueryVariables
->;
+export type GuildPositionsQueryResult = Apollo.QueryResult<GuildPositionsQuery, GuildPositionsQueryVariables>;
 export const CreateGuildPositionDocument = gql`
   mutation createGuildPosition($data: CreateGuildPositionInput!) {
     createGuildPosition(data: $data) {
@@ -115,7 +105,7 @@ export const CreateGuildPositionDocument = gql`
     }
   }
 `;
-export type CreateGuildPositionMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateGuildPositionMutationFn = Apollo.MutationFunction<
   CreateGuildPositionMutation,
   CreateGuildPositionMutationVariables
 >;
@@ -138,16 +128,16 @@ export type CreateGuildPositionMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateGuildPositionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<CreateGuildPositionMutation, CreateGuildPositionMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<CreateGuildPositionMutation, CreateGuildPositionMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<CreateGuildPositionMutation, CreateGuildPositionMutationVariables>(
+  return Apollo.useMutation<CreateGuildPositionMutation, CreateGuildPositionMutationVariables>(
     CreateGuildPositionDocument,
     baseOptions,
   );
 }
 export type CreateGuildPositionMutationHookResult = ReturnType<typeof useCreateGuildPositionMutation>;
-export type CreateGuildPositionMutationResult = ApolloReactCommon.MutationResult<CreateGuildPositionMutation>;
-export type CreateGuildPositionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateGuildPositionMutationResult = Apollo.MutationResult<CreateGuildPositionMutation>;
+export type CreateGuildPositionMutationOptions = Apollo.BaseMutationOptions<
   CreateGuildPositionMutation,
   CreateGuildPositionMutationVariables
 >;
@@ -158,7 +148,7 @@ export const UpdateGuildPositionDocument = gql`
     }
   }
 `;
-export type UpdateGuildPositionMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateGuildPositionMutationFn = Apollo.MutationFunction<
   UpdateGuildPositionMutation,
   UpdateGuildPositionMutationVariables
 >;
@@ -181,16 +171,16 @@ export type UpdateGuildPositionMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateGuildPositionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateGuildPositionMutation, UpdateGuildPositionMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<UpdateGuildPositionMutation, UpdateGuildPositionMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<UpdateGuildPositionMutation, UpdateGuildPositionMutationVariables>(
+  return Apollo.useMutation<UpdateGuildPositionMutation, UpdateGuildPositionMutationVariables>(
     UpdateGuildPositionDocument,
     baseOptions,
   );
 }
 export type UpdateGuildPositionMutationHookResult = ReturnType<typeof useUpdateGuildPositionMutation>;
-export type UpdateGuildPositionMutationResult = ApolloReactCommon.MutationResult<UpdateGuildPositionMutation>;
-export type UpdateGuildPositionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateGuildPositionMutationResult = Apollo.MutationResult<UpdateGuildPositionMutation>;
+export type UpdateGuildPositionMutationOptions = Apollo.BaseMutationOptions<
   UpdateGuildPositionMutation,
   UpdateGuildPositionMutationVariables
 >;
@@ -199,7 +189,7 @@ export const DeleteGuildPositionDocument = gql`
     deleteGuildPosition(id: $id, guildId: $guildId)
   }
 `;
-export type DeleteGuildPositionMutationFn = ApolloReactCommon.MutationFunction<
+export type DeleteGuildPositionMutationFn = Apollo.MutationFunction<
   DeleteGuildPositionMutation,
   DeleteGuildPositionMutationVariables
 >;
@@ -223,16 +213,16 @@ export type DeleteGuildPositionMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useDeleteGuildPositionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteGuildPositionMutation, DeleteGuildPositionMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<DeleteGuildPositionMutation, DeleteGuildPositionMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<DeleteGuildPositionMutation, DeleteGuildPositionMutationVariables>(
+  return Apollo.useMutation<DeleteGuildPositionMutation, DeleteGuildPositionMutationVariables>(
     DeleteGuildPositionDocument,
     baseOptions,
   );
 }
 export type DeleteGuildPositionMutationHookResult = ReturnType<typeof useDeleteGuildPositionMutation>;
-export type DeleteGuildPositionMutationResult = ApolloReactCommon.MutationResult<DeleteGuildPositionMutation>;
-export type DeleteGuildPositionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type DeleteGuildPositionMutationResult = Apollo.MutationResult<DeleteGuildPositionMutation>;
+export type DeleteGuildPositionMutationOptions = Apollo.BaseMutationOptions<
   DeleteGuildPositionMutation,
   DeleteGuildPositionMutationVariables
 >;

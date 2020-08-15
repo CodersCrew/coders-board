@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
@@ -39,14 +38,12 @@ export const SquadDocument = gql`
  *   },
  * });
  */
-export function useSquadQuery(baseOptions?: ApolloReactHooks.QueryHookOptions<SquadQuery, SquadQueryVariables>) {
-  return ApolloReactHooks.useQuery<SquadQuery, SquadQueryVariables>(SquadDocument, baseOptions);
+export function useSquadQuery(baseOptions?: Apollo.QueryHookOptions<SquadQuery, SquadQueryVariables>) {
+  return Apollo.useQuery<SquadQuery, SquadQueryVariables>(SquadDocument, baseOptions);
 }
-export function useSquadLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<SquadQuery, SquadQueryVariables>,
-) {
-  return ApolloReactHooks.useLazyQuery<SquadQuery, SquadQueryVariables>(SquadDocument, baseOptions);
+export function useSquadLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<SquadQuery, SquadQueryVariables>) {
+  return Apollo.useLazyQuery<SquadQuery, SquadQueryVariables>(SquadDocument, baseOptions);
 }
 export type SquadQueryHookResult = ReturnType<typeof useSquadQuery>;
 export type SquadLazyQueryHookResult = ReturnType<typeof useSquadLazyQuery>;
-export type SquadQueryResult = ApolloReactCommon.QueryResult<SquadQuery, SquadQueryVariables>;
+export type SquadQueryResult = Apollo.QueryResult<SquadQuery, SquadQueryVariables>;

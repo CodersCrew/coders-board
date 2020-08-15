@@ -27,11 +27,12 @@ export class AuthController {
         .cookie(TOKEN_COOKIE_NAME, TOKEN_PREFIX + token, {
           expires: new Date(Date.now() + 24 * 3600000),
           httpOnly: true,
+          sameSite: 'strict',
         })
-        .redirect(`${this.configService.values.CLIENT_URL}/login/success`);
+        .redirect(`/login/success`);
     } catch (ex) {
       console.error(ex);
-      return res.redirect(`${this.configService.values.CLIENT_URL}/login/failure`);
+      return res.redirect(`/login/failure`);
     }
 
     return true;

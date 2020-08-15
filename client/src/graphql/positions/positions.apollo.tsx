@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../typings/graphql';
 
@@ -73,19 +72,17 @@ export const PositionsDocument = gql`
  *   },
  * });
  */
-export function usePositionsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<PositionsQuery, PositionsQueryVariables>,
-) {
-  return ApolloReactHooks.useQuery<PositionsQuery, PositionsQueryVariables>(PositionsDocument, baseOptions);
+export function usePositionsQuery(baseOptions?: Apollo.QueryHookOptions<PositionsQuery, PositionsQueryVariables>) {
+  return Apollo.useQuery<PositionsQuery, PositionsQueryVariables>(PositionsDocument, baseOptions);
 }
 export function usePositionsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<PositionsQuery, PositionsQueryVariables>,
+  baseOptions?: Apollo.LazyQueryHookOptions<PositionsQuery, PositionsQueryVariables>,
 ) {
-  return ApolloReactHooks.useLazyQuery<PositionsQuery, PositionsQueryVariables>(PositionsDocument, baseOptions);
+  return Apollo.useLazyQuery<PositionsQuery, PositionsQueryVariables>(PositionsDocument, baseOptions);
 }
 export type PositionsQueryHookResult = ReturnType<typeof usePositionsQuery>;
 export type PositionsLazyQueryHookResult = ReturnType<typeof usePositionsLazyQuery>;
-export type PositionsQueryResult = ApolloReactCommon.QueryResult<PositionsQuery, PositionsQueryVariables>;
+export type PositionsQueryResult = Apollo.QueryResult<PositionsQuery, PositionsQueryVariables>;
 export const CreatePositionDocument = gql`
   mutation createPosition($data: CreatePositionInput!) {
     createPosition(data: $data) {
@@ -93,10 +90,7 @@ export const CreatePositionDocument = gql`
     }
   }
 `;
-export type CreatePositionMutationFn = ApolloReactCommon.MutationFunction<
-  CreatePositionMutation,
-  CreatePositionMutationVariables
->;
+export type CreatePositionMutationFn = Apollo.MutationFunction<CreatePositionMutation, CreatePositionMutationVariables>;
 
 /**
  * __useCreatePositionMutation__
@@ -116,16 +110,16 @@ export type CreatePositionMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreatePositionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<CreatePositionMutation, CreatePositionMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<CreatePositionMutation, CreatePositionMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<CreatePositionMutation, CreatePositionMutationVariables>(
+  return Apollo.useMutation<CreatePositionMutation, CreatePositionMutationVariables>(
     CreatePositionDocument,
     baseOptions,
   );
 }
 export type CreatePositionMutationHookResult = ReturnType<typeof useCreatePositionMutation>;
-export type CreatePositionMutationResult = ApolloReactCommon.MutationResult<CreatePositionMutation>;
-export type CreatePositionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreatePositionMutationResult = Apollo.MutationResult<CreatePositionMutation>;
+export type CreatePositionMutationOptions = Apollo.BaseMutationOptions<
   CreatePositionMutation,
   CreatePositionMutationVariables
 >;
@@ -136,10 +130,7 @@ export const UpdatePositionDocument = gql`
     }
   }
 `;
-export type UpdatePositionMutationFn = ApolloReactCommon.MutationFunction<
-  UpdatePositionMutation,
-  UpdatePositionMutationVariables
->;
+export type UpdatePositionMutationFn = Apollo.MutationFunction<UpdatePositionMutation, UpdatePositionMutationVariables>;
 
 /**
  * __useUpdatePositionMutation__
@@ -159,16 +150,16 @@ export type UpdatePositionMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdatePositionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<UpdatePositionMutation, UpdatePositionMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<UpdatePositionMutation, UpdatePositionMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<UpdatePositionMutation, UpdatePositionMutationVariables>(
+  return Apollo.useMutation<UpdatePositionMutation, UpdatePositionMutationVariables>(
     UpdatePositionDocument,
     baseOptions,
   );
 }
 export type UpdatePositionMutationHookResult = ReturnType<typeof useUpdatePositionMutation>;
-export type UpdatePositionMutationResult = ApolloReactCommon.MutationResult<UpdatePositionMutation>;
-export type UpdatePositionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdatePositionMutationResult = Apollo.MutationResult<UpdatePositionMutation>;
+export type UpdatePositionMutationOptions = Apollo.BaseMutationOptions<
   UpdatePositionMutation,
   UpdatePositionMutationVariables
 >;
@@ -177,10 +168,7 @@ export const DeletePositionDocument = gql`
     deletePosition(id: $id)
   }
 `;
-export type DeletePositionMutationFn = ApolloReactCommon.MutationFunction<
-  DeletePositionMutation,
-  DeletePositionMutationVariables
->;
+export type DeletePositionMutationFn = Apollo.MutationFunction<DeletePositionMutation, DeletePositionMutationVariables>;
 
 /**
  * __useDeletePositionMutation__
@@ -200,16 +188,16 @@ export type DeletePositionMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useDeletePositionMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<DeletePositionMutation, DeletePositionMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<DeletePositionMutation, DeletePositionMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<DeletePositionMutation, DeletePositionMutationVariables>(
+  return Apollo.useMutation<DeletePositionMutation, DeletePositionMutationVariables>(
     DeletePositionDocument,
     baseOptions,
   );
 }
 export type DeletePositionMutationHookResult = ReturnType<typeof useDeletePositionMutation>;
-export type DeletePositionMutationResult = ApolloReactCommon.MutationResult<DeletePositionMutation>;
-export type DeletePositionMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type DeletePositionMutationResult = Apollo.MutationResult<DeletePositionMutation>;
+export type DeletePositionMutationOptions = Apollo.BaseMutationOptions<
   DeletePositionMutation,
   DeletePositionMutationVariables
 >;

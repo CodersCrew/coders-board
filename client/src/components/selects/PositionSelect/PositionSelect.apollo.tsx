@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
@@ -35,27 +34,24 @@ export const PositionSelectPositionsDocument = gql`
  * });
  */
 export function usePositionSelectPositionsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<PositionSelectPositionsQuery, PositionSelectPositionsQueryVariables>,
+  baseOptions?: Apollo.QueryHookOptions<PositionSelectPositionsQuery, PositionSelectPositionsQueryVariables>,
 ) {
-  return ApolloReactHooks.useQuery<PositionSelectPositionsQuery, PositionSelectPositionsQueryVariables>(
+  return Apollo.useQuery<PositionSelectPositionsQuery, PositionSelectPositionsQueryVariables>(
     PositionSelectPositionsDocument,
     baseOptions,
   );
 }
 export function usePositionSelectPositionsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<
-    PositionSelectPositionsQuery,
-    PositionSelectPositionsQueryVariables
-  >,
+  baseOptions?: Apollo.LazyQueryHookOptions<PositionSelectPositionsQuery, PositionSelectPositionsQueryVariables>,
 ) {
-  return ApolloReactHooks.useLazyQuery<PositionSelectPositionsQuery, PositionSelectPositionsQueryVariables>(
+  return Apollo.useLazyQuery<PositionSelectPositionsQuery, PositionSelectPositionsQueryVariables>(
     PositionSelectPositionsDocument,
     baseOptions,
   );
 }
 export type PositionSelectPositionsQueryHookResult = ReturnType<typeof usePositionSelectPositionsQuery>;
 export type PositionSelectPositionsLazyQueryHookResult = ReturnType<typeof usePositionSelectPositionsLazyQuery>;
-export type PositionSelectPositionsQueryResult = ApolloReactCommon.QueryResult<
+export type PositionSelectPositionsQueryResult = Apollo.QueryResult<
   PositionSelectPositionsQuery,
   PositionSelectPositionsQueryVariables
 >;

@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
@@ -38,16 +37,12 @@ export const ChaptersDocument = gql`
  *   },
  * });
  */
-export function useChaptersQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<ChaptersQuery, ChaptersQueryVariables>,
-) {
-  return ApolloReactHooks.useQuery<ChaptersQuery, ChaptersQueryVariables>(ChaptersDocument, baseOptions);
+export function useChaptersQuery(baseOptions?: Apollo.QueryHookOptions<ChaptersQuery, ChaptersQueryVariables>) {
+  return Apollo.useQuery<ChaptersQuery, ChaptersQueryVariables>(ChaptersDocument, baseOptions);
 }
-export function useChaptersLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<ChaptersQuery, ChaptersQueryVariables>,
-) {
-  return ApolloReactHooks.useLazyQuery<ChaptersQuery, ChaptersQueryVariables>(ChaptersDocument, baseOptions);
+export function useChaptersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<ChaptersQuery, ChaptersQueryVariables>) {
+  return Apollo.useLazyQuery<ChaptersQuery, ChaptersQueryVariables>(ChaptersDocument, baseOptions);
 }
 export type ChaptersQueryHookResult = ReturnType<typeof useChaptersQuery>;
 export type ChaptersLazyQueryHookResult = ReturnType<typeof useChaptersLazyQuery>;
-export type ChaptersQueryResult = ApolloReactCommon.QueryResult<ChaptersQuery, ChaptersQueryVariables>;
+export type ChaptersQueryResult = Apollo.QueryResult<ChaptersQuery, ChaptersQueryVariables>;

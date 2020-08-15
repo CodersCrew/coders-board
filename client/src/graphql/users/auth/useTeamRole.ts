@@ -13,7 +13,6 @@ export const useTeamRole = (teamId: string) => {
 
   const { isAdmin } = authorizedUser;
   const role = authorizedUser.teamRoles[teamId]?.role;
-  console.log(teamId, authorizedUser);
   const roleValue = role ? roleValues[role] : -1;
 
   return {

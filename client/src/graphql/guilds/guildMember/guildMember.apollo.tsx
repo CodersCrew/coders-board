@@ -1,6 +1,5 @@
 import { gql } from '@apollo/client';
-import * as ApolloReactCommon from '@apollo/client';
-import * as ApolloReactHooks from '@apollo/client';
+import * as Apollo from '@apollo/client';
 
 import * as Types from '../../../typings/graphql';
 
@@ -95,21 +94,18 @@ export const GuildMembersDocument = gql`
  * });
  */
 export function useGuildMembersQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<GuildMembersQuery, GuildMembersQueryVariables>,
+  baseOptions?: Apollo.QueryHookOptions<GuildMembersQuery, GuildMembersQueryVariables>,
 ) {
-  return ApolloReactHooks.useQuery<GuildMembersQuery, GuildMembersQueryVariables>(GuildMembersDocument, baseOptions);
+  return Apollo.useQuery<GuildMembersQuery, GuildMembersQueryVariables>(GuildMembersDocument, baseOptions);
 }
 export function useGuildMembersLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GuildMembersQuery, GuildMembersQueryVariables>,
+  baseOptions?: Apollo.LazyQueryHookOptions<GuildMembersQuery, GuildMembersQueryVariables>,
 ) {
-  return ApolloReactHooks.useLazyQuery<GuildMembersQuery, GuildMembersQueryVariables>(
-    GuildMembersDocument,
-    baseOptions,
-  );
+  return Apollo.useLazyQuery<GuildMembersQuery, GuildMembersQueryVariables>(GuildMembersDocument, baseOptions);
 }
 export type GuildMembersQueryHookResult = ReturnType<typeof useGuildMembersQuery>;
 export type GuildMembersLazyQueryHookResult = ReturnType<typeof useGuildMembersLazyQuery>;
-export type GuildMembersQueryResult = ApolloReactCommon.QueryResult<GuildMembersQuery, GuildMembersQueryVariables>;
+export type GuildMembersQueryResult = Apollo.QueryResult<GuildMembersQuery, GuildMembersQueryVariables>;
 export const GuildMembersIdsDocument = gql`
   query guildMembersIds($guildId: ID!) {
     guildMembers(guildId: $guildId) {
@@ -138,27 +134,18 @@ export const GuildMembersIdsDocument = gql`
  * });
  */
 export function useGuildMembersIdsQuery(
-  baseOptions?: ApolloReactHooks.QueryHookOptions<GuildMembersIdsQuery, GuildMembersIdsQueryVariables>,
+  baseOptions?: Apollo.QueryHookOptions<GuildMembersIdsQuery, GuildMembersIdsQueryVariables>,
 ) {
-  return ApolloReactHooks.useQuery<GuildMembersIdsQuery, GuildMembersIdsQueryVariables>(
-    GuildMembersIdsDocument,
-    baseOptions,
-  );
+  return Apollo.useQuery<GuildMembersIdsQuery, GuildMembersIdsQueryVariables>(GuildMembersIdsDocument, baseOptions);
 }
 export function useGuildMembersIdsLazyQuery(
-  baseOptions?: ApolloReactHooks.LazyQueryHookOptions<GuildMembersIdsQuery, GuildMembersIdsQueryVariables>,
+  baseOptions?: Apollo.LazyQueryHookOptions<GuildMembersIdsQuery, GuildMembersIdsQueryVariables>,
 ) {
-  return ApolloReactHooks.useLazyQuery<GuildMembersIdsQuery, GuildMembersIdsQueryVariables>(
-    GuildMembersIdsDocument,
-    baseOptions,
-  );
+  return Apollo.useLazyQuery<GuildMembersIdsQuery, GuildMembersIdsQueryVariables>(GuildMembersIdsDocument, baseOptions);
 }
 export type GuildMembersIdsQueryHookResult = ReturnType<typeof useGuildMembersIdsQuery>;
 export type GuildMembersIdsLazyQueryHookResult = ReturnType<typeof useGuildMembersIdsLazyQuery>;
-export type GuildMembersIdsQueryResult = ApolloReactCommon.QueryResult<
-  GuildMembersIdsQuery,
-  GuildMembersIdsQueryVariables
->;
+export type GuildMembersIdsQueryResult = Apollo.QueryResult<GuildMembersIdsQuery, GuildMembersIdsQueryVariables>;
 export const CreateGuildMemberDocument = gql`
   mutation createGuildMember($data: CreateGuildMemberInput!) {
     createGuildMember(data: $data) {
@@ -166,7 +153,7 @@ export const CreateGuildMemberDocument = gql`
     }
   }
 `;
-export type CreateGuildMemberMutationFn = ApolloReactCommon.MutationFunction<
+export type CreateGuildMemberMutationFn = Apollo.MutationFunction<
   CreateGuildMemberMutation,
   CreateGuildMemberMutationVariables
 >;
@@ -189,16 +176,16 @@ export type CreateGuildMemberMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useCreateGuildMemberMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<CreateGuildMemberMutation, CreateGuildMemberMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<CreateGuildMemberMutation, CreateGuildMemberMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<CreateGuildMemberMutation, CreateGuildMemberMutationVariables>(
+  return Apollo.useMutation<CreateGuildMemberMutation, CreateGuildMemberMutationVariables>(
     CreateGuildMemberDocument,
     baseOptions,
   );
 }
 export type CreateGuildMemberMutationHookResult = ReturnType<typeof useCreateGuildMemberMutation>;
-export type CreateGuildMemberMutationResult = ApolloReactCommon.MutationResult<CreateGuildMemberMutation>;
-export type CreateGuildMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type CreateGuildMemberMutationResult = Apollo.MutationResult<CreateGuildMemberMutation>;
+export type CreateGuildMemberMutationOptions = Apollo.BaseMutationOptions<
   CreateGuildMemberMutation,
   CreateGuildMemberMutationVariables
 >;
@@ -209,7 +196,7 @@ export const UpdateGuildMemberDocument = gql`
     }
   }
 `;
-export type UpdateGuildMemberMutationFn = ApolloReactCommon.MutationFunction<
+export type UpdateGuildMemberMutationFn = Apollo.MutationFunction<
   UpdateGuildMemberMutation,
   UpdateGuildMemberMutationVariables
 >;
@@ -232,16 +219,16 @@ export type UpdateGuildMemberMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useUpdateGuildMemberMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<UpdateGuildMemberMutation, UpdateGuildMemberMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<UpdateGuildMemberMutation, UpdateGuildMemberMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<UpdateGuildMemberMutation, UpdateGuildMemberMutationVariables>(
+  return Apollo.useMutation<UpdateGuildMemberMutation, UpdateGuildMemberMutationVariables>(
     UpdateGuildMemberDocument,
     baseOptions,
   );
 }
 export type UpdateGuildMemberMutationHookResult = ReturnType<typeof useUpdateGuildMemberMutation>;
-export type UpdateGuildMemberMutationResult = ApolloReactCommon.MutationResult<UpdateGuildMemberMutation>;
-export type UpdateGuildMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type UpdateGuildMemberMutationResult = Apollo.MutationResult<UpdateGuildMemberMutation>;
+export type UpdateGuildMemberMutationOptions = Apollo.BaseMutationOptions<
   UpdateGuildMemberMutation,
   UpdateGuildMemberMutationVariables
 >;
@@ -250,7 +237,7 @@ export const DeleteGuildMemberDocument = gql`
     deleteGuildMember(id: $id, guildId: $guildId)
   }
 `;
-export type DeleteGuildMemberMutationFn = ApolloReactCommon.MutationFunction<
+export type DeleteGuildMemberMutationFn = Apollo.MutationFunction<
   DeleteGuildMemberMutation,
   DeleteGuildMemberMutationVariables
 >;
@@ -274,16 +261,16 @@ export type DeleteGuildMemberMutationFn = ApolloReactCommon.MutationFunction<
  * });
  */
 export function useDeleteGuildMemberMutation(
-  baseOptions?: ApolloReactHooks.MutationHookOptions<DeleteGuildMemberMutation, DeleteGuildMemberMutationVariables>,
+  baseOptions?: Apollo.MutationHookOptions<DeleteGuildMemberMutation, DeleteGuildMemberMutationVariables>,
 ) {
-  return ApolloReactHooks.useMutation<DeleteGuildMemberMutation, DeleteGuildMemberMutationVariables>(
+  return Apollo.useMutation<DeleteGuildMemberMutation, DeleteGuildMemberMutationVariables>(
     DeleteGuildMemberDocument,
     baseOptions,
   );
 }
 export type DeleteGuildMemberMutationHookResult = ReturnType<typeof useDeleteGuildMemberMutation>;
-export type DeleteGuildMemberMutationResult = ApolloReactCommon.MutationResult<DeleteGuildMemberMutation>;
-export type DeleteGuildMemberMutationOptions = ApolloReactCommon.BaseMutationOptions<
+export type DeleteGuildMemberMutationResult = Apollo.MutationResult<DeleteGuildMemberMutation>;
+export type DeleteGuildMemberMutationOptions = Apollo.BaseMutationOptions<
   DeleteGuildMemberMutation,
   DeleteGuildMemberMutationVariables
 >;

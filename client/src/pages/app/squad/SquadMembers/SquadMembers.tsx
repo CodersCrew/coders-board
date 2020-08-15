@@ -1,9 +1,8 @@
 import React from 'react';
-import { PlusOutlined } from '@ant-design/icons';
 import { Table } from 'antd';
 
-import { Box, Button, Spin } from '@/components/atoms';
-import { Card } from '@/components/molecules';
+import { Box } from '@/components/atoms';
+import { Card, FiltersCard } from '@/components/molecules';
 import { useSquadMembers } from '@/graphql/squads';
 import { useModalState } from '@/hooks/useModalState';
 
@@ -19,15 +18,7 @@ const SquadMembers = () => {
 
   return (
     <>
-      {squadRole.isManager && (
-        <Spin spinning={squadMembers.loading} tip="Loading member actions">
-          <Box pb={24} display="flex">
-            <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={() => squadMemberModal.open()}>
-              Add member
-            </Button>
-          </Box>
-        </Spin>
-      )}
+      <FiltersCard addButton={squadRole.isManager && { label: 'Add member', onClick: squadMemberModal.open }} />
       <Box maxWidth="100%" overflow="auto">
         <Card>
           <Table
