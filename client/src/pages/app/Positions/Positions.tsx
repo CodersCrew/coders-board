@@ -1,36 +1,19 @@
 import React from 'react';
 import { PlusOutlined } from '@ant-design/icons';
-import styled from '@emotion/styled';
+import { List } from 'antd';
 
 import { Button } from '@/components/atoms';
-import { Page } from '@/components/molecules';
+import { Card, FiltersCard, Page } from '@/components/molecules';
 import { usePositions } from '@/graphql/positions';
 import { useModalState } from '@/hooks/useModalState';
-import { down } from '@/utils/styling';
+import { useQueryParam } from '@/hooks/useQueryParam';
 
 import { Position } from './Position';
 import { PositionModal, PositionModalProps } from './PositionModal';
 
-const CardsGrid = styled.div({
-  display: 'grid',
-  gridGap: 24,
-  gridTemplateColumns: 'repeat(4, 1fr)',
-
-  [down('xl')]: {
-    gridTemplateColumns: 'repeat(3, 1fr)',
-  },
-
-  [down('lg')]: {
-    gridTemplateColumns: 'repeat(2, 1fr)',
-  },
-
-  [down('sm')]: {
-    gridTemplateColumns: 'repeat(1, 1fr)',
-  },
-});
-
 const Positions = () => {
-  const positions = usePositions();
+  const [search, setSearch] = useQueryParam('search', false);
+  const positions = usePositions({ search });
   const positionModal = useModalState<PositionModalProps['data']>();
 
   return (
@@ -45,11 +28,17 @@ const Positions = () => {
         ]}
       />
       <Page.Content>
-        <CardsGrid>
-          {positions.data.map(position => (
-            <Position key={position.id} openEditModal={positionModal.open} {...position} />
-          ))}
-        </CardsGrid>
+        <FiltersCard search={{ value: search, onSearch: setSearch }} />
+        <Card>
+          <List
+            rowKey="id"
+            size="small"
+            itemLayout="horizontal"
+            loading={positions.loading}
+            dataSource={positions.data}
+            renderItem={item => <Position key={item.id} openEditModal={positionModal.open} {...item} />}
+          />
+        </Card>
       </Page.Content>
       {positionModal.isMounted && (
         <PositionModal visible={positionModal.isVisible} data={positionModal.data} onCancel={positionModal.close} />

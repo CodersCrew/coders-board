@@ -2,7 +2,7 @@ import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { TeamRole } from '../../common/enums/team-role.enum';
 import { resolveAsyncRelation } from '../../common/utils';
-import { GsuiteService } from '../../gsuite/gsuite.service';
+import { GsuiteService } from '../../integrations';
 import { Chapter } from '../chapters/chapter.model';
 import { SquadMember } from '../squad-members/squad-member.model';
 import { CreateSquadPositionInput } from './dto/create-squad-position.input';

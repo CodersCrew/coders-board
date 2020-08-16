@@ -27,4 +27,10 @@ export type EnvVariables = {
   // gsuite
   GSUITE_CUSTOMER_ID: string;
   GSUITE_SUBJECT: string;
+
+  // slack
+  SLACK_TOKEN: string;
+
+  // cloudinary
+  CLOUDINARY_URL: string;
 };

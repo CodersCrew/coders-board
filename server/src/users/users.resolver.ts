@@ -40,9 +40,15 @@ export class UsersResolver {
     return this.usersService.delete(id);
   }
 
-  @Mutation(returns => [User])
+  @Mutation(returns => Boolean)
   @AdminGuard()
-  migrateGoogleUsers() {
-    return this.usersService.migrateGoogleUsers();
+  syncWithGoogle() {
+    return this.usersService.syncWithGoogle();
+  }
+
+  @Mutation(returns => Boolean)
+  @AdminGuard()
+  syncWithSlack() {
+    return this.usersService.syncWithSlack();
   }
 }

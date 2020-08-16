@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { GsuiteModule } from '../gsuite/gsuite.module';
+import { IntegrationsModule } from '../integrations/integrations.module';
 import { ClansModule } from './clans/clans.module';
 import { GuildMembersModule } from './guild-members/guild-members.module';
 import { GuildPositionsModule } from './guild-positions/guild-positions.module';
@@ -13,7 +13,7 @@ import { GuildsService } from './guilds.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Guild, GuildRepository]),
-    GsuiteModule,
+    IntegrationsModule,
     GuildMembersModule,
     GuildPositionsModule,
     ClansModule,

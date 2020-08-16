@@ -1,9 +1,10 @@
 import { Injectable } from '@nestjs/common';
 import { createHash } from 'crypto';
 import { admin_directory_v1, google } from 'googleapis';
+import fetch from 'node-fetch';
 
-import { env } from '../common/env';
-import { UserRole, UserStatus } from '../users/user.model';
+import { env } from '../../common/env';
+import { UserRole, UserStatus } from '../../users/user.model';
 import { CreateGroupParams } from './interfaces/create-group.params';
 import { CreateMemberParams } from './interfaces/create-member.params';
 import { CreateUserParams } from './interfaces/create-user.params';
@@ -13,7 +14,19 @@ import { DeleteUserParams } from './interfaces/delete-user.params';
 import { HasMemberParams } from './interfaces/has-member.params';
 import { UpdateGroupParams } from './interfaces/update-group.params';
 import { UpdateMemberParams } from './interfaces/update-member.params';
+import { UpdateUserImageParams } from './interfaces/update-user-image.params';
 import { UpdateUserParams } from './interfaces/update-user.params';
+
+const imageToBase64 = async (url: string) => {
+  const response = await fetch(url);
+  const buffer = await response.buffer();
+  const base64 = buffer.toString('base64');
+  const safeBase64 = base64.replace(/\+/g, '-').replace(/\//g, '_').replace(/=+$/, '');
+
+  return safeBase64;
+};
+
+export const toBase64 = file => `data:${file.mimetype};base64,${file.buffer.toString('base64')}`;
 
 @Injectable()
 export class GsuiteService {
@@ -66,9 +79,7 @@ export class GsuiteService {
   }
 
   async createUser(input: CreateUserParams): Promise<string> {
-    const password = createHash('md5')
-      .update(input.password)
-      .digest('hex');
+    const password = createHash('md5').update(input.password).digest('hex');
 
     const response = await this.admin.users.insert({
       requestBody: {
@@ -96,6 +107,13 @@ export class GsuiteService {
 
   async deleteUser({ id }: DeleteUserParams): Promise<boolean> {
     await this.admin.users.delete({ userKey: id });
+
+    return true;
+  }
+
+  async updateUserImage({ id, imageUrl }: UpdateUserImageParams): Promise<boolean> {
+    const photoData = await imageToBase64(imageUrl);
+    await this.admin.users.photos.update({ userKey: id, requestBody: { photoData } });
 
     return true;
   }

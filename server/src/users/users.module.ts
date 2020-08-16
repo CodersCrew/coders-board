@@ -1,13 +1,13 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { GsuiteModule } from '../gsuite/gsuite.module';
+import { IntegrationsModule } from '../integrations/integrations.module';
 import { UserRepository } from './user.repository';
 import { UsersResolver } from './users.resolver';
 import { UsersService } from './users.service';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([UserRepository]), GsuiteModule],
+  imports: [TypeOrmModule.forFeature([UserRepository]), IntegrationsModule],
   providers: [UsersResolver, UsersService],
   exports: [UsersService],
 })

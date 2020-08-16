@@ -3,8 +3,7 @@ import { InjectRepository } from '@nestjs/typeorm';
 import { isEqual, pick } from 'lodash';
 
 import { brackets, resolveAsyncRelation } from '../common/utils';
-import { GsuiteService } from '../gsuite/gsuite.service';
-import { UpdateGroupParams } from '../gsuite/interfaces/update-group.params';
+import { GsuiteService, UpdateGroupParams } from '../integrations';
 import { CreateGuildInput } from './dto/create-guild.input';
 import { GetGuildsArgs } from './dto/get-guilds.args';
 import { UpdateGuildInput } from './dto/update-guild.input';

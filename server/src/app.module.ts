@@ -5,8 +5,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 
 import { AuthModule } from './auth/auth.module';
-import { GsuiteModule } from './gsuite/gsuite.module';
 import { GuildsModule } from './guilds/guilds.module';
+import { IntegrationsModule } from './integrations/integrations.module';
 import typeOrmConfig from './ormconfig';
 import { PositionsModule } from './positions/positions.module';
 import { SquadsModule } from './squads/squads.module';
@@ -27,9 +27,9 @@ import { UsersModule } from './users/users.module';
     UsersModule,
     AuthModule,
     PositionsModule,
-    GsuiteModule,
     GuildsModule,
     SquadsModule,
+    IntegrationsModule,
   ],
   controllers: [],
 })

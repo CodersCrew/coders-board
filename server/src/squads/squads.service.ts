@@ -4,8 +4,7 @@ import { isEqual, pick } from 'lodash';
 
 import { resolveAsyncRelation } from '../common/utils';
 import { brackets } from '../common/utils/brackets';
-import { GsuiteService } from '../gsuite/gsuite.service';
-import { UpdateGroupParams } from '../gsuite/interfaces/update-group.params';
+import { GsuiteService, UpdateGroupParams } from '../integrations';
 import { CreateSquadInput } from './dto/create-squad.input';
 import { GetSquadsArgs } from './dto/get-squads.args';
 import { UpdateSquadInput } from './dto/update-squad.input';

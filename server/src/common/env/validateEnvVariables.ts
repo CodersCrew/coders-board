@@ -8,9 +8,7 @@ dotenv.config();
 
 export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
   const envVarsSchema: Joi.ObjectSchema<EnvVariables> = Joi.object({
-    NODE_ENV: Joi.string()
-      .valid('development', 'test', 'production')
-      .default('development'),
+    NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
 
     PORT: Joi.number().required(),
 
@@ -38,6 +36,12 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
     // gsuite
     GSUITE_CUSTOMER_ID: Joi.string().required(),
     GSUITE_SUBJECT: Joi.string().required(),
+
+    // slack
+    SLACK_TOKEN: Joi.string().required(),
+
+    // cloudinary
+    CLOUDINARY_URL: Joi.string().required(),
   });
 
   const { error, value: validatedEnvConfig } = envVarsSchema.validate(env, {

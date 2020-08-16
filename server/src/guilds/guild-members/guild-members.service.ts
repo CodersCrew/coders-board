@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 
 import { resolveAsyncRelation } from '../../common/utils';
-import { GsuiteService } from '../../gsuite/gsuite.service';
+import { GsuiteService } from '../../integrations';
 import { CreateGuildMemberInput } from './dto/create-guild-member.input';
 import { GetGuildMembersArgs } from './dto/get-guild-members.args';
 import { UpdateGuildMemberInput } from './dto/update-guild-member.input';

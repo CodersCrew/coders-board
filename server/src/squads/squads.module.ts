@@ -1,7 +1,7 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { GsuiteModule } from '../gsuite/gsuite.module';
+import { IntegrationsModule } from '../integrations/integrations.module';
 import { ChaptersModule } from './chapters/chapters.module';
 import { SquadMembersModule } from './squad-members/squad-members.module';
 import { SquadPositionsModule } from './squad-positions/squad-positions.module';
@@ -13,7 +13,7 @@ import { SquadsService } from './squads.service';
 @Module({
   imports: [
     TypeOrmModule.forFeature([Squad, SquadRepository]),
-    GsuiteModule,
+    IntegrationsModule,
     ChaptersModule,
     SquadMembersModule,
     SquadPositionsModule,

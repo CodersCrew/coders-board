@@ -21,6 +21,7 @@ const AppLayout = () => {
 
   if (!auth.isAuthorized) {
     navigate('/login');
+    return null;
   }
 
   return (

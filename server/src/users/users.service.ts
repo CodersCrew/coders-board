@@ -1,13 +1,14 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { keyBy } from 'lodash';
+import { In } from 'typeorm';
 
-import { brackets } from '../common/utils/brackets';
-import { GsuiteService } from '../gsuite/gsuite.service';
+import { brackets } from '../common/utils';
+import { CloudinaryService, GsuiteService, SlackService } from '../integrations';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
 import { User } from './user.model';
 import { UserRepository } from './user.repository';
-import { createGravatar } from './users.utils';
 
 @Injectable()
 export class UsersService {
@@ -15,6 +16,8 @@ export class UsersService {
     @InjectRepository(UserRepository)
     private readonly userRepository: UserRepository,
     private readonly gsuiteService: GsuiteService,
+    private readonly slackService: SlackService,
+    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   findById(id: string): Promise<User | null> {
@@ -46,16 +49,15 @@ export class UsersService {
 
     if (search) {
       const searchQuery = brackets(
-        [
-          'user.firstName LIKE :search',
-          'user.lastName LIKE :search',
-          'user.primaryEmail LIKE :search',
-          'user.recoveryEmail LIKE :search',
-        ].join(' OR '),
+        ['user.fullName LIKE :search', 'user.primaryEmail LIKE :search', 'user.recoveryEmail LIKE :search'].join(
+          ' OR ',
+        ),
       );
 
       query.andWhere(searchQuery, { search: `%${search}%` });
     }
+
+    query.orderBy('user.fullName', 'ASC');
 
     return query.getMany();
   }
@@ -75,33 +77,54 @@ export class UsersService {
     return true;
   }
 
-  async migrateGoogleUsers(): Promise<User[]> {
+  async syncWithGoogle(): Promise<boolean> {
     const users = await this.gsuiteService.findAllUsers();
-    const result: User[] = [];
 
     for (const user of users) {
       const userRecord = await this.findByGoogleId(user.googleId);
 
+      const updateChunk = {
+        ...user,
+        fullName: `${user.firstName} ${user.lastName}`,
+        image: !user.image || user.image.includes('gstatic') ? userRecord.image : user.image,
+      };
+
       if (userRecord) {
-        result.push(
-          await this.userRepository.save({
-            ...userRecord,
-            ...user,
-            fullName: `${user.firstName} ${user.lastName}`,
-            image: user.image || createGravatar(user.primaryEmail),
-          }),
-        );
+        await this.userRepository.save({
+          ...userRecord,
+          ...updateChunk,
+        });
       } else {
-        result.push(
-          await this.userRepository.save({
-            ...user,
-            fullName: `${user.firstName} ${user.lastName}`,
-            image: user.image || createGravatar(user.primaryEmail),
-          }),
-        );
+        await this.userRepository.save(updateChunk);
       }
     }
 
-    return result;
+    return true;
+  }
+
+  async syncWithSlack() {
+    const slackUsers = await this.slackService.findAllUsers();
+    const slackUsersMap = keyBy(slackUsers, 'primaryEmail');
+    const users = await this.userRepository.find({
+      where: { primaryEmail: In(Object.keys(slackUsersMap)) },
+    });
+
+    for (const user of users) {
+      const slackUser = slackUsersMap[user.primaryEmail];
+
+      if (slackUser.image) {
+        const image = await this.cloudinaryService.uploadUserImage(slackUser.image, user.id);
+        const thumbnail = await this.cloudinaryService.uploadUserThumbnail(slackUser.thumbnail, user.id);
+
+        await this.userRepository.save({
+          ...user,
+          image,
+          thumbnail,
+          slackId: slackUser.slackId,
+        });
+      }
+    }
+
+    return true;
   }
 }

@@ -1,5 +1,5 @@
-query positions {
-	positions {
+query positions($search: String $guildId: ID $clanId: ID) {
+	positions(search: $search guildId: $guildId clanId: $clanId) {
     id
     name
     description

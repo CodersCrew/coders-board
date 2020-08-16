@@ -2,6 +2,7 @@ import { GraphQLOperations } from '@/typings/graphql';
 
 import {
   PositionsQuery,
+  PositionsQueryVariables,
   useCreatePositionMutation,
   useDeletePositionMutation,
   usePositionsQuery,
@@ -9,13 +10,14 @@ import {
 } from './positions.apollo';
 
 export type UsePositions = {
+  params: PositionsQueryVariables;
   item: PositionsQuery['positions'][number];
 };
 
-export const usePositions = () => {
+export const usePositions = (params?: UsePositions['params']) => {
   const mutationConfig = { refetchQueries: [GraphQLOperations.Query.positions] };
 
-  const { data, loading, error, refetch } = usePositionsQuery();
+  const { data, loading, error, refetch } = usePositionsQuery({ variables: params });
   const [createMember] = useCreatePositionMutation(mutationConfig);
   const [updateMember] = useUpdatePositionMutation(mutationConfig);
   const [deleteMember] = useDeletePositionMutation(mutationConfig);

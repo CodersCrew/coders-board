@@ -56,8 +56,16 @@ export class User extends BaseModel {
   image: string;
 
   @Field()
+  @Column()
+  thumbnail: string;
+
+  @Field()
   @Column({ unique: true })
   googleId: string;
+
+  @Field()
+  @Column({ unique: true })
+  slackId: string;
 
   @Field(type => UserStatus)
   @Column({ type: 'enum', enum: UserStatus, default: UserStatus.PENDING })

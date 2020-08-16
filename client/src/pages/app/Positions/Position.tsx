@@ -1,9 +1,7 @@
 import React from 'react';
 import { DeleteOutlined, EditOutlined, UserOutlined } from '@ant-design/icons';
-import styled from '@emotion/styled';
-import { Avatar, Tooltip } from 'antd';
+import { Avatar, List, Tooltip } from 'antd';
 
-import { Card, CardMeta } from '@/components/molecules';
 import { UsePositions } from '@/graphql/positions';
 import { useAuthorizedUser } from '@/graphql/users';
 import { CFC } from '@/typings/components';
@@ -15,15 +13,6 @@ import { useDeletePositionConfirm } from './useDeletePositionConfirm';
 export type PositionProps = UsePositions['item'] & {
   openEditModal: (data?: PositionModalProps['data']) => void;
 };
-
-const StyledCard = styled(Card)({
-  display: 'flex',
-  flexDirection: 'column',
-
-  '.ant-card-body': {
-    flex: 1,
-  },
-});
 
 export const Position: CFC<PositionProps> = props => {
   const { isAdmin } = useAuthorizedUser();
@@ -56,8 +45,8 @@ export const Position: CFC<PositionProps> = props => {
   );
 
   return (
-    <StyledCard key={props.id} p={16} actions={actions}>
-      <CardMeta avatar={avatar} title={props.name} description={props.description} />
-    </StyledCard>
+    <List.Item actions={actions}>
+      <List.Item.Meta avatar={avatar} title={props.name} description={props.description} />
+    </List.Item>
   );
 };

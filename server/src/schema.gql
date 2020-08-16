@@ -132,7 +132,9 @@ type User {
   recoveryEmail: String!
   phone: String!
   image: String!
+  thumbnail: String!
   googleId: String!
+  slackId: String!
   status: UserStatus!
   role: UserRole!
   guilds: [GuildMember!]!
@@ -172,7 +174,8 @@ type Query {
 type Mutation {
   createUser(data: CreateUserInput!): User!
   deleteUser(id: ID!): Boolean!
-  migrateGoogleUsers: [User!]!
+  syncWithGoogle: Boolean!
+  syncWithSlack: Boolean!
   signOut: Boolean!
   createClan(data: CreateClanInput!): Clan!
   updateClan(data: UpdateClanInput!): Clan!

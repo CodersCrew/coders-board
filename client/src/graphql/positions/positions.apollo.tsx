@@ -3,7 +3,11 @@ import * as Apollo from '@apollo/client';
 
 import * as Types from '../../typings/graphql';
 
-export type PositionsQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type PositionsQueryVariables = Types.Exact<{
+  search?: Types.Maybe<Types.Scalars['String']>;
+  guildId?: Types.Maybe<Types.Scalars['ID']>;
+  clanId?: Types.Maybe<Types.Scalars['ID']>;
+}>;
 
 export type PositionsQuery = { __typename?: 'Query' } & {
   positions: Array<
@@ -37,8 +41,8 @@ export type DeletePositionMutationVariables = Types.Exact<{
 export type DeletePositionMutation = { __typename?: 'Mutation' } & Pick<Types.Mutation, 'deletePosition'>;
 
 export const PositionsDocument = gql`
-  query positions {
-    positions {
+  query positions($search: String, $guildId: ID, $clanId: ID) {
+    positions(search: $search, guildId: $guildId, clanId: $clanId) {
       id
       name
       description
@@ -69,6 +73,9 @@ export const PositionsDocument = gql`
  * @example
  * const { data, loading, error } = usePositionsQuery({
  *   variables: {
+ *      search: // value for 'search'
+ *      guildId: // value for 'guildId'
+ *      clanId: // value for 'clanId'
  *   },
  * });
  */

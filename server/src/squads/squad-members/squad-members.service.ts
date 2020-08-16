@@ -1,7 +1,7 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 
 import { resolveAsyncRelation } from '../../common/utils';
-import { GsuiteService } from '../../gsuite/gsuite.service';
+import { GsuiteService } from '../../integrations';
 import { CreateSquadMemberInput } from './dto/create-squad-member.input';
 import { GetSquadMembersArgs } from './dto/get-squad-members.args';
 import { UpdateSquadMemberInput } from './dto/update-squad-member.input';
@@ -48,7 +48,7 @@ export class SquadMembersService {
 
     query.where('squadMember.squadId = :squadId', { squadId });
     query.leftJoinAndSelect('squadMember.user', 'user');
-    query.orderBy('user.firstName');
+    query.orderBy('user.fullName');
 
     return query.getMany();
   }
