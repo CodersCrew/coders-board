@@ -30,6 +30,10 @@ export const GlobalStyles = () => {
         .ant-dropdown-menu-dark {
           background: ${lighten(0.1, theme.colors.background.dark)};
         }
+
+        .ant-list-item-meta-content > .ant-list-item-meta-title {
+          margin-bottom: 4px;
+        }
       `}
     />
   );

@@ -1,12 +1,10 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CrownOutlined, DeleteOutlined, MoreOutlined, PartitionOutlined } from '@ant-design/icons';
+import { CrownOutlined, DeleteOutlined, MoreOutlined } from '@ant-design/icons';
 import { Avatar, Dropdown, Menu, Tag } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 
 import { Box, Button, Icon, Paragraph } from '@/components/atoms';
 import { UseSquadMembers } from '@/graphql/squads';
-import { useModalState } from '@/hooks/useModalState';
 import { TeamRole } from '@/typings/graphql';
 
 import { useSquadContext } from '../SquadContext';
@@ -16,11 +14,13 @@ import { useDeleteSquadMemberConfirm } from './useDeleteSquadMemberConfirm';
 type Member = UseSquadMembers['item'];
 type Columns = ColumnsType<Member>;
 
-export const useSquadMembersColumns = () => {
-  const navigate = useNavigate();
+type Params = {
+  openModal: (data: SquadMemberModalProps['data']) => void;
+};
+
+export const useSquadMembersColumns = ({ openModal }: Params) => {
   const { squadRole } = useSquadContext();
   const deleteSquadMemberConfirm = useDeleteSquadMemberConfirm();
-  const squadMemberModal = useModalState<SquadMemberModalProps['data']>();
 
   const columns: Columns = [
     {
@@ -48,12 +48,15 @@ export const useSquadMembersColumns = () => {
     {
       title: 'Position',
       key: 'position',
-      render: (_, { positions }) =>
-        positions
-          .map(({ chapter, position: { name: positionName } }) => {
-            return chapter ? `${positionName} in ${chapter.name} Chapter` : positionName;
-          })
-          .join(', '),
+      render: (_, { positions }) => (
+        <Paragraph whiteSpace="pre-line">
+          {positions
+            .map(({ chapter, position: { name: positionName } }) => {
+              return chapter ? `${positionName} in ${chapter.name} Chapter` : positionName;
+            })
+            .join('\n')}
+        </Paragraph>
+      ),
     },
   ];
 
@@ -61,14 +64,8 @@ export const useSquadMembersColumns = () => {
     const menu = (member: Member) => (
       <Menu>
         <Menu.Item
-          onClick={() => navigate(`../positions?search=${member.user.fullName}`)}
-          icon={<Icon icon={PartitionOutlined} />}
-        >
-          Manage positions
-        </Menu.Item>
-        <Menu.Item
           onClick={() =>
-            squadMemberModal.open({
+            openModal({
               id: member.id,
               role: member.role,
               userId: member.user.id,

@@ -23,12 +23,12 @@ export class GuildsResolver {
 
   @ResolveField('clans', returns => [Clan])
   async getClans(@Parent() guild: Guild) {
-    return this.guildsService.getClans(guild.id);
+    return this.guildsService.getClans(guild);
   }
 
   @ResolveField('members', returns => [GuildMember])
   getMembers(@Parent() guild: Guild) {
-    return this.guildsService.getMembers(guild.id);
+    return this.guildsService.getMembers(guild);
   }
 
   @Query(returns => [Guild], { name: 'guilds' })

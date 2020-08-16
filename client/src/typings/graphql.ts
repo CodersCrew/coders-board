@@ -114,6 +114,10 @@ export type Chapter = {
   positions: Array<SquadPosition>;
 };
 
+export type ChapterPositionsArgs = {
+  active?: Maybe<Scalars['Boolean']>;
+};
+
 export type SquadPosition = {
   __typename?: 'SquadPosition';
   id: Scalars['ID'];
@@ -600,6 +604,9 @@ export const GraphQLOperations = {
     createPosition: 'createPosition',
     updatePosition: 'updatePosition',
     deletePosition: 'deletePosition',
+    createChapter: 'createChapter',
+    updateChapter: 'updateChapter',
+    deleteChapter: 'deleteChapter',
     createSquadMember: 'createSquadMember',
     updateSquadMember: 'updateSquadMember',
     deleteSquadMember: 'deleteSquadMember',

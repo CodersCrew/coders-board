@@ -47,6 +47,8 @@ export class SquadMembersService {
     const query = this.squadMemberRepository.createQueryBuilder('squadMember');
 
     query.where('squadMember.squadId = :squadId', { squadId });
+    query.leftJoinAndSelect('squadMember.user', 'user');
+    query.orderBy('user.firstName');
 
     return query.getMany();
   }

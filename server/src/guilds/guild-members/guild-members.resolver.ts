@@ -22,17 +22,17 @@ export class GuildMembersResolver {
 
   @ResolveField('user', returns => User)
   async getUser(@Parent() guildMember: GuildMember) {
-    return this.guildMembersService.getUser(guildMember.id);
+    return this.guildMembersService.getUser(guildMember);
   }
 
   @ResolveField('guild', returns => Guild)
   async getGuild(@Parent() guildMember: GuildMember) {
-    return this.guildMembersService.getGuild(guildMember.id);
+    return this.guildMembersService.getGuild(guildMember);
   }
 
   @ResolveField('positions', returns => [GuildPosition])
   async getPositions(@Parent() guildMember: GuildMember, @Args('active', { nullable: true }) active?: boolean) {
-    return this.guildMembersService.getPositions(guildMember.id, active);
+    return this.guildMembersService.getPositions(guildMember, active);
   }
 
   @Query(returns => [GuildMember], { name: 'guildMembers' })

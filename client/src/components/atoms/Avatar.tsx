@@ -16,3 +16,5 @@ export const Avatar = styled(AntAvatar, { shouldForwardProp })<AvatarProps>(prop
   minWidth: props.width || props.size,
   minHeight: props.height || props.size,
 }));
+
+export const AvatarGroup = AntAvatar.Group;

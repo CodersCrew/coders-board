@@ -31,6 +31,7 @@ module.exports = {
     'react/jsx-curly-newline': 0, // conflicts with prettier
     'react/jsx-one-expression-per-line': 0, // conflicts with prettier
     'react/jsx-indent': 0, // conflicts with prettier
+    'react/jsx-wrap-multilines': 0, // conflicts with prettier
     'react/destructuring-assignment': 0, // in many cases we want to destructure part of the props
     '@typescript-eslint/explicit-module-boundary-types': 0, // in many cases TS knows return type of the function so we don't need to specify it explicitly
     '@typescript-eslint/no-unused-vars': [2, { argsIgnorePattern: '^_' }],

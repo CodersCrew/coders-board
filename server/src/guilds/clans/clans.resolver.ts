@@ -22,12 +22,12 @@ export class ClansResolver {
 
   @ResolveField('guild', returns => [Guild])
   async getGuild(@Parent() clan: Clan) {
-    return this.clansService.getGuild(clan.id);
+    return this.clansService.getGuild(clan);
   }
 
   @ResolveField('positions', returns => [GuildPosition])
   getPositions(@Parent() clan: Clan) {
-    return this.clansService.getPositions(clan.id);
+    return this.clansService.getPositions(clan);
   }
 
   @Query(returns => [Clan], { name: 'clans' })

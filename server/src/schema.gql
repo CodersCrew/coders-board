@@ -96,7 +96,7 @@ type Chapter {
   googleId: String!
   squad: [Squad!]!
   squadId: String!
-  positions: [SquadPosition!]!
+  positions(active: Boolean): [SquadPosition!]!
 }
 
 type SquadPosition {

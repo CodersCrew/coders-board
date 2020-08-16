@@ -17,10 +17,12 @@ import { UsersModule } from './users/users.module';
     TypeOrmModule.forRoot(typeOrmConfig),
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
+      introspection: true,
       context: ({ req }) => ({ user: req.user }),
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'client', 'build'),
+      exclude: ['/auth/*', '/graphql'],
     }),
     UsersModule,
     AuthModule,

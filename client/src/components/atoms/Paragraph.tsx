@@ -1,4 +1,4 @@
-import React from 'react';
+import React, { CSSProperties } from 'react';
 import styled from '@emotion/styled';
 import { Typography as AntTypography } from 'antd';
 import { ParagraphProps as AntParagraphProps } from 'antd/lib/typography/Paragraph';
@@ -15,6 +15,8 @@ import {
   TypographyProps,
 } from 'styled-system';
 
+import { omitProps } from '@/utils/styling';
+
 type StyledSystemProps = SpaceProps & LayoutProps & TypographyProps & ColorProps;
 
 type WithTextSize = {
@@ -22,40 +24,49 @@ type WithTextSize = {
   large?: boolean;
 };
 
-export type ParagraphProps = AntParagraphProps & StyledSystemProps & WithTextSize;
+export type ParagraphProps = AntParagraphProps &
+  StyledSystemProps &
+  WithTextSize & {
+    whiteSpace?: CSSProperties['whiteSpace'];
+  };
 
 const styledSystem = compose(space, layout, typography, color);
 
-const StyledParagraph = styled(AntTypography.Paragraph)<Omit<ParagraphProps, 'large' | 'small'>>(props => {
-  const { theme } = props;
-  const { fontSizes, lineHeights, fontWeights, fonts } = theme;
+const shouldForwardProp = omitProps([...styledSystem.propNames, 'whiteSpace']);
 
-  return {
-    fontFamily: fonts.main,
-    fontSize: fontSizes.normal,
-    lineHeight: lineHeights.normal,
-    fontWeight: fontWeights.normal,
+const StyledParagraph = styled(AntTypography.Paragraph, { shouldForwardProp })<Omit<ParagraphProps, 'large' | 'small'>>(
+  props => {
+    const { theme } = props;
+    const { fontSizes, lineHeights, fontWeights, fonts } = theme;
 
-    '&.ant-typography': {
-      marginBottom: 'unset',
-      ...styledSystem(props),
-    },
+    return {
+      fontFamily: fonts.main,
+      fontSize: fontSizes.normal,
+      lineHeight: lineHeights.normal,
+      fontWeight: fontWeights.normal,
 
-    '&.small': {
-      fontSize: fontSizes.small,
-      lineHeight: lineHeights.small,
-    },
+      '&.ant-typography': {
+        marginBottom: 'unset',
+        whiteSpace: props.whiteSpace,
+        ...styledSystem(props),
+      },
 
-    '&.large': {
-      fontSize: fontSizes.large,
-      lineHeight: lineHeights.large,
-    },
+      '&.small': {
+        fontSize: fontSizes.small,
+        lineHeight: lineHeights.small,
+      },
 
-    '.ant-typography-expand, .ant-typography-edit, .ant-typography-copy': {
-      color: theme.colors.primary.main,
-    },
-  };
-});
+      '&.large': {
+        fontSize: fontSizes.large,
+        lineHeight: lineHeights.large,
+      },
+
+      '.ant-typography-expand, .ant-typography-edit, .ant-typography-copy': {
+        color: theme.colors.primary.main,
+      },
+    };
+  },
+);
 
 export const Paragraph = ({ small, large, ...props }: ParagraphProps) => {
   const className = clsx(props.className, { small }, { large });

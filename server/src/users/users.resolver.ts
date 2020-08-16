@@ -1,4 +1,4 @@
-import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { UserId } from '../common/decorators/user-id.decorator';
 import { AdminGuard } from '../common/guards/admin.guard';
@@ -12,11 +12,6 @@ import { UsersService } from './users.service';
 @AuthorizedGuard()
 export class UsersResolver {
   constructor(private usersService: UsersService) {}
-
-  @ResolveField('fullName', returns => String)
-  async getFullName(@Parent() user: User) {
-    return this.usersService.getFullName(user.id);
-  }
 
   @Query(returns => User, { name: 'user' })
   getUser(@Args('id') id: string) {

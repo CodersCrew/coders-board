@@ -17,7 +17,12 @@ export type UseSquadPositions = {
 
 export const useSquadPositions = (params?: UseSquadPositions['params']) => {
   const mutationConfig = {
-    refetchQueries: [GraphQLOperations.Query.squadMembers, GraphQLOperations.Query.squadMembersIds],
+    refetchQueries: [
+      GraphQLOperations.Query.squadMembers,
+      GraphQLOperations.Query.squad,
+      GraphQLOperations.Query.squadPositions,
+      GraphQLOperations.Query.chapters,
+    ],
   };
 
   const [fetchPositions, { data, loading, error }] = useSquadPositionsLazyQuery();

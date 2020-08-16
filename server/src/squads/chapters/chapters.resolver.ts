@@ -26,8 +26,8 @@ export class ChaptersResolver {
   }
 
   @ResolveField('positions', returns => [SquadPosition])
-  getPositions(@Parent() chapter: Chapter) {
-    return this.chaptersService.getPositions(chapter);
+  getPositions(@Parent() chapter: Chapter, @Args('active', { nullable: true }) active?: boolean) {
+    return this.chaptersService.getPositions(chapter, active);
   }
 
   @Query(returns => [Chapter], { name: 'chapters' })

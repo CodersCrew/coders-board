@@ -1,6 +1,7 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
 import { TeamRole } from '../../common/enums/team-role.enum';
+import { resolveAsyncRelation } from '../../common/utils';
 import { GsuiteService } from '../../gsuite/gsuite.service';
 import { Clan } from '../clans/clan.model';
 import { GuildMember } from '../guild-members/guild-member.model';
@@ -17,15 +18,8 @@ export class GuildPositionsService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  async getMember(id: string) {
-    const guildPosition = await this.findByIdOrThrow(id);
-    return guildPosition.member;
-  }
-
-  async getClan(id: string) {
-    const guildPosition = await this.findByIdOrThrow(id);
-    return guildPosition.clan;
-  }
+  getMember = resolveAsyncRelation<GuildPosition, 'member'>('member', this.findByIdOrThrow);
+  getClan = resolveAsyncRelation<GuildPosition, 'clan'>('clan', this.findByIdOrThrow);
 
   findById(id: string): Promise<GuildPosition | null> {
     if (!id) return null;
@@ -85,8 +79,8 @@ export class GuildPositionsService {
 
   async delete(id: string) {
     const guildPosition = await this.findByIdOrThrow(id, true);
-    const clan = await this.getClan(id);
-    const member = await this.getMember(id);
+    const clan = await this.getClan(guildPosition);
+    const member = await this.getMember(guildPosition);
 
     await this.guildPositionRepository.delete(id);
 
@@ -100,12 +94,14 @@ export class GuildPositionsService {
     return true;
   }
 
-  async updateInGoogle({ memberId, clanId, id }: GuildPosition, clan?: Clan, member?: GuildMember) {
+  async updateInGoogle(guildPosition: GuildPosition, clan?: Clan, member?: GuildMember) {
+    const { memberId, clanId } = guildPosition;
+
     if (!clanId) return true;
 
     const guildPositions = await this.guildPositionRepository.find({ where: { memberId, clanId } });
-    const { googleId: groupId } = clan || (await this.getClan(id));
-    const memberRecord = member || (await this.getMember(id));
+    const { googleId: groupId } = clan || (await this.getClan(guildPosition));
+    const memberRecord = member || (await this.getMember(guildPosition));
     const { googleId: userId } = await memberRecord.user;
 
     const isActive = guildPositions.some(({ to }) => !to);

@@ -2,7 +2,7 @@ import { BadRequestException, ConflictException, Injectable } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { isEqual, pick } from 'lodash';
 
-import { brackets } from '../common/utils/brackets';
+import { brackets, resolveAsyncRelation } from '../common/utils';
 import { GsuiteService } from '../gsuite/gsuite.service';
 import { UpdateGroupParams } from '../gsuite/interfaces/update-group.params';
 import { CreateGuildInput } from './dto/create-guild.input';
@@ -19,15 +19,8 @@ export class GuildsService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  async getClans(id: string) {
-    const guild = await this.findByIdOrThrow(id);
-    return guild.clans;
-  }
-
-  async getMembers(id: string) {
-    const guild = await this.findByIdOrThrow(id);
-    return guild.members;
-  }
+  getClans = resolveAsyncRelation<Guild, 'clans'>('clans', this.findByIdOrThrow);
+  getMembers = resolveAsyncRelation<Guild, 'members'>('members', this.findByIdOrThrow);
 
   findById(id: string): Promise<Guild | null> {
     if (!id) return null;

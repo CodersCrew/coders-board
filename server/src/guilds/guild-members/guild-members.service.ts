@@ -1,5 +1,6 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 
+import { resolveAsyncRelation } from '../../common/utils';
 import { GsuiteService } from '../../gsuite/gsuite.service';
 import { CreateGuildMemberInput } from './dto/create-guild-member.input';
 import { GetGuildMembersArgs } from './dto/get-guild-members.args';
@@ -14,19 +15,14 @@ export class GuildMembersService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  async getUser(id: string) {
-    const guildMember = await this.findByIdOrThrow(id);
-    return guildMember.user;
-  }
+  getUser = resolveAsyncRelation<GuildMember, 'user'>('user', this.findByIdOrThrow);
+  getGuild = resolveAsyncRelation<GuildMember, 'guild'>('guild', this.findByIdOrThrow);
 
-  async getGuild(id: string) {
-    const guildMember = await this.findByIdOrThrow(id);
-    return guildMember.guild;
-  }
-
-  async getPositions(id: string, isActive?: boolean) {
-    const guildMember = await this.findByIdOrThrow(id);
-    const positions = await guildMember.positions;
+  async getPositions(guildMember: GuildMember, isActive?: boolean) {
+    const positions = await resolveAsyncRelation<GuildMember, 'positions'>(
+      'positions',
+      this.findByIdOrThrow,
+    )(guildMember);
 
     if (typeof isActive !== 'undefined') {
       return positions.filter(position => (isActive ? !position.to : position.to));
@@ -57,8 +53,8 @@ export class GuildMembersService {
 
   async create(input: CreateGuildMemberInput) {
     const guildMember = await this.guildMemberRepository.save(input);
-    const guild = await this.getGuild(guildMember.id);
-    const user = await this.getUser(guildMember.id);
+    const guild = await this.getGuild(guildMember);
+    const user = await this.getUser(guildMember);
 
     try {
       await this.gsuiteService.createMember({
@@ -75,8 +71,8 @@ export class GuildMembersService {
 
   async update({ id, guildId: _guildId, ...input }: UpdateGuildMemberInput) {
     const guildMember = await this.findByIdOrThrow(id);
-    const guild = await this.getGuild(guildMember.id);
-    const user = await this.getUser(guildMember.id);
+    const guild = await this.getGuild(guildMember);
+    const user = await this.getUser(guildMember);
 
     await this.gsuiteService.updateMember({
       groupId: guild.googleId,
@@ -98,8 +94,8 @@ export class GuildMembersService {
       throw new ConflictException('You cannot remove guild member with attached positions');
     }
 
-    const guild = await this.getGuild(guildMember.id);
-    const user = await this.getUser(guildMember.id);
+    const guild = await this.getGuild(guildMember);
+    const user = await this.getUser(guildMember);
 
     await this.gsuiteService.deleteMember({ groupId: guild.googleId, userId: user.googleId });
     await this.guildMemberRepository.delete(id);

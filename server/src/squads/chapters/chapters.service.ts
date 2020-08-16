@@ -22,7 +22,15 @@ export class ChaptersService {
 
   getSquad = resolveAsyncRelation<Chapter, 'squad'>('squad', this.findByIdOrThrow);
 
-  getPositions = resolveAsyncRelation<Chapter, 'positions'>('positions', this.findByIdOrThrow);
+  async getPositions(chapter: Chapter, isActive?: boolean) {
+    const positions = await resolveAsyncRelation<Chapter, 'positions'>('positions', this.findByIdOrThrow)(chapter);
+
+    if (typeof isActive !== 'undefined') {
+      return positions.filter(position => (isActive ? !position.to : position.to));
+    }
+
+    return positions;
+  }
 
   findById(id: string): Promise<Chapter | null> {
     if (!id) return null;

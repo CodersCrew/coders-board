@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { NestFactory } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
+import { NextFunction, Request, Response } from 'express';
 import helmet from 'helmet';
 
 import { AppModule } from './app.module';
@@ -13,7 +14,13 @@ async function bootstrap() {
 
   app.enableCors({ credentials: true });
   app.use(cookieParser());
-  app.use(helmet(helmetConfig));
+  app.use((req: Request, res: Response, next: NextFunction) => {
+    if (req.path === '/graphql' || req.path.match(/^\/auth/)) {
+      next();
+    } else {
+      helmet(helmetConfig)(req, res, next);
+    }
+  });
   app.use(authMiddleware());
 
   app.useGlobalPipes(

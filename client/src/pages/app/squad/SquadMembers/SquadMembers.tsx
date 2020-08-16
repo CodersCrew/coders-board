@@ -14,7 +14,7 @@ const SquadMembers = () => {
   const { squadId, squadRole } = useSquadContext();
   const squadMembers = useSquadMembers({ squadId });
   const squadMemberModal = useModalState<SquadMemberModalProps['data']>();
-  const columns = useSquadMembersColumns();
+  const columns = useSquadMembersColumns({ openModal: squadMemberModal.open });
 
   return (
     <>

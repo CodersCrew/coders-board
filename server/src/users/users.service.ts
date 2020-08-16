@@ -17,11 +17,6 @@ export class UsersService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  async getFullName(id: string) {
-    const user = await this.findByIdOrThrow(id);
-    return `${user.firstName} ${user.lastName}`;
-  }
-
   findById(id: string): Promise<User | null> {
     if (!id) return null;
 
@@ -68,7 +63,7 @@ export class UsersService {
   async create(input: CreateUserInput): Promise<User> {
     const googleId = await this.gsuiteService.createUser(input);
 
-    return this.userRepository.save({ ...input, googleId });
+    return this.userRepository.save({ ...input, fullName: `${input.firstName} ${input.lastName}`, googleId });
   }
 
   async delete(userId: string): Promise<boolean> {
@@ -92,12 +87,15 @@ export class UsersService {
           await this.userRepository.save({
             ...userRecord,
             ...user,
+            fullName: `${user.firstName} ${user.lastName}`,
+            image: user.image || createGravatar(user.primaryEmail),
           }),
         );
       } else {
         result.push(
           await this.userRepository.save({
             ...user,
+            fullName: `${user.firstName} ${user.lastName}`,
             image: user.image || createGravatar(user.primaryEmail),
           }),
         );

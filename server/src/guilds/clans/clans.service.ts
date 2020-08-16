@@ -2,6 +2,7 @@ import { BadRequestException, ConflictException, Injectable } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { isEqual, pick } from 'lodash';
 
+import { resolveAsyncRelation } from '../../common/utils';
 import { brackets } from '../../common/utils/brackets';
 import { GsuiteService } from '../../gsuite/gsuite.service';
 import { UpdateGroupParams } from '../../gsuite/interfaces/update-group.params';
@@ -19,15 +20,8 @@ export class ClansService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  async getGuild(id: string) {
-    const clan = await this.findByIdOrThrow(id);
-    return clan.guild;
-  }
-
-  async getPositions(id: string) {
-    const clan = await this.findByIdOrThrow(id);
-    return clan.positions;
-  }
+  getGuild = resolveAsyncRelation<Clan, 'guild'>('guild', this.findByIdOrThrow);
+  getPositions = resolveAsyncRelation<Clan, 'positions'>('positions', this.findByIdOrThrow);
 
   findById(id: string): Promise<Clan | null> {
     if (!id) return null;
@@ -62,7 +56,7 @@ export class ClansService {
   async create(input: CreateClanInput): Promise<Clan> {
     const googleId = await this.gsuiteService.createGroup(input);
     const clan = await this.clanRepository.save({ ...input, googleId });
-    const guild = await this.getGuild(clan.id);
+    const guild = await this.getGuild(clan);
 
     await this.gsuiteService.updateGroup({ ...input, name: `${guild.name} | ${clan.name}`, id: googleId });
 
@@ -86,7 +80,7 @@ export class ClansService {
   async delete(id: string): Promise<boolean> {
     const clan = await this.findByIdOrThrow(id);
 
-    const positions = await clan.positions;
+    const positions = await this.getPositions(clan);
 
     if (positions.length) {
       throw new ConflictException('You cannot remove a clan with positions');

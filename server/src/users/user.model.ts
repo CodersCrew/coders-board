@@ -36,6 +36,7 @@ export class User extends BaseModel {
   lastName: string;
 
   @Field()
+  @Column()
   fullName: string;
 
   @Field()
@@ -67,16 +68,10 @@ export class User extends BaseModel {
   role: UserRole;
 
   @Field(type => [GuildMember])
-  @OneToMany(
-    type => GuildMember,
-    guildMember => guildMember.user,
-  )
+  @OneToMany(type => GuildMember, guildMember => guildMember.user)
   guilds: Promise<GuildMember[]>;
 
   @Field(type => [SquadMember])
-  @OneToMany(
-    type => SquadMember,
-    squadMember => squadMember.user,
-  )
+  @OneToMany(type => SquadMember, squadMember => squadMember.user)
   squads: Promise<SquadMember[]>;
 }

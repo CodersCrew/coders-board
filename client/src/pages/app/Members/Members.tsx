@@ -1,71 +1,23 @@
 import React, { useState } from 'react';
-import { DeleteOutlined, MoreOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Menu, Table } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
+import { Table } from 'antd';
 
-import { Box, Button, Icon, Paragraph } from '@/components/atoms';
+import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Page } from '@/components/molecules';
 import { RoleSelect } from '@/components/selects';
-import { UseUsers, useUsers } from '@/graphql/users';
+import { useAuthorizedUser, useUsers } from '@/graphql/users';
 import { useToggle } from '@/hooks/useToggle';
 import { UserRole } from '@/typings/graphql';
 
 import { AddMemberModal } from './AddMemberModal';
-
-type Member = UseUsers['item'];
-type Columns = ColumnsType<Member>;
+import { useMembersColumns } from './useMembersColumns';
 
 const Members = () => {
   const memberModalToggle = useToggle(false);
   const [search, setSearch] = useState('');
+  const { isAdmin } = useAuthorizedUser();
   const [role, setRole] = useState<UserRole | undefined>();
   const users = useUsers({ search, role });
-
-  const menu = (
-    <Menu>
-      <Menu.Item danger icon={<Icon icon={DeleteOutlined} />}>
-        Remove member
-      </Menu.Item>
-    </Menu>
-  );
-
-  const columns: Columns = [
-    {
-      title: 'Full name',
-      dataIndex: 'firstName',
-      width: 216,
-      fixed: true,
-      render: (_, { firstName, lastName, image }) => (
-        <Box px={4} display="flex" alignItems="center">
-          <Avatar size="small" src={image} />
-          <Paragraph ml={12}>
-            {firstName} {lastName}
-          </Paragraph>
-        </Box>
-      ),
-    },
-    {
-      title: 'CodersCrew email',
-      dataIndex: 'primaryEmail',
-      width: 280,
-    },
-    {
-      title: 'Private email',
-      dataIndex: 'recoveryEmail',
-      width: 280,
-    },
-    {
-      align: 'right',
-      fixed: 'right',
-      render: () => {
-        return (
-          <Dropdown overlay={menu} trigger={['click']}>
-            <Button type="link" icon={<Icon icon={MoreOutlined} color="text.secondary" />} />
-          </Dropdown>
-        );
-      },
-    },
-  ];
+  const columns = useMembersColumns();
 
   const filtersLeftNode = (
     <RoleSelect
@@ -83,7 +35,7 @@ const Members = () => {
       <Page.Content>
         <FiltersCard
           search={{ onSearch: setSearch, value: search, loading: users.loading }}
-          addButton={{ label: 'Add member', onClick: memberModalToggle.setOn }}
+          addButton={isAdmin && { label: 'Add member', onClick: memberModalToggle.setOn }}
           leftNode={filtersLeftNode}
         />
         <Box maxWidth="100%" overflow="auto" mt={32}>
