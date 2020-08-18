@@ -75,7 +75,7 @@ export const Sidebar: CFC<SidebarProps> = props => {
     <StyledSider {...props} collapsible trigger={null} collapsed={collapsed}>
       <Logo src={logoSrc} alt="CodersBoard logo" />
       <Menu theme="dark" mode="inline" onClick={handleItemClick} selectedKeys={selectedKeys}>
-        <Menu.Item key="members" icon={<ContactsOutlined />}>
+        <Menu.Item key="users" icon={<ContactsOutlined />}>
           Members
         </Menu.Item>
         <Menu.Item key="teams" icon={<TeamOutlined />}>

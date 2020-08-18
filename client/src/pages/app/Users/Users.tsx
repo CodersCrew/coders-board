@@ -5,24 +5,27 @@ import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Page } from '@/components/molecules';
 import { RoleSelect } from '@/components/selects';
 import { useAuthorizedUser, useUsers } from '@/graphql/users';
+import { useModalState } from '@/hooks/useModalState';
 import { useToggle } from '@/hooks/useToggle';
 import { UserRole } from '@/typings/graphql';
 
-import { AddMemberModal } from './AddMemberModal';
-import { useMembersColumns } from './useMembersColumns';
+import { AddUserModal } from './AddUserModal';
+import { SyncSlackModal, SyncSlackModalProps } from './SyncSlackModal';
+import { useUsersColumns } from './useUsersColumns';
 
-const Members = () => {
-  const memberModalToggle = useToggle(false);
+const Users = () => {
+  const userModalToggle = useToggle(false);
+  const syncSlackModal = useModalState<SyncSlackModalProps['data']>();
   const [search, setSearch] = useState('');
-  const { isAdmin } = useAuthorizedUser();
   const [role, setRole] = useState<UserRole | undefined>();
+  const { isAdmin } = useAuthorizedUser();
   const users = useUsers({ search, role });
-  const columns = useMembersColumns();
+  const columns = useUsersColumns({ openSyncSlackModal: syncSlackModal.open });
 
   const filtersLeftNode = (
     <RoleSelect
       loading={users.loading}
-      placeholder="Select member role"
+      placeholder="Select user role"
       onSelect={setRole}
       allowClear
       style={{ width: 240, marginLeft: 24 }}
@@ -31,11 +34,11 @@ const Members = () => {
 
   return (
     <Page>
-      <Page.Header title="Members" subTitle="Search and filter for all of the CodersCrew members" />
+      <Page.Header title="Users" subTitle="Search and filter for all of the CodersCrew users" />
       <Page.Content>
         <FiltersCard
           search={{ onSearch: setSearch, value: search, loading: users.loading }}
-          addButton={isAdmin && { label: 'Add member', onClick: memberModalToggle.setOn }}
+          addButton={isAdmin && { label: 'Add user', onClick: userModalToggle.setOn }}
           leftNode={filtersLeftNode}
         />
         <Box maxWidth="100%" overflow="auto" mt={32}>
@@ -51,9 +54,12 @@ const Members = () => {
           </Card>
         </Box>
       </Page.Content>
-      <AddMemberModal visible={memberModalToggle.on} onCancel={memberModalToggle.setOff} />
+      <AddUserModal visible={userModalToggle.on} onCancel={userModalToggle.setOff} />
+      {syncSlackModal.isMounted && (
+        <SyncSlackModal onCancel={syncSlackModal.close} visible={syncSlackModal.isVisible} data={syncSlackModal.data} />
+      )}
     </Page>
   );
 };
 
-export default Members;
+export default Users;

@@ -1,0 +1,9 @@
+query gsuiteUsers {
+	gsuiteUsers {
+    id
+    firstName
+    lastName
+    primaryEmail
+    recoveryEmail
+  }
+}

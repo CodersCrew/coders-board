@@ -5,14 +5,14 @@ export const getBasicMessages = (name: string, state: 'create' | 'update' | 'del
   let messages = {
     loading: `Adding a new ${name}...`,
     success: `${nameCapitalized} added successfully`,
-    failure: `Error with ${name} adding`,
+    failure: `Error when adding a new ${name}`,
   };
 
   if (state === 'update') {
     messages = {
       loading: `Updating ${name}...`,
       success: `${nameCapitalized} updated successfully`,
-      failure: `Error with ${name} updating`,
+      failure: `Error when updating ${name}`,
     };
   }
 
@@ -20,7 +20,7 @@ export const getBasicMessages = (name: string, state: 'create' | 'update' | 'del
     messages = {
       loading: `Removing ${name}...`,
       success: `${nameCapitalized} removed successfully`,
-      failure: `Error with ${name} removing`,
+      failure: `Error when removing ${name}`,
     };
   }
 

@@ -12,7 +12,7 @@ export type UsersQuery = { __typename?: 'Query' } & {
   users: Array<
     { __typename?: 'User' } & Pick<
       Types.User,
-      'id' | 'image' | 'firstName' | 'lastName' | 'primaryEmail' | 'recoveryEmail' | 'role'
+      'id' | 'image' | 'thumbnail' | 'firstName' | 'lastName' | 'primaryEmail' | 'recoveryEmail' | 'role' | 'slackId'
     >
   >;
 };
@@ -30,11 +30,13 @@ export const UsersDocument = gql`
     users(search: $search, role: $role) {
       id
       image
+      thumbnail
       firstName
       lastName
       primaryEmail
       recoveryEmail
       role
+      slackId
     }
   }
 `;

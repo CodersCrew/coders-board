@@ -39,16 +39,4 @@ export class UsersResolver {
   deleteUser(@Args('id', { type: () => ID }) id: string) {
     return this.usersService.delete(id);
   }
-
-  @Mutation(returns => Boolean)
-  @AdminGuard()
-  syncWithGoogle() {
-    return this.usersService.syncWithGoogle();
-  }
-
-  @Mutation(returns => Boolean)
-  @AdminGuard()
-  syncWithSlack() {
-    return this.usersService.syncWithSlack();
-  }
 }

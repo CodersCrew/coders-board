@@ -18,7 +18,9 @@ const GuildMembers = () => {
 
   return (
     <>
-      <FiltersCard addButton={guildRole.isManager && { label: 'Add member', onClick: guildMemberModal.open }} />
+      <FiltersCard
+        addButton={guildRole.isManager && { label: 'Add member', onClick: () => guildMemberModal.open(null) }}
+      />
       <Box maxWidth="100%" overflow="auto">
         <Card>
           <Table

@@ -6,13 +6,13 @@ import GuildClans from './pages/app/guild/GuildClans';
 import GuildLayout from './pages/app/guild/GuildLayout';
 import GuildMembers from './pages/app/guild/GuildMembers';
 import GuildPositions from './pages/app/guild/GuildPositions';
-import Members from './pages/app/Members';
 import Positions from './pages/app/Positions';
 import SquadChapters from './pages/app/squad/SquadChapters';
 import SquadLayout from './pages/app/squad/SquadLayout';
 import SquadMembers from './pages/app/squad/SquadMembers';
 import SquadPositions from './pages/app/squad/SquadPositions';
 import Teams from './pages/app/Teams';
+import Users from './pages/app/Users';
 import Login from './pages/Login';
 import LoginFailure from './pages/LoginFailure';
 import LoginSuccess from './pages/LoginSuccess';
@@ -28,7 +28,7 @@ export const Routing = () => {
           <Route path="login/success" element={<LoginSuccess />} />
           <Route path="login/failure" element={<LoginFailure />} />
           <Route path="app" element={<AppLayout />}>
-            <Route path="members" element={<Members />} />
+            <Route path="users" element={<Users />} />
             <Route path="teams" element={<Teams />} />
             <Route path="positions" element={<Positions />} />
             <Route path="guild/:id" element={<GuildLayout />}>

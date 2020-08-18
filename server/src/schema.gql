@@ -130,11 +130,11 @@ type User {
   fullName: String!
   primaryEmail: String!
   recoveryEmail: String!
-  phone: String!
+  phone: String
   image: String!
   thumbnail: String!
-  googleId: String!
-  slackId: String!
+  googleId: String
+  slackId: String
   status: UserStatus!
   role: UserRole!
   guilds: [GuildMember!]!
@@ -152,10 +152,32 @@ enum UserRole {
   USER
 }
 
+type GsuiteUser {
+  id: String!
+  firstName: String!
+  lastName: String!
+  primaryEmail: String!
+  recoveryEmail: String
+}
+
+type SlackMessage {
+  text: String!
+  user: String!
+  botId: String!
+  type: String!
+}
+
+type SlackUser {
+  id: String!
+  fullName: String!
+  primaryEmail: String!
+  image: String!
+  thumbnail: String!
+}
+
 type Query {
-  user(id: String!): User!
-  me: User!
-  users(search: String, role: UserRole, ids: [ID!]): [User!]!
+  gsuiteUsers: [GsuiteUser!]!
+  slackUsers: [SlackUser!]!
   clans(search: String, guildId: ID): [Clan!]!
   clan(id: ID!): Clan!
   guildMembers(guildId: ID!): [GuildMember!]!
@@ -169,14 +191,16 @@ type Query {
   squadPositions(squadId: ID!, memberId: String): [SquadPosition!]!
   squads(search: String): [Squad!]!
   squad(id: ID!): Squad!
+  user(id: String!): User!
+  me: User!
+  users(search: String, role: UserRole, ids: [ID!]): [User!]!
 }
 
 type Mutation {
-  createUser(data: CreateUserInput!): User!
-  deleteUser(id: ID!): Boolean!
-  syncWithGoogle: Boolean!
-  syncWithSlack: Boolean!
   signOut: Boolean!
+  deleteGsuiteUser(id: String!): Boolean!
+  syncSlackUser(data: SyncSlackUserInput!): User!
+  sendSlackMessage(data: SendSlackMessageInput!): SlackMessage!
   createClan(data: CreateClanInput!): Clan!
   updateClan(data: UpdateClanInput!): Clan!
   deleteClan(id: ID!, guildId: ID!): Boolean!
@@ -204,14 +228,18 @@ type Mutation {
   createSquad(data: CreateSquadInput!): Squad!
   updateSquad(data: UpdateSquadInput!): Squad!
   deleteSquad(id: ID!): Boolean!
+  createUser(data: CreateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
 }
 
-input CreateUserInput {
-  firstName: String!
-  lastName: String!
-  password: String!
-  primaryEmail: String!
-  recoveryEmail: String!
+input SyncSlackUserInput {
+  userId: String!
+  slackId: String!
+}
+
+input SendSlackMessageInput {
+  channelId: String!
+  text: String!
 }
 
 input CreateClanInput {
@@ -355,4 +383,12 @@ input UpdateSquadInput {
   color: String!
   description: String = ""
   id: ID!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  password: String!
+  primaryEmail: String!
+  recoveryEmail: String!
 }

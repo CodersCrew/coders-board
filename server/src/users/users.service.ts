@@ -1,10 +1,8 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { keyBy } from 'lodash';
-import { In } from 'typeorm';
 
 import { brackets } from '../common/utils';
-import { CloudinaryService, GsuiteService, SlackService } from '../integrations';
+import { GsuiteService } from '../integrations';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
 import { User } from './user.model';
@@ -16,8 +14,6 @@ export class UsersService {
     @InjectRepository(UserRepository)
     private readonly userRepository: UserRepository,
     private readonly gsuiteService: GsuiteService,
-    private readonly slackService: SlackService,
-    private readonly cloudinaryService: CloudinaryService,
   ) {}
 
   findById(id: string): Promise<User | null> {
@@ -63,67 +59,23 @@ export class UsersService {
   }
 
   async create(input: CreateUserInput): Promise<User> {
-    const googleId = await this.gsuiteService.createUser(input);
+    const { id: googleId } = await this.gsuiteService.createUser(input);
 
-    return this.userRepository.save({ ...input, fullName: `${input.firstName} ${input.lastName}`, googleId });
+    try {
+      const fullName = `${input.firstName} ${input.lastName}`;
+      const user = await this.userRepository.save({ ...input, fullName, googleId });
+      return user;
+    } catch (ex) {
+      await this.gsuiteService.deleteUser({ id: googleId });
+      throw ex;
+    }
   }
 
   async delete(userId: string): Promise<boolean> {
-    const userRecord = await this.findByIdOrThrow(userId);
+    const user = await this.findByIdOrThrow(userId);
 
-    await this.gsuiteService.deleteUser({ id: userRecord.googleId });
+    await this.gsuiteService.deleteUser({ id: user.googleId });
     await this.userRepository.delete(userId);
-
-    return true;
-  }
-
-  async syncWithGoogle(): Promise<boolean> {
-    const users = await this.gsuiteService.findAllUsers();
-
-    for (const user of users) {
-      const userRecord = await this.findByGoogleId(user.googleId);
-
-      const updateChunk = {
-        ...user,
-        fullName: `${user.firstName} ${user.lastName}`,
-        image: !user.image || user.image.includes('gstatic') ? userRecord.image : user.image,
-      };
-
-      if (userRecord) {
-        await this.userRepository.save({
-          ...userRecord,
-          ...updateChunk,
-        });
-      } else {
-        await this.userRepository.save(updateChunk);
-      }
-    }
-
-    return true;
-  }
-
-  async syncWithSlack() {
-    const slackUsers = await this.slackService.findAllUsers();
-    const slackUsersMap = keyBy(slackUsers, 'primaryEmail');
-    const users = await this.userRepository.find({
-      where: { primaryEmail: In(Object.keys(slackUsersMap)) },
-    });
-
-    for (const user of users) {
-      const slackUser = slackUsersMap[user.primaryEmail];
-
-      if (slackUser.image) {
-        const image = await this.cloudinaryService.uploadUserImage(slackUser.image, user.id);
-        const thumbnail = await this.cloudinaryService.uploadUserThumbnail(slackUser.thumbnail, user.id);
-
-        await this.userRepository.save({
-          ...user,
-          image,
-          thumbnail,
-          slackId: slackUser.slackId,
-        });
-      }
-    }
 
     return true;
   }

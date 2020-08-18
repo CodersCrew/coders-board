@@ -20,7 +20,7 @@ const SquadChapters = () => {
     <>
       {squadRole.isManager && (
         <Box display="flex" justifyContent="flex-end" mb={24}>
-          <Button type="primary" icon={<PlusOutlined />} onClick={() => chapterModal.open()}>
+          <Button type="primary" icon={<PlusOutlined />} onClick={() => chapterModal.open(null)}>
             Add chapter
           </Button>
         </Box>

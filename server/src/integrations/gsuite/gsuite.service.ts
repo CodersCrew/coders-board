@@ -4,18 +4,19 @@ import { admin_directory_v1, google } from 'googleapis';
 import fetch from 'node-fetch';
 
 import { env } from '../../common/env';
-import { UserRole, UserStatus } from '../../users/user.model';
+import { pick, transformAndValidate } from '../../common/utils';
+import { CreateUserInput } from './dto/create-user.input';
+import { UpdateUserImageInput } from './dto/update-user-image.input';
+import { UpdateUserInput } from './dto/update-user.input';
+import { GsuiteUser } from './gsuite-user.model';
 import { CreateGroupParams } from './interfaces/create-group.params';
 import { CreateMemberParams } from './interfaces/create-member.params';
-import { CreateUserParams } from './interfaces/create-user.params';
 import { DeleteGroupParams } from './interfaces/delete-group.params';
 import { DeleteMemberParams } from './interfaces/delete-member.params';
 import { DeleteUserParams } from './interfaces/delete-user.params';
 import { HasMemberParams } from './interfaces/has-member.params';
 import { UpdateGroupParams } from './interfaces/update-group.params';
 import { UpdateMemberParams } from './interfaces/update-member.params';
-import { UpdateUserImageParams } from './interfaces/update-user-image.params';
-import { UpdateUserParams } from './interfaces/update-user.params';
 
 const imageToBase64 = async (url: string) => {
   const response = await fetch(url);
@@ -36,7 +37,7 @@ export class GsuiteService {
 
   admin: admin_directory_v1.Admin;
 
-  async initialize() {
+  private async initialize() {
     const auth = new google.auth.GoogleAuth({
       clientOptions: {
         subject: env.GSUITE_SUBJECT,
@@ -66,41 +67,47 @@ export class GsuiteService {
 
     return response.data.users
       .filter(user => !user.orgUnitPath.includes('Bots'))
-      .map(user => ({
-        firstName: user.name.givenName,
-        lastName: user.name.familyName,
-        googleId: user.id,
-        image: user.thumbnailPhotoUrl,
-        primaryEmail: user.primaryEmail,
-        recoveryEmail: user.recoveryEmail,
-        role: user.isAdmin ? UserRole.ADMIN : UserRole.USER,
-        status: UserStatus.ACTIVE,
-      }));
+      .map(
+        user =>
+          new GsuiteUser({
+            id: user.id,
+            firstName: user.name.givenName,
+            lastName: user.name.familyName,
+            primaryEmail: user.primaryEmail,
+            recoveryEmail: user.recoveryEmail,
+          }),
+      );
   }
 
-  async createUser(input: CreateUserParams): Promise<string> {
-    const password = createHash('md5').update(input.password).digest('hex');
+  async createUser(input: CreateUserInput) {
+    const googleUserInput = await transformAndValidate(CreateUserInput, input);
+    const password = createHash('md5').update(googleUserInput.password).digest('hex');
 
     const response = await this.admin.users.insert({
       requestBody: {
         name: {
-          familyName: input.firstName,
-          givenName: input.lastName,
-          fullName: `${input.firstName} ${input.lastName}`,
+          familyName: googleUserInput.firstName,
+          givenName: googleUserInput.lastName,
+          fullName: `${googleUserInput.firstName} ${googleUserInput.lastName}`,
         },
-        primaryEmail: input.primaryEmail,
-        recoveryEmail: input.recoveryEmail,
+        primaryEmail: googleUserInput.primaryEmail,
+        recoveryEmail: googleUserInput.recoveryEmail,
         password,
         changePasswordAtNextLogin: true,
         hashFunction: 'MD5',
       },
     });
 
-    return response.data.id;
+    return new GsuiteUser({
+      id: response.data.id,
+      ...pick(googleUserInput, ['firstName', 'lastName', 'primaryEmail', 'recoveryEmail']),
+    });
   }
 
-  async updateUser({ id, ...input }: UpdateUserParams): Promise<boolean> {
-    await this.admin.users.update({ userKey: id, requestBody: input });
+  async updateUser(input: UpdateUserInput): Promise<boolean> {
+    const { id, ...googleUserInput } = await transformAndValidate(UpdateUserInput, input);
+
+    await this.admin.users.update({ userKey: id, requestBody: googleUserInput });
 
     return true;
   }
@@ -111,8 +118,10 @@ export class GsuiteService {
     return true;
   }
 
-  async updateUserImage({ id, imageUrl }: UpdateUserImageParams): Promise<boolean> {
+  async updateUserImage(input: UpdateUserImageInput): Promise<boolean> {
+    const { id, imageUrl } = await transformAndValidate(UpdateUserImageInput, input);
     const photoData = await imageToBase64(imageUrl);
+
     await this.admin.users.photos.update({ userKey: id, requestBody: { photoData } });
 
     return true;

@@ -1,16 +1,21 @@
 import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { JWTPayload } from '../common/typings/JWTPayload';
-import { UsersService } from '../users/users.service';
+import { UserRepository } from '../users/user.repository';
 import { OAuthUser } from './auth.types';
 
 @Injectable()
 export class AuthService {
-  constructor(private readonly usersService: UsersService, private jwtService: JwtService) {}
+  constructor(
+    @InjectRepository(UserRepository)
+    private readonly userRepository: UserRepository,
+    private readonly jwtService: JwtService,
+  ) {}
 
   async authorizeGoogleUser({ profile }: OAuthUser) {
-    const user = await this.usersService.findByGoogleId(profile.id);
+    const user = await this.userRepository.findOne({ googleId: profile.id });
 
     if (!user) {
       throw new NotFoundException();

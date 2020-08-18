@@ -12,7 +12,7 @@ const NotFound = () => {
     return <Navigate to="/login" />;
   }
 
-  const handleClick = () => navigate('/app/members');
+  const handleClick = () => navigate('/app/users');
 
   return (
     <div>

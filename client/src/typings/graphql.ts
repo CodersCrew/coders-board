@@ -156,9 +156,11 @@ export type User = {
   fullName: Scalars['String'];
   primaryEmail: Scalars['String'];
   recoveryEmail: Scalars['String'];
-  phone: Scalars['String'];
+  phone?: Maybe<Scalars['String']>;
   image: Scalars['String'];
-  googleId: Scalars['String'];
+  thumbnail: Scalars['String'];
+  googleId?: Maybe<Scalars['String']>;
+  slackId?: Maybe<Scalars['String']>;
   status: UserStatus;
   role: UserRole;
   guilds: Array<GuildMember>;
@@ -176,11 +178,36 @@ export enum UserRole {
   User = 'USER',
 }
 
+export type GsuiteUser = {
+  __typename?: 'GsuiteUser';
+  id: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  primaryEmail: Scalars['String'];
+  recoveryEmail?: Maybe<Scalars['String']>;
+};
+
+export type SlackMessage = {
+  __typename?: 'SlackMessage';
+  text: Scalars['String'];
+  user: Scalars['String'];
+  botId: Scalars['String'];
+  type: Scalars['String'];
+};
+
+export type SlackUser = {
+  __typename?: 'SlackUser';
+  id: Scalars['String'];
+  fullName: Scalars['String'];
+  primaryEmail: Scalars['String'];
+  image: Scalars['String'];
+  thumbnail: Scalars['String'];
+};
+
 export type Query = {
   __typename?: 'Query';
-  user: User;
-  me: User;
-  users: Array<User>;
+  gsuiteUsers: Array<GsuiteUser>;
+  slackUsers: Array<SlackUser>;
   clans: Array<Clan>;
   clan: Clan;
   guildMembers: Array<GuildMember>;
@@ -194,16 +221,9 @@ export type Query = {
   squadPositions: Array<SquadPosition>;
   squads: Array<Squad>;
   squad: Squad;
-};
-
-export type QueryUserArgs = {
-  id: Scalars['String'];
-};
-
-export type QueryUsersArgs = {
-  search?: Maybe<Scalars['String']>;
-  role?: Maybe<UserRole>;
-  ids?: Maybe<Array<Scalars['ID']>>;
+  user: User;
+  me: User;
+  users: Array<User>;
 };
 
 export type QueryClansArgs = {
@@ -264,12 +284,22 @@ export type QuerySquadArgs = {
   id: Scalars['ID'];
 };
 
+export type QueryUserArgs = {
+  id: Scalars['String'];
+};
+
+export type QueryUsersArgs = {
+  search?: Maybe<Scalars['String']>;
+  role?: Maybe<UserRole>;
+  ids?: Maybe<Array<Scalars['ID']>>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
-  createUser: User;
-  deleteUser: Scalars['Boolean'];
-  migrateGoogleUsers: Array<User>;
   signOut: Scalars['Boolean'];
+  deleteGsuiteUser: Scalars['Boolean'];
+  syncSlackUser: User;
+  sendSlackMessage: SlackMessage;
   createClan: Clan;
   updateClan: Clan;
   deleteClan: Scalars['Boolean'];
@@ -297,14 +327,20 @@ export type Mutation = {
   createSquad: Squad;
   updateSquad: Squad;
   deleteSquad: Scalars['Boolean'];
+  createUser: User;
+  deleteUser: Scalars['Boolean'];
 };
 
-export type MutationCreateUserArgs = {
-  data: CreateUserInput;
+export type MutationDeleteGsuiteUserArgs = {
+  id: Scalars['String'];
 };
 
-export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
+export type MutationSyncSlackUserArgs = {
+  data: SyncSlackUserInput;
+};
+
+export type MutationSendSlackMessageArgs = {
+  data: SendSlackMessageInput;
 };
 
 export type MutationCreateClanArgs = {
@@ -421,12 +457,22 @@ export type MutationDeleteSquadArgs = {
   id: Scalars['ID'];
 };
 
-export type CreateUserInput = {
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  password: Scalars['String'];
-  primaryEmail: Scalars['String'];
-  recoveryEmail: Scalars['String'];
+export type MutationCreateUserArgs = {
+  data: CreateUserInput;
+};
+
+export type MutationDeleteUserArgs = {
+  id: Scalars['ID'];
+};
+
+export type SyncSlackUserInput = {
+  userId: Scalars['String'];
+  slackId: Scalars['String'];
+};
+
+export type SendSlackMessageInput = {
+  channelId: Scalars['String'];
+  text: Scalars['String'];
 };
 
 export type CreateClanInput = {
@@ -572,6 +618,14 @@ export type UpdateSquadInput = {
   id: Scalars['ID'];
 };
 
+export type CreateUserInput = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  password: Scalars['String'];
+  primaryEmail: Scalars['String'];
+  recoveryEmail: Scalars['String'];
+};
+
 export const GraphQLOperations = {
   Query: {
     chapterSelectChapters: 'chapterSelectChapters',
@@ -584,6 +638,8 @@ export const GraphQLOperations = {
     guildMembers: 'guildMembers',
     guildMembersIds: 'guildMembersIds',
     guildPositions: 'guildPositions',
+    gsuiteUsers: 'gsuiteUsers',
+    slackUsers: 'slackUsers',
     positions: 'positions',
     chapters: 'chapters',
     squad: 'squad',
@@ -601,6 +657,7 @@ export const GraphQLOperations = {
     createGuildPosition: 'createGuildPosition',
     updateGuildPosition: 'updateGuildPosition',
     deleteGuildPosition: 'deleteGuildPosition',
+    syncSlackUser: 'syncSlackUser',
     createPosition: 'createPosition',
     updatePosition: 'updatePosition',
     deletePosition: 'deletePosition',

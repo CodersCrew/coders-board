@@ -2,11 +2,13 @@ query users($search: String $role: UserRole) {
 	users(search: $search role: $role) {
 		id
     image
+    thumbnail
     firstName
     lastName
     primaryEmail
     recoveryEmail
     role
+    slackId
   }
 }
 

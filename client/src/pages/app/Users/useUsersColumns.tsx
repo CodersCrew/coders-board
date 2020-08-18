@@ -1,21 +1,32 @@
 import React from 'react';
-import { DeleteOutlined, MoreOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Menu } from 'antd';
+import { DeleteOutlined, MoreOutlined, SlackOutlined } from '@ant-design/icons';
+import { Avatar, Dropdown, Menu, Tag } from 'antd';
 import { ColumnsType } from 'antd/lib/table';
 
 import { Box, Button, Icon, Paragraph } from '@/components/atoms';
 import { useAuthorizedUser, UseUsers } from '@/graphql/users';
 
-type Member = UseUsers['item'];
-type Columns = ColumnsType<Member>;
+import { SyncSlackModalProps } from './SyncSlackModal';
 
-export const useMembersColumns = () => {
+type User = UseUsers['item'];
+type Columns = ColumnsType<User>;
+
+type Params = {
+  openSyncSlackModal: (data: SyncSlackModalProps['data']) => void;
+};
+
+export const useUsersColumns = ({ openSyncSlackModal }: Params) => {
   const { isAdmin } = useAuthorizedUser();
 
-  const menu = (
+  const menu = (user: User) => (
     <Menu>
+      {!user.slackId && (
+        <Menu.Item icon={<SlackOutlined />} onClick={() => openSyncSlackModal({ userId: user.id })}>
+          Sync with Slack
+        </Menu.Item>
+      )}
       <Menu.Item danger icon={<Icon icon={DeleteOutlined} />}>
-        Remove member
+        Remove user
       </Menu.Item>
     </Menu>
   );
@@ -46,13 +57,20 @@ export const useMembersColumns = () => {
       width: 280,
     },
     {
+      title: 'Slack',
+      dataIndex: 'slackId',
+      render: (_, { slackId }) => {
+        return slackId ? <Tag color="success">Integrated</Tag> : <Tag color="error">Non-integrated</Tag>;
+      },
+    },
+    {
       align: 'right',
       fixed: 'right',
-      render: () => {
+      render: (_, user) => {
         if (!isAdmin) return null;
 
         return (
-          <Dropdown overlay={menu} trigger={['click']}>
+          <Dropdown overlay={menu(user)} trigger={['click']}>
             <Button type="link" icon={<Icon icon={MoreOutlined} color="text.secondary" />} />
           </Dropdown>
         );

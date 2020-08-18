@@ -1,0 +1,15 @@
+query slackUsers {
+	slackUsers {
+    id
+    fullName
+    primaryEmail
+    image
+    thumbnail
+  }
+}
+
+mutation syncSlackUser($data: SyncSlackUserInput!) {
+  syncSlackUser(data: $data) {
+    id
+  }
+}

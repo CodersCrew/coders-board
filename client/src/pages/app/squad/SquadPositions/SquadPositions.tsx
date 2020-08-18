@@ -44,7 +44,7 @@ const SquadPositions = () => {
         renderItem={position => (
           <SquadPosition
             {...position}
-            openModal={() => squadPositionModal.open()}
+            openModal={() => squadPositionModal.open(null)}
             closeModal={squadPositionModal.close}
           />
         )}
@@ -56,12 +56,12 @@ const SquadPositions = () => {
     <Spin spinning={squadPositions.loading} tip="Loading member actions">
       <FiltersCard
         search={{ value: search, onSearch: setSearch }}
-        addButton={{ label: 'Add position', onClick: squadPositionModal.open }}
+        addButton={{ label: 'Add position', onClick: () => squadPositionModal.open(null) }}
       />
       {!squadPositions.loading && (
         <Box maxWidth="100%" overflow="auto" mt={32}>
           {filteredPositionItems.length === 0 && (
-            <EmptyPositions positionsCount={squadPositions.count} openModal={squadPositionModal.open} />
+            <EmptyPositions positionsCount={squadPositions.count} openModal={() => squadPositionModal.open(null)} />
           )}
           {current.length > 0 && renderList('Current positions', current)}
           {current.length > 0 && past.length > 0 && <Box height={24} />}

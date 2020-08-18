@@ -44,28 +44,28 @@ export class User extends BaseModel {
   primaryEmail: string;
 
   @Field()
-  @Column({ default: '' })
+  @Column()
   recoveryEmail: string;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   phone?: string;
 
   @Field()
-  @Column()
+  @Column({ default: 'http://www.gravatar.com/avatar?d=mp&s=192' })
   image: string;
 
   @Field()
-  @Column()
+  @Column({ default: 'http://www.gravatar.com/avatar?d=mp&s=48' })
   thumbnail: string;
 
-  @Field()
-  @Column({ unique: true })
-  googleId: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true, unique: true })
+  googleId?: string;
 
-  @Field()
-  @Column({ unique: true })
-  slackId: string;
+  @Field({ nullable: true })
+  @Column({ nullable: true, unique: true })
+  slackId?: string;
 
   @Field(type => UserStatus)
   @Column({ type: 'enum', enum: UserStatus, default: UserStatus.PENDING })

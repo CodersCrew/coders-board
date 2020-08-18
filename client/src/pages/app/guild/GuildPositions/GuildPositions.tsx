@@ -52,12 +52,12 @@ const GuildPositions = () => {
     <Spin spinning={guildPositions.loading} tip="Loading member actions">
       <FiltersCard
         search={{ value: search, onSearch: setSearch }}
-        addButton={guildRole.isManager && { label: 'Add position', onClick: guildPositionModal.open }}
+        addButton={guildRole.isManager && { label: 'Add position', onClick: () => guildPositionModal.open(null) }}
       />
       {!guildPositions.loading && (
         <Box maxWidth="100%" overflow="auto" mt={32}>
           {filteredPositionItems.length === 0 && (
-            <EmptyPositions positionsCount={guildPositions.count} openModal={guildPositionModal.open} />
+            <EmptyPositions positionsCount={guildPositions.count} openModal={() => guildPositionModal.open(null)} />
           )}
           {current.length > 0 && renderList('Current positions', current)}
           {current.length > 0 && past.length > 0 && <Box height={24} />}

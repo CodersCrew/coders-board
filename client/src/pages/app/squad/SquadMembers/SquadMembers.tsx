@@ -18,7 +18,9 @@ const SquadMembers = () => {
 
   return (
     <>
-      <FiltersCard addButton={squadRole.isManager && { label: 'Add member', onClick: squadMemberModal.open }} />
+      <FiltersCard
+        addButton={squadRole.isManager && { label: 'Add member', onClick: () => squadMemberModal.open(null) }}
+      />
       <Box maxWidth="100%" overflow="auto">
         <Card>
           <Table

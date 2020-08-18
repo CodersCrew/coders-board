@@ -22,7 +22,7 @@ const Positions = () => {
         title="Positions"
         subTitle="Find out all positions available across CodersCrew"
         extra={[
-          <Button key="create" type="primary" icon={<PlusOutlined />} onClick={() => positionModal.open()}>
+          <Button key="create" type="primary" icon={<PlusOutlined />} onClick={() => positionModal.open(null)}>
             Create position
           </Button>,
         ]}
@@ -36,7 +36,7 @@ const Positions = () => {
             itemLayout="horizontal"
             loading={positions.loading}
             dataSource={positions.data}
-            renderItem={item => <Position key={item.id} openEditModal={positionModal.open} {...item} />}
+            renderItem={item => <Position key={item.id} openEditModal={() => positionModal.open(null)} {...item} />}
           />
         </Card>
       </Page.Content>
