@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
-import { TeamModel } from '../../common/models/Team.model';
+import { TeamModel } from '../../common/models';
 import { GuildPosition } from '../guild-positions/guild-position.model';
 import { Guild } from '../guild.model';
 
@@ -13,10 +13,7 @@ export class Clan extends TeamModel {
   image: string;
 
   @Field(type => Guild)
-  @ManyToOne(
-    type => Guild,
-    guild => guild.clans,
-  )
+  @ManyToOne(type => Guild, guild => guild.clans)
   guild: Promise<Guild>;
 
   @Field()
@@ -24,9 +21,6 @@ export class Clan extends TeamModel {
   guildId: string;
 
   @Field(type => [GuildPosition])
-  @OneToMany(
-    type => GuildPosition,
-    guildPosition => guildPosition.clan,
-  )
+  @OneToMany(type => GuildPosition, guildPosition => guildPosition.clan)
   positions: Promise<GuildPosition[]>;
 }

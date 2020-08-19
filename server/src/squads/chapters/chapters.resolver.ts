@@ -1,9 +1,8 @@
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { TeamKind } from '../../common/decorators/team-kind.decorator';
-import { TeamRole } from '../../common/enums/team-role.enum';
-import { AuthorizedGuard } from '../../common/guards/authorized.guard';
-import { TeamRoleGuard } from '../../common/guards/team-role.guard';
+import { TeamKind } from '../../common/decorators';
+import { TeamRole } from '../../common/enums';
+import { TeamRoleGuard } from '../../common/guards';
 import { SquadPosition } from '../squad-positions/squad-position.model';
 import { Squad } from '../squad.model';
 import { Chapter } from './chapter.model';
@@ -16,7 +15,6 @@ import { UpdateChapterInput } from './dto/update-chapter.input';
 
 @Resolver(of => Chapter)
 @TeamKind('squad')
-@AuthorizedGuard()
 export class ChaptersResolver {
   constructor(private readonly chaptersService: ChaptersService) {}
 

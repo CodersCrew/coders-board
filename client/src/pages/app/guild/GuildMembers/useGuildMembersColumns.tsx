@@ -1,29 +1,16 @@
 import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { CrownOutlined, DeleteOutlined, MoreOutlined, PartitionOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Menu, Tag } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
+import { Avatar, Tag } from 'antd';
 
-import { Box, Button, Icon, Paragraph } from '@/components/atoms';
+import { Box, Paragraph } from '@/components/atoms';
+import { TableColumns } from '@/components/molecules';
 import { UseGuildMembers } from '@/graphql/guilds';
-import { useModalState } from '@/hooks/useModalState';
 import { TeamRole } from '@/typings/graphql';
 import { parseGuildPositionKind } from '@/utils/platform';
 
-import { useGuildContext } from '../GuildContext';
-import { GuildMemberModalProps } from './GuildMemberModal';
-import { useDeleteGuildMemberConfirm } from './useDeleteGuildMemberConfirm';
-
 type Member = UseGuildMembers['item'];
-type Columns = ColumnsType<Member>;
 
 export const useGuildMembersColumns = () => {
-  const navigate = useNavigate();
-  const { guildRole } = useGuildContext();
-  const deleteGuildMemberConfirm = useDeleteGuildMemberConfirm();
-  const guildMemberModal = useModalState<GuildMemberModalProps['data']>();
-
-  const columns: Columns = [
+  const columns: TableColumns<Member> = [
     {
       title: 'Full name',
       key: 'fullname',
@@ -59,50 +46,6 @@ export const useGuildMembersColumns = () => {
       },
     },
   ];
-
-  if (guildRole.isManager) {
-    const menu = (member: Member) => (
-      <Menu>
-        <Menu.Item
-          onClick={() => navigate(`../positions?search=${member.user.fullName}`)}
-          icon={<Icon icon={PartitionOutlined} />}
-        >
-          Manage positions
-        </Menu.Item>
-        <Menu.Item
-          onClick={() =>
-            guildMemberModal.open({
-              id: member.id,
-              role: member.role,
-              userId: member.user.id,
-            })
-          }
-          icon={<Icon icon={CrownOutlined} />}
-        >
-          Change role
-        </Menu.Item>
-        <Menu.Item
-          danger
-          onClick={() => deleteGuildMemberConfirm({ id: member.id, fullName: member.user.fullName })}
-          icon={<Icon icon={DeleteOutlined} />}
-        >
-          Delete member
-        </Menu.Item>
-      </Menu>
-    );
-
-    columns.push({
-      align: 'right',
-      fixed: 'right',
-      render: (_, member) => {
-        return (
-          <Dropdown overlay={menu(member)} trigger={['click']}>
-            <Button type="link" icon={<Icon icon={MoreOutlined} color="text.secondary" />} />
-          </Dropdown>
-        );
-      },
-    });
-  }
 
   return columns;
 };

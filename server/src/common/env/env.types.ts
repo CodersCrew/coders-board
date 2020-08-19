@@ -2,6 +2,7 @@ export type EnvVariables = {
   NODE_ENV: 'development' | 'test' | 'production';
 
   PORT: number;
+  CLIENT_URL: string;
 
   // database
   DATABASE_SYNC: boolean;
@@ -10,6 +11,7 @@ export type EnvVariables = {
 
   // jwt
   JWT_SECRET: string;
+  COOKIE_SECRET: string;
   TOKEN_COOKIE_NAME: string;
   TOKEN_PREFIX: string;
 

@@ -1,7 +1,7 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Column, Entity, OneToMany } from 'typeorm';
 
-import { BaseModel } from '../common/models/Base.model';
+import { BaseModel } from '../common/models';
 import { GuildMember } from '../guilds/guild-members/guild-member.model';
 import { SquadMember } from '../squads/squad-members/squad-member.model';
 

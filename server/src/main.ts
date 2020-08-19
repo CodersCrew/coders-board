@@ -1,38 +1,44 @@
 import { ValidationPipe } from '@nestjs/common';
-import { NestFactory } from '@nestjs/core';
+import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
+import { NestFactory, Reflector } from '@nestjs/core';
 import cookieParser from 'cookie-parser';
-import { NextFunction, Request, Response } from 'express';
-import helmet from 'helmet';
+import { readFileSync } from 'fs';
+import path from 'path';
 
 import { AppModule } from './app.module';
+import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { env } from './common/env';
-import { authMiddleware } from './common/middlewares/auth.middleware';
-import { helmetConfig } from './helmet.config';
+import { IsAuthorized } from './common/guards';
+import { helmetMiddleware } from './common/middlewares';
+
+const httpsOptions: HttpsOptions =
+  env.NODE_ENV === 'development'
+    ? {
+        key: readFileSync(path.resolve(__dirname, '../../.cert/key.pem')),
+        cert: readFileSync(path.resolve(__dirname, '../../.cert/cert.pem')),
+      }
+    : undefined;
+
+const validationPipe = new ValidationPipe({
+  whitelist: true,
+  forbidNonWhitelisted: true,
+  transform: true,
+  transformOptions: {
+    enableImplicitConversion: true,
+  },
+});
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule);
+  const app = await NestFactory.create(AppModule, { httpsOptions });
 
-  app.enableCors({ credentials: true });
-  app.use(cookieParser());
-  app.use((req: Request, res: Response, next: NextFunction) => {
-    if (req.path === '/graphql' || req.path.match(/^\/auth/)) {
-      next();
-    } else {
-      helmet(helmetConfig)(req, res, next);
-    }
-  });
-  app.use(authMiddleware());
+  app.enableCors({ credentials: true, origin: false });
+  app.use(cookieParser(env.COOKIE_SECRET));
+  app.use(helmetMiddleware);
 
-  app.useGlobalPipes(
-    new ValidationPipe({
-      whitelist: true,
-      forbidNonWhitelisted: true,
-      transform: true,
-      transformOptions: {
-        enableImplicitConversion: true,
-      },
-    }),
-  );
+  const reflector = app.get(Reflector);
+
+  app.useGlobalGuards(new JwtAuthGuard(reflector), new IsAuthorized(reflector));
+  app.useGlobalPipes(validationPipe);
 
   await app.listen(env.PORT);
 }

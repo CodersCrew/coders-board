@@ -1,8 +1,8 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, Index, ManyToOne, OneToMany } from 'typeorm';
 
-import { TeamRole } from '../../common/enums/team-role.enum';
-import { BaseModel } from '../../common/models/Base.model';
+import { TeamRole } from '../../common/enums';
+import { BaseModel } from '../../common/models';
 import { User } from '../../users/user.model';
 import { SquadPosition } from '../squad-positions/squad-position.model';
 import { Squad } from '../squad.model';
@@ -16,17 +16,11 @@ export class SquadMember extends BaseModel {
   role: TeamRole;
 
   @Field(type => [SquadPosition])
-  @OneToMany(
-    type => SquadPosition,
-    squadPosition => squadPosition.member,
-  )
+  @OneToMany(type => SquadPosition, squadPosition => squadPosition.member)
   positions: Promise<SquadPosition[]>;
 
   @Field(type => Squad)
-  @ManyToOne(
-    type => Squad,
-    squad => squad.members,
-  )
+  @ManyToOne(type => Squad, squad => squad.members)
   squad: Promise<Squad>;
 
   @Field()
@@ -34,10 +28,7 @@ export class SquadMember extends BaseModel {
   squadId: string;
 
   @Field(type => User)
-  @ManyToOne(
-    type => User,
-    user => user.squads,
-  )
+  @ManyToOne(type => User, user => user.squads)
   user: Promise<User>;
 
   @Field()

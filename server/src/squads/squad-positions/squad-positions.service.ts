@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { TeamRole } from '../../common/enums/team-role.enum';
+import { TeamRole } from '../../common/enums';
 import { resolveAsyncRelation } from '../../common/utils';
 import { GsuiteService } from '../../integrations';
 import { Chapter } from '../chapters/chapter.model';

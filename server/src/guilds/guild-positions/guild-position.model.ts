@@ -1,7 +1,7 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
-import { BaseModel } from '../../common/models/Base.model';
+import { BaseModel } from '../../common/models';
 import { Clan } from '../clans/clan.model';
 import { GuildMember } from '../guild-members/guild-member.model';
 
@@ -34,10 +34,7 @@ export class GuildPosition extends BaseModel {
   kind: GuildPositionKind;
 
   @Field(type => GuildMember)
-  @ManyToOne(
-    type => GuildMember,
-    guildMember => guildMember.positions,
-  )
+  @ManyToOne(type => GuildMember, guildMember => guildMember.positions)
   member: Promise<GuildMember>;
 
   @Field()
@@ -45,11 +42,7 @@ export class GuildPosition extends BaseModel {
   memberId: string;
 
   @Field(type => Clan, { nullable: true })
-  @ManyToOne(
-    type => Clan,
-    clan => clan.positions,
-    { nullable: true },
-  )
+  @ManyToOne(type => Clan, clan => clan.positions, { nullable: true })
   clan?: Promise<Clan>;
 
   @Field()

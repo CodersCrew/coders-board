@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
-import { BaseModel } from '../common/models/Base.model';
+import { BaseModel } from '../common/models';
 import { Clan } from '../guilds/clans/clan.model';
 import { Guild } from '../guilds/guild.model';
 

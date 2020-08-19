@@ -1,1 +1,1 @@
-export type WithId<T extends object> = T & { id: string };
+export type WithId<T extends Record<string, unknown>> = T & { id: string };

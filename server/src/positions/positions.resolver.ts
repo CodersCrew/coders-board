@@ -1,6 +1,5 @@
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { AuthorizedGuard } from '../common/guards/authorized.guard';
 import { Clan } from '../guilds/clans/clan.model';
 import { Guild } from '../guilds/guild.model';
 import { CreatePositionInput } from './dto/create-position.input';
@@ -11,7 +10,6 @@ import { Position } from './position.model';
 import { PositionsService } from './positions.service';
 
 @Resolver(of => Position)
-@AuthorizedGuard()
 export class PositionsResolver {
   constructor(private positionsService: PositionsService) {}
 

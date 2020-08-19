@@ -11,6 +11,7 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
     NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
 
     PORT: Joi.number().required(),
+    CLIENT_URL: Joi.string().allow('').default(''),
 
     // database
     DATABASE_SYNC: Joi.boolean().required(),
@@ -19,6 +20,7 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
 
     // jwt
     JWT_SECRET: Joi.string().required(),
+    COOKIE_SECRET: Joi.string().required(),
     TOKEN_COOKIE_NAME: Joi.string().required(),
     TOKEN_PREFIX: Joi.string().required(),
 

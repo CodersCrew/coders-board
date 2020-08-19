@@ -17,8 +17,6 @@ import { SquadMember } from '../../squads/squad-members/squad-member.model';
 import { User } from '../../users/user.model';
 import { UserRole } from '../../users/user.model';
 import { TeamRole } from '../enums/team-role.enum';
-import { RequestUser } from '../typings/RequestUser';
-import { IsAuthorized } from './authorized.guard';
 
 const roleValues = {
   [TeamRole.MEMBER]: 0,
@@ -31,9 +29,9 @@ export class HasTeamRole implements CanActivate {
   constructor(private reflector: Reflector) {}
 
   async canActivate(context: ExecutionContext) {
-    const ctx = GqlExecutionContext.create(context).getContext();
+    const ctx = GqlExecutionContext.create(context).getContext().req;
 
-    const userId: RequestUser = ctx.user?.id;
+    const userId = ctx.user?.id;
     const userRecord = await getRepository(User).findOne(userId);
 
     if (userRecord.role === UserRole.ADMIN) {
@@ -87,6 +85,6 @@ export function TeamRoleGuard(role: TeamRole, teamIdVariableName: string) {
   return applyDecorators(
     SetMetadata('role', role),
     SetMetadata('teamIdVariableName', teamIdVariableName),
-    UseGuards(IsAuthorized, HasTeamRole),
+    UseGuards(HasTeamRole),
   );
 }

@@ -20,7 +20,7 @@ const GuildClans = () => {
   return (
     <Grid>
       {clans.data.map(item => (
-        <Card hoverable cover={<img alt={item.name} src={item.image} />} p={16}>
+        <Card key={item.id} hoverable cover={<img alt={item.name} src={item.image} />} p={16}>
           <CardMeta
             title={<Title level={4}>{item.name}</Title>}
             description={<Paragraph ellipsis={{ rows: 4 }}>{item.description}</Paragraph>}

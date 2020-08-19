@@ -1,20 +1,44 @@
 import React from 'react';
-import { Table } from 'antd';
+import { CrownOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { Box } from '@/components/atoms';
-import { Card, FiltersCard } from '@/components/molecules';
-import { useSquadMembers } from '@/graphql/squads';
+import { Card, FiltersCard, Table, TableActions } from '@/components/molecules';
+import { UseSquadMembers, useSquadMembers } from '@/graphql/squads';
 import { useModalState } from '@/hooks/useModalState';
+import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';
 import { SquadMemberModal, SquadMemberModalProps } from './SquadMemberModal';
+import { useDeleteSquadMemberConfirm } from './useDeleteSquadMemberConfirm';
 import { useSquadMembersColumns } from './useSquadMembersColumns';
+
+type Member = UseSquadMembers['item'];
 
 const SquadMembers = () => {
   const { squadId, squadRole } = useSquadContext();
   const squadMembers = useSquadMembers({ squadId });
   const squadMemberModal = useModalState<SquadMemberModalProps['data']>();
-  const columns = useSquadMembersColumns({ openModal: squadMemberModal.open });
+  const columns = useSquadMembersColumns();
+  const deleteSquadMemberConfirm = useDeleteSquadMemberConfirm();
+
+  const actions: TableActions<Member> = [
+    {
+      label: 'Change role',
+      icon: CrownOutlined,
+      onClick: member => {
+        squadMemberModal.open({
+          ...pick(member, ['id', 'role']),
+          userId: member.user.id,
+        });
+      },
+    },
+    {
+      label: 'Delete member',
+      icon: DeleteOutlined,
+      itemProps: { danger: true },
+      onClick: member => deleteSquadMemberConfirm({ id: member.id, fullName: member.user.fullName }),
+    },
+  ];
 
   return (
     <>
@@ -27,10 +51,8 @@ const SquadMembers = () => {
             loading={squadMembers.loading}
             dataSource={squadMembers.data}
             columns={columns}
-            rowKey="id"
-            size="small"
+            actions={squadRole.isManager ? actions : []}
             pagination={false}
-            scroll={{ x: 'max-content' }}
           />
         </Card>
       </Box>

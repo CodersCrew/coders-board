@@ -1,37 +1,16 @@
 import React from 'react';
-import { DeleteOutlined, MoreOutlined, SlackOutlined } from '@ant-design/icons';
-import { Avatar, Dropdown, Menu, Tag } from 'antd';
-import { ColumnsType } from 'antd/lib/table';
+import { Avatar, Tag } from 'antd';
 
-import { Box, Button, Icon, Paragraph } from '@/components/atoms';
+import { Box, Paragraph } from '@/components/atoms';
+import { TableColumns } from '@/components/molecules';
 import { useAuthorizedUser, UseUsers } from '@/graphql/users';
 
-import { SyncSlackModalProps } from './SyncSlackModal';
-
 type User = UseUsers['item'];
-type Columns = ColumnsType<User>;
 
-type Params = {
-  openSyncSlackModal: (data: SyncSlackModalProps['data']) => void;
-};
-
-export const useUsersColumns = ({ openSyncSlackModal }: Params) => {
+export const useUsersColumns = () => {
   const { isAdmin } = useAuthorizedUser();
 
-  const menu = (user: User) => (
-    <Menu>
-      {!user.slackId && (
-        <Menu.Item icon={<SlackOutlined />} onClick={() => openSyncSlackModal({ userId: user.id })}>
-          Sync with Slack
-        </Menu.Item>
-      )}
-      <Menu.Item danger icon={<Icon icon={DeleteOutlined} />}>
-        Remove user
-      </Menu.Item>
-    </Menu>
-  );
-
-  const columns: Columns = [
+  const columns: TableColumns<User> = [
     {
       title: 'Full name',
       dataIndex: 'firstName',
@@ -59,21 +38,9 @@ export const useUsersColumns = ({ openSyncSlackModal }: Params) => {
     {
       title: 'Slack',
       dataIndex: 'slackId',
+      visible: isAdmin,
       render: (_, { slackId }) => {
         return slackId ? <Tag color="success">Integrated</Tag> : <Tag color="error">Non-integrated</Tag>;
-      },
-    },
-    {
-      align: 'right',
-      fixed: 'right',
-      render: (_, user) => {
-        if (!isAdmin) return null;
-
-        return (
-          <Dropdown overlay={menu(user)} trigger={['click']}>
-            <Button type="link" icon={<Icon icon={MoreOutlined} color="text.secondary" />} />
-          </Dropdown>
-        );
       },
     },
   ];

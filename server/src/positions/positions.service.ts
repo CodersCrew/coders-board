@@ -1,8 +1,7 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { resolveAsyncRelation } from '../common/utils';
-import { brackets } from '../common/utils/brackets';
+import { brackets, resolveAsyncRelation } from '../common/utils';
 import { CreatePositionInput } from './dto/create-position.input';
 import { GetPositionsArgs } from './dto/get-positions.args';
 import { UpdatePositionInput } from './dto/update-position.input';

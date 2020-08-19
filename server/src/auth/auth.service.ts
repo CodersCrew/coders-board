@@ -2,7 +2,7 @@ import { Injectable, NotFoundException } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import { InjectRepository } from '@nestjs/typeorm';
 
-import { JWTPayload } from '../common/typings/JWTPayload';
+import { JWTPayload } from '../common/typings';
 import { UserRepository } from '../users/user.repository';
 import { OAuthUser } from './auth.types';
 

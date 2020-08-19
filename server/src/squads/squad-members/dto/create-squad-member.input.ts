@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsEnum, IsNotEmpty, IsUUID } from 'class-validator';
 
-import { TeamRole } from '../../../common/enums/team-role.enum';
+import { TeamRole } from '../../../common/enums';
 import { SquadMember } from '../squad-member.model';
 
 @InputType()

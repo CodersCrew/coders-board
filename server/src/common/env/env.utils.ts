@@ -14,5 +14,7 @@ type RequiredInProductionParams =
       defaultValue: number;
     };
 
+const NODE_ENV = process.env.NODE_ENV || 'development';
+
 export const requiredInProduction = ({ joiType, defaultValue }: RequiredInProductionParams) =>
-  process.env.NODE_ENV === 'production' ? joiType.required() : joiType.optional().default(defaultValue);
+  NODE_ENV === 'production' ? joiType.required() : joiType.optional().default(defaultValue);

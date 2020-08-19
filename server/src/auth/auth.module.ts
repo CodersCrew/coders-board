@@ -9,6 +9,7 @@ import { AuthController } from './auth.controller';
 import { AuthResolver } from './auth.resolver';
 import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
+import { JwtStrategy } from './jwt.strategy';
 
 @Module({
   imports: [
@@ -19,7 +20,7 @@ import { GoogleStrategy } from './google.strategy';
       signOptions: { expiresIn: '2d' },
     }),
   ],
-  providers: [AuthResolver, AuthService, GoogleStrategy],
+  providers: [AuthResolver, AuthService, GoogleStrategy, JwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

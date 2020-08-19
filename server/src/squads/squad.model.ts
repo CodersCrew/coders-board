@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, OneToMany } from 'typeorm';
 
-import { TeamModel } from '../common/models/Team.model';
+import { TeamModel } from '../common/models';
 import { Chapter } from './chapters/chapter.model';
 import { SquadMember } from './squad-members/squad-member.model';
 
@@ -17,16 +17,10 @@ export class Squad extends TeamModel {
   image: string;
 
   @Field(type => [SquadMember])
-  @OneToMany(
-    type => SquadMember,
-    squadMember => squadMember.squad,
-  )
+  @OneToMany(type => SquadMember, squadMember => squadMember.squad)
   members: Promise<SquadMember[]>;
 
   @Field(type => [Chapter])
-  @OneToMany(
-    type => Chapter,
-    chapter => chapter.squad,
-  )
+  @OneToMany(type => Chapter, chapter => chapter.squad)
   chapters: Promise<Chapter[]>;
 }

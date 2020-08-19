@@ -2,8 +2,7 @@ import { BadRequestException, ConflictException, Injectable } from '@nestjs/comm
 import { InjectRepository } from '@nestjs/typeorm';
 import { isEqual, pick } from 'lodash';
 
-import { resolveAsyncRelation } from '../../common/utils';
-import { brackets } from '../../common/utils/brackets';
+import { brackets, resolveAsyncRelation } from '../../common/utils';
 import { GsuiteService, UpdateGroupParams } from '../../integrations';
 import { Clan } from './clan.model';
 import { ClanRepository } from './clan.repository';

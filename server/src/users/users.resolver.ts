@@ -1,15 +1,13 @@
 import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
 
-import { UserId } from '../common/decorators/user-id.decorator';
-import { AdminGuard } from '../common/guards/admin.guard';
-import { AuthorizedGuard } from '../common/guards/authorized.guard';
+import { UserId } from '../common/decorators';
+import { AdminGuard } from '../common/guards';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
 import { User } from './user.model';
 import { UsersService } from './users.service';
 
 @Resolver(of => User)
-@AuthorizedGuard()
 export class UsersResolver {
   constructor(private usersService: UsersService) {}
 

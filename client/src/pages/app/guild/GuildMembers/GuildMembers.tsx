@@ -1,20 +1,44 @@
 import React from 'react';
-import { Table } from 'antd';
+import { CrownOutlined, DeleteOutlined } from '@ant-design/icons';
 
 import { Box } from '@/components/atoms';
-import { Card, FiltersCard } from '@/components/molecules';
-import { useGuildMembers } from '@/graphql/guilds';
+import { Card, FiltersCard, Table, TableActions } from '@/components/molecules';
+import { UseGuildMembers, useGuildMembers } from '@/graphql/guilds';
 import { useModalState } from '@/hooks/useModalState';
+import { pick } from '@/utils/objects';
 
 import { useGuildContext } from '../GuildContext';
 import { GuildMemberModal, GuildMemberModalProps } from './GuildMemberModal';
+import { useDeleteGuildMemberConfirm } from './useDeleteGuildMemberConfirm';
 import { useGuildMembersColumns } from './useGuildMembersColumns';
+
+type Member = UseGuildMembers['item'];
 
 const GuildMembers = () => {
   const { guildId, guildRole } = useGuildContext();
-  const columns = useGuildMembersColumns();
   const guildMembers = useGuildMembers({ guildId });
   const guildMemberModal = useModalState<GuildMemberModalProps['data']>();
+  const columns = useGuildMembersColumns();
+  const deleteGuildMemberConfirm = useDeleteGuildMemberConfirm();
+
+  const actions: TableActions<Member> = [
+    {
+      label: 'Change role',
+      icon: CrownOutlined,
+      onClick: member => {
+        guildMemberModal.open({
+          ...pick(member, ['id', 'role']),
+          userId: member.user.id,
+        });
+      },
+    },
+    {
+      label: 'Delete member',
+      icon: DeleteOutlined,
+      itemProps: { danger: true },
+      onClick: member => deleteGuildMemberConfirm({ id: member.id, fullName: member.user.fullName }),
+    },
+  ];
 
   return (
     <>
@@ -27,10 +51,8 @@ const GuildMembers = () => {
             loading={guildMembers.loading}
             dataSource={guildMembers.data}
             columns={columns}
-            rowKey="id"
-            size="small"
+            actions={guildRole.isManager ? actions : []}
             pagination={false}
-            scroll={{ x: 'max-content' }}
           />
         </Card>
       </Box>

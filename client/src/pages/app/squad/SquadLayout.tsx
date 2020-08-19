@@ -2,12 +2,10 @@ import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Tabs } from 'antd';
-import { BreadcrumbProps } from 'antd/lib/breadcrumb';
 import { TabsProps } from 'antd/lib/tabs';
 
-import { Page } from '@/components/molecules';
+import { createBreadcrumb, Page } from '@/components/molecules';
 import { useSquad } from '@/graphql/squads';
-import { breadcrumbItemRender } from '@/utils/breadcrumbItemRender';
 
 import { SquadContextProvider, useSquadContext } from './SquadContext';
 
@@ -28,7 +26,7 @@ const SquadLayout = () => {
 
   const fullName = `${squad.data.name} Squad`;
 
-  const routes: BreadcrumbProps['routes'] = [
+  const breadcrumb = createBreadcrumb([
     {
       path: '/app/teams',
       breadcrumbName: 'Teams',
@@ -37,7 +35,7 @@ const SquadLayout = () => {
       path: location.pathname,
       breadcrumbName: fullName,
     },
-  ];
+  ]);
 
   const handleItemChange: TabsProps['onChange'] = activeKey => navigate(activeKey);
 
@@ -53,7 +51,7 @@ const SquadLayout = () => {
     <Page>
       <StyledPageHeader
         title={fullName}
-        breadcrumb={{ routes, itemRender: breadcrumbItemRender }}
+        breadcrumb={breadcrumb}
         avatar={{ src: squad.data.image, shape: 'square' }}
         footer={footer}
       >

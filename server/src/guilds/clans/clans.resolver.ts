@@ -1,9 +1,8 @@
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
-import { TeamKind } from '../../common/decorators/team-kind.decorator';
-import { TeamRole } from '../../common/enums/team-role.enum';
-import { AuthorizedGuard } from '../../common/guards/authorized.guard';
-import { TeamRoleGuard } from '../../common/guards/team-role.guard';
+import { TeamKind } from '../../common/decorators';
+import { TeamRole } from '../../common/enums';
+import { TeamRoleGuard } from '../../common/guards';
 import { GuildPosition } from '../guild-positions/guild-position.model';
 import { Guild } from '../guild.model';
 import { Clan } from './clan.model';
@@ -16,7 +15,6 @@ import { UpdateClanInput } from './dto/update-clan.input';
 
 @Resolver(of => Clan)
 @TeamKind('guild')
-@AuthorizedGuard()
 export class ClansResolver {
   constructor(private readonly clansService: ClansService) {}
 

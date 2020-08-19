@@ -1,4 +1,7 @@
-import { HelmetOptions } from 'helmet';
+import { NextFunction, Request, Response } from 'express';
+import helmet from 'helmet';
+
+type HelmetOptions = Parameters<typeof helmet>[0];
 
 export const helmetConfig: HelmetOptions = {
   contentSecurityPolicy: {
@@ -16,4 +19,12 @@ export const helmetConfig: HelmetOptions = {
       'upgrade-insecure-requests': [],
     },
   },
+};
+
+export const helmetMiddleware = (req: Request, res: Response, next: NextFunction) => {
+  if (req.path === '/graphql' || req.path.match(/^\/auth/)) {
+    next();
+  } else {
+    helmet(helmetConfig)(req, res, next);
+  }
 };

@@ -1,7 +1,7 @@
 import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne, OneToMany } from 'typeorm';
 
-import { TeamModel } from '../../common/models/Team.model';
+import { TeamModel } from '../../common/models';
 import { SquadPosition } from '../squad-positions/squad-position.model';
 import { Squad } from '../squad.model';
 

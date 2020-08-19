@@ -1,10 +1,10 @@
 import React, { useState } from 'react';
-import { Table } from 'antd';
+import { DeleteOutlined, SlackOutlined } from '@ant-design/icons';
 
 import { Box } from '@/components/atoms';
-import { Card, FiltersCard, Page } from '@/components/molecules';
+import { Card, FiltersCard, Page, Table, TableActions } from '@/components/molecules';
 import { RoleSelect } from '@/components/selects';
-import { useAuthorizedUser, useUsers } from '@/graphql/users';
+import { useAuthorizedUser, UseUsers, useUsers } from '@/graphql/users';
 import { useModalState } from '@/hooks/useModalState';
 import { useToggle } from '@/hooks/useToggle';
 import { UserRole } from '@/typings/graphql';
@@ -13,6 +13,8 @@ import { AddUserModal } from './AddUserModal';
 import { SyncSlackModal, SyncSlackModalProps } from './SyncSlackModal';
 import { useUsersColumns } from './useUsersColumns';
 
+type User = UseUsers['item'];
+
 const Users = () => {
   const userModalToggle = useToggle(false);
   const syncSlackModal = useModalState<SyncSlackModalProps['data']>();
@@ -20,7 +22,7 @@ const Users = () => {
   const [role, setRole] = useState<UserRole | undefined>();
   const { isAdmin } = useAuthorizedUser();
   const users = useUsers({ search, role });
-  const columns = useUsersColumns({ openSyncSlackModal: syncSlackModal.open });
+  const columns = useUsersColumns();
 
   const filtersLeftNode = (
     <RoleSelect
@@ -31,6 +33,20 @@ const Users = () => {
       style={{ width: 240, marginLeft: 24 }}
     />
   );
+
+  const actions: TableActions<User> = [
+    {
+      label: 'Sync with Slack',
+      icon: SlackOutlined,
+      visible: user => !user.slackId,
+      onClick: user => syncSlackModal.open({ userId: user.id }),
+    },
+    {
+      label: 'Remove user',
+      icon: DeleteOutlined,
+      onClick: () => console.log('delete'),
+    },
+  ];
 
   return (
     <Page>
@@ -43,14 +59,7 @@ const Users = () => {
         />
         <Box maxWidth="100%" overflow="auto" mt={32}>
           <Card>
-            <Table
-              loading={users.loading}
-              dataSource={users.data}
-              columns={columns}
-              rowKey="id"
-              size="small"
-              scroll={{ x: 'max-content' }}
-            />
+            <Table loading={users.loading} dataSource={users.data} columns={columns} actions={isAdmin ? actions : []} />
           </Card>
         </Box>
       </Page.Content>

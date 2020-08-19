@@ -18,7 +18,7 @@ import { UsersModule } from './users/users.module';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       introspection: true,
-      context: ({ req }) => ({ user: req.user }),
+      context: ({ req }) => ({ req }),
     }),
     ServeStaticModule.forRoot({
       rootPath: join(__dirname, '..', '..', 'client', 'build'),
