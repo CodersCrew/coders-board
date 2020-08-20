@@ -16,9 +16,9 @@ export const useUsersColumns = () => {
       dataIndex: 'firstName',
       width: 216,
       fixed: true,
-      render: (_, { firstName, lastName, image }) => (
+      render: (_, { firstName, lastName, thumbnail }) => (
         <Box px={4} display="flex" alignItems="center">
-          <Avatar size="small" src={image} />
+          <Avatar size="small" src={thumbnail} />
           <Paragraph ml={12}>
             {firstName} {lastName}
           </Paragraph>

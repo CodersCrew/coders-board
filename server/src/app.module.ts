@@ -11,6 +11,7 @@ import typeOrmConfig from './ormconfig';
 import { PositionsModule } from './positions/positions.module';
 import { SquadsModule } from './squads/squads.module';
 import { UsersModule } from './users/users.module';
+import { SuccessesModule } from './successes/successes.module';
 
 @Module({
   imports: [
@@ -30,6 +31,7 @@ import { UsersModule } from './users/users.module';
     GuildsModule,
     SquadsModule,
     IntegrationsModule,
+    SuccessesModule,
   ],
   controllers: [],
 })

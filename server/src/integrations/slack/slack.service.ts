@@ -1,5 +1,4 @@
 import { Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { WebClient } from '@slack/web-api';
 
 import { env } from '../../common/env';
@@ -17,11 +16,7 @@ import { slackRequest } from './slack.utils';
 
 @Injectable()
 export class SlackService {
-  constructor(
-    @InjectRepository(UserRepository)
-    private readonly userRepository: UserRepository,
-    private readonly cloudinaryService: CloudinaryService,
-  ) {}
+  constructor(private readonly userRepository: UserRepository, private readonly cloudinaryService: CloudinaryService) {}
 
   web = new WebClient(env.SLACK_TOKEN);
 

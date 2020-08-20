@@ -4,9 +4,9 @@ import { Dropdown, Menu } from 'antd';
 
 import { Button, Icon } from '@/components/atoms';
 
-import { TableAction } from './Table.types';
+import { TableAction, TableRecord } from './Table.types';
 
-function getIsDisabled<T>(disabled: TableAction<T>['disabled'], record: T) {
+function getIsDisabled<T extends TableRecord>(disabled: TableAction<T>['disabled'], record: T) {
   if (typeof disabled === 'undefined') {
     return false;
   }
@@ -18,7 +18,7 @@ function getIsDisabled<T>(disabled: TableAction<T>['disabled'], record: T) {
   return disabled(record);
 }
 
-function getIsVisible<T>(visible: TableAction<T>['visible'], record: T) {
+function getIsVisible<T extends TableRecord>(visible: TableAction<T>['visible'], record: T) {
   if (typeof visible === 'undefined') {
     return true;
   }
@@ -30,7 +30,7 @@ function getIsVisible<T>(visible: TableAction<T>['visible'], record: T) {
   return visible(record);
 }
 
-function getClassName<T>(className: TableAction<T>['className'], record: T) {
+function getClassName<T extends TableRecord>(className: TableAction<T>['className'], record: T) {
   if (typeof className === 'undefined') {
     return undefined;
   }
@@ -42,10 +42,11 @@ function getClassName<T>(className: TableAction<T>['className'], record: T) {
   return className(record);
 }
 
-function renderActionButton<T>(rowId: number, record: T) {
+function renderActionButton<T extends TableRecord>(record: T) {
   return ({ onClick, icon, label, disabled, className, visible, itemProps = {} }: TableAction<T>) => {
     const handleClick = () => onClick(record);
     const labelText = typeof label === 'string' ? label : label(record);
+    const customItemProps = 'apply' in itemProps ? itemProps(record) : itemProps;
 
     if (!getIsVisible(visible, record)) {
       return null;
@@ -53,11 +54,11 @@ function renderActionButton<T>(rowId: number, record: T) {
 
     return (
       <Menu.Item
-        key={rowId}
+        key={labelText}
         className={getClassName(className, record)}
         disabled={getIsDisabled(disabled, record)}
         onClick={handleClick}
-        {...itemProps}
+        {...customItemProps}
       >
         <Icon icon={icon} />
         {labelText}
@@ -66,10 +67,10 @@ function renderActionButton<T>(rowId: number, record: T) {
   };
 }
 
-export function renderActions<T>(actions: TableAction<T>[]) {
-  return (rowId: number, record: T) => {
+export function renderActions<T extends TableRecord>(actions: TableAction<T>[]) {
+  return (_: unknown, record: T) => {
     return (
-      <Dropdown overlay={<Menu>{actions.map(renderActionButton(rowId, record))}</Menu>} trigger={['click']}>
+      <Dropdown overlay={<Menu>{actions.map(renderActionButton(record))}</Menu>} trigger={['click']}>
         <Button type="link" icon={<Icon icon={MoreOutlined} color="text.secondary" />} />
       </Dropdown>
     );

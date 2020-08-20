@@ -2,6 +2,8 @@ import React, { ReactNode } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
 
+import { pick } from '@/utils/objects';
+
 import { Box, Button } from '../atoms';
 import { Card } from './Card';
 
@@ -9,6 +11,7 @@ type Search = {
   onSearch: (value: string) => void;
   value: string;
   loading?: boolean;
+  autoFocus?: boolean;
 };
 
 type AddButtonProps = {
@@ -30,7 +33,12 @@ export const FiltersCard = ({ addButton, search, leftNode }: FiltersCardProps) =
     <Card p={24} display="flex" mb={24}>
       {search && (
         <Box width={240}>
-          <Input.Search placeholder="Search..." onSearch={search.onSearch} defaultValue={search.value} />
+          <Input.Search
+            placeholder="Search..."
+            defaultValue={search.value}
+            allowClear
+            {...pick(search, ['onSearch', 'autoFocus', 'loading'])}
+          />
         </Box>
       )}
       {leftNode}

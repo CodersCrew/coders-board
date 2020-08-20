@@ -15,7 +15,6 @@ import { YupSchema } from '@/typings/forms';
 import { CreateGuildPositionInput, GuildPositionKind } from '@/typings/graphql';
 import { getInitialValuesFromSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
-import { pick } from '@/utils/objects';
 
 import { useGuildContext } from '../GuildContext';
 
@@ -122,7 +121,7 @@ export const GuildPositionModal: CFC<GuildPositionModalProps> = props => {
     try {
       if (props.data?.id) {
         await guildPositions.update({
-          variables: { data: { ...pick(values, ['from', 'to', 'notes']), id: props.data.id, guildId } },
+          variables: { data: { ...values, id: props.data.id, guildId } },
         });
       } else {
         await guildPositions.create({ variables: { data: { ...values, guildId } } });

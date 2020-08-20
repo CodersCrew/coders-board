@@ -5,7 +5,8 @@ import * as yup from 'yup';
 
 import { Modal, ModalProps } from '@/components/molecules';
 import { FormikTeamRoleSelect, FormikUserSelect } from '@/components/selects';
-import { useGuildMembers, useGuildMembersIds } from '@/graphql/guilds';
+import { useGuildMembersIds } from '@/graphql/guilds';
+import { useGuildMembersMutations } from '@/graphql/guilds/guildMember/useGuildMembersMutations';
 import { CFC } from '@/typings/components';
 import { YupSchema } from '@/typings/forms';
 import { CreateGuildMemberInput, TeamRole } from '@/typings/graphql';
@@ -63,7 +64,7 @@ const GuildMemberModalComponent: CFC<GuildMemberModalProps> = ({ data, ...props 
 };
 
 export const GuildMemberModal: CFC<GuildMemberModalProps> = props => {
-  const guildMembers = useGuildMembers();
+  const guildMembersMutations = useGuildMembersMutations();
   const { guildId } = useGuildContext();
 
   const validationSchema: YupSchema<FormValues> = yup.object({
@@ -79,11 +80,11 @@ export const GuildMemberModal: CFC<GuildMemberModalProps> = props => {
 
     try {
       if (props.data) {
-        await guildMembers.update({
+        await guildMembersMutations.update({
           variables: { data: { role: values.role, id: props.data.id, guildId } },
         });
       } else {
-        await guildMembers.create({ variables: { data: { ...values, guildId } } });
+        await guildMembersMutations.create({ variables: { data: { ...values, guildId } } });
       }
 
       props.onCancel();

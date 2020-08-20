@@ -1,5 +1,4 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { isEqual, pick } from 'lodash';
 
 import { brackets, resolveAsyncRelation } from '../../common/utils';
@@ -12,11 +11,7 @@ import { UpdateClanInput } from './dto/update-clan.input';
 
 @Injectable()
 export class ClansService {
-  constructor(
-    @InjectRepository(ClanRepository)
-    private readonly clanRepository: ClanRepository,
-    private readonly gsuiteService: GsuiteService,
-  ) {}
+  constructor(private readonly clanRepository: ClanRepository, private readonly gsuiteService: GsuiteService) {}
 
   getGuild = resolveAsyncRelation<Clan, 'guild'>('guild', this.findByIdOrThrow);
   getPositions = resolveAsyncRelation<Clan, 'positions'>('positions', this.findByIdOrThrow);

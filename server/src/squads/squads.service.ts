@@ -1,5 +1,4 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 import { isEqual, pick } from 'lodash';
 
 import { brackets, resolveAsyncRelation } from '../common/utils';
@@ -12,11 +11,7 @@ import { SquadRepository } from './squad.repository';
 
 @Injectable()
 export class SquadsService {
-  constructor(
-    @InjectRepository(SquadRepository)
-    private readonly squadRepository: SquadRepository,
-    private readonly gsuiteService: GsuiteService,
-  ) {}
+  constructor(private readonly squadRepository: SquadRepository, private readonly gsuiteService: GsuiteService) {}
 
   getChapters = resolveAsyncRelation<Squad, 'chapters'>('chapters', this.findByIdOrThrow);
   getMembers = resolveAsyncRelation<Squad, 'members'>('members', this.findByIdOrThrow);

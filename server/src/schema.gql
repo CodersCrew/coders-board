@@ -123,6 +123,23 @@ type SquadMember {
   userId: String!
 }
 
+type Success {
+  id: ID!
+  name: String!
+  description: String!
+  date: DateTime!
+  type: SuccessType!
+  users: [User!]!
+  creator: User!
+  creatorId: String!
+}
+
+enum SuccessType {
+  EPIC
+  SMALL
+  NEWS
+}
+
 type User {
   id: ID!
   firstName: String!
@@ -139,6 +156,8 @@ type User {
   role: UserRole!
   guilds: [GuildMember!]!
   squads: [SquadMember!]!
+  successes: [Success!]!
+  createdSuccesses: [Success!]!
 }
 
 enum UserStatus {
@@ -178,10 +197,13 @@ type SlackUser {
 type Query {
   gsuiteUsers: [GsuiteUser!]!
   slackUsers: [SlackUser!]!
+  user(id: String!): User!
+  me: User!
+  users(search: String, role: UserRole, ids: [ID!]): [User!]!
   clans(search: String, guildId: ID): [Clan!]!
   clan(id: ID!): Clan!
-  guildMembers(guildId: ID!): [GuildMember!]!
   guildPositions(guildId: ID!, memberId: String): [GuildPosition!]!
+  guildMembers(guildId: ID!): [GuildMember!]!
   guilds(search: String): [Guild!]!
   guild(id: ID!): Guild!
   positions(search: String, guildId: ID, clanId: ID): [Position!]!
@@ -191,25 +213,25 @@ type Query {
   squadPositions(squadId: ID!, memberId: String): [SquadPosition!]!
   squads(search: String): [Squad!]!
   squad(id: ID!): Squad!
-  user(id: String!): User!
-  me: User!
-  users(search: String, role: UserRole, ids: [ID!]): [User!]!
+  successs(search: String, type: SuccessType): [Success!]!
 }
 
 type Mutation {
-  signOut: Boolean!
   deleteGsuiteUser(id: String!): Boolean!
   syncSlackUser(data: SyncSlackUserInput!): User!
   sendSlackMessage(data: SendSlackMessageInput!): SlackMessage!
+  createUser(data: CreateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+  signOut: Boolean!
   createClan(data: CreateClanInput!): Clan!
   updateClan(data: UpdateClanInput!): Clan!
   deleteClan(id: ID!, guildId: ID!): Boolean!
-  createGuildMember(data: CreateGuildMemberInput!): GuildMember!
-  updateGuildMember(data: UpdateGuildMemberInput!): GuildMember!
-  deleteGuildMember(id: ID!, guildId: ID!): Boolean!
   createGuildPosition(data: CreateGuildPositionInput!): GuildPosition!
   updateGuildPosition(data: UpdateGuildPositionInput!): GuildPosition!
   deleteGuildPosition(id: ID!, guildId: ID!): Boolean!
+  createGuildMember(data: CreateGuildMemberInput!): GuildMember!
+  updateGuildMember(data: UpdateGuildMemberInput!): GuildMember!
+  deleteGuildMember(id: ID!, guildId: ID!): Boolean!
   createGuild(data: CreateGuildInput!): Guild!
   updateGuild(data: UpdateGuildInput!): Guild!
   deleteGuild(id: ID!): Boolean!
@@ -228,8 +250,8 @@ type Mutation {
   createSquad(data: CreateSquadInput!): Squad!
   updateSquad(data: UpdateSquadInput!): Squad!
   deleteSquad(id: ID!): Boolean!
-  createUser(data: CreateUserInput!): User!
-  deleteUser(id: ID!): Boolean!
+  createSuccess(data: CreateSuccessInput!): Success!
+  deleteSuccess(id: ID!): Boolean!
 }
 
 input SyncSlackUserInput {
@@ -240,6 +262,14 @@ input SyncSlackUserInput {
 input SendSlackMessageInput {
   channelId: String!
   text: String!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  password: String!
+  primaryEmail: String!
+  recoveryEmail: String!
 }
 
 input CreateClanInput {
@@ -259,18 +289,6 @@ input UpdateClanInput {
   id: ID!
 }
 
-input CreateGuildMemberInput {
-  role: TeamRole!
-  userId: ID!
-  guildId: ID!
-}
-
-input UpdateGuildMemberInput {
-  id: ID!
-  role: TeamRole!
-  guildId: ID!
-}
-
 input CreateGuildPositionInput {
   from: DateTime!
   kind: GuildPositionKind!
@@ -282,11 +300,26 @@ input CreateGuildPositionInput {
 }
 
 input UpdateGuildPositionInput {
-  id: ID!
   from: DateTime!
+  kind: GuildPositionKind!
+  memberId: ID!
   guildId: ID!
   to: DateTime
   notes: String
+  clanId: ID
+  id: ID!
+}
+
+input CreateGuildMemberInput {
+  role: TeamRole!
+  userId: ID!
+  guildId: ID!
+}
+
+input UpdateGuildMemberInput {
+  id: ID!
+  role: TeamRole!
+  guildId: ID!
 }
 
 input CreateGuildInput {
@@ -385,10 +418,10 @@ input UpdateSquadInput {
   id: ID!
 }
 
-input CreateUserInput {
-  firstName: String!
-  lastName: String!
-  password: String!
-  primaryEmail: String!
-  recoveryEmail: String!
+input CreateSuccessInput {
+  name: String!
+  description: String!
+  date: DateTime!
+  type: SuccessType!
+  usersIds: [ID!]!
 }

@@ -1,10 +1,10 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
 import { IsNotEmpty, IsUUID } from 'class-validator';
 
-import { CreateGuildPositionInput } from './create-guild-position.input';
+import { CreateSuccessInput } from './create-success.input';
 
 @InputType()
-export class UpdateGuildPositionInput extends CreateGuildPositionInput {
+export class UpdateSuccessInput extends CreateSuccessInput {
   @Field(type => ID)
   @IsNotEmpty()
   @IsUUID()

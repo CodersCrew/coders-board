@@ -9,7 +9,7 @@
     "test": "craco test",
     "lint": "cross-env TIMING=1 eslint \"src/*.{js,ts,tsx}\" --fix",
     "typecheck": "tsc --noEmit",
-    "codegen": "graphql-codegen --config codegen.yml",
+    "codegen": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml",
     "storybook": "start-storybook -p 6006 -s public",
     "build-storybook": "build-storybook -s public"
   },

@@ -1,9 +1,10 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
-import { Column, Entity, OneToMany } from 'typeorm';
+import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 
 import { BaseModel } from '../common/models';
 import { GuildMember } from '../guilds/guild-members/guild-member.model';
 import { SquadMember } from '../squads/squad-members/squad-member.model';
+import { Success } from '../successes/success.model';
 
 export enum UserStatus {
   PENDING = 'PENDING',
@@ -77,9 +78,17 @@ export class User extends BaseModel {
 
   @Field(type => [GuildMember])
   @OneToMany(type => GuildMember, guildMember => guildMember.user)
-  guilds: Promise<GuildMember[]>;
+  guilds: GuildMember[];
 
   @Field(type => [SquadMember])
   @OneToMany(type => SquadMember, squadMember => squadMember.user)
-  squads: Promise<SquadMember[]>;
+  squads: SquadMember[];
+
+  @Field(type => [Success])
+  @ManyToMany(type => Success, success => success.users)
+  successes: Success[];
+
+  @Field(type => [Success])
+  @OneToMany(type => Success, success => success.creator)
+  createdSuccesses: Success[];
 }

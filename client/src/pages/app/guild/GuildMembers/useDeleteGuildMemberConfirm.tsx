@@ -4,7 +4,7 @@ import { useTheme } from '@emotion/react';
 
 import { Icon } from '@/components/atoms';
 import { confirmModal } from '@/components/molecules';
-import { useGuildMembers } from '@/graphql/guilds';
+import { useGuildMembersMutations } from '@/graphql/guilds';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
 import { useGuildContext } from '../GuildContext';
@@ -16,7 +16,7 @@ type Params = {
 
 export const useDeleteGuildMemberConfirm = () => {
   const { colors } = useTheme();
-  const guildMembers = useGuildMembers();
+  const guildMembersMutations = useGuildMembersMutations();
   const { guildId } = useGuildContext();
 
   const messages = getBasicMessages('member', 'delete');
@@ -31,7 +31,7 @@ export const useDeleteGuildMemberConfirm = () => {
       onOk: async () => {
         try {
           messages.loading();
-          await guildMembers.delete({ variables: { id, guildId } });
+          await guildMembersMutations.delete({ variables: { id, guildId } });
           messages.success();
         } catch ({ graphQLErrors }) {
           messages.failure(graphQLErrors[0].message);

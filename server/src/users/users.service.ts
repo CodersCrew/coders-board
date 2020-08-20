@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 
 import { brackets } from '../common/utils';
 import { GsuiteService } from '../integrations';
@@ -10,11 +9,7 @@ import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(
-    @InjectRepository(UserRepository)
-    private readonly userRepository: UserRepository,
-    private readonly gsuiteService: GsuiteService,
-  ) {}
+  constructor(private readonly userRepository: UserRepository, private readonly gsuiteService: GsuiteService) {}
 
   findById(id: string): Promise<User | null> {
     if (!id) return null;
@@ -26,10 +21,6 @@ export class UsersService {
     if (!id) throw new BadRequestException();
 
     return this.userRepository.findOneOrFail(id);
-  }
-
-  findByGoogleId(googleId: string): Promise<User | null> {
-    return this.userRepository.findOne({ googleId });
   }
 
   findAll({ role, search, ids }: GetUsersArgs): Promise<User[]> {

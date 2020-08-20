@@ -23,6 +23,8 @@ export type TableColumns<T extends TableRecord> = (
   | (ColumnType<T> & CustomProps)
 )[];
 
+type CustomItemProps = Omit<MenuItemProps, 'children' | 'onClick' | 'disabled' | 'className'>;
+
 export type TableAction<T> = {
   label: ((record: T) => string) | string;
   onClick: (record: T) => void;
@@ -30,7 +32,7 @@ export type TableAction<T> = {
   disabled?: ((record: T) => boolean) | boolean;
   visible?: ((record: T) => boolean) | boolean;
   className?: ((record: T) => string) | string;
-  itemProps?: Omit<MenuItemProps, 'children' | 'onClick' | 'disabled' | 'className'>;
+  itemProps?: ((record: T) => CustomItemProps) | CustomItemProps;
 };
 
 export type TableActions<T> = TableAction<T>[];

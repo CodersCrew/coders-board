@@ -1,5 +1,4 @@
 import { BadRequestException, Injectable, NotFoundException } from '@nestjs/common';
-import { InjectRepository } from '@nestjs/typeorm';
 
 import { brackets, resolveAsyncRelation } from '../common/utils';
 import { CreatePositionInput } from './dto/create-position.input';
@@ -10,10 +9,7 @@ import { PositionRepository } from './position.repository';
 
 @Injectable()
 export class PositionsService {
-  constructor(
-    @InjectRepository(PositionRepository)
-    private readonly positionRepository: PositionRepository,
-  ) {}
+  constructor(private readonly positionRepository: PositionRepository) {}
 
   getGuild = resolveAsyncRelation<Position, 'guild'>('guild', this.findByIdOrThrow);
   getClan = resolveAsyncRelation<Position, 'clan'>('clan', this.findByIdOrThrow);

@@ -1,5 +1,6 @@
 import React from 'react';
-import { CrownOutlined, DeleteOutlined } from '@ant-design/icons';
+import { useNavigate } from 'react-router-dom';
+import { CrownOutlined, DeleteOutlined, PartitionOutlined } from '@ant-design/icons';
 
 import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Table, TableActions } from '@/components/molecules';
@@ -15,6 +16,7 @@ import { useGuildMembersColumns } from './useGuildMembersColumns';
 type Member = UseGuildMembers['item'];
 
 const GuildMembers = () => {
+  const navigate = useNavigate();
   const { guildId, guildRole } = useGuildContext();
   const guildMembers = useGuildMembers({ guildId });
   const guildMemberModal = useModalState<GuildMemberModalProps['data']>();
@@ -33,9 +35,16 @@ const GuildMembers = () => {
       },
     },
     {
+      label: 'Manage positions',
+      icon: PartitionOutlined,
+      visible: member => !!member.positions.length,
+      onClick: member => navigate(`../positions?search=${encodeURI(member.user.fullName)}`),
+    },
+    {
       label: 'Delete member',
       icon: DeleteOutlined,
-      itemProps: { danger: true },
+      itemProps: member => ({ danger: !member.positions.length }),
+      disabled: member => !!member.positions.length,
       onClick: member => deleteGuildMemberConfirm({ id: member.id, fullName: member.user.fullName }),
     },
   ];
