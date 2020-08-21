@@ -18,9 +18,9 @@ export class Squad extends TeamModel {
 
   @Field(type => [SquadMember])
   @OneToMany(type => SquadMember, squadMember => squadMember.squad)
-  members: Promise<SquadMember[]>;
+  members: SquadMember[];
 
   @Field(type => [Chapter])
   @OneToMany(type => Chapter, chapter => chapter.squad)
-  chapters: Promise<Chapter[]>;
+  chapters: Chapter[];
 }

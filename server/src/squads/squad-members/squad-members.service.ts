@@ -15,14 +15,11 @@ export class SquadMembersService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  getUser = resolveAsyncRelation<SquadMember, 'user'>('user', this.findByIdOrThrow);
-  getSquad = resolveAsyncRelation<SquadMember, 'squad'>('squad', this.findByIdOrThrow);
+  getUser = resolveAsyncRelation(this.squadMemberRepository, 'user');
+  getSquad = resolveAsyncRelation(this.squadMemberRepository, 'squad');
 
   async getPositions(squadMember: SquadMember, isActive?: boolean) {
-    const positions = await resolveAsyncRelation<SquadMember, 'positions'>(
-      'positions',
-      this.findByIdOrThrow,
-    )(squadMember);
+    const positions = await resolveAsyncRelation(this.squadMemberRepository, 'positions')(squadMember);
 
     if (typeof isActive !== 'undefined') {
       return positions.filter(position => (isActive ? !position.to : position.to));

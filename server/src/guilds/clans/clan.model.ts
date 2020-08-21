@@ -14,7 +14,7 @@ export class Clan extends TeamModel {
 
   @Field(type => Guild)
   @ManyToOne(type => Guild, guild => guild.clans)
-  guild: Promise<Guild>;
+  guild: Guild;
 
   @Field()
   @Column()
@@ -22,5 +22,5 @@ export class Clan extends TeamModel {
 
   @Field(type => [GuildPosition])
   @OneToMany(type => GuildPosition, guildPosition => guildPosition.clan)
-  positions: Promise<GuildPosition[]>;
+  positions: GuildPosition[];
 }

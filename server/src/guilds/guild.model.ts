@@ -18,9 +18,9 @@ export class Guild extends TeamModel {
 
   @Field(type => [Clan])
   @OneToMany(type => Clan, clan => clan.guild)
-  clans: Promise<Clan[]>;
+  clans: Clan[];
 
   @Field(type => [GuildMember])
   @OneToMany(type => GuildMember, member => member.guild)
-  members: Promise<GuildMember[]>;
+  members: GuildMember[];
 }

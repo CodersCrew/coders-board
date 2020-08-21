@@ -35,7 +35,7 @@ export class GuildPosition extends BaseModel {
 
   @Field(type => GuildMember)
   @ManyToOne(type => GuildMember, guildMember => guildMember.positions)
-  member: Promise<GuildMember>;
+  member: GuildMember;
 
   @Field()
   @Column()
@@ -43,7 +43,7 @@ export class GuildPosition extends BaseModel {
 
   @Field(type => Clan, { nullable: true })
   @ManyToOne(type => Clan, clan => clan.positions, { nullable: true })
-  clan?: Promise<Clan>;
+  clan?: Clan;
 
   @Field()
   @Column({ nullable: true })

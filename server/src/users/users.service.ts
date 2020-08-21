@@ -1,6 +1,6 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { brackets } from '../common/utils';
+import { brackets, resolveAsyncRelation } from '../common/utils';
 import { GsuiteService } from '../integrations';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
@@ -10,6 +10,9 @@ import { UserRepository } from './user.repository';
 @Injectable()
 export class UsersService {
   constructor(private readonly userRepository: UserRepository, private readonly gsuiteService: GsuiteService) {}
+
+  getGuilds = resolveAsyncRelation(this.userRepository, 'guilds');
+  getSquads = resolveAsyncRelation(this.userRepository, 'squads');
 
   findById(id: string): Promise<User | null> {
     if (!id) return null;

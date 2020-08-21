@@ -10,7 +10,7 @@ import { Squad } from '../squad.model';
 export class Chapter extends TeamModel {
   @Field(type => Squad)
   @ManyToOne(type => Squad, squad => squad.chapters)
-  squad: Promise<Squad>;
+  squad: Squad;
 
   @Field()
   @Column()
@@ -18,5 +18,5 @@ export class Chapter extends TeamModel {
 
   @Field(type => [SquadPosition])
   @OneToMany(type => SquadPosition, squadPosition => squadPosition.chapter)
-  positions: Promise<SquadPosition[]>;
+  positions: SquadPosition[];
 }

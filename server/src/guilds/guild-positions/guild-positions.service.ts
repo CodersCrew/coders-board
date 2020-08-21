@@ -18,8 +18,8 @@ export class GuildPositionsService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  getMember = resolveAsyncRelation<GuildPosition, 'member'>('member', this.findByIdOrThrow);
-  getClan = resolveAsyncRelation<GuildPosition, 'clan'>('clan', this.findByIdOrThrow);
+  getMember = resolveAsyncRelation(this.guildPositionRepository, 'member');
+  getClan = resolveAsyncRelation(this.guildPositionRepository, 'clan');
 
   findById(id: string): Promise<GuildPosition | null> {
     if (!id) return null;

@@ -18,8 +18,8 @@ export class SquadPositionsService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  getMember = resolveAsyncRelation<SquadPosition, 'member'>('member', this.findByIdOrThrow);
-  getChapter = resolveAsyncRelation<SquadPosition, 'chapter'>('chapter', this.findByIdOrThrow);
+  getMember = resolveAsyncRelation(this.squadPositionRepository, 'member');
+  getChapter = resolveAsyncRelation(this.squadPositionRepository, 'chapter');
 
   findById(id: string): Promise<SquadPosition | null> {
     if (!id) return null;

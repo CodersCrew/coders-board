@@ -26,14 +26,11 @@ export class GuildMembersService {
     private readonly gsuiteService: GsuiteService,
   ) {}
 
-  getUser = resolveAsyncRelation<GuildMember, 'user'>('user', this.findByIdOrThrow);
-  getGuild = resolveAsyncRelation<GuildMember, 'guild'>('guild', this.findByIdOrThrow);
+  getUser = resolveAsyncRelation(this.guildMemberRepository, 'user');
+  getGuild = resolveAsyncRelation(this.guildMemberRepository, 'guild');
 
   async getPositions(guildMember: GuildMember, isActive?: boolean) {
-    const positions = await resolveAsyncRelation<GuildMember, 'positions'>(
-      'positions',
-      this.findByIdOrThrow,
-    )(guildMember);
+    const positions = await resolveAsyncRelation(this.guildMemberRepository, 'positions')(guildMember);
 
     return filterActivePositions(positions, isActive);
   }

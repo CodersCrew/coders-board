@@ -17,11 +17,11 @@ export class SquadMember extends BaseModel {
 
   @Field(type => [SquadPosition])
   @OneToMany(type => SquadPosition, squadPosition => squadPosition.member)
-  positions: Promise<SquadPosition[]>;
+  positions: SquadPosition[];
 
   @Field(type => Squad)
   @ManyToOne(type => Squad, squad => squad.members)
-  squad: Promise<Squad>;
+  squad: Squad;
 
   @Field()
   @Column()
@@ -29,7 +29,7 @@ export class SquadMember extends BaseModel {
 
   @Field(type => User)
   @ManyToOne(type => User, user => user.squads)
-  user: Promise<User>;
+  user: User;
 
   @Field()
   @Column()

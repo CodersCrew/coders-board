@@ -13,10 +13,10 @@ import { UpdateChapterInput } from './dto/update-chapter.input';
 export class ChaptersService {
   constructor(private readonly chapterRepository: ChapterRepository, private readonly gsuiteService: GsuiteService) {}
 
-  getSquad = resolveAsyncRelation<Chapter, 'squad'>('squad', this.findByIdOrThrow);
+  getSquad = resolveAsyncRelation(this.chapterRepository, 'squad');
 
   async getPositions(chapter: Chapter, isActive?: boolean) {
-    const positions = await resolveAsyncRelation<Chapter, 'positions'>('positions', this.findByIdOrThrow)(chapter);
+    const positions = await resolveAsyncRelation(this.chapterRepository, 'positions')(chapter);
 
     if (typeof isActive !== 'undefined') {
       return positions.filter(position => (isActive ? !position.to : position.to));

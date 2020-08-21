@@ -1,4 +1,6 @@
-import { Args, ID, Mutation, Query, Resolver } from '@nestjs/graphql';
+import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { GuildMember } from 'src/guilds/guild-members/guild-member.model';
+import { SquadMember } from 'src/squads/squad-members/squad-member.model';
 
 import { UserId } from '../common/decorators';
 import { AdminGuard } from '../common/guards';
@@ -9,7 +11,17 @@ import { UsersService } from './users.service';
 
 @Resolver(of => User)
 export class UsersResolver {
-  constructor(private usersService: UsersService) {}
+  constructor(private readonly usersService: UsersService) {}
+
+  @ResolveField('guilds', returns => [GuildMember])
+  getGuilds(@Parent() user: User) {
+    return this.usersService.getGuilds(user);
+  }
+
+  @ResolveField('squads', returns => [SquadMember])
+  getSquads(@Parent() user: User) {
+    return this.usersService.getSquads(user);
+  }
 
   @Query(returns => User, { name: 'user' })
   getUser(@Args('id') id: string) {

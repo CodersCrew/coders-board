@@ -23,7 +23,7 @@ export class SquadPosition extends BaseModel {
 
   @Field(type => SquadMember)
   @ManyToOne(type => SquadMember, squadMember => squadMember.positions)
-  member: Promise<SquadMember>;
+  member: SquadMember;
 
   @Field()
   @Column()
@@ -31,7 +31,7 @@ export class SquadPosition extends BaseModel {
 
   @Field(type => Chapter, { nullable: true })
   @ManyToOne(type => Chapter, chapter => chapter.positions, { nullable: true })
-  chapter?: Promise<Chapter>;
+  chapter?: Chapter;
 
   @Field()
   @Column({ nullable: true })
@@ -39,7 +39,7 @@ export class SquadPosition extends BaseModel {
 
   @Field(type => Position)
   @ManyToOne(type => Position)
-  position: Promise<Position>;
+  position: Position;
 
   @Field()
   @Column()

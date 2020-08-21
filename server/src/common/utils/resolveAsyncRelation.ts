@@ -1,18 +1,10 @@
-type Unpromisify<T> = T extends Promise<infer R> ? R : T;
+import { Repository } from 'typeorm';
 
-export function resolveAsyncRelation<T extends { id: string }, K extends keyof T>(
-  relationKey: K,
-  findFc: (id: string) => Promise<T>,
-) {
-  return async function (entity: T): Promise<Unpromisify<T[K]>> {
-    let relation: any = await entity[relationKey];
-    console.log(222, relation);
+import { BaseModel } from '../models';
 
-    if (!relation && entity[`${relationKey}Id`]) {
-      const record = await findFc.bind(this)(entity.id);
-      relation = await record[relationKey];
-    }
-
-    return relation;
+export function resolveAsyncRelation<T extends BaseModel, K extends keyof T>(repository: Repository<T>, relation: K) {
+  return async function (entity: T) {
+    const record = await repository.findOne(entity.id, { relations: [relation as string] });
+    return record[relation];
   };
 }

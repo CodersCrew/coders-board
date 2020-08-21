@@ -13,8 +13,8 @@ import { SquadRepository } from './squad.repository';
 export class SquadsService {
   constructor(private readonly squadRepository: SquadRepository, private readonly gsuiteService: GsuiteService) {}
 
-  getChapters = resolveAsyncRelation<Squad, 'chapters'>('chapters', this.findByIdOrThrow);
-  getMembers = resolveAsyncRelation<Squad, 'members'>('members', this.findByIdOrThrow);
+  getChapters = resolveAsyncRelation(this.squadRepository, 'chapters');
+  getMembers = resolveAsyncRelation(this.squadRepository, 'members');
 
   findById(id: string): Promise<Squad | null> {
     if (!id) return null;

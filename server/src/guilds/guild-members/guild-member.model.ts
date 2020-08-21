@@ -17,7 +17,7 @@ export class GuildMember extends BaseModel {
 
   @Field(type => User)
   @ManyToOne(type => User, user => user.guilds)
-  user: Promise<User>;
+  user: User;
 
   @Field()
   @Column()
@@ -25,7 +25,7 @@ export class GuildMember extends BaseModel {
 
   @Field(type => Guild)
   @ManyToOne(type => Guild, guild => guild.members)
-  guild: Promise<Guild>;
+  guild: Guild;
 
   @Field()
   @Column()
@@ -33,5 +33,5 @@ export class GuildMember extends BaseModel {
 
   @Field(type => [GuildPosition])
   @OneToMany(type => GuildPosition, guildPosition => guildPosition.member)
-  positions: Promise<GuildPosition[]>;
+  positions: GuildPosition[];
 }

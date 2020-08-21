@@ -13,8 +13,8 @@ import { UpdateClanInput } from './dto/update-clan.input';
 export class ClansService {
   constructor(private readonly clanRepository: ClanRepository, private readonly gsuiteService: GsuiteService) {}
 
-  getGuild = resolveAsyncRelation<Clan, 'guild'>('guild', this.findByIdOrThrow);
-  getPositions = resolveAsyncRelation<Clan, 'positions'>('positions', this.findByIdOrThrow);
+  getGuild = resolveAsyncRelation(this.clanRepository, 'guild');
+  getPositions = resolveAsyncRelation(this.clanRepository, 'positions');
 
   findById(id: string): Promise<Clan | null> {
     if (!id) return null;

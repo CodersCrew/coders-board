@@ -19,7 +19,7 @@ export class SquadsResolver {
   constructor(private readonly squadsService: SquadsService) {}
 
   @ResolveField('chapters', returns => [Chapter])
-  async getChapters(@Parent() squad: Squad) {
+  getChapters(@Parent() squad: Squad) {
     return this.squadsService.getChapters(squad);
   }
 

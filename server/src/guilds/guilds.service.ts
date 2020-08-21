@@ -13,8 +13,8 @@ import { GuildRepository } from './guild.repository';
 export class GuildsService {
   constructor(private readonly guildRepository: GuildRepository, private readonly gsuiteService: GsuiteService) {}
 
-  getClans = resolveAsyncRelation<Guild, 'clans'>('clans', this.findByIdOrThrow);
-  getMembers = resolveAsyncRelation<Guild, 'members'>('members', this.findByIdOrThrow);
+  getClans = resolveAsyncRelation(this.guildRepository, 'clans');
+  getMembers = resolveAsyncRelation(this.guildRepository, 'members');
 
   findById(id: string): Promise<Guild | null> {
     if (!id) return null;

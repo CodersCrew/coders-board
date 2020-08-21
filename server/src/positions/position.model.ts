@@ -22,7 +22,7 @@ export class Position extends BaseModel {
 
   @Field(type => Clan, { nullable: true })
   @ManyToOne(type => Clan, { nullable: true })
-  clan?: Promise<Clan>;
+  clan?: Clan;
 
   @Field()
   @Column({ nullable: true })
@@ -30,7 +30,7 @@ export class Position extends BaseModel {
 
   @Field(type => Guild, { nullable: true })
   @ManyToOne(type => Guild, { nullable: true })
-  guild?: Promise<Guild>;
+  guild?: Guild;
 
   @Field()
   @Column({ nullable: true })

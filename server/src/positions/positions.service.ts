@@ -11,8 +11,8 @@ import { PositionRepository } from './position.repository';
 export class PositionsService {
   constructor(private readonly positionRepository: PositionRepository) {}
 
-  getGuild = resolveAsyncRelation<Position, 'guild'>('guild', this.findByIdOrThrow);
-  getClan = resolveAsyncRelation<Position, 'clan'>('clan', this.findByIdOrThrow);
+  getGuild = resolveAsyncRelation(this.positionRepository, 'guild');
+  getClan = resolveAsyncRelation(this.positionRepository, 'clan');
 
   findById(id: string): Promise<Position | null> {
     if (!id) return null;
