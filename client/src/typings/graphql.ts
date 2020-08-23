@@ -148,6 +148,24 @@ export type SquadMemberPositionsArgs = {
   active?: Maybe<Scalars['Boolean']>;
 };
 
+export type Success = {
+  __typename?: 'Success';
+  id: Scalars['ID'];
+  name: Scalars['String'];
+  description: Scalars['String'];
+  date: Scalars['DateTime'];
+  type: SuccessType;
+  users: Array<User>;
+  creator: User;
+  creatorId: Scalars['String'];
+};
+
+export enum SuccessType {
+  Epic = 'EPIC',
+  Small = 'SMALL',
+  News = 'NEWS',
+}
+
 export type User = {
   __typename?: 'User';
   id: Scalars['ID'];
@@ -165,6 +183,8 @@ export type User = {
   role: UserRole;
   guilds: Array<GuildMember>;
   squads: Array<SquadMember>;
+  successes: Array<Success>;
+  createdSuccesses: Array<Success>;
 };
 
 export enum UserStatus {
@@ -224,6 +244,7 @@ export type Query = {
   squadPositions: Array<SquadPosition>;
   squads: Array<Squad>;
   squad: Squad;
+  successes: Array<Success>;
 };
 
 export type QueryUserArgs = {
@@ -294,6 +315,11 @@ export type QuerySquadArgs = {
   id: Scalars['ID'];
 };
 
+export type QuerySuccessesArgs = {
+  search?: Maybe<Scalars['String']>;
+  type?: Maybe<SuccessType>;
+};
+
 export type Mutation = {
   __typename?: 'Mutation';
   deleteGsuiteUser: Scalars['Boolean'];
@@ -329,6 +355,9 @@ export type Mutation = {
   createSquad: Squad;
   updateSquad: Squad;
   deleteSquad: Scalars['Boolean'];
+  createSuccess: Success;
+  updateSuccess: Success;
+  deleteSuccess: Scalars['Boolean'];
 };
 
 export type MutationDeleteGsuiteUserArgs = {
@@ -462,6 +491,18 @@ export type MutationUpdateSquadArgs = {
 };
 
 export type MutationDeleteSquadArgs = {
+  id: Scalars['ID'];
+};
+
+export type MutationCreateSuccessArgs = {
+  data: CreateSuccessInput;
+};
+
+export type MutationUpdateSuccessArgs = {
+  data: UpdateSuccessInput;
+};
+
+export type MutationDeleteSuccessArgs = {
   id: Scalars['ID'];
 };
 
@@ -629,6 +670,23 @@ export type UpdateSquadInput = {
   id: Scalars['ID'];
 };
 
+export type CreateSuccessInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  date: Scalars['DateTime'];
+  type: SuccessType;
+  usersIds: Array<Scalars['ID']>;
+};
+
+export type UpdateSuccessInput = {
+  name: Scalars['String'];
+  description: Scalars['String'];
+  date: Scalars['DateTime'];
+  type: SuccessType;
+  usersIds: Array<Scalars['ID']>;
+  id: Scalars['ID'];
+};
+
 export const GraphQLOperations = {
   Query: {
     chapterSelectChapters: 'chapterSelectChapters',
@@ -649,6 +707,7 @@ export const GraphQLOperations = {
     squadMembers: 'squadMembers',
     squadMembersIds: 'squadMembersIds',
     squadPositions: 'squadPositions',
+    successes: 'successes',
     me: 'me',
     users: 'users',
     teams: 'teams',
@@ -673,7 +732,13 @@ export const GraphQLOperations = {
     createSquadPosition: 'createSquadPosition',
     updateSquadPosition: 'updateSquadPosition',
     deleteSquadPosition: 'deleteSquadPosition',
+    createSuccess: 'createSuccess',
+    updateSuccess: 'updateSuccess',
+    deleteSuccess: 'deleteSuccess',
     signOut: 'signOut',
     createUser: 'createUser',
+  },
+  Fragment: {
+    SuccessUser: 'SuccessUser',
   },
 };

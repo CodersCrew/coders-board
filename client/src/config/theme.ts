@@ -58,6 +58,11 @@ const colors = {
     black: '#000',
     white: '#fff',
   },
+  successes: {
+    epic: '#722ed1',
+    small: '#13c2c2',
+    news: '#7cb305',
+  },
 };
 
 const fonts = {

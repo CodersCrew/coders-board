@@ -18,13 +18,7 @@ export const ChapterSelect: CFC<ChapterSelectProps> = ({ squadId, ...props }) =>
 
   const options = data?.chapters.map(({ id, name }) => ({ label: name, value: id })) ?? [];
 
-  const handleChange: SelectProps<ValueType>['onChange'] = value => {
-    if (typeof value === 'undefined' && props.onSelect) {
-      props.onSelect(undefined, { value: undefined, options });
-    }
-  };
-
-  return <Select {...props} loading={loading} onChange={handleChange} options={options} optionFilterProp="label" />;
+  return <Select {...props} loading={loading} options={options} optionFilterProp="label" />;
 };
 
 export const FormikChapterSelect = selectToFormikSelect(ChapterSelect);

@@ -10,8 +10,8 @@ import { IntegrationsModule } from './integrations/integrations.module';
 import typeOrmConfig from './ormconfig';
 import { PositionsModule } from './positions/positions.module';
 import { SquadsModule } from './squads/squads.module';
-import { UsersModule } from './users/users.module';
 import { SuccessesModule } from './successes/successes.module';
+import { UsersModule } from './users/users.module';
 
 @Module({
   imports: [

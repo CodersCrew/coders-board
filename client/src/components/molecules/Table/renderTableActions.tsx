@@ -1,9 +1,8 @@
 import React from 'react';
-import { MoreOutlined } from '@ant-design/icons';
-import { Dropdown, Menu } from 'antd';
 
-import { Button, Icon } from '@/components/atoms';
+import { notEmpty } from '@/utils/arrays';
 
+import { ActionsDropdown, ActionsDropdownProps } from '../ActionsDropdown';
 import { TableAction, TableRecord } from './Table.types';
 
 function getIsDisabled<T extends TableRecord>(disabled: TableAction<T>['disabled'], record: T) {
@@ -42,8 +41,16 @@ function getClassName<T extends TableRecord>(className: TableAction<T>['classNam
   return className(record);
 }
 
-function renderActionButton<T extends TableRecord>(record: T) {
-  return ({ onClick, icon, label, disabled, className, visible, itemProps = {} }: TableAction<T>) => {
+function tableActionsToActions<T extends TableRecord>(record: T) {
+  return ({
+    onClick,
+    icon,
+    label,
+    disabled,
+    className,
+    visible,
+    itemProps = {},
+  }: TableAction<T>): ActionsDropdownProps['actions'][number] | null => {
     const handleClick = () => onClick(record);
     const labelText = typeof label === 'string' ? label : label(record);
     const customItemProps = 'apply' in itemProps ? itemProps(record) : itemProps;
@@ -52,27 +59,21 @@ function renderActionButton<T extends TableRecord>(record: T) {
       return null;
     }
 
-    return (
-      <Menu.Item
-        key={labelText}
-        className={getClassName(className, record)}
-        disabled={getIsDisabled(disabled, record)}
-        onClick={handleClick}
-        {...customItemProps}
-      >
-        <Icon icon={icon} />
-        {labelText}
-      </Menu.Item>
-    );
+    return {
+      label: labelText,
+      className: getClassName(className, record),
+      disabled: getIsDisabled(disabled, record),
+      onClick: handleClick,
+      icon,
+      ...customItemProps,
+    };
   };
 }
 
-export function renderActions<T extends TableRecord>(actions: TableAction<T>[]) {
+export function renderTableActions<T extends TableRecord>(actions: TableAction<T>[]) {
   return (_: unknown, record: T) => {
-    return (
-      <Dropdown overlay={<Menu>{actions.map(renderActionButton(record))}</Menu>} trigger={['click']}>
-        <Button type="link" icon={<Icon icon={MoreOutlined} color="text.secondary" />} />
-      </Dropdown>
-    );
+    const parsedActions = actions.map(tableActionsToActions(record)).filter(notEmpty);
+
+    return <ActionsDropdown actions={parsedActions} />;
   };
 }

@@ -17,13 +17,7 @@ const options: Option[] = Object.values(GuildPositionKind).map(kind => ({
 }));
 
 export const GuildPositionKindSelect: CFC<GuildPositionKindSelectProps> = props => {
-  const handleChange: SelectProps<GuildPositionKind | undefined>['onChange'] = value => {
-    if (typeof value === 'undefined' && props.onSelect) {
-      props.onSelect(undefined, { value: undefined, options });
-    }
-  };
-
-  return <Select {...props} onChange={handleChange} options={options} />;
+  return <Select {...props} options={options} />;
 };
 
 export const FormikGuildPositionKindSelect = selectToFormikSelect(GuildPositionKindSelect);

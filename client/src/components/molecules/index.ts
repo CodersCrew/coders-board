@@ -1,3 +1,4 @@
+export * from './ActionsDropdown';
 export * from './Card';
 export * from './FiltersCard';
 export * from './FormikModal';

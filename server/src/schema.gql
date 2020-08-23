@@ -213,7 +213,7 @@ type Query {
   squadPositions(squadId: ID!, memberId: String): [SquadPosition!]!
   squads(search: String): [Squad!]!
   squad(id: ID!): Squad!
-  successs(search: String, type: SuccessType): [Success!]!
+  successes(search: String, type: SuccessType): [Success!]!
 }
 
 type Mutation {

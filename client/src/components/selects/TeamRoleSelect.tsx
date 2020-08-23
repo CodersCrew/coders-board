@@ -13,13 +13,7 @@ export type TeamRoleSelectProps = SelectProps<TeamRole | undefined>;
 const options: Option[] = Object.values(TeamRole).map(role => ({ label: role, value: role }));
 
 export const TeamRoleSelect: CFC<TeamRoleSelectProps> = props => {
-  const handleChange: SelectProps<TeamRole | undefined>['onChange'] = value => {
-    if (typeof value === 'undefined' && props.onSelect) {
-      props.onSelect(undefined, { value: undefined, options });
-    }
-  };
-
-  return <Select {...props} onChange={handleChange} options={options} />;
+  return <Select {...props} options={options} />;
 };
 
 export const FormikTeamRoleSelect = selectToFormikSelect(TeamRoleSelect);

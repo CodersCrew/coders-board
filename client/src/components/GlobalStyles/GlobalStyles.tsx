@@ -12,6 +12,10 @@ export const GlobalStyles = () => {
       styles={css`
         ${normalizeCSS}
 
+        .ant-typography {
+          color: ${theme.colors.text.primary};
+        }
+
         .ant-table-cell {
           vertical-align: top;
         }

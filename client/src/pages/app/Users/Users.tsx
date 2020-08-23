@@ -28,7 +28,7 @@ const Users = () => {
     <RoleSelect
       loading={users.loading}
       placeholder="Select user role"
-      onSelect={setRole}
+      onChange={setRole}
       allowClear
       style={{ width: 240, marginLeft: 24 }}
     />

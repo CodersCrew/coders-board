@@ -16,13 +16,7 @@ const options: Option[] = [
 ];
 
 export const RoleSelect: CFC<RoleSelectProps> = props => {
-  const handleChange: SelectProps<UserRole | undefined>['onChange'] = value => {
-    if (typeof value === 'undefined' && props.onSelect) {
-      props.onSelect(undefined, { value: undefined, options });
-    }
-  };
-
-  return <Select {...props} onChange={handleChange} options={options} />;
+  return <Select {...props} options={options} />;
 };
 
 export const FormikRoleSelect = selectToFormikSelect(RoleSelect);

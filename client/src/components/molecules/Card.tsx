@@ -40,9 +40,11 @@ export const Card = styled(AntCard, { shouldForwardProp })<CardProps>(props => {
   const { display, ...layoutProps } = omit(splitSystem(props), ['size']);
 
   return {
-    ...layoutProps,
-    ...mainCardSystem(props),
-    borderRadius: 4,
+    '&.ant-card': {
+      ...layoutProps,
+      ...mainCardSystem(props),
+      borderRadius: 4,
+    },
 
     '.ant-card-body': {
       display,

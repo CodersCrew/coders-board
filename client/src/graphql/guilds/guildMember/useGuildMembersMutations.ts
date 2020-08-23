@@ -1,16 +1,10 @@
 import { GraphQLOperations } from '@/typings/graphql';
 
 import {
-  GuildMembersQuery,
   useCreateGuildMemberMutation,
   useDeleteGuildMemberMutation,
   useUpdateGuildMemberMutation,
 } from './guildMember.apollo';
-
-export type UseGuildMembersMutations = {
-  item: GuildMembersQuery['guildMembers'][number];
-  params: { guildId?: string };
-};
 
 export const useGuildMembersMutations = () => {
   const mutationConfig = {

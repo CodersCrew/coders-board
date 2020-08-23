@@ -5,5 +5,6 @@ export * from './Button';
 export * from './Icon';
 export * from './Paragraph';
 export * from './Spin';
+export * from './Tag';
 export * from './Text';
 export * from './Title';

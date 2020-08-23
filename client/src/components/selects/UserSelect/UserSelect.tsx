@@ -28,13 +28,7 @@ export const UserSelect: CFC<UserSelectProps> = ({ idsToOmit, ids, idMapper, ...
     options = options.filter(({ value }) => !idsToOmit.includes(value));
   }
 
-  const handleChange: SelectProps<ValueType>['onChange'] = value => {
-    if (typeof value === 'undefined' && props.onSelect) {
-      props.onSelect(undefined, { value: undefined, options });
-    }
-  };
-
-  return <Select {...props} loading={loading} onChange={handleChange} options={options} optionFilterProp="label" />;
+  return <Select {...props} loading={loading} options={options} optionFilterProp="label" />;
 };
 
 export const FormikUserSelect = selectToFormikSelect(UserSelect);

@@ -23,7 +23,7 @@ export type TableColumns<T extends TableRecord> = (
   | (ColumnType<T> & CustomProps)
 )[];
 
-type CustomItemProps = Omit<MenuItemProps, 'children' | 'onClick' | 'disabled' | 'className'>;
+type CustomItemProps = Omit<MenuItemProps, 'children' | 'onClick' | 'disabled' | 'className' | 'icon'>;
 
 export type TableAction<T> = {
   label: ((record: T) => string) | string;

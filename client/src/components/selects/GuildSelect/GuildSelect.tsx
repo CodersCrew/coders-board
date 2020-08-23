@@ -16,13 +16,7 @@ export const GuildSelect: CFC<GuildSelectProps> = props => {
 
   const options = data?.guilds.map(({ id, name }) => ({ label: name, value: id })) ?? [];
 
-  const handleChange: SelectProps<ValueType>['onChange'] = value => {
-    if (typeof value === 'undefined' && props.onSelect) {
-      props.onSelect(undefined, { value: undefined, options });
-    }
-  };
-
-  return <Select {...props} loading={loading} onChange={handleChange} options={options} optionFilterProp="label" />;
+  return <Select {...props} loading={loading} options={options} optionFilterProp="label" />;
 };
 
 export const FormikGuildSelect = selectToFormikSelect(GuildSelect);

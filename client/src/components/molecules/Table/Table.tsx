@@ -1,7 +1,7 @@
 import React from 'react';
 
-import { renderActions } from './actions';
 import { createColumns } from './createColumns';
+import { renderTableActions } from './renderTableActions';
 import { StyledTable } from './StyledTable';
 import { TableColumns, TableProps, TableRecord } from './Table.types';
 
@@ -12,7 +12,7 @@ export function Table<T extends TableRecord>({ actions, ...props }: TableProps<T
     columnsWithActions.push({
       align: 'right',
       fixed: 'right',
-      render: renderActions(actions),
+      render: renderTableActions(actions),
     });
   }
 
