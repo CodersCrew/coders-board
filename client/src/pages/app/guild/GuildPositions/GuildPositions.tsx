@@ -5,13 +5,13 @@ import { get, groupBy } from 'lodash';
 import { Box, Spin, Title } from '@/components/atoms';
 import { Card, FiltersCard } from '@/components/molecules';
 import { UseGuildPositions, useGuildPositions } from '@/graphql/guilds';
-import { useModalState } from '@/hooks/useModalState';
 import { useQueryParam } from '@/hooks/useQueryParam';
+import { useDataModal } from '@/services/dataModal';
 
 import { useGuildContext } from '../GuildContext';
 import { EmptyPositions } from './EmptyPositions';
 import { GuildPosition } from './GuildPosition';
-import { GuildPositionModal, GuildPositionModalProps } from './GuildPositionModal';
+import { GuildPositionModal, GuildPositionModalData } from './GuildPositionModal';
 
 const filterPositions = (positions: UseGuildPositions['item'][], search: string) => {
   if (!search || !positions.length) return positions;
@@ -27,7 +27,7 @@ const filterPositions = (positions: UseGuildPositions['item'][], search: string)
 const GuildPositions = () => {
   const { guildId, guildRole } = useGuildContext();
   const guildPositions = useGuildPositions({ guildId });
-  const guildPositionModal = useModalState<GuildPositionModalProps['data']>();
+  const guildPositionModal = useDataModal<GuildPositionModalData>();
   const [search, setSearch] = useQueryParam('search', false);
 
   const filteredPositionItems = filterPositions(guildPositions.data, search);
@@ -64,13 +64,7 @@ const GuildPositions = () => {
           {past.length > 0 && renderList('Past positions', past)}
         </Box>
       )}
-      {guildPositionModal.isMounted && (
-        <GuildPositionModal
-          visible={guildPositionModal.isVisible}
-          onCancel={guildPositionModal.close}
-          data={guildPositionModal.data}
-        />
-      )}
+      <GuildPositionModal {...guildPositionModal} />
     </Spin>
   );
 };

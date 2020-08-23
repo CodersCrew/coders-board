@@ -1,12 +1,13 @@
 import React from 'react';
-import { Formik, FormikConfig, useFormikContext } from 'formik';
+import { FormikConfig } from 'formik';
 import { Form } from 'formik-antd';
 import * as yup from 'yup';
 
-import { Modal, ModalProps } from '@/components/molecules';
+import { FormikModal } from '@/components/molecules';
 import { FormikTeamRoleSelect, FormikUserSelect } from '@/components/selects';
 import { useSquadMembers, useSquadMembersIds } from '@/graphql/squads';
-import { CFC } from '@/typings/components';
+import { createDataModal, DataModalProps } from '@/services/dataModal';
+import { WithId } from '@/typings/enhancers';
 import { YupSchema } from '@/typings/forms';
 import { CreateSquadMemberInput, TeamRole } from '@/typings/graphql';
 import { getInitialValuesFromSchema } from '@/utils/forms';
@@ -18,30 +19,67 @@ type FormValues = Omit<CreateSquadMemberInput, 'squadId'>;
 
 type FormConfig = FormikConfig<FormValues>;
 
-export type SquadMemberModalProps = ModalProps & {
-  onCancel: () => void;
-  data: (FormValues & { id: string }) | null;
-};
+export type SquadMemberModalData = WithId<FormValues> | null;
 
-const SquadMemberModalComponent: CFC<SquadMemberModalProps> = ({ data, ...props }) => {
+type SquadMemberModalProps = DataModalProps<SquadMemberModalData>;
+
+const useSquadMemberModal = (props: SquadMemberModalProps) => {
+  const { data, ...modalProps } = props;
+
   const { squadId } = useSquadContext();
-  const formik = useFormikContext<FormValues>();
+  const squadMembers = useSquadMembers();
   const squadMembersIds = useSquadMembersIds({ squadId });
 
-  const title = data ? 'Update squad member' : 'Add new squad member';
-  const okText = data ? 'Update member' : 'Add member';
+  const validationSchema: YupSchema<FormValues> = yup.object({
+    userId: yup.string().required(),
+    role: yup.mixed<TeamRole>().required().default(TeamRole.Member),
+  });
 
-  const buttonProps = { loading: formik.isSubmitting };
+  const initialValues = data ?? getInitialValuesFromSchema(validationSchema);
+  const messages = getBasicMessages('squad member', data ? 'update' : 'create');
+
+  const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
+    messages.loading();
+
+    try {
+      if (data) {
+        await squadMembers.update({
+          variables: { data: { role: values.role, id: data.id, squadId } },
+        });
+      } else {
+        await squadMembers.create({ variables: { data: { ...values, squadId } } });
+      }
+
+      props.onCancel();
+      messages.success();
+    } catch (ex) {
+      console.log(ex);
+      messages.failure();
+    } finally {
+      helpers.setSubmitting(false);
+    }
+  };
+
+  modalProps.title = data ? 'Update squad member' : 'Add new squad member';
+  modalProps.okText = data ? 'Update member' : 'Add member';
+
+  return {
+    modal: modalProps,
+    form: {
+      initialValues,
+      validationSchema,
+      onSubmit: handleSubmit,
+    },
+    squadMembersIds,
+    data,
+  };
+};
+
+export const SquadMemberModal = createDataModal<SquadMemberModalProps>(props => {
+  const { form, modal, squadMembersIds, data } = useSquadMemberModal(props);
 
   return (
-    <Modal
-      title={title}
-      okText={okText}
-      okButtonProps={buttonProps}
-      onOk={formik.submitForm}
-      cancelButtonProps={buttonProps}
-      {...props}
-    >
+    <FormikModal form={form} modal={modal}>
       <Form layout="vertical" colon>
         {!data && (
           <Form.Item name="userId" label="User" required>
@@ -58,47 +96,6 @@ const SquadMemberModalComponent: CFC<SquadMemberModalProps> = ({ data, ...props 
           <FormikTeamRoleSelect name="role" />
         </Form.Item>
       </Form>
-    </Modal>
+    </FormikModal>
   );
-};
-
-export const SquadMemberModal: CFC<SquadMemberModalProps> = props => {
-  const { squadId } = useSquadContext();
-  const squadMembers = useSquadMembers();
-
-  const validationSchema: YupSchema<FormValues> = yup.object({
-    userId: yup.string().required(),
-    role: yup.mixed<TeamRole>().required().default(TeamRole.Member),
-  });
-
-  const initialValues = props.data ?? getInitialValuesFromSchema(validationSchema);
-  const messages = getBasicMessages('squad member', props.data ? 'update' : 'create');
-
-  const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    messages.loading();
-
-    try {
-      if (props.data) {
-        await squadMembers.update({
-          variables: { data: { role: values.role, id: props.data.id, squadId } },
-        });
-      } else {
-        await squadMembers.create({ variables: { data: { ...values, squadId } } });
-      }
-
-      props.onCancel();
-      messages.success();
-    } catch (ex) {
-      console.log(ex);
-      messages.failure();
-    } finally {
-      helpers.setSubmitting(false);
-    }
-  };
-
-  return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-      <SquadMemberModalComponent {...props} />
-    </Formik>
-  );
-};
+});

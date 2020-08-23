@@ -6,7 +6,6 @@ import { GsuiteService, UpdateGroupParams } from '../integrations';
 import { CreateGuildInput } from './dto/create-guild.input';
 import { GetGuildsArgs } from './dto/get-guilds.args';
 import { UpdateGuildInput } from './dto/update-guild.input';
-import { Guild } from './guild.model';
 import { GuildRepository } from './guild.repository';
 
 @Injectable()
@@ -16,19 +15,19 @@ export class GuildsService {
   getClans = resolveAsyncRelation(this.guildRepository, 'clans');
   getMembers = resolveAsyncRelation(this.guildRepository, 'members');
 
-  findById(id: string): Promise<Guild | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.guildRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string): Promise<Guild> {
+  findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.guildRepository.findOneOrFail(id);
   }
 
-  findAll({ search }: GetGuildsArgs): Promise<Guild[]> {
+  findAll({ search }: GetGuildsArgs) {
     const query = this.guildRepository.createQueryBuilder('guild');
 
     if (search) {
@@ -42,13 +41,13 @@ export class GuildsService {
     return query.getMany();
   }
 
-  async create(input: CreateGuildInput): Promise<Guild> {
+  async create(input: CreateGuildInput) {
     const googleId = await this.gsuiteService.createGroup(input);
 
     return this.guildRepository.save({ ...input, googleId });
   }
 
-  async update({ id, ...input }: UpdateGuildInput): Promise<Guild> {
+  async update({ id, ...input }: UpdateGuildInput) {
     const guild = await this.findByIdOrThrow(id);
 
     const googlePropNames: (keyof Omit<UpdateGroupParams, 'id'>)[] = ['name', 'description', 'email'];
@@ -60,7 +59,7 @@ export class GuildsService {
     return this.guildRepository.save({ ...guild, ...input });
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: string) {
     const guild = await this.findByIdOrThrow(id);
 
     const members = await guild.members;

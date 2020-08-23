@@ -6,7 +6,6 @@ import { GsuiteService, UpdateGroupParams } from '../integrations';
 import { CreateSquadInput } from './dto/create-squad.input';
 import { GetSquadsArgs } from './dto/get-squads.args';
 import { UpdateSquadInput } from './dto/update-squad.input';
-import { Squad } from './squad.model';
 import { SquadRepository } from './squad.repository';
 
 @Injectable()
@@ -16,19 +15,19 @@ export class SquadsService {
   getChapters = resolveAsyncRelation(this.squadRepository, 'chapters');
   getMembers = resolveAsyncRelation(this.squadRepository, 'members');
 
-  findById(id: string): Promise<Squad | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.squadRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string): Promise<Squad> {
+  findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.squadRepository.findOneOrFail(id);
   }
 
-  findAll({ search }: GetSquadsArgs): Promise<Squad[]> {
+  findAll({ search }: GetSquadsArgs) {
     const query = this.squadRepository.createQueryBuilder('squad');
 
     if (search) {
@@ -42,13 +41,13 @@ export class SquadsService {
     return query.getMany();
   }
 
-  async create(input: CreateSquadInput): Promise<Squad> {
+  async create(input: CreateSquadInput) {
     const googleId = await this.gsuiteService.createGroup(input);
 
     return this.squadRepository.save({ ...input, googleId });
   }
 
-  async update({ id, ...input }: UpdateSquadInput): Promise<Squad> {
+  async update({ id, ...input }: UpdateSquadInput) {
     const squad = await this.findByIdOrThrow(id);
 
     const googlePropNames: (keyof Omit<UpdateGroupParams, 'id'>)[] = ['name', 'description', 'email'];
@@ -60,7 +59,7 @@ export class SquadsService {
     return this.squadRepository.save({ ...squad, ...input });
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: string) {
     const squad = await this.findByIdOrThrow(id);
 
     const members = await this.getMembers(squad);

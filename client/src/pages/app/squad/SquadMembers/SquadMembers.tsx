@@ -4,11 +4,11 @@ import { CrownOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Table, TableActions } from '@/components/molecules';
 import { UseSquadMembers, useSquadMembers } from '@/graphql/squads';
-import { useModalState } from '@/hooks/useModalState';
+import { useDataModal } from '@/services/dataModal';
 import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';
-import { SquadMemberModal, SquadMemberModalProps } from './SquadMemberModal';
+import { SquadMemberModal, SquadMemberModalData } from './SquadMemberModal';
 import { useDeleteSquadMemberConfirm } from './useDeleteSquadMemberConfirm';
 import { useSquadMembersColumns } from './useSquadMembersColumns';
 
@@ -17,7 +17,7 @@ type Member = UseSquadMembers['item'];
 const SquadMembers = () => {
   const { squadId, squadRole } = useSquadContext();
   const squadMembers = useSquadMembers({ squadId });
-  const squadMemberModal = useModalState<SquadMemberModalProps['data']>();
+  const squadMemberModal = useDataModal<SquadMemberModalData>();
   const columns = useSquadMembersColumns();
   const deleteSquadMemberConfirm = useDeleteSquadMemberConfirm();
 
@@ -56,13 +56,7 @@ const SquadMembers = () => {
           />
         </Card>
       </Box>
-      {squadMemberModal.isMounted && (
-        <SquadMemberModal
-          onCancel={squadMemberModal.close}
-          visible={squadMemberModal.isVisible}
-          data={squadMemberModal.data}
-        />
-      )}
+      <SquadMemberModal {...squadMemberModal} />
     </>
   );
 };

@@ -21,19 +21,19 @@ export class SquadPositionsService {
   getMember = resolveAsyncRelation(this.squadPositionRepository, 'member');
   getChapter = resolveAsyncRelation(this.squadPositionRepository, 'chapter');
 
-  findById(id: string): Promise<SquadPosition | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.squadPositionRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string): Promise<SquadPosition> {
+  findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.squadPositionRepository.findOneOrFail(id);
   }
 
-  findAll({ squadId, memberId }: GetSquadPositionsArgs): Promise<SquadPosition[]> {
+  findAll({ squadId, memberId }: GetSquadPositionsArgs) {
     const query = this.squadPositionRepository.createQueryBuilder('squadPosition');
 
     query.innerJoinAndSelect('squadPosition.member', 'member');

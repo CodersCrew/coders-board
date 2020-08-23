@@ -40,7 +40,8 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
     GSUITE_SUBJECT: Joi.string().required(),
 
     // slack
-    SLACK_TOKEN: Joi.string().required(),
+    SLACK_BOT_TOKEN: Joi.string().required(),
+    SLACK_USER_TOKEN: Joi.string().required(),
 
     // cloudinary
     CLOUDINARY_URL: Joi.string().required(),

@@ -5,13 +5,13 @@ import { get, groupBy } from 'lodash';
 import { Box, Spin, Title } from '@/components/atoms';
 import { Card, FiltersCard } from '@/components/molecules';
 import { UseSquadPositions, useSquadPositions } from '@/graphql/squads';
-import { useModalState } from '@/hooks/useModalState';
 import { useQueryParam } from '@/hooks/useQueryParam';
+import { useDataModal } from '@/services/dataModal';
 
 import { useSquadContext } from '../SquadContext';
 import { EmptyPositions } from './EmptyPositions';
 import { SquadPosition } from './SquadPosition';
-import { SquadPositionModal, SquadPositionModalProps } from './SquadPositionModal';
+import { SquadPositionModal, SquadPositionModalData } from './SquadPositionModal';
 
 const filterPositions = (positions: UseSquadPositions['item'][], search: string) => {
   if (!search || !positions.length) return positions;
@@ -27,7 +27,7 @@ const filterPositions = (positions: UseSquadPositions['item'][], search: string)
 const SquadPositions = () => {
   const { squadId } = useSquadContext();
   const squadPositions = useSquadPositions({ squadId });
-  const squadPositionModal = useModalState<SquadPositionModalProps['data']>();
+  const squadPositionModal = useDataModal<SquadPositionModalData>();
   const [search, setSearch] = useQueryParam('search', false);
 
   const filteredPositionItems = filterPositions(squadPositions.data, search);
@@ -68,13 +68,7 @@ const SquadPositions = () => {
           {past.length > 0 && renderList('Past positions', past)}
         </Box>
       )}
-      {squadPositionModal.isMounted && (
-        <SquadPositionModal
-          visible={squadPositionModal.isVisible}
-          onCancel={squadPositionModal.close}
-          data={squadPositionModal.data}
-        />
-      )}
+      <SquadPositionModal {...squadPositionModal} />
     </Spin>
   );
 };

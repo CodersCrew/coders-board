@@ -2,7 +2,7 @@ import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/g
 import { User } from 'src/users/user.model';
 
 import { UserId } from '../common/decorators';
-import { CreateSuccessInput, DeleteSuccessArgs, GetSuccessesArgs } from './dto';
+import { CreateSuccessInput, DeleteSuccessArgs, GetSuccessesArgs, UpdateSuccessInput } from './dto';
 import { Success } from './success.model';
 import { SuccessesService } from './successes.service';
 
@@ -28,6 +28,11 @@ export class SuccessesResolver {
   @Mutation(returns => Success)
   createSuccess(@Args('data') input: CreateSuccessInput, @UserId() userId: string) {
     return this.successsService.create(input, userId);
+  }
+
+  @Mutation(returns => Success)
+  updateSuccess(@Args('data') input: UpdateSuccessInput) {
+    return this.successsService.update(input);
   }
 
   @Mutation(returns => Boolean)

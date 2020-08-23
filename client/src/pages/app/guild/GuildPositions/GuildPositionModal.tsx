@@ -1,16 +1,17 @@
 import React from 'react';
-import { Formik, FormikConfig, useFormikContext } from 'formik';
+import { FormikConfig, useFormikContext } from 'formik';
 import { DatePicker, DatePickerProps, Form, Input } from 'formik-antd';
 import moment from 'moment';
 import * as yup from 'yup';
 
 import { Box } from '@/components/atoms';
-import { Modal, ModalProps } from '@/components/molecules';
+import { FormikModal } from '@/components/molecules';
 import { FormikClanSelect, FormikGuildPositionKindSelect } from '@/components/selects';
 import { FormikUserSelect } from '@/components/selects/UserSelect';
 import { useGuildPositions } from '@/graphql/guilds';
 import { useGuildMembersIds } from '@/graphql/guilds/guildMember';
-import { CFC } from '@/typings/components';
+import { createDataModal, DataModalProps } from '@/services/dataModal';
+import { WithId } from '@/typings/enhancers';
 import { YupSchema } from '@/typings/forms';
 import { CreateGuildPositionInput, GuildPositionKind } from '@/typings/graphql';
 import { getInitialValuesFromSchema } from '@/utils/forms';
@@ -22,86 +23,22 @@ type FormValues = Omit<CreateGuildPositionInput, 'guildId'>;
 
 type FormConfig = FormikConfig<FormValues>;
 
-export type GuildPositionModalProps = ModalProps & {
-  onCancel: () => void;
-  data: (FormValues & { id: string }) | null;
+export type GuildPositionModalData = WithId<FormValues> | null;
+
+type GuildPositionModalProps = DataModalProps<GuildPositionModalData>;
+
+const pickerProps: Partial<DatePickerProps> = {
+  picker: 'month',
+  style: { width: '100%' },
 };
 
-const GuildPositionModalComponent: CFC<GuildPositionModalProps> = ({ data, ...props }) => {
-  const formik = useFormikContext<FormValues>();
+const useGuildPositionModal = (props: GuildPositionModalProps) => {
+  const { data, ...modalProps } = props;
+
   const { guildId } = useGuildContext();
-  const guildMambersIds = useGuildMembersIds({ guildId });
-  const title = data?.id ? 'Edit position' : 'Add position';
-  const okText = data?.id ? 'Update position' : 'Add position';
+  const guildMembersIds = useGuildMembersIds({ guildId });
 
-  const buttonProps = { loading: formik.isSubmitting };
-
-  const pickerProps: Partial<DatePickerProps> = {
-    picker: 'month',
-    style: { width: '100%' },
-  };
-
-  return (
-    <Modal
-      title={title}
-      okText={okText}
-      okButtonProps={buttonProps}
-      onOk={formik.submitForm}
-      cancelButtonProps={buttonProps}
-      {...props}
-    >
-      <Form layout="vertical" colon>
-        <Form.Item name="memberId" label="Guild member" required>
-          <FormikUserSelect
-            name="memberId"
-            placeholder="Select team member..."
-            ids={guildMambersIds.userIds}
-            idMapper={guildMambersIds.userToMemberMap}
-            showSearch
-          />
-        </Form.Item>
-        <Box display="flex">
-          <Box width={1 / 2}>
-            <Form.Item name="from" label="Start date" required>
-              <DatePicker
-                name="from"
-                placeholder="Choose start date..."
-                {...pickerProps}
-                disabledDate={current => (formik.values.to ? current.isAfter(formik.values.to) : false)}
-              />
-            </Form.Item>
-          </Box>
-          <Box width={40} />
-          <Box width={1 / 2}>
-            <Form.Item name="to" label="End date">
-              <DatePicker
-                name="to"
-                placeholder="Choose end date..."
-                {...pickerProps}
-                disabledDate={current => {
-                  return formik.values.from ? current.isBefore(moment(formik.values.from).add(1, 'month')) : false;
-                }}
-              />
-            </Form.Item>
-          </Box>
-        </Box>
-        <Form.Item name="kind" label="Position" required>
-          <FormikGuildPositionKindSelect name="kind" placeholder="Select position..." />
-        </Form.Item>
-        <Form.Item name="notes" label="Notes about position">
-          <Input.TextArea name="notes" placeholder="Enter notes..." />
-        </Form.Item>
-        <Form.Item name="clanId" label="Clan">
-          <FormikClanSelect guildId={guildId} name="clanId" placeholder="Select clan for the role..." allowClear />
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
-};
-
-export const GuildPositionModal: CFC<GuildPositionModalProps> = props => {
   const guildPositions = useGuildPositions();
-  const { guildId } = useGuildContext();
 
   const validationSchema: YupSchema<FormValues> = yup.object({
     from: yup.date().required().default(null),
@@ -113,6 +50,7 @@ export const GuildPositionModal: CFC<GuildPositionModalProps> = props => {
   });
 
   const initialValues = props.data ?? getInitialValuesFromSchema(validationSchema);
+
   const messages = getBasicMessages('guild position', props.data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
@@ -137,9 +75,87 @@ export const GuildPositionModal: CFC<GuildPositionModalProps> = props => {
     }
   };
 
+  modalProps.title = data?.id ? 'Edit position' : 'Add position';
+  modalProps.okText = data?.id ? 'Update position' : 'Add position';
+
+  return {
+    modal: modalProps,
+    form: {
+      initialValues,
+      validationSchema,
+      onSubmit: handleSubmit,
+    },
+    guildMembersIds,
+    guildId,
+  };
+};
+
+const FromDatePicker = () => {
+  const { values } = useFormikContext<FormValues>();
+
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-      <GuildPositionModalComponent {...props} />
-    </Formik>
+    <DatePicker
+      name="from"
+      placeholder="Choose start date..."
+      {...pickerProps}
+      disabledDate={current => (values.to ? current.isAfter(values.to) : false)}
+    />
   );
 };
+
+const ToDatePicker = () => {
+  const { values } = useFormikContext<FormValues>();
+
+  return (
+    <DatePicker
+      name="to"
+      placeholder="Choose end date..."
+      {...pickerProps}
+      disabledDate={current => {
+        return values.from ? current.isBefore(moment(values.from).add(1, 'month')) : false;
+      }}
+    />
+  );
+};
+
+export const GuildPositionModal = createDataModal<GuildPositionModalProps>(props => {
+  const { form, modal, guildMembersIds, guildId } = useGuildPositionModal(props);
+
+  return (
+    <FormikModal form={form} modal={modal}>
+      <Form layout="vertical" colon>
+        <Form.Item name="memberId" label="Guild member" required>
+          <FormikUserSelect
+            name="memberId"
+            placeholder="Select team member..."
+            ids={guildMembersIds.userIds}
+            idMapper={guildMembersIds.userToMemberMap}
+            showSearch
+          />
+        </Form.Item>
+        <Box display="flex">
+          <Box width={1 / 2}>
+            <Form.Item name="from" label="Start date" required>
+              <FromDatePicker />
+            </Form.Item>
+          </Box>
+          <Box width={40} />
+          <Box width={1 / 2}>
+            <Form.Item name="to" label="End date">
+              <ToDatePicker />
+            </Form.Item>
+          </Box>
+        </Box>
+        <Form.Item name="kind" label="Position" required>
+          <FormikGuildPositionKindSelect name="kind" placeholder="Select position..." />
+        </Form.Item>
+        <Form.Item name="notes" label="Notes about position">
+          <Input.TextArea name="notes" placeholder="Enter notes..." />
+        </Form.Item>
+        <Form.Item name="clanId" label="Clan">
+          <FormikClanSelect guildId={guildId} name="clanId" placeholder="Select clan for the role..." allowClear />
+        </Form.Item>
+      </Form>
+    </FormikModal>
+  );
+});

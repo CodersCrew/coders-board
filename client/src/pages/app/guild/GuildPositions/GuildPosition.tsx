@@ -9,11 +9,11 @@ import { CFC } from '@/typings/components';
 import { parseGuildPositionKind } from '@/utils/platform';
 
 import { useGuildContext } from '../GuildContext';
-import { GuildPositionModalProps } from './GuildPositionModal';
+import { GuildPositionModalData } from './GuildPositionModal';
 import { useDeleteGuildPositionConfirm } from './useDeleteGuildPositionConfirm';
 
 type GuildPositionProps = UseGuildPositions['item'] & {
-  openModal: (data: GuildPositionModalProps['data']) => void;
+  openModal: (data: GuildPositionModalData) => void;
   closeModal: () => void;
 };
 

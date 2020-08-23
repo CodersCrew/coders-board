@@ -251,6 +251,7 @@ type Mutation {
   updateSquad(data: UpdateSquadInput!): Squad!
   deleteSquad(id: ID!): Boolean!
   createSuccess(data: CreateSuccessInput!): Success!
+  updateSuccess(data: UpdateSuccessInput!): Success!
   deleteSuccess(id: ID!): Boolean!
 }
 
@@ -424,4 +425,13 @@ input CreateSuccessInput {
   date: DateTime!
   type: SuccessType!
   usersIds: [ID!]!
+}
+
+input UpdateSuccessInput {
+  name: String!
+  description: String!
+  date: DateTime!
+  type: SuccessType!
+  usersIds: [ID!]!
+  id: ID!
 }

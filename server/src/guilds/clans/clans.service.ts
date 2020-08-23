@@ -3,7 +3,6 @@ import { isEqual, pick } from 'lodash';
 
 import { brackets, resolveAsyncRelation } from '../../common/utils';
 import { GsuiteService, UpdateGroupParams } from '../../integrations';
-import { Clan } from './clan.model';
 import { ClanRepository } from './clan.repository';
 import { CreateClanInput } from './dto/create-clan.input';
 import { GetClansArgs } from './dto/get-clans.args';
@@ -16,19 +15,19 @@ export class ClansService {
   getGuild = resolveAsyncRelation(this.clanRepository, 'guild');
   getPositions = resolveAsyncRelation(this.clanRepository, 'positions');
 
-  findById(id: string): Promise<Clan | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.clanRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string): Promise<Clan> {
+  findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.clanRepository.findOneOrFail(id);
   }
 
-  findAll({ search, guildId }: GetClansArgs): Promise<Clan[]> {
+  findAll({ search, guildId }: GetClansArgs) {
     const query = this.clanRepository.createQueryBuilder('clan');
 
     if (guildId) {
@@ -46,7 +45,7 @@ export class ClansService {
     return query.getMany();
   }
 
-  async create(input: CreateClanInput): Promise<Clan> {
+  async create(input: CreateClanInput) {
     const googleId = await this.gsuiteService.createGroup(input);
     const clan = await this.clanRepository.save({ ...input, googleId });
     const guild = await this.getGuild(clan);
@@ -56,7 +55,7 @@ export class ClansService {
     return clan;
   }
 
-  async update({ id, ...input }: UpdateClanInput): Promise<Clan> {
+  async update({ id, ...input }: UpdateClanInput) {
     const clan = await this.findByIdOrThrow(id);
 
     const googlePropNames: (keyof Omit<UpdateGroupParams, 'id'>)[] = ['name', 'description', 'email'];
@@ -70,7 +69,7 @@ export class ClansService {
     return this.clanRepository.save({ ...clan, ...input });
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: string) {
     const clan = await this.findByIdOrThrow(id);
 
     const positions = await this.getPositions(clan);

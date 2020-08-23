@@ -5,16 +5,16 @@ import { List } from 'antd';
 import { Button } from '@/components/atoms';
 import { Card, FiltersCard, Page } from '@/components/molecules';
 import { usePositions } from '@/graphql/positions';
-import { useModalState } from '@/hooks/useModalState';
 import { useQueryParam } from '@/hooks/useQueryParam';
+import { useDataModal } from '@/services/dataModal';
 
 import { Position } from './Position';
-import { PositionModal, PositionModalProps } from './PositionModal';
+import { PositionModal, PositionModalData } from './PositionModal';
 
 const Positions = () => {
   const [search, setSearch] = useQueryParam('search', false);
   const positions = usePositions({ search });
-  const positionModal = useModalState<PositionModalProps['data']>();
+  const positionModal = useDataModal<PositionModalData>();
 
   return (
     <Page>
@@ -40,9 +40,7 @@ const Positions = () => {
           />
         </Card>
       </Page.Content>
-      {positionModal.isMounted && (
-        <PositionModal visible={positionModal.isVisible} data={positionModal.data} onCancel={positionModal.close} />
-      )}
+      <PositionModal {...positionModal} />
     </Page>
   );
 };

@@ -1,37 +1,29 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 
-import { brackets } from '../common/utils';
-import { CreateSuccessInput, DeleteSuccessArgs, GetSuccessesArgs } from './dto';
-import { Success } from './success.model';
+import { brackets, resolveAsyncRelation } from '../common/utils';
+import { CreateSuccessInput, DeleteSuccessArgs, GetSuccessesArgs, UpdateSuccessInput } from './dto';
 import { SuccessRepository } from './success.repository';
 
 @Injectable()
 export class SuccessesService {
   constructor(private readonly successRepository: SuccessRepository) {}
 
-  async getUsers(success: Success) {
-    const { users } = await this.successRepository.findOne(success.id, { relations: ['users'] });
-    return users;
-  }
+  getUsers = resolveAsyncRelation(this.successRepository, 'users');
+  getCreator = resolveAsyncRelation(this.successRepository, 'creator');
 
-  async getCreator(success: Success) {
-    const { creator } = await this.successRepository.findOne(success.id, { relations: ['creator'] });
-    return creator;
-  }
-
-  findById(id: string): Promise<Success | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.successRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string): Promise<Success> {
+  findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.successRepository.findOneOrFail(id);
   }
 
-  findAll({ search, type }: GetSuccessesArgs): Promise<Success[]> {
+  findAll({ search, type }: GetSuccessesArgs) {
     const query = this.successRepository.createQueryBuilder('success');
 
     if (type) {
@@ -49,7 +41,7 @@ export class SuccessesService {
     return query.getMany();
   }
 
-  async create(input: CreateSuccessInput, creatorId: string): Promise<Success> {
+  async create(input: CreateSuccessInput, creatorId: string) {
     return this.successRepository.save({
       ...input,
       creatorId,
@@ -57,7 +49,14 @@ export class SuccessesService {
     });
   }
 
-  async delete({ id }: DeleteSuccessArgs): Promise<boolean> {
+  async update(input: UpdateSuccessInput) {
+    return this.successRepository.save({
+      ...input,
+      users: input.usersIds.map(id => ({ id })),
+    });
+  }
+
+  async delete({ id }: DeleteSuccessArgs) {
     const success = await this.findByIdOrThrow(id);
 
     await this.successRepository.remove(success);

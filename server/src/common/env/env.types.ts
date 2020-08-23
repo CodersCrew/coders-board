@@ -31,7 +31,8 @@ export type EnvVariables = {
   GSUITE_SUBJECT: string;
 
   // slack
-  SLACK_TOKEN: string;
+  SLACK_BOT_TOKEN: string;
+  SLACK_USER_TOKEN: string;
 
   // cloudinary
   CLOUDINARY_URL: string;

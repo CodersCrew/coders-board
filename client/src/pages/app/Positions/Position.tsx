@@ -7,11 +7,11 @@ import { useAuthorizedUser } from '@/graphql/users';
 import { CFC } from '@/typings/components';
 import { pick } from '@/utils/objects';
 
-import { PositionModalProps } from './PositionModal';
+import { PositionModalData } from './PositionModal';
 import { useDeletePositionConfirm } from './useDeletePositionConfirm';
 
 export type PositionProps = UsePositions['item'] & {
-  openEditModal: (data?: PositionModalProps['data']) => void;
+  openEditModal: (data?: PositionModalData) => void;
 };
 
 export const Position: CFC<PositionProps> = props => {

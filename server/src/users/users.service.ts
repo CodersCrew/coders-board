@@ -4,7 +4,6 @@ import { brackets, resolveAsyncRelation } from '../common/utils';
 import { GsuiteService } from '../integrations';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
-import { User } from './user.model';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -14,19 +13,19 @@ export class UsersService {
   getGuilds = resolveAsyncRelation(this.userRepository, 'guilds');
   getSquads = resolveAsyncRelation(this.userRepository, 'squads');
 
-  findById(id: string): Promise<User | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.userRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string): Promise<User> {
+  findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.userRepository.findOneOrFail(id);
   }
 
-  findAll({ role, search, ids }: GetUsersArgs): Promise<User[]> {
+  findAll({ role, search, ids }: GetUsersArgs) {
     const query = this.userRepository.createQueryBuilder('user');
 
     if (ids) {
@@ -52,7 +51,7 @@ export class UsersService {
     return query.getMany();
   }
 
-  async create(input: CreateUserInput): Promise<User> {
+  async create(input: CreateUserInput) {
     const { id: googleId } = await this.gsuiteService.createUser(input);
 
     try {
@@ -65,7 +64,7 @@ export class UsersService {
     }
   }
 
-  async delete(userId: string): Promise<boolean> {
+  async delete(userId: string) {
     const user = await this.findByIdOrThrow(userId);
 
     await this.gsuiteService.deleteUser({ id: user.googleId });

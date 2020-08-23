@@ -25,19 +25,19 @@ export class ChaptersService {
     return positions;
   }
 
-  findById(id: string): Promise<Chapter | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.chapterRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string): Promise<Chapter> {
+  findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.chapterRepository.findOneOrFail(id);
   }
 
-  findAll({ search, squadId }: GetChaptersArgs): Promise<Chapter[]> {
+  findAll({ search, squadId }: GetChaptersArgs) {
     const query = this.chapterRepository.createQueryBuilder('chapter');
 
     if (squadId) {
@@ -55,7 +55,7 @@ export class ChaptersService {
     return query.getMany();
   }
 
-  async create(input: CreateChapterInput): Promise<Chapter> {
+  async create(input: CreateChapterInput) {
     const googleId = await this.gsuiteService.createGroup(input);
     const chapter = await this.chapterRepository.save({ ...input, googleId });
     const squad = await this.getSquad(chapter);
@@ -65,7 +65,7 @@ export class ChaptersService {
     return chapter;
   }
 
-  async update({ id, ...input }: UpdateChapterInput): Promise<Chapter> {
+  async update({ id, ...input }: UpdateChapterInput) {
     const chapter = await this.findByIdOrThrow(id);
 
     const googlePropNames: (keyof Omit<UpdateGroupParams, 'id'>)[] = ['name', 'description', 'email'];
@@ -79,7 +79,7 @@ export class ChaptersService {
     return this.chapterRepository.save({ ...chapter, ...input });
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: string) {
     const chapter = await this.findByIdOrThrow(id);
 
     const positions = await chapter.positions;

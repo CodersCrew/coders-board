@@ -5,19 +5,19 @@ import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Page, Table, TableActions } from '@/components/molecules';
 import { RoleSelect } from '@/components/selects';
 import { useAuthorizedUser, UseUsers, useUsers } from '@/graphql/users';
-import { useModalState } from '@/hooks/useModalState';
 import { useToggle } from '@/hooks/useToggle';
+import { useDataModal } from '@/services/dataModal';
 import { UserRole } from '@/typings/graphql';
 
 import { AddUserModal } from './AddUserModal';
-import { SyncSlackModal, SyncSlackModalProps } from './SyncSlackModal';
+import { SyncSlackModal, SyncSlackModalData } from './SyncSlackModal';
 import { useUsersColumns } from './useUsersColumns';
 
 type User = UseUsers['item'];
 
 const Users = () => {
   const userModalToggle = useToggle(false);
-  const syncSlackModal = useModalState<SyncSlackModalProps['data']>();
+  const syncSlackModal = useDataModal<SyncSlackModalData>();
   const [search, setSearch] = useState('');
   const [role, setRole] = useState<UserRole | undefined>();
   const { isAdmin } = useAuthorizedUser();
@@ -64,9 +64,7 @@ const Users = () => {
         </Box>
       </Page.Content>
       <AddUserModal visible={userModalToggle.on} onCancel={userModalToggle.setOff} />
-      {syncSlackModal.isMounted && (
-        <SyncSlackModal onCancel={syncSlackModal.close} visible={syncSlackModal.isVisible} data={syncSlackModal.data} />
-      )}
+      <SyncSlackModal {...syncSlackModal} />
     </Page>
   );
 };

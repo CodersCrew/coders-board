@@ -35,19 +35,19 @@ export class GuildMembersService {
     return filterActivePositions(positions, isActive);
   }
 
-  findById(id: string): Promise<GuildMember | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.guildMemberRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string): Promise<GuildMember> {
+  findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.guildMemberRepository.findOneOrFail(id);
   }
 
-  findAll({ guildId }: GetGuildMembersArgs): Promise<GuildMember[]> {
+  findAll({ guildId }: GetGuildMembersArgs) {
     const query = this.guildMemberRepository.createQueryBuilder('guildMember');
 
     query.where('guildMember.guildId = :guildId', { guildId });

@@ -21,19 +21,19 @@ export class GuildPositionsService {
   getMember = resolveAsyncRelation(this.guildPositionRepository, 'member');
   getClan = resolveAsyncRelation(this.guildPositionRepository, 'clan');
 
-  findById(id: string): Promise<GuildPosition | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.guildPositionRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string, withRelations?: boolean): Promise<GuildPosition> {
+  findByIdOrThrow(id: string, withRelations?: boolean) {
     if (!id) throw new BadRequestException();
 
     return this.guildPositionRepository.findOneOrFail(id, { relations: withRelations ? ['member', 'clan'] : [] });
   }
 
-  findAll({ guildId, memberId }: GetGuildPositionsArgs): Promise<GuildPosition[]> {
+  findAll({ guildId, memberId }: GetGuildPositionsArgs) {
     const query = this.guildPositionRepository.createQueryBuilder('guildPosition');
 
     query.innerJoinAndSelect('guildPosition.member', 'member');

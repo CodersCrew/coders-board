@@ -7,12 +7,12 @@ import { UseChapters } from '@/graphql/squads';
 import { pick } from '@/utils/objects';
 
 import { ChapterContent } from './ChapterContent';
-import { SquadChapterModalProps } from './SquadChapterModal';
+import { SquadChapterModalData } from './SquadChapterModal';
 import { useDeleteChapterConfirm } from './useDeleteChapterConfirm';
 
 export type ChapterProps = {
   chapter: UseChapters['item'];
-  openModal: (data: SquadChapterModalProps['data']) => void;
+  openModal: (data: SquadChapterModalData) => void;
 };
 
 const Chapter = ({ chapter, openModal }: ChapterProps) => {

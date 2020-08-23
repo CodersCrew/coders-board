@@ -1,12 +1,12 @@
 import React from 'react';
 import { message } from 'antd';
-import { Formik, FormikConfig, useFormikContext } from 'formik';
+import { FormikConfig } from 'formik';
 import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
-import { Modal, ModalProps } from '@/components/molecules';
+import { FormikModal } from '@/components/molecules';
 import { useSlackMutations } from '@/graphql/integrations';
-import { CFC } from '@/typings/components';
+import { createDataModal, DataModalProps } from '@/services/dataModal';
 import { YupSchema } from '@/typings/forms';
 import { SyncSlackUserInput } from '@/typings/graphql';
 import { getInitialValuesFromSchema } from '@/utils/forms';
@@ -15,37 +15,11 @@ type FormValues = Omit<SyncSlackUserInput, 'userId'>;
 
 type FormConfig = FormikConfig<FormValues>;
 
-export type SyncSlackModalProps = ModalProps & {
-  onCancel: () => void;
-  data: { userId: string };
-};
+export type SyncSlackModalData = { userId: string };
 
-type SyncSlackModalComponentProps = Omit<SyncSlackModalProps, 'data' | 'ctx'>;
+type SyncSlackModalProps = DataModalProps<SyncSlackModalData>;
 
-const SyncSlackModalComponent: CFC<SyncSlackModalComponentProps> = props => {
-  const formik = useFormikContext<FormValues>();
-
-  const buttonProps = { loading: formik.isSubmitting };
-
-  return (
-    <Modal
-      title="Sync user with Slack"
-      okText="Sync user"
-      okButtonProps={buttonProps}
-      onOk={formik.submitForm}
-      cancelButtonProps={buttonProps}
-      {...props}
-    >
-      <Form layout="vertical" colon>
-        <Form.Item name="slackId" label="Slack ID" required>
-          <Input name="slackId" />
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
-};
-
-export const SyncSlackModal: CFC<SyncSlackModalProps> = ({ data, ...props }) => {
+const useSyncSlackModal = ({ data, ...modalProps }: SyncSlackModalProps) => {
   const slackMutations = useSlackMutations();
 
   const validationSchema: YupSchema<FormValues> = yup.object({
@@ -59,7 +33,7 @@ export const SyncSlackModal: CFC<SyncSlackModalProps> = ({ data, ...props }) => 
 
     try {
       await slackMutations.syncUser({ userId: data.userId, slackId: values.slackId });
-      props.onCancel();
+      modalProps.onCancel();
       message.success('User synced with Slack');
     } catch (ex) {
       console.log(ex);
@@ -69,9 +43,30 @@ export const SyncSlackModal: CFC<SyncSlackModalProps> = ({ data, ...props }) => 
     }
   };
 
-  return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-      <SyncSlackModalComponent {...props} />
-    </Formik>
-  );
+  return {
+    modal: {
+      ...modalProps,
+      title: 'Sync user with Slack',
+      okText: 'Sync user',
+    },
+    form: {
+      initialValues,
+      validationSchema,
+      onSubmit: handleSubmit,
+    },
+  };
 };
+
+export const SyncSlackModal = createDataModal<SyncSlackModalProps>(props => {
+  const { form, modal } = useSyncSlackModal(props);
+
+  return (
+    <FormikModal form={form} modal={modal}>
+      <Form layout="vertical" colon>
+        <Form.Item name="slackId" label="Slack ID" required>
+          <Input name="slackId" />
+        </Form.Item>
+      </Form>
+    </FormikModal>
+  );
+});

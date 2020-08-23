@@ -5,16 +5,16 @@ import { List } from 'antd';
 import { Box, Button } from '@/components/atoms';
 import { Card } from '@/components/molecules';
 import { useChapters } from '@/graphql/squads';
-import { useModalState } from '@/hooks/useModalState';
+import { useDataModal } from '@/services/dataModal';
 
 import { useSquadContext } from '../SquadContext';
 import Chapter from './Chapter';
-import { SquadChapterModal, SquadChapterModalProps } from './SquadChapterModal';
+import { SquadChapterModal, SquadChapterModalData } from './SquadChapterModal';
 
 const SquadChapters = () => {
   const { squadId, squadRole } = useSquadContext();
   const chapters = useChapters({ squadId });
-  const chapterModal = useModalState<SquadChapterModalProps['data']>();
+  const chapterModal = useDataModal<SquadChapterModalData>();
 
   return (
     <>
@@ -35,9 +35,7 @@ const SquadChapters = () => {
           renderItem={item => <Chapter key={item.id} chapter={item} openModal={chapterModal.open} />}
         />
       </Card>
-      {chapterModal.isMounted && (
-        <SquadChapterModal data={chapterModal.data} visible={chapterModal.isVisible} onCancel={chapterModal.close} />
-      )}
+      <SquadChapterModal {...chapterModal} />
     </>
   );
 };

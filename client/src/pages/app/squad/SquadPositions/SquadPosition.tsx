@@ -8,11 +8,11 @@ import { UseSquadPositions } from '@/graphql/squads';
 import { CFC } from '@/typings/components';
 
 import { useSquadContext } from '../SquadContext';
-import { SquadPositionModalProps } from './SquadPositionModal';
+import { SquadPositionModalData } from './SquadPositionModal';
 import { useDeleteSquadPositionConfirm } from './useDeleteSquadPositionConfirm';
 
 type SquadPositionProps = UseSquadPositions['item'] & {
-  openModal: (data: SquadPositionModalProps['data']) => void;
+  openModal: (data: SquadPositionModalData) => void;
   closeModal: () => void;
 };
 

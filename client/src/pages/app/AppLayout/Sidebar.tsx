@@ -1,6 +1,6 @@
 import React from 'react';
 import { useLocation, useNavigate } from 'react-router-dom';
-import { ContactsOutlined, LogoutOutlined, PartitionOutlined, TeamOutlined } from '@ant-design/icons';
+import { ContactsOutlined, LogoutOutlined, PartitionOutlined, TeamOutlined, TrophyOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 import { Dropdown, Layout, Menu } from 'antd';
 import { SiderProps } from 'antd/lib/layout';
@@ -83,6 +83,9 @@ export const Sidebar: CFC<SidebarProps> = props => {
         </Menu.Item>
         <Menu.Item key="positions" icon={<PartitionOutlined />}>
           Positions
+        </Menu.Item>
+        <Menu.Item key="successes" icon={<TrophyOutlined />}>
+          Successes
         </Menu.Item>
       </Menu>
       <Dropdown overlay={menu} trigger={['click']}>

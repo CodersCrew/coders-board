@@ -28,19 +28,19 @@ export class SquadMembersService {
     return positions;
   }
 
-  findById(id: string): Promise<SquadMember | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.squadMemberRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string): Promise<SquadMember> {
+  findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.squadMemberRepository.findOneOrFail(id);
   }
 
-  findAll({ squadId }: GetSquadMembersArgs): Promise<SquadMember[]> {
+  findAll({ squadId }: GetSquadMembersArgs) {
     const query = this.squadMemberRepository.createQueryBuilder('squadMember');
 
     query.where('squadMember.squadId = :squadId', { squadId });
@@ -87,7 +87,7 @@ export class SquadMembersService {
 
   async delete(id: string) {
     const squadMember = await this.findByIdOrThrow(id);
-    const positions = await squadMember.positions;
+    const positions = await this.getPositions(squadMember);
 
     if (positions.length) {
       throw new ConflictException('You cannot remove squad member with attached positions');
@@ -97,7 +97,7 @@ export class SquadMembersService {
     const user = await this.getUser(squadMember);
 
     await this.gsuiteService.deleteMember({ groupId: squad.googleId, userId: user.googleId });
-    await this.squadMemberRepository.delete(id);
+    await this.squadMemberRepository.remove(squadMember);
 
     return true;
   }

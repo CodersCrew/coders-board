@@ -4,7 +4,6 @@ import { brackets, resolveAsyncRelation } from '../common/utils';
 import { CreatePositionInput } from './dto/create-position.input';
 import { GetPositionsArgs } from './dto/get-positions.args';
 import { UpdatePositionInput } from './dto/update-position.input';
-import { Position } from './position.model';
 import { PositionRepository } from './position.repository';
 
 @Injectable()
@@ -14,19 +13,19 @@ export class PositionsService {
   getGuild = resolveAsyncRelation(this.positionRepository, 'guild');
   getClan = resolveAsyncRelation(this.positionRepository, 'clan');
 
-  findById(id: string): Promise<Position | null> {
+  findById(id: string) {
     if (!id) return null;
 
     return this.positionRepository.findOne(id);
   }
 
-  findByIdOrThrow(id: string): Promise<Position> {
+  findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.positionRepository.findOneOrFail(id);
   }
 
-  findAll({ search, clanId, guildId }: GetPositionsArgs): Promise<Position[]> {
+  findAll({ search, clanId, guildId }: GetPositionsArgs) {
     const query = this.positionRepository.createQueryBuilder('position');
 
     if (search) {
@@ -46,17 +45,17 @@ export class PositionsService {
     return query.getMany();
   }
 
-  async create(input: CreatePositionInput): Promise<Position> {
+  async create(input: CreatePositionInput) {
     return this.positionRepository.save(input);
   }
 
-  async update({ id, ...input }: UpdatePositionInput): Promise<Position> {
+  async update({ id, ...input }: UpdatePositionInput) {
     const position = await this.findByIdOrThrow(id);
 
     return this.positionRepository.save({ ...position, ...input });
   }
 
-  async delete(id: string): Promise<boolean> {
+  async delete(id: string) {
     const deleteResult = await this.positionRepository.delete(id);
 
     if (deleteResult.affected === 0) {

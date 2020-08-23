@@ -11,6 +11,7 @@ import SquadChapters from './pages/app/squad/SquadChapters';
 import SquadLayout from './pages/app/squad/SquadLayout';
 import SquadMembers from './pages/app/squad/SquadMembers';
 import SquadPositions from './pages/app/squad/SquadPositions';
+import Successes from './pages/app/Successes';
 import Teams from './pages/app/Teams';
 import Users from './pages/app/Users';
 import Login from './pages/Login';
@@ -31,6 +32,7 @@ export const Routing = () => {
             <Route path="users" element={<Users />} />
             <Route path="teams" element={<Teams />} />
             <Route path="positions" element={<Positions />} />
+            <Route path="successes" element={<Successes />} />
             <Route path="guild/:id" element={<GuildLayout />}>
               <Route path="members" element={<GuildMembers />} />
               <Route path="clans" element={<GuildClans />} />

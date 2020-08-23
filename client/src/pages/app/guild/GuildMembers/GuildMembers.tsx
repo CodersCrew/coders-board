@@ -5,11 +5,11 @@ import { CrownOutlined, DeleteOutlined, PartitionOutlined } from '@ant-design/ic
 import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Table, TableActions } from '@/components/molecules';
 import { UseGuildMembers, useGuildMembers } from '@/graphql/guilds';
-import { useModalState } from '@/hooks/useModalState';
+import { useDataModal } from '@/services/dataModal';
 import { pick } from '@/utils/objects';
 
 import { useGuildContext } from '../GuildContext';
-import { GuildMemberModal, GuildMemberModalProps } from './GuildMemberModal';
+import { GuildMemberModal, GuildMemberModalData } from './GuildMemberModal';
 import { useDeleteGuildMemberConfirm } from './useDeleteGuildMemberConfirm';
 import { useGuildMembersColumns } from './useGuildMembersColumns';
 
@@ -19,7 +19,7 @@ const GuildMembers = () => {
   const navigate = useNavigate();
   const { guildId, guildRole } = useGuildContext();
   const guildMembers = useGuildMembers({ guildId });
-  const guildMemberModal = useModalState<GuildMemberModalProps['data']>();
+  const guildMemberModal = useDataModal<GuildMemberModalData>();
   const columns = useGuildMembersColumns();
   const deleteGuildMemberConfirm = useDeleteGuildMemberConfirm();
 
@@ -65,13 +65,7 @@ const GuildMembers = () => {
           />
         </Card>
       </Box>
-      {guildMemberModal.isMounted && (
-        <GuildMemberModal
-          onCancel={guildMemberModal.close}
-          visible={guildMemberModal.isVisible}
-          data={guildMemberModal.data}
-        />
-      )}
+      <GuildMemberModal {...guildMemberModal} />
     </>
   );
 };

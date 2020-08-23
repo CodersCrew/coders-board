@@ -78,7 +78,7 @@ export const AddUserModal: CFC<AddUserModalProps> = props => {
     messages.loading();
 
     try {
-      await users.create({ variables: { data: { ...values, password: '12345678' } } });
+      await users.create({ variables: { data: { ...values, primaryEmail, password: 'Li837jdk3JKP' } } });
       props.onCancel();
       messages.success();
     } catch (ex) {

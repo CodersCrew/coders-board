@@ -1,12 +1,12 @@
 import React, { useEffect } from 'react';
-import { Formik, FormikConfig, useFormikContext } from 'formik';
+import { FormikConfig, useFormikContext } from 'formik';
 import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
-import { Modal, ModalProps } from '@/components/molecules';
+import { FormikModal } from '@/components/molecules';
 import { FormikClanSelect, FormikGuildSelect } from '@/components/selects';
 import { usePositions } from '@/graphql/positions';
-import { CFC } from '@/typings/components';
+import { createDataModal, DataModalProps } from '@/services/dataModal';
 import { WithId } from '@/typings/enhancers';
 import { YupSchema } from '@/typings/forms';
 import { CreatePositionInput } from '@/typings/graphql';
@@ -17,54 +17,13 @@ type FormValues = CreatePositionInput;
 
 type FormConfig = FormikConfig<FormValues>;
 
-export type PositionModalProps = ModalProps & {
-  onCancel: () => void;
-  data: WithId<FormValues> | null;
-};
+export type PositionModalData = WithId<FormValues> | null;
 
-const PositionModalComponent: CFC<PositionModalProps> = ({ data, ...props }) => {
-  const { values, ...formik } = useFormikContext<FormValues>();
-  const title = data?.id ? 'Edit position' : 'Create position';
-  const okText = data?.id ? 'Update position' : 'Create';
+type PositionModalProps = DataModalProps<PositionModalData>;
 
-  const buttonProps = { loading: formik.isSubmitting };
+const usePositionModal = (props: PositionModalProps) => {
+  const { data, ...modalProps } = props;
 
-  useEffect(() => {
-    if (!values.guildId && values.clanId) {
-      formik.setFieldValue('clanId', undefined);
-    }
-  }, [values.guildId]);
-
-  return (
-    <Modal
-      title={title}
-      okText={okText}
-      okButtonProps={buttonProps}
-      onOk={formik.submitForm}
-      cancelButtonProps={buttonProps}
-      {...props}
-    >
-      <Form layout="vertical" colon>
-        <Form.Item name="name" label="Position name" required>
-          <Input name="name" placeholder="Enter position name..." />
-        </Form.Item>
-        <Form.Item name="description" label="Description">
-          <Input.TextArea name="description" placeholder="Enter description..." />
-        </Form.Item>
-        <Form.Item name="guildId" label="Related guild">
-          <FormikGuildSelect name="guildId" placeholder="Choose related guild..." allowClear />
-        </Form.Item>
-        {values.guildId && (
-          <Form.Item name="clanId" label="Related clan">
-            <FormikClanSelect name="clanId" placeholder="Choose related clan..." allowClear guildId={values.guildId} />
-          </Form.Item>
-        )}
-      </Form>
-    </Modal>
-  );
-};
-
-export const PositionModal: CFC<PositionModalProps> = props => {
   const positions = usePositions();
 
   const validationSchema: YupSchema<FormValues> = yup.object({
@@ -75,20 +34,20 @@ export const PositionModal: CFC<PositionModalProps> = props => {
     guildId: yup.string().optional().nullable(),
   });
 
-  const initialValues = props.data ?? getInitialValuesFromSchema(validationSchema);
-  const messages = getBasicMessages('position', props.data ? 'update' : 'create');
+  const initialValues = data ?? getInitialValuesFromSchema(validationSchema);
+  const messages = getBasicMessages('position', data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     messages.loading();
 
     try {
-      if (props.data?.id) {
-        await positions.update({ variables: { data: { ...values, id: props.data.id } } });
+      if (data?.id) {
+        await positions.update({ variables: { data: { ...values, id: data.id } } });
       } else {
         await positions.create({ variables: { data: values } });
       }
 
-      props.onCancel();
+      modalProps.onCancel();
       messages.success();
     } catch (ex) {
       console.log(ex);
@@ -98,9 +57,54 @@ export const PositionModal: CFC<PositionModalProps> = props => {
     }
   };
 
+  modalProps.title = data?.id ? 'Edit position' : 'Create position';
+  modalProps.okText = data?.id ? 'Update position' : 'Create';
+
+  return {
+    modal: modalProps,
+    form: {
+      initialValues,
+      validationSchema,
+      onSubmit: handleSubmit,
+    },
+  };
+};
+
+const ClanSelectField = () => {
+  const { values, setFieldValue } = useFormikContext<FormValues>();
+
+  useEffect(() => {
+    if (!values.guildId && values.clanId) {
+      setFieldValue('clanId', undefined);
+    }
+  }, [values.guildId]);
+
+  if (!values.guildId) return null;
+
   return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-      <PositionModalComponent {...props} />
-    </Formik>
+    <Form.Item name="clanId" label="Related clan">
+      <FormikClanSelect name="clanId" placeholder="Choose related clan..." allowClear guildId={values.guildId} />
+    </Form.Item>
   );
 };
+
+export const PositionModal = createDataModal<PositionModalProps>(props => {
+  const { form, modal } = usePositionModal(props);
+
+  return (
+    <FormikModal form={form} modal={modal}>
+      <Form layout="vertical" colon>
+        <Form.Item name="name" label="Position name" required>
+          <Input name="name" placeholder="Enter position name..." />
+        </Form.Item>
+        <Form.Item name="description" label="Description">
+          <Input.TextArea name="description" placeholder="Enter description..." />
+        </Form.Item>
+        <Form.Item name="guildId" label="Related guild">
+          <FormikGuildSelect name="guildId" placeholder="Choose related guild..." allowClear />
+        </Form.Item>
+        <ClanSelectField />
+      </Form>
+    </FormikModal>
+  );
+});
