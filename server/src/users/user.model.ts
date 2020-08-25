@@ -1,6 +1,7 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
 import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 
+import { EMPTY_USER_IMAGE, EMPTY_USER_THUMBNAIL } from '../common/constants';
 import { BaseModel } from '../common/models';
 import { GuildMember } from '../guilds/guild-members/guild-member.model';
 import { SquadMember } from '../squads/squad-members/squad-member.model';
@@ -53,11 +54,11 @@ export class User extends BaseModel {
   phone?: string;
 
   @Field()
-  @Column({ default: 'http://www.gravatar.com/avatar?d=mp&s=192' })
+  @Column({ default: EMPTY_USER_IMAGE })
   image: string;
 
   @Field()
-  @Column({ default: 'http://www.gravatar.com/avatar?d=mp&s=48' })
+  @Column({ default: EMPTY_USER_THUMBNAIL })
   thumbnail: string;
 
   @Field({ nullable: true })

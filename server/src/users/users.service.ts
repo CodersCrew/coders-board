@@ -1,14 +1,19 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 
 import { brackets, resolveAsyncRelation } from '../common/utils';
-import { GsuiteService } from '../integrations';
+import { CloudinaryService, GsuiteService, SlackService } from '../integrations';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
 import { UserRepository } from './user.repository';
 
 @Injectable()
 export class UsersService {
-  constructor(private readonly userRepository: UserRepository, private readonly gsuiteService: GsuiteService) {}
+  constructor(
+    private readonly userRepository: UserRepository,
+    private readonly gsuiteService: GsuiteService,
+    private readonly slackService: SlackService,
+    private readonly cloudinaryService: CloudinaryService,
+  ) {}
 
   getGuilds = resolveAsyncRelation(this.userRepository, 'guilds');
   getSquads = resolveAsyncRelation(this.userRepository, 'squads');
@@ -66,6 +71,20 @@ export class UsersService {
 
   async delete(userId: string) {
     const user = await this.findByIdOrThrow(userId);
+
+    const slackUser = await this.slackService.getUser({ slackId: user.slackId });
+
+    if (slackUser && !slackUser.deleted) {
+      throw new ConflictException('You cannot delete user with active Slack account');
+    }
+
+    if (user.image.includes('cloudinary')) {
+      await this.cloudinaryService.deleteUserImage(user.id);
+    }
+
+    if (user.thumbnail.includes('cloudinary')) {
+      await this.cloudinaryService.deleteUserThumbnail(user.id);
+    }
 
     await this.gsuiteService.deleteUser({ id: user.googleId });
     await this.userRepository.delete(userId);

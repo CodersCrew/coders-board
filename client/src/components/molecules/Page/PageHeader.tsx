@@ -21,10 +21,12 @@ const breadcrumbItemRender: BreadcrumbProps['itemRender'] = (route, params, rout
 };
 
 const StyledPageHeader = styled(AntPageHeader)<PageHeaderProps>(({ theme }) => ({
-  backgroundColor: theme.colors.background.component,
-  position: 'sticky',
-  top: 0,
-  zIndex: 100,
+  '&.ant-page-header': {
+    position: 'sticky',
+    top: 0,
+    zIndex: 100,
+    boxShadow: theme.shadows.sm,
+  },
 }));
 
 export const PageHeader: CFC<PageHeaderProps> = props => {
@@ -33,4 +35,8 @@ export const PageHeader: CFC<PageHeaderProps> = props => {
     : undefined;
 
   return <StyledPageHeader {...props} breadcrumb={breadcrumb} />;
+};
+
+PageHeader.defaultProps = {
+  ghost: false,
 };

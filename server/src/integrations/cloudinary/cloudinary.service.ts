@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import { v2 as cloudinary } from 'cloudinary';
+import { EMPTY_USER_IMAGE, EMPTY_USER_THUMBNAIL } from 'src/common/constants';
 
 import { env } from '../../common/env';
 import { toBase64 } from './cloudinary.utils';
@@ -26,6 +27,14 @@ export class CloudinaryService {
     return data.secure_url;
   }
 
+  async deleteUserImage(fileName: string): Promise<string> {
+    const path = `codersboard-development/users/images/${fileName}`;
+
+    await cloudinary.uploader.destroy(path);
+
+    return EMPTY_USER_IMAGE;
+  }
+
   async uploadUserThumbnail(fileOrPath: File | string, fileName?: string): Promise<string> {
     const image = typeof fileOrPath === 'string' ? fileOrPath : toBase64(fileOrPath);
 
@@ -38,5 +47,13 @@ export class CloudinaryService {
     });
 
     return data.secure_url;
+  }
+
+  async deleteUserThumbnail(fileName: string): Promise<string> {
+    const path = `codersboard-development/users/thumbnails/${fileName}`;
+
+    await cloudinary.uploader.destroy(path);
+
+    return EMPTY_USER_THUMBNAIL;
   }
 }

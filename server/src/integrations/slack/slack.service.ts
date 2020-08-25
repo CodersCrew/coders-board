@@ -6,8 +6,7 @@ import { pick } from '../../common/utils';
 import { UserRepository } from '../../users/user.repository';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { GsuiteService } from '../gsuite/gsuite.service';
-import { SendSlackMessageInput } from './dto/send-slack-message.input';
-import { SyncSlackUserInput } from './dto/sync-slack-user.input';
+import { GetSlackUserInput, SendSlackMessageInput, SyncSlackUserInput } from './dto';
 import { ChatPostMessageResult } from './interfaces/chat-post-message-result.interface';
 import { UsersInfoResult } from './interfaces/user-info-result.interface';
 import { UsersListResult } from './interfaces/users-list-result.interface';
@@ -44,7 +43,7 @@ export class SlackService {
   }
 
   async syncUser({ slackId, userId }: SyncSlackUserInput) {
-    const { user: slackUser } = await slackRequest<UsersInfoResult>(this.slackBot.users.info({ user: slackId }));
+    const slackUser = await this.getUser({ slackId });
 
     const user = await this.userRepository.findOneOrFail(userId);
 
@@ -67,6 +66,12 @@ export class SlackService {
       thumbnail,
       slackId,
     });
+  }
+
+  async getUser({ slackId }: GetSlackUserInput) {
+    const { user: slackUser } = await slackRequest<UsersInfoResult>(this.slackBot.users.info({ user: slackId }));
+
+    return slackUser;
   }
 
   async sendMessage({ channelId, text }: SendSlackMessageInput): Promise<SlackMessage> {

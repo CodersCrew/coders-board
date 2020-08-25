@@ -9,38 +9,38 @@ import { SuccessesService } from './successes.service';
 
 @Resolver(of => Success)
 export class SuccessesResolver {
-  constructor(private successsService: SuccessesService) {}
+  constructor(private successesService: SuccessesService) {}
 
   @ResolveField('users', returns => [User])
   async getUsers(@Parent() success: Success) {
-    return this.successsService.getUsers(success);
+    return this.successesService.getUsers(success);
   }
 
   @ResolveField('creator', returns => User)
   async getCreator(@Parent() success: Success) {
-    return this.successsService.getCreator(success);
+    return this.successesService.getCreator(success);
   }
 
   @Query(returns => [Success], { name: 'successes' })
   getSuccesses(@Args() args?: GetSuccessesArgs) {
-    return this.successsService.findAll(args);
+    return this.successesService.findAll(args);
   }
 
   @Mutation(returns => Success)
   @AdminGuard()
   createSuccess(@Args('data') input: CreateSuccessInput, @UserId() userId: string) {
-    return this.successsService.create(input, userId);
+    return this.successesService.create(input, userId);
   }
 
   @Mutation(returns => Success)
   @AdminGuard()
   updateSuccess(@Args('data') input: UpdateSuccessInput) {
-    return this.successsService.update(input);
+    return this.successesService.update(input);
   }
 
   @Mutation(returns => Boolean)
   @AdminGuard()
   deleteSuccess(@Args() args: DeleteSuccessArgs) {
-    return this.successsService.delete(args);
+    return this.successesService.delete(args);
   }
 }
