@@ -5,7 +5,7 @@ import { Formik, FormikConfig, useFormikContext } from 'formik';
 import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
-import { useUsers } from '@/graphql/users';
+import { useUsersMutations } from '@/graphql/users';
 import { CFC } from '@/typings/components';
 import { YupSchema } from '@/typings/forms';
 import { CreateUserInput } from '@/typings/graphql';
@@ -53,7 +53,7 @@ export const AddUserModalComponent: CFC<AddUserModalComponentProps> = props => {
 };
 
 export const AddUserModal: CFC<AddUserModalProps> = props => {
-  const users = useUsers();
+  const usersMutations = useUsersMutations();
 
   const validationSchema: YupSchema<FormValues> = yup.object({
     firstName: yup.string().required().default(''),
@@ -78,7 +78,7 @@ export const AddUserModal: CFC<AddUserModalProps> = props => {
     messages.loading();
 
     try {
-      await users.create({ variables: { data: { ...values, primaryEmail, password: 'Li837jdk3JKP' } } });
+      await usersMutations.create({ variables: { data: { ...values, primaryEmail, password: 'Li837jdk3JKP' } } });
       props.onCancel();
       messages.success();
     } catch (ex) {

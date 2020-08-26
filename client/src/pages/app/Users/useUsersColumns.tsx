@@ -1,7 +1,6 @@
 import React from 'react';
-import { Avatar, Tag } from 'antd';
 
-import { Box, Paragraph } from '@/components/atoms';
+import { Avatar, Box, Paragraph, Tag } from '@/components/atoms';
 import { TableColumns } from '@/components/molecules';
 import { useAuthorizedUser, UseUsers } from '@/graphql/users';
 
@@ -16,12 +15,10 @@ export const useUsersColumns = () => {
       dataIndex: 'firstName',
       width: 216,
       fixed: true,
-      render: (_, { firstName, lastName, thumbnail }) => (
+      render: (_, { fullName, thumbnail }) => (
         <Box px={4} display="flex" alignItems="center">
           <Avatar size="small" src={thumbnail} />
-          <Paragraph ml={12}>
-            {firstName} {lastName}
-          </Paragraph>
+          <Paragraph ml={12}>{fullName}</Paragraph>
         </Box>
       ),
     },

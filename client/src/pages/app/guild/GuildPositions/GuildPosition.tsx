@@ -1,11 +1,11 @@
 import React from 'react';
 import { Avatar, List } from 'antd';
-import { pick } from 'lodash';
 import moment, { Moment } from 'moment';
 
 import { Button } from '@/components/atoms';
 import { UseGuildPositions } from '@/graphql/guilds';
 import { CFC } from '@/typings/components';
+import { pick } from '@/utils/objects';
 import { parseGuildPositionKind } from '@/utils/platform';
 
 import { useGuildContext } from '../GuildContext';

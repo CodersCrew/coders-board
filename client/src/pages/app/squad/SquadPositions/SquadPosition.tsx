@@ -1,11 +1,11 @@
 import React from 'react';
 import { Avatar, List } from 'antd';
-import { pick } from 'lodash';
 import moment, { Moment } from 'moment';
 
 import { Button } from '@/components/atoms';
 import { UseSquadPositions } from '@/graphql/squads';
 import { CFC } from '@/typings/components';
+import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';
 import { SquadPositionModalData } from './SquadPositionModal';

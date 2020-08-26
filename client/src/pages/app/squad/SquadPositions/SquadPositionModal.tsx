@@ -1,7 +1,6 @@
 import React from 'react';
 import { FormikConfig, useFormikContext } from 'formik';
 import { DatePicker, DatePickerProps, Form, Input } from 'formik-antd';
-import { pick } from 'lodash';
 import moment from 'moment';
 import * as yup from 'yup';
 
@@ -16,6 +15,7 @@ import { YupSchema } from '@/typings/forms';
 import { CreateSquadPositionInput } from '@/typings/graphql';
 import { getInitialValuesFromSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
+import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';
 

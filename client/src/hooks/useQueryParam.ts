@@ -1,6 +1,7 @@
 import { useLocation, useNavigate } from 'react-router-dom';
-import { omit } from 'lodash';
 import querystring from 'query-string';
+
+import { omit } from '@/utils/objects';
 
 export function useQueryParam<T extends Array<string>>(name: string, isArray: true): [T, (data: T) => void];
 export function useQueryParam<T extends string>(name: string, isArray: false): [T, (data: T) => void];
@@ -14,7 +15,7 @@ export function useQueryParam<T>(name: string, isArray: boolean): [T, (data: T) 
   if (!isArray && !value) value = '';
 
   const setValue = (newValue: T) => {
-    const newValues = newValue ? { ...values, [name]: newValue } : omit(values, name);
+    const newValues = newValue ? { ...values, [name]: newValue } : omit(values, [name]);
     const query = querystring.stringify(newValues);
 
     navigate({ search: query ? `?${query}` : '' });

@@ -8,9 +8,11 @@ import { useAuthorizedUser, UseUsers, useUsers } from '@/graphql/users';
 import { useToggle } from '@/hooks/useToggle';
 import { useDataModal } from '@/services/dataModal';
 import { UserRole } from '@/typings/graphql';
+import { pick } from '@/utils/objects';
 
 import { AddUserModal } from './AddUserModal';
 import { SyncSlackModal, SyncSlackModalData } from './SyncSlackModal';
+import { useDeleteUserConfirm } from './useDeleteUserConfirm';
 import { useUsersColumns } from './useUsersColumns';
 
 type User = UseUsers['item'];
@@ -21,6 +23,7 @@ const Users = () => {
   const [search, setSearch] = useState('');
   const [role, setRole] = useState<UserRole | undefined>();
   const { isAdmin } = useAuthorizedUser();
+  const deleteUserConfirm = useDeleteUserConfirm();
   const users = useUsers({ search, role });
   const columns = useUsersColumns();
 
@@ -44,7 +47,8 @@ const Users = () => {
     {
       label: 'Remove user',
       icon: DeleteOutlined,
-      onClick: () => console.log('delete'),
+      onClick: user => deleteUserConfirm(pick(user, ['id', 'fullName'])),
+      itemProps: { danger: true },
     },
   ];
 

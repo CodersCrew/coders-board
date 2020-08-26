@@ -1,12 +1,13 @@
 import React from 'react';
 import { List } from 'antd';
-import { get, groupBy } from 'lodash';
+import { get } from 'lodash';
 
 import { Box, Spin, Title } from '@/components/atoms';
 import { Card, FiltersCard } from '@/components/molecules';
 import { UseSquadPositions, useSquadPositions } from '@/graphql/squads';
 import { useQueryParam } from '@/hooks/useQueryParam';
 import { useDataModal } from '@/services/dataModal';
+import { groupBy } from '@/utils/arrays';
 
 import { useSquadContext } from '../SquadContext';
 import { EmptyPositions } from './EmptyPositions';

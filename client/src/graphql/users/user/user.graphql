@@ -3,8 +3,7 @@ query users($search: String $role: UserRole) {
 		id
     image
     thumbnail
-    firstName
-    lastName
+    fullName
     primaryEmail
     recoveryEmail
     role
@@ -16,4 +15,8 @@ mutation createUser($data: CreateUserInput!) {
   createUser(data: $data) {
     id
   }
+}
+
+mutation deleteUser($id: ID!) {
+  deleteUser(id: $id)
 }

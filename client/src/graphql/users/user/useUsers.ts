@@ -1,4 +1,4 @@
-import { useCreateUserMutation, UsersQuery, UsersQueryVariables, useUsersQuery } from './user.apollo';
+import { UsersQuery, UsersQueryVariables, useUsersQuery } from './user.apollo';
 
 export type UseUsers = {
   item: UsersQuery['users'][number];
@@ -7,7 +7,6 @@ export type UseUsers = {
 
 export const useUsers = (params?: UseUsers['params']) => {
   const { data, loading, error } = useUsersQuery({ variables: params });
-  const [createUser] = useCreateUserMutation();
 
   const users = data?.users ?? [];
 
@@ -16,6 +15,5 @@ export const useUsers = (params?: UseUsers['params']) => {
     error,
     data: users,
     count: users.length,
-    create: createUser,
   };
 };

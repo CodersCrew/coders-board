@@ -737,6 +737,7 @@ export const GraphQLOperations = {
     deleteSuccess: 'deleteSuccess',
     signOut: 'signOut',
     createUser: 'createUser',
+    deleteUser: 'deleteUser',
   },
   Fragment: {
     SuccessUser: 'SuccessUser',
