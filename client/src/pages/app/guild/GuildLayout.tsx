@@ -2,9 +2,8 @@ import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Tabs } from 'antd';
-import { TabsProps } from 'antd/lib/tabs';
 
-import { Page, createBreadcrumb } from '@/components/molecules';
+import { createBreadcrumb, Page } from '@/components/molecules';
 import { useGuild } from '@/graphql/guilds';
 
 import { GuildContextProvider, useGuildContext } from './GuildContext';
@@ -25,6 +24,7 @@ const GuildLayout = () => {
   if (!guild.data) return null;
 
   const fullName = `${guild.data.name} Guild`;
+  const activeTabKey = location.pathname.split('/').pop();
 
   const breadcrumb = createBreadcrumb([
     {
@@ -37,10 +37,8 @@ const GuildLayout = () => {
     },
   ]);
 
-  const handleItemChange: TabsProps['onChange'] = activeKey => navigate(activeKey);
-
   const footer = (
-    <Tabs activeKey={location.pathname.split('/').pop()} onChange={handleItemChange}>
+    <Tabs activeKey={activeTabKey} onChange={navigate}>
       <Tabs.TabPane tab="Members" key="members" />
       <Tabs.TabPane tab="Clans" key="clans" />
       <Tabs.TabPane tab="Positions" key="positions" />

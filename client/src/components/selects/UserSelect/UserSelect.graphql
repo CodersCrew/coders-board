@@ -1,6 +1,0 @@
-query userSelectUsers($ids: [ID!]) {
-  users(ids: $ids) {
-    id
-    fullName
-  }
-}

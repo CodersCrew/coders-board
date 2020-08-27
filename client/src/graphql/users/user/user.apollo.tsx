@@ -17,6 +17,14 @@ export type UsersQuery = { __typename?: 'Query' } & {
   >;
 };
 
+export type SimpleUsersQueryVariables = Types.Exact<{
+  ids?: Types.Maybe<Array<Types.Scalars['ID']>>;
+}>;
+
+export type SimpleUsersQuery = { __typename?: 'Query' } & {
+  users: Array<{ __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName'>>;
+};
+
 export type CreateUserMutationVariables = Types.Exact<{
   data: Types.CreateUserInput;
 }>;
@@ -72,6 +80,44 @@ export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<User
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export const SimpleUsersDocument = gql`
+  query simpleUsers($ids: [ID!]) {
+    users(ids: $ids) {
+      id
+      fullName
+    }
+  }
+`;
+
+/**
+ * __useSimpleUsersQuery__
+ *
+ * To run a query within a React component, call `useSimpleUsersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSimpleUsersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSimpleUsersQuery({
+ *   variables: {
+ *      ids: // value for 'ids'
+ *   },
+ * });
+ */
+export function useSimpleUsersQuery(
+  baseOptions?: Apollo.QueryHookOptions<SimpleUsersQuery, SimpleUsersQueryVariables>,
+) {
+  return Apollo.useQuery<SimpleUsersQuery, SimpleUsersQueryVariables>(SimpleUsersDocument, baseOptions);
+}
+export function useSimpleUsersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SimpleUsersQuery, SimpleUsersQueryVariables>,
+) {
+  return Apollo.useLazyQuery<SimpleUsersQuery, SimpleUsersQueryVariables>(SimpleUsersDocument, baseOptions);
+}
+export type SimpleUsersQueryHookResult = ReturnType<typeof useSimpleUsersQuery>;
+export type SimpleUsersLazyQueryHookResult = ReturnType<typeof useSimpleUsersLazyQuery>;
+export type SimpleUsersQueryResult = Apollo.QueryResult<SimpleUsersQuery, SimpleUsersQueryVariables>;
 export const CreateUserDocument = gql`
   mutation createUser($data: CreateUserInput!) {
     createUser(data: $data) {

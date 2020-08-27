@@ -11,6 +11,13 @@ query users($search: String $role: UserRole) {
   }
 }
 
+query simpleUsers($ids: [ID!]) {
+  users(ids: $ids) {
+    id
+    fullName
+  }
+}
+
 mutation createUser($data: CreateUserInput!) {
   createUser(data: $data) {
     id

@@ -1,6 +1,0 @@
-query guildSelectGuilds {
-  guilds{
-    id
-    name
-  }
-}

@@ -2,10 +2,9 @@ import React from 'react';
 import { Select } from 'antd';
 import { SelectProps } from 'antd/lib/select';
 
+import { useSimpleClans } from '@/graphql/guilds';
 import { CFC } from '@/typings/components';
 import { selectToFormikSelect } from '@/utils/forms';
-
-import { useClanSelectClansQuery } from './ClanSelect.apollo';
 
 type ValueType = string | undefined;
 
@@ -14,11 +13,11 @@ export type ClanSelectProps = SelectProps<ValueType> & {
 };
 
 export const ClanSelect: CFC<ClanSelectProps> = ({ guildId, ...props }) => {
-  const { data, loading } = useClanSelectClansQuery({ variables: { guildId } });
+  const simpleClans = useSimpleClans({ guildId });
 
-  const options = data?.clans.map(({ id, name }) => ({ label: name, value: id })) ?? [];
+  const options = simpleClans.data.map(({ id, name }) => ({ label: name, value: id })) ?? [];
 
-  return <Select {...props} loading={loading} options={options} optionFilterProp="label" />;
+  return <Select {...props} loading={simpleClans.loading} options={options} optionFilterProp="label" />;
 };
 
 export const FormikClanSelect = selectToFormikSelect(ClanSelect);

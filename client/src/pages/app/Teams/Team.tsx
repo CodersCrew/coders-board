@@ -13,7 +13,7 @@ type TeamProps = TeamObject & {
 
 export const Team: CFC<TeamProps> = props => {
   return (
-    <Link key={props.id} to={`/app/${props.type}/${props.id}/members`}>
+    <Link key={props.id} to={`/app/${props.type}/${props.id}`}>
       <Card hoverable cover={<img alt={props.name} src={props.image} />} p={16}>
         <CardMeta
           title={<Title level={4}>{props.name}</Title>}

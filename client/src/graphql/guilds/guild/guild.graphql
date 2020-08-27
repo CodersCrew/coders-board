@@ -6,3 +6,20 @@ query guild($id: ID!) {
     image
   }
 }
+
+query simpleGuilds {
+  guilds {
+    id
+    name
+  }
+}
+
+query guilds {
+  guilds {
+    id
+    name
+    description
+    color
+    image
+  }
+}

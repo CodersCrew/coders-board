@@ -6,3 +6,10 @@ query clans($guildId: ID!) {
     image
   }
 }
+
+query simpleClans($guildId: ID!) {
+  clans(guildId: $guildId) {
+    id
+    name
+  }
+}

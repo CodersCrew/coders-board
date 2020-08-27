@@ -2,10 +2,9 @@ import React from 'react';
 import { Select } from 'antd';
 import { SelectProps } from 'antd/lib/select';
 
+import { useSimpleUsers } from '@/graphql/users';
 import { CFC } from '@/typings/components';
 import { selectToFormikSelect } from '@/utils/forms';
-
-import { useUserSelectUsersQuery } from './UserSelect.apollo';
 
 type ValueType = string | undefined;
 
@@ -16,10 +15,10 @@ export type UserSelectProps = SelectProps<ValueType> & {
 };
 
 export const UserSelect: CFC<UserSelectProps> = ({ idsToOmit, ids, idMapper, ...props }) => {
-  const { data, loading } = useUserSelectUsersQuery({ variables: { ids } });
+  const simpleUsers = useSimpleUsers({ ids });
 
   let options =
-    data?.users.map(({ id, fullName }) => ({
+    simpleUsers.data.map(({ id, fullName }) => ({
       label: fullName,
       value: idMapper ? idMapper[id] : id,
     })) || [];
@@ -28,7 +27,7 @@ export const UserSelect: CFC<UserSelectProps> = ({ idsToOmit, ids, idMapper, ...
     options = options.filter(({ value }) => !idsToOmit.includes(value));
   }
 
-  return <Select {...props} loading={loading} options={options} optionFilterProp="label" />;
+  return <Select {...props} loading={simpleUsers.loading} options={options} optionFilterProp="label" />;
 };
 
 export const FormikUserSelect = selectToFormikSelect(UserSelect);

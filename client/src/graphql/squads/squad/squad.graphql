@@ -6,3 +6,13 @@ query squad($id: ID!) {
     image
   }
 }
+
+query squads {
+  squads {
+    id
+    name
+    color
+    description
+    image
+  }
+}

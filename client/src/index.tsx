@@ -3,8 +3,8 @@ import '@/config/globalConfig';
 import React from 'react';
 import ReactDOM from 'react-dom';
 
-import { Providers } from './Providers';
-import { Routing } from './Routing';
+import Providers from './Providers';
+import Routing from './Routing';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(

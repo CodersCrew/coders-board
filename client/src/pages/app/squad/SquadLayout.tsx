@@ -2,7 +2,6 @@ import React from 'react';
 import { Outlet, useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Tabs } from 'antd';
-import { TabsProps } from 'antd/lib/tabs';
 
 import { createBreadcrumb, Page } from '@/components/molecules';
 import { useSquad } from '@/graphql/squads';
@@ -25,6 +24,7 @@ const SquadLayout = () => {
   if (!squad.data) return null;
 
   const fullName = `${squad.data.name} Squad`;
+  const activeTabKey = location.pathname.split('/').pop();
 
   const breadcrumb = createBreadcrumb([
     {
@@ -37,10 +37,8 @@ const SquadLayout = () => {
     },
   ]);
 
-  const handleItemChange: TabsProps['onChange'] = activeKey => navigate(activeKey);
-
   const footer = (
-    <Tabs activeKey={location.pathname.split('/').pop()} onChange={handleItemChange}>
+    <Tabs activeKey={activeTabKey} onChange={navigate}>
       <Tabs.TabPane tab="Members" key="members" />
       <Tabs.TabPane tab="Chapters" key="chapters" />
       <Tabs.TabPane tab="Positions" key="positions" />

@@ -2,10 +2,9 @@ import React from 'react';
 import { Select } from 'antd';
 import { SelectProps } from 'antd/lib/select';
 
+import { useSimpleChapters } from '@/graphql/squads';
 import { CFC } from '@/typings/components';
 import { selectToFormikSelect } from '@/utils/forms';
-
-import { useChapterSelectChaptersQuery } from './ChapterSelect.apollo';
 
 type ValueType = string | undefined;
 
@@ -14,11 +13,11 @@ export type ChapterSelectProps = SelectProps<ValueType> & {
 };
 
 export const ChapterSelect: CFC<ChapterSelectProps> = ({ squadId, ...props }) => {
-  const { data, loading } = useChapterSelectChaptersQuery({ variables: { squadId } });
+  const simpleChapters = useSimpleChapters({ squadId });
 
-  const options = data?.chapters.map(({ id, name }) => ({ label: name, value: id })) ?? [];
+  const options = simpleChapters.data.map(({ id, name }) => ({ label: name, value: id })) ?? [];
 
-  return <Select {...props} loading={loading} options={options} optionFilterProp="label" />;
+  return <Select {...props} loading={simpleChapters.loading} options={options} optionFilterProp="label" />;
 };
 
 export const FormikChapterSelect = selectToFormikSelect(ChapterSelect);

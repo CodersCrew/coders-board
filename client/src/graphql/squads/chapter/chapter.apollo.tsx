@@ -22,6 +22,14 @@ export type ChaptersQuery = { __typename?: 'Query' } & {
   >;
 };
 
+export type SimpleChaptersQueryVariables = Types.Exact<{
+  squadId: Types.Scalars['ID'];
+}>;
+
+export type SimpleChaptersQuery = { __typename?: 'Query' } & {
+  chapters: Array<{ __typename?: 'Chapter' } & Pick<Types.Chapter, 'id' | 'name'>>;
+};
+
 export type CreateChapterMutationVariables = Types.Exact<{
   data: Types.CreateChapterInput;
 }>;
@@ -100,6 +108,44 @@ export function useChaptersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<C
 export type ChaptersQueryHookResult = ReturnType<typeof useChaptersQuery>;
 export type ChaptersLazyQueryHookResult = ReturnType<typeof useChaptersLazyQuery>;
 export type ChaptersQueryResult = Apollo.QueryResult<ChaptersQuery, ChaptersQueryVariables>;
+export const SimpleChaptersDocument = gql`
+  query simpleChapters($squadId: ID!) {
+    chapters(squadId: $squadId) {
+      id
+      name
+    }
+  }
+`;
+
+/**
+ * __useSimpleChaptersQuery__
+ *
+ * To run a query within a React component, call `useSimpleChaptersQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSimpleChaptersQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSimpleChaptersQuery({
+ *   variables: {
+ *      squadId: // value for 'squadId'
+ *   },
+ * });
+ */
+export function useSimpleChaptersQuery(
+  baseOptions?: Apollo.QueryHookOptions<SimpleChaptersQuery, SimpleChaptersQueryVariables>,
+) {
+  return Apollo.useQuery<SimpleChaptersQuery, SimpleChaptersQueryVariables>(SimpleChaptersDocument, baseOptions);
+}
+export function useSimpleChaptersLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SimpleChaptersQuery, SimpleChaptersQueryVariables>,
+) {
+  return Apollo.useLazyQuery<SimpleChaptersQuery, SimpleChaptersQueryVariables>(SimpleChaptersDocument, baseOptions);
+}
+export type SimpleChaptersQueryHookResult = ReturnType<typeof useSimpleChaptersQuery>;
+export type SimpleChaptersLazyQueryHookResult = ReturnType<typeof useSimpleChaptersLazyQuery>;
+export type SimpleChaptersQueryResult = Apollo.QueryResult<SimpleChaptersQuery, SimpleChaptersQueryVariables>;
 export const CreateChapterDocument = gql`
   mutation createChapter($data: CreateChapterInput!) {
     createChapter(data: $data) {

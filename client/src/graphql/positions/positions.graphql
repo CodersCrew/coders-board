@@ -17,6 +17,13 @@ query positions($search: String $guildId: ID $clanId: ID) {
   }
 }
 
+query simplePositions {
+  positions {
+    id
+    name
+  }
+}
+
 mutation createPosition($data: CreatePositionInput!) {
   createPosition(data: $data) {
     id

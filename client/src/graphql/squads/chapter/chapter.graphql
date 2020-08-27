@@ -26,6 +26,13 @@ query chapters($squadId: ID!) {
   }
 }
 
+query simpleChapters($squadId: ID!) {
+  chapters(squadId: $squadId) {
+    id
+    name
+  }
+}
+
 mutation createChapter($data: CreateChapterInput!) {
   createChapter(data: $data) {
     id

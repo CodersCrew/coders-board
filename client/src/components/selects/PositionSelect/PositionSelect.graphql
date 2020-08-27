@@ -1,6 +1,0 @@
-query positionSelectPositions {
-  positions {
-    id
-    name
-  }
-}

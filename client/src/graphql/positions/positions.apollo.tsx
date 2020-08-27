@@ -18,6 +18,12 @@ export type PositionsQuery = { __typename?: 'Query' } & {
   >;
 };
 
+export type SimplePositionsQueryVariables = Types.Exact<{ [key: string]: never }>;
+
+export type SimplePositionsQuery = { __typename?: 'Query' } & {
+  positions: Array<{ __typename?: 'Position' } & Pick<Types.Position, 'id' | 'name'>>;
+};
+
 export type CreatePositionMutationVariables = Types.Exact<{
   data: Types.CreatePositionInput;
 }>;
@@ -90,6 +96,43 @@ export function usePositionsLazyQuery(
 export type PositionsQueryHookResult = ReturnType<typeof usePositionsQuery>;
 export type PositionsLazyQueryHookResult = ReturnType<typeof usePositionsLazyQuery>;
 export type PositionsQueryResult = Apollo.QueryResult<PositionsQuery, PositionsQueryVariables>;
+export const SimplePositionsDocument = gql`
+  query simplePositions {
+    positions {
+      id
+      name
+    }
+  }
+`;
+
+/**
+ * __useSimplePositionsQuery__
+ *
+ * To run a query within a React component, call `useSimplePositionsQuery` and pass it any options that fit your needs.
+ * When your component renders, `useSimplePositionsQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useSimplePositionsQuery({
+ *   variables: {
+ *   },
+ * });
+ */
+export function useSimplePositionsQuery(
+  baseOptions?: Apollo.QueryHookOptions<SimplePositionsQuery, SimplePositionsQueryVariables>,
+) {
+  return Apollo.useQuery<SimplePositionsQuery, SimplePositionsQueryVariables>(SimplePositionsDocument, baseOptions);
+}
+export function useSimplePositionsLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<SimplePositionsQuery, SimplePositionsQueryVariables>,
+) {
+  return Apollo.useLazyQuery<SimplePositionsQuery, SimplePositionsQueryVariables>(SimplePositionsDocument, baseOptions);
+}
+export type SimplePositionsQueryHookResult = ReturnType<typeof useSimplePositionsQuery>;
+export type SimplePositionsLazyQueryHookResult = ReturnType<typeof useSimplePositionsLazyQuery>;
+export type SimplePositionsQueryResult = Apollo.QueryResult<SimplePositionsQuery, SimplePositionsQueryVariables>;
 export const CreatePositionDocument = gql`
   mutation createPosition($data: CreatePositionInput!) {
     createPosition(data: $data) {
