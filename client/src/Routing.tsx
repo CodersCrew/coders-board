@@ -81,12 +81,10 @@ export const routes: Routes = [
 
 const CurrentPage = () => useRoutes(routes);
 
-const Routing = () => {
-  return (
-    <BrowserRouter>
-      <CurrentPage />
-    </BrowserRouter>
-  );
-};
+const Routing = () => (
+  <BrowserRouter>
+    <CurrentPage />
+  </BrowserRouter>
+);
 
 export default Routing;

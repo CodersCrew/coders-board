@@ -4,7 +4,7 @@ import { CrownOutlined, DeleteOutlined } from '@ant-design/icons';
 import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Table, TableActions } from '@/components/molecules';
 import { UseSquadMembers, useSquadMembers } from '@/graphql/squads';
-import { useDataModal } from '@/services/dataModal';
+import { useDataModal } from '@/services/modals';
 import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';

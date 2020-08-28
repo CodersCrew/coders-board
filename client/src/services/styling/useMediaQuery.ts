@@ -1,6 +1,6 @@
 import { useMedia } from 'react-use';
 
-import { BreakpointKey, down, up } from '@/utils/styling';
+import { BreakpointKey, down, up } from './breakpoints';
 
 const queries = { down, up };
 

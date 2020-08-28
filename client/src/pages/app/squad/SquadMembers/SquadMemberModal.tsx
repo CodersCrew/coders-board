@@ -6,11 +6,10 @@ import * as yup from 'yup';
 import { FormikModal } from '@/components/molecules';
 import { FormikTeamRoleSelect, FormikUserSelect } from '@/components/selects';
 import { useSquadMembers, useSquadMembersIds } from '@/graphql/squads';
-import { createDataModal, DataModalProps } from '@/services/dataModal';
+import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { YupSchema } from '@/typings/forms';
 import { CreateSquadMemberInput, TeamRole } from '@/typings/graphql';
-import { getInitialValuesFromSchema } from '@/utils/forms';
+import { createValidationSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
 import { useSquadContext } from '../SquadContext';
@@ -30,12 +29,12 @@ const useSquadMemberModal = (props: SquadMemberModalProps) => {
   const squadMembers = useSquadMembers();
   const squadMembersIds = useSquadMembersIds({ squadId });
 
-  const validationSchema: YupSchema<FormValues> = yup.object({
+  const validationSchema = createValidationSchema<FormValues>({
     userId: yup.string().required(),
     role: yup.mixed<TeamRole>().required().default(TeamRole.Member),
   });
 
-  const initialValues = data ?? getInitialValuesFromSchema(validationSchema);
+  const initialValues = data ?? validationSchema.initialValues;
   const messages = getBasicMessages('squad member', data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {

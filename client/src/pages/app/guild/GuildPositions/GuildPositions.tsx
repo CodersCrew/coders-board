@@ -6,7 +6,7 @@ import { Box, Spin, Title } from '@/components/atoms';
 import { Card, FiltersCard } from '@/components/molecules';
 import { UseGuildPositions, useGuildPositions } from '@/graphql/guilds';
 import { useQueryParam } from '@/hooks/useQueryParam';
-import { useDataModal } from '@/services/dataModal';
+import { useDataModal } from '@/services/modals';
 import { groupBy } from '@/utils/arrays';
 
 import { useGuildContext } from '../GuildContext';

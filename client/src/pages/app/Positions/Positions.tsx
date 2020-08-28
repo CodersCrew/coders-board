@@ -6,7 +6,7 @@ import { Button } from '@/components/atoms';
 import { Card, FiltersCard, Page } from '@/components/molecules';
 import { usePositions } from '@/graphql/positions';
 import { useQueryParam } from '@/hooks/useQueryParam';
-import { useDataModal } from '@/services/dataModal';
+import { useDataModal } from '@/services/modals';
 
 import { Position } from './Position';
 import { PositionModal, PositionModalData } from './PositionModal';

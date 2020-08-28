@@ -11,6 +11,8 @@ generates:
       - "named-operations-object"
     config:
       identifierName: GraphQLOperations
+      scalars:
+        DateTime: Date
   src/:
     preset: near-operation-file
     presetConfig:

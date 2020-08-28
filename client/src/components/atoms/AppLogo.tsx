@@ -2,7 +2,7 @@ import { HTMLProps } from 'react';
 import styled from '@emotion/styled';
 import { compose, layout, LayoutProps, space, SpaceProps } from 'styled-system';
 
-import { omitProps } from '@/utils/styling';
+import { omitProps } from '@/services/styling';
 
 export type AppLogoProps = Omit<HTMLProps<HTMLImageElement>, 'src'> & SpaceProps & LayoutProps;
 

@@ -3,7 +3,7 @@ import { Avatar as AntAvatar } from 'antd';
 import { AvatarProps as AntAvatarProps } from 'antd/lib/avatar';
 import { compose, layout, LayoutProps, space, SpaceProps } from 'styled-system';
 
-import { omitProps } from '@/utils/styling';
+import { omitProps } from '@/services/styling';
 
 export type AvatarProps = Omit<AntAvatarProps, 'size'> & SpaceProps & LayoutProps;
 

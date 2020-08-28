@@ -9,11 +9,10 @@ import { FormikModal } from '@/components/molecules';
 import { FormikChapterSelect, FormikPositionSelect } from '@/components/selects';
 import { FormikUserSelect } from '@/components/selects/UserSelect';
 import { useSquadMembersIds, useSquadPositions } from '@/graphql/squads';
-import { createDataModal, DataModalProps } from '@/services/dataModal';
+import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { YupSchema } from '@/typings/forms';
 import { CreateSquadPositionInput } from '@/typings/graphql';
-import { getInitialValuesFromSchema } from '@/utils/forms';
+import { createValidationSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 import { pick } from '@/utils/objects';
 
@@ -39,16 +38,16 @@ const useSquadPositionModal = (props: SquadPositionModalProps) => {
   const squadPositions = useSquadPositions();
   const squadMembersIds = useSquadMembersIds({ squadId });
 
-  const validationSchema: YupSchema<FormValues> = yup.object({
-    from: yup.date().required().default(null),
-    to: yup.string().optional().nullable(),
+  const validationSchema = createValidationSchema<FormValues>({
+    from: yup.date().required(),
+    to: yup.date().optional().nullable(),
     notes: yup.string().optional().nullable(),
     memberId: yup.string().required(),
     positionId: yup.string().required(),
     chapterId: yup.string().optional(),
   });
 
-  const initialValues = data ?? getInitialValuesFromSchema(validationSchema);
+  const initialValues = data ?? validationSchema.initialValues;
   const messages = getBasicMessages('squad position', data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {

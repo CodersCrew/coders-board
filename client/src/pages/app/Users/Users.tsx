@@ -6,7 +6,7 @@ import { Card, FiltersCard, Page, Table, TableActions } from '@/components/molec
 import { RoleSelect } from '@/components/selects';
 import { useAuthorizedUser, UseUsers, useUsers } from '@/graphql/users';
 import { useToggle } from '@/hooks/useToggle';
-import { useDataModal } from '@/services/dataModal';
+import { useDataModal } from '@/services/modals';
 import { UserRole } from '@/typings/graphql';
 import { pick } from '@/utils/objects';
 

@@ -20,6 +20,7 @@ export class SquadPositionsService {
 
   getMember = resolveAsyncRelation(this.squadPositionRepository, 'member');
   getChapter = resolveAsyncRelation(this.squadPositionRepository, 'chapter');
+  getPosition = resolveAsyncRelation(this.squadPositionRepository, 'position');
 
   findById(id: string) {
     if (!id) return null;
@@ -33,7 +34,7 @@ export class SquadPositionsService {
     return this.squadPositionRepository.findOneOrFail(id);
   }
 
-  findAll({ squadId, memberId }: GetSquadPositionsArgs) {
+  async findAll({ squadId, memberId }: GetSquadPositionsArgs) {
     const query = this.squadPositionRepository.createQueryBuilder('squadPosition');
 
     query.innerJoinAndSelect('squadPosition.member', 'member');
@@ -43,7 +44,10 @@ export class SquadPositionsService {
       query.andWhere('squadPosition.memberId = :memberId', { memberId });
     }
 
-    return query.getMany();
+    const x = await query.getMany();
+    console.log(x);
+
+    return x;
   }
 
   async create({ squadId: _squadId, ...input }: CreateSquadPositionInput) {

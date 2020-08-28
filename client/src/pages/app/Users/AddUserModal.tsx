@@ -7,9 +7,8 @@ import * as yup from 'yup';
 
 import { useUsersMutations } from '@/graphql/users';
 import { CFC } from '@/typings/components';
-import { YupSchema } from '@/typings/forms';
 import { CreateUserInput } from '@/typings/graphql';
-import { getInitialValuesFromSchema } from '@/utils/forms';
+import { createValidationSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
 type FormValues = Omit<CreateUserInput, 'password'>;
@@ -55,14 +54,14 @@ export const AddUserModalComponent: CFC<AddUserModalComponentProps> = props => {
 export const AddUserModal: CFC<AddUserModalProps> = props => {
   const usersMutations = useUsersMutations();
 
-  const validationSchema: YupSchema<FormValues> = yup.object({
+  const validationSchema = createValidationSchema<FormValues>({
     firstName: yup.string().required().default(''),
     lastName: yup.string().required().default(''),
     primaryEmail: yup.string().required().lowercase().default(''),
     recoveryEmail: yup.string().required().email().default(''),
   });
 
-  const initialValues = getInitialValuesFromSchema(validationSchema);
+  const { initialValues } = validationSchema;
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     const primaryEmail = values.primaryEmail + EMAIL_SUFFIX;

@@ -5,7 +5,7 @@ import { CrownOutlined, DeleteOutlined, PartitionOutlined } from '@ant-design/ic
 import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Table, TableActions } from '@/components/molecules';
 import { UseGuildMembers, useGuildMembers } from '@/graphql/guilds';
-import { useDataModal } from '@/services/dataModal';
+import { useDataModal } from '@/services/modals';
 import { pick } from '@/utils/objects';
 
 import { useGuildContext } from '../GuildContext';

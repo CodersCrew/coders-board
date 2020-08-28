@@ -7,11 +7,10 @@ import * as yup from 'yup';
 import { FormikModal } from '@/components/molecules';
 import { FormikSuccessTypeSelect, FormikUserSelect } from '@/components/selects';
 import { useSuccessesMutations } from '@/graphql/successes';
-import { createDataModal, DataModalProps } from '@/services/dataModal';
+import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { YupSchema } from '@/typings/forms';
 import { CreateSuccessInput, SuccessType } from '@/typings/graphql';
-import { getInitialValuesFromSchema } from '@/utils/forms';
+import { createValidationSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
 type FormValues = CreateSuccessInput;
@@ -25,7 +24,7 @@ type SuccessModalProps = DataModalProps<SuccessModalData>;
 const useSuccessModal = ({ data, ...modalProps }: SuccessModalProps) => {
   const successesMutations = useSuccessesMutations();
 
-  const validationSchema: YupSchema<FormValues> = yup.object({
+  const validationSchema = createValidationSchema<FormValues>({
     name: yup.string().required().default(''),
     description: yup.string().required().default(''),
     date: yup.date().required().max(moment().add(1, 'day').toDate()),
@@ -33,7 +32,7 @@ const useSuccessModal = ({ data, ...modalProps }: SuccessModalProps) => {
     usersIds: yup.array(yup.string().required()).required().default([]),
   });
 
-  const initialValues = data ?? getInitialValuesFromSchema(validationSchema);
+  const initialValues = data ?? validationSchema.initialValues;
   const messages = getBasicMessages('success', data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {

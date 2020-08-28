@@ -20,7 +20,7 @@ import {
 } from 'styled-system';
 
 import { omit } from '@/utils/objects';
-import { omitProps } from '@/utils/styling';
+import { omitProps } from '@/services/styling';
 
 export type CardProps = AntCardProps &
   SpaceProps &

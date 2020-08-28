@@ -7,11 +7,10 @@ import { FormikModal } from '@/components/molecules';
 import { FormikTeamRoleSelect, FormikUserSelect } from '@/components/selects';
 import { useGuildMembersIds } from '@/graphql/guilds';
 import { useGuildMembersMutations } from '@/graphql/guilds/guildMember/useGuildMembersMutations';
-import { createDataModal, DataModalProps } from '@/services/dataModal';
+import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { YupSchema } from '@/typings/forms';
 import { CreateGuildMemberInput, TeamRole } from '@/typings/graphql';
-import { getInitialValuesFromSchema } from '@/utils/forms';
+import { createValidationSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
 import { useGuildContext } from '../GuildContext';
@@ -31,12 +30,12 @@ const useGuildMemberModal = (props: GuildMemberModalProps) => {
   const guildMembersIds = useGuildMembersIds({ guildId });
   const guildMembersMutations = useGuildMembersMutations();
 
-  const validationSchema: YupSchema<FormValues> = yup.object({
+  const validationSchema = createValidationSchema<FormValues>({
     userId: yup.string().required(),
     role: yup.mixed<TeamRole>().required().default(TeamRole.Member),
   });
 
-  const initialValues = props.data ?? getInitialValuesFromSchema(validationSchema);
+  const initialValues = props.data ?? validationSchema.initialValues;
 
   const messages = getBasicMessages('guild member', props.data ? 'update' : 'create');
 

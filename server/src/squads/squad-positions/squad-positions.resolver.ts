@@ -27,6 +27,11 @@ export class SquadPositionsResolver {
     return this.squadPositionsService.getChapter(squadPosition);
   }
 
+  @ResolveField('position', returns => Chapter)
+  async getPosition(@Parent() squadPosition: SquadPosition) {
+    return this.squadPositionsService.getPosition(squadPosition);
+  }
+
   @Query(returns => [SquadPosition], { name: 'squadPositions' })
   getSquadPositions(@Args() args?: GetSquadPositionsArgs) {
     return this.squadPositionsService.findAll(args);

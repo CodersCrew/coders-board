@@ -3,7 +3,7 @@ import { Button as AntButton } from 'antd';
 import { ButtonProps as AntButtonProps } from 'antd/lib/button';
 import { compose, space, SpaceProps } from 'styled-system';
 
-import { omitProps } from '@/utils/styling';
+import { omitProps } from '@/services/styling';
 
 export type ButtonProps = AntButtonProps & SpaceProps;
 

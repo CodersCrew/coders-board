@@ -5,7 +5,7 @@ import { List } from 'antd';
 import { Box, Button } from '@/components/atoms';
 import { Card } from '@/components/molecules';
 import { useChapters } from '@/graphql/squads';
-import { useDataModal } from '@/services/dataModal';
+import { useDataModal } from '@/services/modals';
 
 import { useSquadContext } from '../SquadContext';
 import Chapter from './Chapter';

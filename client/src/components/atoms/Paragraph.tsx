@@ -15,7 +15,7 @@ import {
   TypographyProps,
 } from 'styled-system';
 
-import { omitProps } from '@/utils/styling';
+import { omitProps } from '@/services/styling';
 
 type StyledSystemProps = SpaceProps & LayoutProps & TypographyProps & ColorProps;
 

@@ -3,7 +3,7 @@ import { Tag as AntTag } from 'antd';
 import { TagProps as AntTagProps } from 'antd/lib/tag';
 import { compose, space, SpaceProps } from 'styled-system';
 
-import { omitProps } from '@/utils/styling';
+import { omitProps } from '@/services/styling';
 
 export type TagProps = AntTagProps & SpaceProps;
 

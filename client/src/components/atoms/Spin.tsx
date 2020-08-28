@@ -4,7 +4,7 @@ import { SpinProps as AntSpinProps } from 'antd/lib/spin';
 import { without } from 'lodash';
 import { compose, layout, LayoutProps, space, SpaceProps } from 'styled-system';
 
-import { omitProps } from '@/utils/styling';
+import { omitProps } from '@/services/styling';
 
 export type SpinProps = AntSpinProps & SpaceProps & LayoutProps;
 

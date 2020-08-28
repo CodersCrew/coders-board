@@ -1,4 +1,4 @@
-import { breakpoints } from '@/config/theme';
+import { breakpoints } from './theme';
 
 export type BreakpointKey = keyof typeof breakpoints;
 

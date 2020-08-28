@@ -4,7 +4,7 @@ import styled from '@emotion/styled';
 import { color, ColorProps, compose, fontSize, FontSizeProps, space, SpaceProps } from 'styled-system';
 
 import { CFC, RFC } from '@/typings/components';
-import { omitProps } from '@/utils/styling';
+import { omitProps } from '@/services/styling';
 
 type IconProps = AntdIconProps &
   SpaceProps &

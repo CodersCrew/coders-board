@@ -6,10 +6,9 @@ import * as yup from 'yup';
 
 import { FormikModal } from '@/components/molecules';
 import { useSlackMutations } from '@/graphql/integrations';
-import { createDataModal, DataModalProps } from '@/services/dataModal';
-import { YupSchema } from '@/typings/forms';
+import { createDataModal, DataModalProps } from '@/services/modals';
 import { SyncSlackUserInput } from '@/typings/graphql';
-import { getInitialValuesFromSchema } from '@/utils/forms';
+import { createValidationSchema } from '@/utils/forms';
 
 type FormValues = Omit<SyncSlackUserInput, 'userId'>;
 
@@ -22,11 +21,11 @@ type SyncSlackModalProps = DataModalProps<SyncSlackModalData>;
 const useSyncSlackModal = ({ data, ...modalProps }: SyncSlackModalProps) => {
   const slackMutations = useSlackMutations();
 
-  const validationSchema: YupSchema<FormValues> = yup.object({
+  const validationSchema = createValidationSchema<FormValues>({
     slackId: yup.string().required().default(''),
   });
 
-  const initialValues = getInitialValuesFromSchema(validationSchema);
+  const { initialValues } = validationSchema;
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     message.loading('Syncing user with Slack account');

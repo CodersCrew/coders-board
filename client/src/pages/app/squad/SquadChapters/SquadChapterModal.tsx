@@ -5,11 +5,10 @@ import * as yup from 'yup';
 
 import { FormikModal } from '@/components/molecules';
 import { useChaptersMutations, useSquad } from '@/graphql/squads';
-import { createDataModal, DataModalProps } from '@/services/dataModal';
+import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { YupSchema } from '@/typings/forms';
 import { CreateChapterInput } from '@/typings/graphql';
-import { getInitialValuesFromSchema } from '@/utils/forms';
+import { createValidationSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
 import { useSquadContext } from '../SquadContext';
@@ -38,7 +37,7 @@ const useSquadChapterModal = (props: SquadChapterModalProps) => {
   const chapterPrefix = `${squad.data.name.toLowerCase().replace(/\s/g, '-')}-`;
   const emailRegex = new RegExp(`${chapterPrefix}(.*)${CHAPTER_SUFFIX}`);
 
-  const validationSchema: YupSchema<FormValues> = yup.object({
+  const validationSchema = createValidationSchema<FormValues>({
     name: yup.string().required().default(''),
     description: yup.string().optional().default(''),
     email: yup.string().required().lowercase().default(''),
@@ -46,7 +45,7 @@ const useSquadChapterModal = (props: SquadChapterModalProps) => {
 
   const initialValues = data
     ? { ...data, email: data.email.match(emailRegex)?.[1] ?? '' }
-    : getInitialValuesFromSchema(validationSchema);
+    : validationSchema.initialValues;
   const messages = getBasicMessages('chapter', data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {

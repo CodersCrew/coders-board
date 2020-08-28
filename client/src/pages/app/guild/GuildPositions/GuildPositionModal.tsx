@@ -10,11 +10,10 @@ import { FormikClanSelect, FormikGuildPositionKindSelect } from '@/components/se
 import { FormikUserSelect } from '@/components/selects/UserSelect';
 import { useGuildPositions } from '@/graphql/guilds';
 import { useGuildMembersIds } from '@/graphql/guilds/guildMember';
-import { createDataModal, DataModalProps } from '@/services/dataModal';
+import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { YupSchema } from '@/typings/forms';
 import { CreateGuildPositionInput, GuildPositionKind } from '@/typings/graphql';
-import { getInitialValuesFromSchema } from '@/utils/forms';
+import { createValidationSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
 import { useGuildContext } from '../GuildContext';
@@ -40,16 +39,16 @@ const useGuildPositionModal = (props: GuildPositionModalProps) => {
 
   const guildPositions = useGuildPositions();
 
-  const validationSchema: YupSchema<FormValues> = yup.object({
+  const validationSchema = createValidationSchema<FormValues>({
     from: yup.date().required().default(null),
-    to: yup.string().optional().nullable(),
+    to: yup.date().optional().nullable(),
     notes: yup.string().optional().nullable(),
     kind: yup.mixed<GuildPositionKind>().required().default(GuildPositionKind.Member),
     memberId: yup.string().required(),
     clanId: yup.string().optional(),
   });
 
-  const initialValues = props.data ?? getInitialValuesFromSchema(validationSchema);
+  const initialValues = props.data ?? validationSchema.initialValues;
 
   const messages = getBasicMessages('guild position', props.data ? 'update' : 'create');
 

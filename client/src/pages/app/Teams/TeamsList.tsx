@@ -2,8 +2,8 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { Title } from '@/components/atoms';
+import { down } from '@/services/styling';
 import { CFC } from '@/typings/components';
-import { down } from '@/utils/styling';
 
 import { Team } from './Team';
 import { TeamObject } from './Team.types';

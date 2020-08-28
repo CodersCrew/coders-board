@@ -6,7 +6,7 @@ import { Button } from '@/components/atoms';
 import { Page } from '@/components/molecules';
 import { useSuccesses } from '@/graphql/successes';
 import { useAuthorizedUser } from '@/graphql/users';
-import { useDataModal } from '@/services/dataModal';
+import { useDataModal } from '@/services/modals';
 
 import { Success } from './Success';
 import { SuccessModal, SuccessModalData } from './SuccessModal';

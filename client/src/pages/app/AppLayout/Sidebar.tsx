@@ -9,7 +9,7 @@ import { lighten } from 'polished';
 
 import { Avatar, Box, Paragraph } from '@/components/atoms';
 import { useAuthorizedUser } from '@/graphql/users';
-import { useMediaQuery } from '@/hooks/useMediaQuery';
+import { useMediaQuery } from '@/services/styling';
 import { CFC } from '@/typings/components';
 
 type SidebarProps = Omit<SiderProps, 'theme'>;

@@ -6,7 +6,7 @@ import { Box, Spin, Title } from '@/components/atoms';
 import { Card, FiltersCard } from '@/components/molecules';
 import { UseSquadPositions, useSquadPositions } from '@/graphql/squads';
 import { useQueryParam } from '@/hooks/useQueryParam';
-import { useDataModal } from '@/services/dataModal';
+import { useDataModal } from '@/services/modals';
 import { groupBy } from '@/utils/arrays';
 
 import { useSquadContext } from '../SquadContext';
@@ -43,11 +43,7 @@ const SquadPositions = () => {
         dataSource={dataSource}
         rowKey="id"
         renderItem={position => (
-          <SquadPosition
-            {...position}
-            openModal={() => squadPositionModal.open(null)}
-            closeModal={squadPositionModal.close}
-          />
+          <SquadPosition {...position} openModal={squadPositionModal.open} closeModal={squadPositionModal.close} />
         )}
       />
     </Card>

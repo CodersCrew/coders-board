@@ -6,11 +6,10 @@ import * as yup from 'yup';
 import { FormikModal } from '@/components/molecules';
 import { FormikClanSelect, FormikGuildSelect } from '@/components/selects';
 import { usePositions } from '@/graphql/positions';
-import { createDataModal, DataModalProps } from '@/services/dataModal';
+import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { YupSchema } from '@/typings/forms';
 import { CreatePositionInput } from '@/typings/graphql';
-import { getInitialValuesFromSchema } from '@/utils/forms';
+import { createValidationSchema } from '@/utils/forms';
 import { getBasicMessages } from '@/utils/getBasicMessages';
 
 type FormValues = CreatePositionInput;
@@ -26,7 +25,7 @@ const usePositionModal = (props: PositionModalProps) => {
 
   const positions = usePositions();
 
-  const validationSchema: YupSchema<FormValues> = yup.object({
+  const validationSchema = createValidationSchema<FormValues>({
     name: yup.string().required().default(''),
     description: yup.string().optional().nullable(),
     image: yup.string().optional().nullable(),
@@ -34,7 +33,7 @@ const usePositionModal = (props: PositionModalProps) => {
     guildId: yup.string().optional().nullable(),
   });
 
-  const initialValues = data ?? getInitialValuesFromSchema(validationSchema);
+  const initialValues = data ?? validationSchema.initialValues;
   const messages = getBasicMessages('position', data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {

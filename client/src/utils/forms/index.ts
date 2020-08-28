@@ -1,2 +1,2 @@
-export * from './getInitialValuesFromSchema';
 export * from './selectToFormikSelect';
+export * from './createValidationSchema';

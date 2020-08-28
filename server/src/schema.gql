@@ -108,7 +108,7 @@ type SquadPosition {
   memberId: String!
   chapter: Chapter
   chapterId: String!
-  position: Position!
+  position: Chapter!
   positionId: String!
   clan: Chapter
 }
