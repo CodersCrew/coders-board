@@ -1,20 +1,20 @@
-import { GuildMembersQuery, useGuildMembersQuery } from './guildMember.apollo';
+import { GuildMembersQuery, GuildMembersQueryVariables, useGuildMembersQuery } from './guildMember.apollo';
 
 export type UseGuildMembers = {
   item: GuildMembersQuery['guildMembers'][number];
-  params: { guildId: string };
+  variables: GuildMembersQueryVariables;
 };
 
-export const useGuildMembers = ({ guildId }: UseGuildMembers['params']) => {
-  const { data, loading, error, refetch } = useGuildMembersQuery({ variables: { guildId } });
+export const useGuildMembers = (variables: UseGuildMembers['variables']) => {
+  const { data, loading, error, refetch } = useGuildMembersQuery({ variables });
 
   const guildMembers = data?.guildMembers ?? [];
 
   return {
     loading,
     error,
+    refetch,
     data: guildMembers,
     count: guildMembers.length,
-    refetch,
   };
 };

@@ -2,11 +2,11 @@ import { SimpleClansQuery, SimpleClansQueryVariables, useSimpleClansQuery } from
 
 export type UseSimpleClans = {
   item: SimpleClansQuery['clans'][number];
-  params: SimpleClansQueryVariables;
+  variables: SimpleClansQueryVariables;
 };
 
-export const useSimpleClans = (params?: UseSimpleClans['params']) => {
-  const { data, loading, error } = useSimpleClansQuery({ variables: params });
+export const useSimpleClans = (variables: UseSimpleClans['variables']) => {
+  const { data, loading, error } = useSimpleClansQuery({ variables });
 
   const clans = data?.clans ?? [];
 

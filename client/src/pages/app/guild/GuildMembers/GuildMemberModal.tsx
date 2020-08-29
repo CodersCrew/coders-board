@@ -5,13 +5,13 @@ import * as yup from 'yup';
 
 import { FormikModal } from '@/components/molecules';
 import { FormikTeamRoleSelect, FormikUserSelect } from '@/components/selects';
-import { useGuildMembersIds } from '@/graphql/guilds';
-import { useGuildMembersMutations } from '@/graphql/guilds/guildMember/useGuildMembersMutations';
+import { useGuildMemberMutations, useGuildMembersIds } from '@/graphql/guilds';
+import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
 import { CreateGuildMemberInput, TeamRole } from '@/typings/graphql';
 import { createValidationSchema } from '@/utils/forms';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useGuildContext } from '../GuildContext';
 
@@ -28,7 +28,7 @@ const useGuildMemberModal = (props: GuildMemberModalProps) => {
 
   const { guildId } = useGuildContext();
   const guildMembersIds = useGuildMembersIds({ guildId });
-  const guildMembersMutations = useGuildMembersMutations();
+  const { createGuildMember, updateGuildMember } = useGuildMemberMutations();
 
   const validationSchema = createValidationSchema<FormValues>({
     userId: yup.string().required(),
@@ -37,35 +37,24 @@ const useGuildMemberModal = (props: GuildMemberModalProps) => {
 
   const initialValues = props.data ?? validationSchema.initialValues;
 
-  const messages = getBasicMessages('guild member', props.data ? 'update' : 'create');
-
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    messages.loading();
+    const mutation = props.data
+      ? updateGuildMember({ role: values.role, id: props.data.id, guildId })
+      : createGuildMember({ ...values, guildId });
 
-    try {
-      if (props.data) {
-        await guildMembersMutations.update({
-          variables: { data: { role: values.role, id: props.data.id, guildId } },
-        });
-      } else {
-        await guildMembersMutations.create({ variables: { data: { ...values, guildId } } });
-      }
-
-      props.onCancel();
-      messages.success();
-    } catch (ex) {
-      console.log(ex);
-      messages.failure();
-    } finally {
-      helpers.setSubmitting(false);
-    }
+    runMutation({
+      mutation,
+      success: () => props.onCancel(),
+      finally: () => helpers.setSubmitting(false),
+      messages: getGenericMessages('guild member', props.data ? 'update' : 'create'),
+    });
   };
-
-  modalProps.title = data ? 'Update guild member' : 'Add new guild member';
-  modalProps.okText = data ? 'Update member' : 'Add member';
-
   return {
-    modal: modalProps,
+    modal: {
+      ...modalProps,
+      title: data ? 'Update guild member' : 'Add new guild member',
+      okText: data ? 'Update member' : 'Add member',
+    },
     form: {
       initialValues,
       validationSchema,

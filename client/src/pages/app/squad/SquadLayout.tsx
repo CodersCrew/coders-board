@@ -19,7 +19,7 @@ const SquadLayout = () => {
   const { squadId } = useSquadContext();
   const location = useLocation();
   const navigate = useNavigate();
-  const squad = useSquad({ squadId });
+  const squad = useSquad({ id: squadId });
 
   if (!squad.data) return null;
 

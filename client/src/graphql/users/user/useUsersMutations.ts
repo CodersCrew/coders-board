@@ -1,6 +1,6 @@
-import { GraphQLOperations } from '@/typings/graphql';
+import { CreateUserInput, GraphQLOperations } from '@/typings/graphql';
 
-import { useCreateUserMutation, useDeleteUserMutation } from './user.apollo';
+import { DeleteUserMutationVariables, useCreateUserMutation, useDeleteUserMutation } from './user.apollo';
 
 export const useUsersMutations = () => {
   const mutationConfig = {
@@ -15,7 +15,7 @@ export const useUsersMutations = () => {
   const [deleteUser] = useDeleteUserMutation(mutationConfig);
 
   return {
-    create: createUser,
-    delete: deleteUser,
+    createUser: (data: CreateUserInput) => createUser({ variables: { data } }),
+    deleteUser: (variables: DeleteUserMutationVariables) => deleteUser({ variables }),
   };
 };

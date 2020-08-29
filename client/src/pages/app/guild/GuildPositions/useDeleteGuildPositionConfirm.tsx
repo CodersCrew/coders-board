@@ -4,9 +4,10 @@ import { useTheme } from '@emotion/react';
 
 import { Icon } from '@/components/atoms';
 import { confirmModal } from '@/components/molecules';
-import { useGuildPositions } from '@/graphql/guilds';
+import { useGuildPositionMutations } from '@/graphql/guilds';
+import { runMutation } from '@/services/graphql';
 import { GuildPositionKind } from '@/typings/graphql';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 import { parseGuildPositionKind } from '@/utils/platform';
 
 import { useGuildContext } from '../GuildContext';
@@ -18,10 +19,8 @@ type Params = {
 
 export const useDeleteGuildPositionConfirm = ({ kind, id }: Params) => {
   const { colors } = useTheme();
-  const guildPositions = useGuildPositions();
+  const { deleteGuildPosition } = useGuildPositionMutations();
   const { guildId } = useGuildContext();
-
-  const messages = getBasicMessages('team position', 'delete');
 
   return () => {
     const position = parseGuildPositionKind(kind);
@@ -32,16 +31,11 @@ export const useDeleteGuildPositionConfirm = ({ kind, id }: Params) => {
       okText: 'Yes, delete position',
       cancelText: 'No, preserve position',
       width: 440,
-      onOk: async () => {
-        try {
-          messages.loading();
-          await guildPositions.delete({ variables: { id, guildId } });
-          messages.success();
-        } catch (ex) {
-          console.log(ex);
-          messages.failure();
-        }
-      },
+      onOk: () =>
+        runMutation({
+          mutation: deleteGuildPosition({ id, guildId }),
+          messages: getGenericMessages('team position', 'delete'),
+        }),
       okButtonProps: { danger: true },
       icon: <Icon icon={DeleteOutlined} color={colors.error.main} />,
       autoFocusButton: null,

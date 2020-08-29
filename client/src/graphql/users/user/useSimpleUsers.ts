@@ -2,11 +2,11 @@ import { SimpleUsersQuery, SimpleUsersQueryVariables, useSimpleUsersQuery } from
 
 export type UseSimpleUsers = {
   item: SimpleUsersQuery['users'][number];
-  params: SimpleUsersQueryVariables;
+  variables: SimpleUsersQueryVariables;
 };
 
-export const useSimpleUsers = (params?: UseSimpleUsers['params']) => {
-  const { data, loading, error } = useSimpleUsersQuery({ variables: params });
+export const useSimpleUsers = (variables: UseSimpleUsers['variables']) => {
+  const { data, loading, error } = useSimpleUsersQuery({ variables });
 
   const users = data?.users ?? [];
 

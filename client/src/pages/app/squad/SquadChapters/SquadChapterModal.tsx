@@ -4,12 +4,13 @@ import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
 import { FormikModal } from '@/components/molecules';
-import { useChaptersMutations, useSquad } from '@/graphql/squads';
+import { useChapterMutations, useSquad } from '@/graphql/squads';
+import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
 import { CreateChapterInput } from '@/typings/graphql';
 import { createValidationSchema } from '@/utils/forms';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useSquadContext } from '../SquadContext';
 
@@ -27,8 +28,8 @@ const useSquadChapterModal = (props: SquadChapterModalProps) => {
   const { data, ...modalProps } = props;
 
   const { squadId } = useSquadContext();
-  const squad = useSquad({ squadId });
-  const chaptersMutations = useChaptersMutations();
+  const squad = useSquad({ id: squadId });
+  const { createChapter, updateChapter } = useChapterMutations();
 
   if (!squad.data) {
     throw new Error('SquadChapterModal must be used in a scope of the particular squad');
@@ -46,34 +47,22 @@ const useSquadChapterModal = (props: SquadChapterModalProps) => {
   const initialValues = data
     ? { ...data, email: data.email.match(emailRegex)?.[1] ?? '' }
     : validationSchema.initialValues;
-  const messages = getBasicMessages('chapter', data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    messages.loading();
+    const input: CreateChapterInput = {
+      ...values,
+      squadId,
+      email: `${chapterPrefix}${values.email}${CHAPTER_SUFFIX}`,
+    };
 
-    try {
-      const input: CreateChapterInput = {
-        ...values,
-        squadId,
-        email: `${chapterPrefix}${values.email}${CHAPTER_SUFFIX}`,
-      };
+    const mutation = data ? updateChapter({ ...input, id: data.id }) : createChapter(input);
 
-      if (data) {
-        await chaptersMutations.update({
-          variables: { data: { ...input, id: data.id } },
-        });
-      } else {
-        await chaptersMutations.create({ variables: { data: input } });
-      }
-
-      modalProps.onCancel();
-      messages.success();
-    } catch (ex) {
-      console.log(ex);
-      messages.failure();
-    } finally {
-      helpers.setSubmitting(false);
-    }
+    runMutation({
+      mutation,
+      success: () => modalProps.onCancel(),
+      finally: () => helpers.setSubmitting(false),
+      messages: getGenericMessages('chapter', data ? 'update' : 'create'),
+    });
   };
 
   modalProps.title = data ? 'Update chapter' : 'Add new chapter';

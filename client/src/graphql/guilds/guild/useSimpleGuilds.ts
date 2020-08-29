@@ -2,17 +2,18 @@ import { SimpleGuildsQuery, SimpleGuildsQueryVariables, useSimpleGuildsQuery } f
 
 export type UseSimpleGuilds = {
   item: SimpleGuildsQuery['guilds'][number];
-  params: SimpleGuildsQueryVariables;
+  variables: SimpleGuildsQueryVariables;
 };
 
-export const useSimpleGuilds = (params?: UseSimpleGuilds['params']) => {
-  const { data, loading, error } = useSimpleGuildsQuery({ variables: params });
+export const useSimpleGuilds = (variables?: UseSimpleGuilds['variables']) => {
+  const { data, loading, error, refetch } = useSimpleGuildsQuery({ variables });
 
   const guilds = data?.guilds ?? [];
 
   return {
     loading,
     error,
+    refetch,
     data: guilds,
     count: guilds.length,
   };

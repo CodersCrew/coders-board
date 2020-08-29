@@ -1,2 +1,2 @@
 export * from './useSuccesses';
-export * from './useSuccessesMutations';
+export * from './useSuccessMutations';

@@ -1,25 +1,17 @@
-import { useEffect } from 'react';
-
-import { GuildQuery, useGuildLazyQuery } from './guild.apollo';
+import { GuildQuery, GuildQueryVariables, useGuildQuery } from './guild.apollo';
 
 export type UseGuild = {
   data: GuildQuery['guild'];
-  params: { guildId?: string };
+  variables: GuildQueryVariables;
 };
 
-export const useGuild = (params?: UseGuild['params']) => {
-  const [fetchGuild, { data, loading, error }] = useGuildLazyQuery();
-
-  useEffect(() => {
-    if (params?.guildId) {
-      fetchGuild({ variables: { id: params.guildId } });
-    }
-  }, [params?.guildId]);
+export const useGuild = (variables: UseGuild['variables']) => {
+  const { data, loading, error, refetch } = useGuildQuery({ variables });
 
   return {
     loading,
     error,
+    refetch,
     data: data?.guild ?? null,
-    fetch: fetchGuild,
   };
 };

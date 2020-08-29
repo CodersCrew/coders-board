@@ -8,13 +8,14 @@ import { Box } from '@/components/atoms';
 import { FormikModal } from '@/components/molecules';
 import { FormikClanSelect, FormikGuildPositionKindSelect } from '@/components/selects';
 import { FormikUserSelect } from '@/components/selects/UserSelect';
-import { useGuildPositions } from '@/graphql/guilds';
+import { useGuildPositionMutations } from '@/graphql/guilds';
 import { useGuildMembersIds } from '@/graphql/guilds/guildMember';
+import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
 import { CreateGuildPositionInput, GuildPositionKind } from '@/typings/graphql';
 import { createValidationSchema } from '@/utils/forms';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useGuildContext } from '../GuildContext';
 
@@ -37,7 +38,7 @@ const useGuildPositionModal = (props: GuildPositionModalProps) => {
   const { guildId } = useGuildContext();
   const guildMembersIds = useGuildMembersIds({ guildId });
 
-  const guildPositions = useGuildPositions();
+  const { createGuildPosition, updateGuildPosition } = useGuildPositionMutations();
 
   const validationSchema = createValidationSchema<FormValues>({
     from: yup.date().required().default(null),
@@ -50,35 +51,25 @@ const useGuildPositionModal = (props: GuildPositionModalProps) => {
 
   const initialValues = props.data ?? validationSchema.initialValues;
 
-  const messages = getBasicMessages('guild position', props.data ? 'update' : 'create');
-
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    messages.loading();
+    const mutation = props.data?.id
+      ? updateGuildPosition({ ...values, id: props.data.id, guildId })
+      : createGuildPosition({ ...values, guildId });
 
-    try {
-      if (props.data?.id) {
-        await guildPositions.update({
-          variables: { data: { ...values, id: props.data.id, guildId } },
-        });
-      } else {
-        await guildPositions.create({ variables: { data: { ...values, guildId } } });
-      }
-
-      props.onCancel();
-      messages.success();
-    } catch (ex) {
-      console.log(ex);
-      messages.failure();
-    } finally {
-      helpers.setSubmitting(false);
-    }
+    runMutation({
+      mutation,
+      success: () => props.onCancel(),
+      finally: () => helpers.setSubmitting(false),
+      messages: getGenericMessages('guild position', props.data ? 'update' : 'create'),
+    });
   };
 
-  modalProps.title = data?.id ? 'Edit position' : 'Add position';
-  modalProps.okText = data?.id ? 'Update position' : 'Add position';
-
   return {
-    modal: modalProps,
+    modal: {
+      ...modalProps,
+      title: data?.id ? 'Edit position' : 'Add position',
+      okText: data?.id ? 'Update position' : 'Add position',
+    },
     form: {
       initialValues,
       validationSchema,

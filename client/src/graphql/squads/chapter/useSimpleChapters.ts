@@ -2,17 +2,18 @@ import { SimpleChaptersQuery, SimpleChaptersQueryVariables, useSimpleChaptersQue
 
 export type UseSimpleChapters = {
   item: SimpleChaptersQuery['chapters'][number];
-  params: SimpleChaptersQueryVariables;
+  variables: SimpleChaptersQueryVariables;
 };
 
-export const useSimpleChapters = (params?: UseSimpleChapters['params']) => {
-  const { data, loading, error } = useSimpleChaptersQuery({ variables: params });
+export const useSimpleChapters = (variables: UseSimpleChapters['variables']) => {
+  const { data, loading, error, refetch } = useSimpleChaptersQuery({ variables });
 
   const chapters = data?.chapters ?? [];
 
   return {
     loading,
     error,
+    refetch,
     data: chapters,
     count: chapters.length,
   };

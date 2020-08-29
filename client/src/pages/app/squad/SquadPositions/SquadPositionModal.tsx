@@ -8,12 +8,13 @@ import { Box } from '@/components/atoms';
 import { FormikModal } from '@/components/molecules';
 import { FormikChapterSelect, FormikPositionSelect } from '@/components/selects';
 import { FormikUserSelect } from '@/components/selects/UserSelect';
-import { useSquadMembersIds, useSquadPositions } from '@/graphql/squads';
+import { useSquadMembersIds, useSquadPositionMutations } from '@/graphql/squads';
+import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
 import { CreateSquadPositionInput } from '@/typings/graphql';
 import { createValidationSchema } from '@/utils/forms';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';
@@ -35,7 +36,7 @@ const useSquadPositionModal = (props: SquadPositionModalProps) => {
   const { data, ...modalProps } = props;
 
   const { squadId } = useSquadContext();
-  const squadPositions = useSquadPositions();
+  const { createSquadPosition, updateSquadPosition } = useSquadPositionMutations();
   const squadMembersIds = useSquadMembersIds({ squadId });
 
   const validationSchema = createValidationSchema<FormValues>({
@@ -48,35 +49,26 @@ const useSquadPositionModal = (props: SquadPositionModalProps) => {
   });
 
   const initialValues = data ?? validationSchema.initialValues;
-  const messages = getBasicMessages('squad position', data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    messages.loading();
+    const mutation = data?.id
+      ? updateSquadPosition({ ...pick(values, ['from', 'to', 'notes']), id: data.id, squadId })
+      : createSquadPosition({ ...values, squadId });
 
-    try {
-      if (data?.id) {
-        await squadPositions.update({
-          variables: { data: { ...pick(values, ['from', 'to', 'notes']), id: data.id, squadId } },
-        });
-      } else {
-        await squadPositions.create({ variables: { data: { ...values, squadId } } });
-      }
-
-      props.onCancel();
-      messages.success();
-    } catch (ex) {
-      console.log(ex);
-      messages.failure();
-    } finally {
-      helpers.setSubmitting(false);
-    }
+    runMutation({
+      mutation,
+      success: () => props.onCancel(),
+      finally: () => helpers.setSubmitting(false),
+      messages: getGenericMessages('squad position', data ? 'update' : 'create'),
+    });
   };
 
-  modalProps.title = data?.id ? 'Edit position' : 'Add position';
-  modalProps.okText = data?.id ? 'Update position' : 'Add position';
-
   return {
-    modal: modalProps,
+    modal: {
+      ...modalProps,
+      title: data?.id ? 'Edit position' : 'Add position',
+      okText: data?.id ? 'Update position' : 'Add position',
+    },
     form: {
       initialValues,
       validationSchema,

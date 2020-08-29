@@ -5,12 +5,13 @@ import * as yup from 'yup';
 
 import { FormikModal } from '@/components/molecules';
 import { FormikClanSelect, FormikGuildSelect } from '@/components/selects';
-import { usePositions } from '@/graphql/positions';
+import { usePositionMutations } from '@/graphql/positions';
+import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
 import { CreatePositionInput } from '@/typings/graphql';
 import { createValidationSchema } from '@/utils/forms';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 
 type FormValues = CreatePositionInput;
 
@@ -23,7 +24,7 @@ type PositionModalProps = DataModalProps<PositionModalData>;
 const usePositionModal = (props: PositionModalProps) => {
   const { data, ...modalProps } = props;
 
-  const positions = usePositions();
+  const { createPosition, updatePosition } = usePositionMutations();
 
   const validationSchema = createValidationSchema<FormValues>({
     name: yup.string().required().default(''),
@@ -34,33 +35,24 @@ const usePositionModal = (props: PositionModalProps) => {
   });
 
   const initialValues = data ?? validationSchema.initialValues;
-  const messages = getBasicMessages('position', data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    messages.loading();
+    const mutation = data?.id ? updatePosition({ ...values, id: data.id }) : createPosition(values);
 
-    try {
-      if (data?.id) {
-        await positions.update({ variables: { data: { ...values, id: data.id } } });
-      } else {
-        await positions.create({ variables: { data: values } });
-      }
-
-      modalProps.onCancel();
-      messages.success();
-    } catch (ex) {
-      console.log(ex);
-      messages.failure();
-    } finally {
-      helpers.setSubmitting(false);
-    }
+    runMutation({
+      mutation,
+      success: () => modalProps.onCancel(),
+      finally: () => helpers.setSubmitting(false),
+      messages: getGenericMessages('position', data ? 'update' : 'create'),
+    });
   };
 
-  modalProps.title = data?.id ? 'Edit position' : 'Create position';
-  modalProps.okText = data?.id ? 'Update position' : 'Create';
-
   return {
-    modal: modalProps,
+    modal: {
+      ...modalProps,
+      title: data?.id ? 'Edit position' : 'Create position',
+      okText: data?.id ? 'Update position' : 'Create',
+    },
     form: {
       initialValues,
       validationSchema,

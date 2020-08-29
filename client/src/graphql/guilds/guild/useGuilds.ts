@@ -1,18 +1,18 @@
-import { GuildsQuery, GuildsQueryVariables, useGuildsQuery } from './guild.apollo';
+import { GuildsQuery, useGuildsQuery } from './guild.apollo';
 
 export type UseGuilds = {
   item: GuildsQuery['guilds'][number];
-  params: GuildsQueryVariables;
 };
 
-export const useGuilds = (params?: UseGuilds['params']) => {
-  const { data, loading, error } = useGuildsQuery({ variables: params });
+export const useGuilds = () => {
+  const { data, loading, error, refetch } = useGuildsQuery();
 
   const guilds = data?.guilds ?? [];
 
   return {
     loading,
     error,
+    refetch,
     data: guilds,
     count: guilds.length,
   };

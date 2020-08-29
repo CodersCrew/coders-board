@@ -10,6 +10,6 @@ export const useSlackMutations = () => {
   const [syncSlackUser] = useSyncSlackUserMutation(mutationConfig);
 
   return {
-    syncUser: (data: SyncSlackUserInput) => syncSlackUser({ variables: { data } }),
+    syncSlackUser: (data: SyncSlackUserInput) => syncSlackUser({ variables: { data } }),
   };
 };

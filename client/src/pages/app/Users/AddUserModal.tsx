@@ -6,10 +6,11 @@ import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
 import { useUsersMutations } from '@/graphql/users';
+import { runMutation } from '@/services/graphql';
 import { CFC } from '@/typings/components';
 import { CreateUserInput } from '@/typings/graphql';
 import { createValidationSchema } from '@/utils/forms';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 
 type FormValues = Omit<CreateUserInput, 'password'>;
 
@@ -52,7 +53,7 @@ export const AddUserModalComponent: CFC<AddUserModalComponentProps> = props => {
 };
 
 export const AddUserModal: CFC<AddUserModalProps> = props => {
-  const usersMutations = useUsersMutations();
+  const { createUser } = useUsersMutations();
 
   const validationSchema = createValidationSchema<FormValues>({
     firstName: yup.string().required().default(''),
@@ -66,25 +67,17 @@ export const AddUserModal: CFC<AddUserModalProps> = props => {
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     const primaryEmail = values.primaryEmail + EMAIL_SUFFIX;
 
-    try {
-      await yup.string().email().validate(primaryEmail);
-    } catch (ex) {
-      helpers.setFieldError('primaryEmail', ex.errors[0]);
-      return;
-    }
+    const isEmailValid = yup.string().email().isValidSync(primaryEmail);
 
-    const messages = getBasicMessages('user', 'create');
-    messages.loading();
-
-    try {
-      await usersMutations.create({ variables: { data: { ...values, primaryEmail, password: 'Li837jdk3JKP' } } });
-      props.onCancel();
-      messages.success();
-    } catch (ex) {
-      console.log(ex);
-      messages.failure();
-    } finally {
-      helpers.setSubmitting(false);
+    if (!isEmailValid) {
+      helpers.setFieldError('primaryEmail', 'Invalid email format');
+    } else {
+      runMutation({
+        mutation: createUser({ ...values, primaryEmail, password: 'Li837jdk3JKP' }),
+        success: () => props.onCancel(),
+        finally: () => helpers.setSubmitting(false),
+        messages: getGenericMessages('user', 'create'),
+      });
     }
   };
 

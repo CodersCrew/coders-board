@@ -4,8 +4,9 @@ import { useTheme } from '@emotion/react';
 
 import { Icon } from '@/components/atoms';
 import { confirmModal } from '@/components/molecules';
-import { useSquadMembers } from '@/graphql/squads';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { useSquadMemberMutations } from '@/graphql/squads';
+import { runMutation } from '@/services/graphql';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useSquadContext } from '../SquadContext';
 
@@ -17,9 +18,7 @@ type Params = {
 export const useDeleteSquadMemberConfirm = () => {
   const theme = useTheme();
   const { squadId } = useSquadContext();
-  const squadMembers = useSquadMembers();
-
-  const messages = getBasicMessages('member', 'delete');
+  const { deleteSquadMember } = useSquadMemberMutations();
 
   return ({ fullName, id }: Params) => {
     confirmModal({
@@ -28,15 +27,14 @@ export const useDeleteSquadMemberConfirm = () => {
       okText: 'Yes, delete member',
       cancelText: 'No, preserve member',
       width: 440,
-      onOk: async () => {
-        try {
-          messages.loading();
-          await squadMembers.delete({ variables: { id, squadId } });
-          messages.success();
-        } catch ({ graphQLErrors }) {
-          messages.failure(graphQLErrors[0].message);
-        }
-      },
+      onOk: () =>
+        runMutation({
+          mutation: deleteSquadMember({ id, squadId }),
+          messages: {
+            ...getGenericMessages('member', 'delete'),
+            failure: ({ graphQLErrors }) => graphQLErrors[0].message,
+          },
+        }),
       okButtonProps: { danger: true },
       icon: <Icon icon={DeleteOutlined} color={theme.colors.error.main} />,
       autoFocusButton: null,

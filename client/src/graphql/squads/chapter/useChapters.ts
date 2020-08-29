@@ -1,17 +1,20 @@
-import { ChaptersQuery, useChaptersQuery } from './chapter.apollo';
+import { ChaptersQuery, ChaptersQueryVariables, useChaptersQuery } from './chapter.apollo';
 
 export type UseChapters = {
   item: ChaptersQuery['chapters'][number];
-  params: { squadId: string };
+  variables: ChaptersQueryVariables;
 };
 
-export const useChapters = (params: UseChapters['params']) => {
-  const { data, loading, error, refetch } = useChaptersQuery({ variables: { squadId: params.squadId } });
+export const useChapters = (variables: UseChapters['variables']) => {
+  const { data, loading, error, refetch } = useChaptersQuery({ variables });
+
+  const chapters = data?.chapters ?? [];
 
   return {
     loading,
     error,
-    data: data?.chapters ?? [],
     refetch,
+    data: chapters,
+    count: chapters.length,
   };
 };

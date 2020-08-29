@@ -4,8 +4,9 @@ import { useTheme } from '@emotion/react';
 
 import { Icon } from '@/components/atoms';
 import { confirmModal } from '@/components/molecules';
-import { usePositions } from '@/graphql/positions';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { usePositionMutations } from '@/graphql/positions';
+import { runMutation } from '@/services/graphql';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 
 type Params = {
   name: string;
@@ -13,10 +14,8 @@ type Params = {
 };
 
 export const useDeletePositionConfirm = ({ name, id }: Params) => {
-  const positions = usePositions();
+  const { deletePosition } = usePositionMutations();
   const { colors } = useTheme();
-
-  const messages = getBasicMessages('position', 'delete');
 
   return () =>
     confirmModal({
@@ -24,16 +23,11 @@ export const useDeletePositionConfirm = ({ name, id }: Params) => {
       content: `Are you sure you want to delete position "${name}"? This operation will be permanent and cannot be undone.`,
       okText: 'Yes, delete position',
       cancelText: 'No, preserve position',
-      onOk: async () => {
-        try {
-          messages.loading();
-          await positions.delete({ variables: { id } });
-          messages.success();
-        } catch (ex) {
-          console.log(ex);
-          messages.failure();
-        }
-      },
+      onOk: () =>
+        runMutation({
+          mutation: deletePosition({ id }),
+          messages: getGenericMessages('position', 'delete'),
+        }),
       okButtonProps: { danger: true },
       icon: <Icon icon={DeleteOutlined} color={colors.error.main} />,
       autoFocusButton: null,

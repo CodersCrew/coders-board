@@ -6,12 +6,13 @@ import * as yup from 'yup';
 
 import { FormikModal } from '@/components/molecules';
 import { FormikSuccessTypeSelect, FormikUserSelect } from '@/components/selects';
-import { useSuccessesMutations } from '@/graphql/successes';
+import { useSuccessMutations } from '@/graphql/successes';
+import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
 import { CreateSuccessInput, SuccessType } from '@/typings/graphql';
 import { createValidationSchema } from '@/utils/forms';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 
 type FormValues = CreateSuccessInput;
 
@@ -22,7 +23,7 @@ export type SuccessModalData = WithId<FormValues> | null;
 type SuccessModalProps = DataModalProps<SuccessModalData>;
 
 const useSuccessModal = ({ data, ...modalProps }: SuccessModalProps) => {
-  const successesMutations = useSuccessesMutations();
+  const { createSuccess, updateSuccess } = useSuccessMutations();
 
   const validationSchema = createValidationSchema<FormValues>({
     name: yup.string().required().default(''),
@@ -33,26 +34,16 @@ const useSuccessModal = ({ data, ...modalProps }: SuccessModalProps) => {
   });
 
   const initialValues = data ?? validationSchema.initialValues;
-  const messages = getBasicMessages('success', data ? 'update' : 'create');
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    messages.loading();
+    const mutation = data?.id ? updateSuccess({ ...values, id: data.id }) : createSuccess(values);
 
-    try {
-      if (data?.id) {
-        await successesMutations.update({ variables: { data: { ...values, id: data.id } } });
-      } else {
-        await successesMutations.create({ variables: { data: values } });
-      }
-
-      modalProps.onCancel();
-      messages.success();
-    } catch (ex) {
-      console.log(ex);
-      messages.failure();
-    } finally {
-      helpers.setSubmitting(false);
-    }
+    runMutation({
+      mutation,
+      success: () => modalProps.onCancel(),
+      finally: () => helpers.setSubmitting(false),
+      messages: getGenericMessages('success', data ? 'update' : 'create'),
+    });
   };
 
   return {

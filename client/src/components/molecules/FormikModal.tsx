@@ -13,11 +13,13 @@ export function FormikModal<V>({ children, form, modal }: FormikModalProps<V>) {
   const formik = useFormik<V>(form);
 
   const buttonProps = { loading: formik.isSubmitting };
+  const onCancel = formik.isSubmitting ? undefined : modal.onCancel;
 
   return (
     <Modal
       {...modal}
       onOk={formik.submitForm}
+      onCancel={onCancel}
       okButtonProps={{ ...modal.okButtonProps, ...buttonProps }}
       cancelButtonProps={{ ...modal.cancelButtonProps, ...buttonProps }}
     >

@@ -19,7 +19,7 @@ export type SyncSlackModalData = { userId: string };
 type SyncSlackModalProps = DataModalProps<SyncSlackModalData>;
 
 const useSyncSlackModal = ({ data, ...modalProps }: SyncSlackModalProps) => {
-  const slackMutations = useSlackMutations();
+  const { syncSlackUser } = useSlackMutations();
 
   const validationSchema = createValidationSchema<FormValues>({
     slackId: yup.string().required().default(''),
@@ -31,7 +31,7 @@ const useSyncSlackModal = ({ data, ...modalProps }: SyncSlackModalProps) => {
     message.loading('Syncing user with Slack account');
 
     try {
-      await slackMutations.syncUser({ userId: data.userId, slackId: values.slackId });
+      await syncSlackUser({ userId: data.userId, slackId: values.slackId });
       modalProps.onCancel();
       message.success('User synced with Slack');
     } catch (ex) {

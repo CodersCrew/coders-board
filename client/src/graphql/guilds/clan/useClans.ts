@@ -1,25 +1,20 @@
-import { useEffect } from 'react';
-
-import { ClansQuery, useClansLazyQuery } from './clan.apollo';
+import { ClansQuery, ClansQueryVariables, useClansQuery } from './clan.apollo';
 
 export type UseClans = {
   item: ClansQuery['clans'][number];
-  params: { guildId?: string };
+  variables: ClansQueryVariables;
 };
 
-export const useClans = (params: UseClans['params']) => {
-  const [fetchClans, { data, loading, error }] = useClansLazyQuery();
+export const useClans = (variables: UseClans['variables']) => {
+  const { data, loading, error, refetch } = useClansQuery({ variables });
 
-  useEffect(() => {
-    if (params?.guildId) {
-      fetchClans({ variables: { guildId: params.guildId } });
-    }
-  }, [params?.guildId]);
+  const clans = data?.clans ?? [];
 
   return {
     loading,
     error,
-    data: data?.clans ?? [],
-    fetch: fetchClans,
+    refetch,
+    data: clans,
+    count: clans.length,
   };
 };

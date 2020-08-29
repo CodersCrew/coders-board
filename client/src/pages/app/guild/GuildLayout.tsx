@@ -19,7 +19,7 @@ const GuildLayout = () => {
   const { guildId } = useGuildContext();
   const location = useLocation();
   const navigate = useNavigate();
-  const guild = useGuild({ guildId });
+  const guild = useGuild({ id: guildId });
 
   if (!guild.data) return null;
 

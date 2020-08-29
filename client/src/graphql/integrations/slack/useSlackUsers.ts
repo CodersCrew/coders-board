@@ -7,10 +7,13 @@ export type UseSlackUsers = {
 export const useSlackUsers = () => {
   const { data, loading, error, refetch } = useSlackUsersQuery();
 
+  const slackUsers = data?.slackUsers ?? [];
+
   return {
     loading,
     error,
-    data: data?.slackUsers ?? [],
     refetch,
+    data: slackUsers,
+    count: slackUsers.length,
   };
 };

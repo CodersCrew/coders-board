@@ -4,8 +4,9 @@ import { useTheme } from '@emotion/react';
 
 import { Icon } from '@/components/atoms';
 import { confirmModal } from '@/components/molecules';
-import { useChaptersMutations } from '@/graphql/squads';
-import { getBasicMessages } from '@/utils/getBasicMessages';
+import { useChapterMutations } from '@/graphql/squads';
+import { runMutation } from '@/services/graphql';
+import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useSquadContext } from '../SquadContext';
 
@@ -17,9 +18,7 @@ type Params = {
 export const useDeleteChapterConfirm = () => {
   const theme = useTheme();
   const { squadId } = useSquadContext();
-  const chaptersMutations = useChaptersMutations();
-
-  const messages = getBasicMessages('chapter', 'delete');
+  const { deleteChapter } = useChapterMutations();
 
   return ({ name, id }: Params) => {
     confirmModal({
@@ -28,15 +27,14 @@ export const useDeleteChapterConfirm = () => {
       okText: 'Yes, delete chapter',
       cancelText: 'No, preserve chapter',
       width: 440,
-      onOk: async () => {
-        try {
-          messages.loading();
-          await chaptersMutations.delete({ variables: { id, squadId } });
-          messages.success();
-        } catch ({ graphQLErrors }) {
-          messages.failure(graphQLErrors[0].message);
-        }
-      },
+      onOk: () =>
+        runMutation({
+          mutation: deleteChapter({ id, squadId }),
+          messages: {
+            ...getGenericMessages('chapter', 'delete'),
+            failure: ({ graphQLErrors }) => graphQLErrors[0].message,
+          },
+        }),
       okButtonProps: { danger: true },
       icon: <Icon icon={DeleteOutlined} color={theme.colors.error.main} />,
       autoFocusButton: null,

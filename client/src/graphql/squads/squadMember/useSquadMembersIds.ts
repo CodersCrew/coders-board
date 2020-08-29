@@ -1,11 +1,11 @@
-import { useSquadMembersIdsQuery } from './squadMember.apollo';
+import { SquadMembersIdsQueryVariables, useSquadMembersIdsQuery } from './squadMember.apollo';
 
 export type UseSquadMembersIds = {
-  params: { squadId: string };
+  variables: SquadMembersIdsQueryVariables;
 };
 
-export const useSquadMembersIds = ({ squadId }: UseSquadMembersIds['params']) => {
-  const { data } = useSquadMembersIdsQuery({ variables: { squadId } });
+export const useSquadMembersIds = (variables: UseSquadMembersIds['variables']) => {
+  const { data } = useSquadMembersIdsQuery({ variables });
 
   const squadMembers = data?.squadMembers ?? [];
   const membersIds = squadMembers.map(({ id }) => id);

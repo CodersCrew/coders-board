@@ -7,10 +7,13 @@ export type UseGsuiteUsers = {
 export const useGsuiteUsers = () => {
   const { data, loading, error, refetch } = useGsuiteUsersQuery();
 
+  const gsuiteUsers = data?.gsuiteUsers ?? [];
+
   return {
     loading,
     error,
-    data: data?.gsuiteUsers ?? [],
     refetch,
+    data: gsuiteUsers,
+    count: gsuiteUsers.length,
   };
 };
