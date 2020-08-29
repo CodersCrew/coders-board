@@ -9,11 +9,18 @@ import { usePositionMutations } from '@/graphql/positions';
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { CreatePositionInput } from '@/typings/graphql';
-import { createValidationSchema } from '@/utils/forms';
+import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
-type FormValues = CreatePositionInput;
+const { initialValues, validationSchema, fields } = createFormFields({
+  name: yup.string().label('Position name').required().default(''),
+  description: yup.string().label('Description').optional().nullable(),
+  image: yup.string().label('').optional().nullable(),
+  clanId: yup.string().label('Related clan').optional().nullable(),
+  guildId: yup.string().label('Related guild').optional().nullable(),
+});
+
+type FormValues = typeof initialValues;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -25,16 +32,6 @@ const usePositionModal = (props: PositionModalProps) => {
   const { data, ...modalProps } = props;
 
   const { createPosition, updatePosition } = usePositionMutations();
-
-  const validationSchema = createValidationSchema<FormValues>({
-    name: yup.string().required().default(''),
-    description: yup.string().optional().nullable(),
-    image: yup.string().optional().nullable(),
-    clanId: yup.string().optional().nullable(),
-    guildId: yup.string().optional().nullable(),
-  });
-
-  const initialValues = data ?? validationSchema.initialValues;
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     const mutation = data?.id ? updatePosition({ ...values, id: data.id }) : createPosition(values);
@@ -54,7 +51,7 @@ const usePositionModal = (props: PositionModalProps) => {
       okText: data?.id ? 'Update position' : 'Create',
     },
     form: {
-      initialValues,
+      initialValues: data ?? initialValues,
       validationSchema,
       onSubmit: handleSubmit,
     },
@@ -73,8 +70,13 @@ const ClanSelectField = () => {
   if (!values.guildId) return null;
 
   return (
-    <Form.Item name="clanId" label="Related clan">
-      <FormikClanSelect name="clanId" placeholder="Choose related clan..." allowClear guildId={values.guildId} />
+    <Form.Item {...fields.clanId}>
+      <FormikClanSelect
+        name={fields.clanId.name}
+        placeholder="Choose related clan..."
+        allowClear
+        guildId={values.guildId}
+      />
     </Form.Item>
   );
 };
@@ -85,14 +87,14 @@ export const PositionModal = createDataModal<PositionModalProps>(props => {
   return (
     <FormikModal form={form} modal={modal}>
       <Form layout="vertical" colon>
-        <Form.Item name="name" label="Position name" required>
-          <Input name="name" placeholder="Enter position name..." />
+        <Form.Item {...fields.name}>
+          <Input name={fields.name.name} placeholder="Enter position name..." />
         </Form.Item>
-        <Form.Item name="description" label="Description">
-          <Input.TextArea name="description" placeholder="Enter description..." />
+        <Form.Item {...fields.description}>
+          <Input.TextArea name={fields.description.name} placeholder="Enter description..." />
         </Form.Item>
-        <Form.Item name="guildId" label="Related guild">
-          <FormikGuildSelect name="guildId" placeholder="Choose related guild..." allowClear />
+        <Form.Item {...fields.guildId}>
+          <FormikGuildSelect name={fields.guildId.name} placeholder="Choose related guild..." allowClear />
         </Form.Item>
         <ClanSelectField />
       </Form>

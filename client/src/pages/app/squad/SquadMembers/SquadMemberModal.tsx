@@ -9,13 +9,18 @@ import { useSquadMemberMutations, useSquadMembersIds } from '@/graphql/squads';
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { CreateSquadMemberInput, TeamRole } from '@/typings/graphql';
-import { createValidationSchema } from '@/utils/forms';
+import { TeamRole } from '@/typings/graphql';
+import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useSquadContext } from '../SquadContext';
 
-type FormValues = Omit<CreateSquadMemberInput, 'squadId'>;
+const { initialValues, validationSchema, fields } = createFormFields({
+  userId: yup.string().required(),
+  role: yup.mixed<TeamRole>().required().default(TeamRole.Member),
+});
+
+type FormValues = typeof initialValues;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -28,11 +33,6 @@ const useSquadMemberModal = (props: SquadMemberModalProps) => {
 
   const { squadId } = useSquadContext();
   const { createSquadMember, updateSquadMember } = useSquadMemberMutations();
-
-  const validationSchema = createValidationSchema<FormValues>({
-    userId: yup.string().required(),
-    role: yup.mixed<TeamRole>().required().default(TeamRole.Member),
-  });
 
   const handleSubmit: FormConfig['onSubmit'] = (values, helpers) => {
     const mutation = data
@@ -54,7 +54,7 @@ const useSquadMemberModal = (props: SquadMemberModalProps) => {
       okText: data ? 'Update member' : 'Add member',
     },
     form: {
-      initialValues: data ?? validationSchema.initialValues,
+      initialValues: data ?? initialValues,
       validationSchema,
       onSubmit: handleSubmit,
     },
@@ -67,9 +67,9 @@ const MemberPicker = () => {
   const squadMembersIds = useSquadMembersIds({ squadId });
 
   return (
-    <Form.Item name="userId" label="User" required>
+    <Form.Item {...fields.userId}>
       <FormikUserSelect
-        name="userId"
+        name={fields.userId.name}
         placeholder="Choose user to add..."
         showSearch
         virtual
@@ -86,8 +86,8 @@ export const SquadMemberModal = createDataModal<SquadMemberModalProps>(props => 
     <FormikModal form={form} modal={modal}>
       <Form layout="vertical" colon>
         {!isUpdateModal && <MemberPicker />}
-        <Form.Item name="role" label="Role" required>
-          <FormikTeamRoleSelect name="role" />
+        <Form.Item {...fields.role}>
+          <FormikTeamRoleSelect name={fields.role.name} />
         </Form.Item>
       </Form>
     </FormikModal>

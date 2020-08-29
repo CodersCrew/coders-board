@@ -10,11 +10,24 @@ import { useSuccessMutations } from '@/graphql/successes';
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { CreateSuccessInput, SuccessType } from '@/typings/graphql';
-import { createValidationSchema } from '@/utils/forms';
+import { SuccessType } from '@/typings/graphql';
+import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
-type FormValues = CreateSuccessInput;
+const { initialValues, validationSchema, fields } = createFormFields({
+  name: yup.string().label('Success name').required().default(''),
+  description: yup.string().label('Description').required().default(''),
+  date: yup.date().required().label('Date').max(moment().add(1, 'day').toDate()),
+  type: yup
+    .mixed<SuccessType>()
+    .label('Type of the success')
+    .required()
+    .oneOf(Object.values(SuccessType))
+    .default(SuccessType.Epic),
+  usersIds: yup.array(yup.string().required()).label('Users participating in the success').required().default([]),
+});
+
+type FormValues = typeof initialValues;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -24,16 +37,6 @@ type SuccessModalProps = DataModalProps<SuccessModalData>;
 
 const useSuccessModal = ({ data, ...modalProps }: SuccessModalProps) => {
   const { createSuccess, updateSuccess } = useSuccessMutations();
-
-  const validationSchema = createValidationSchema<FormValues>({
-    name: yup.string().required().default(''),
-    description: yup.string().required().default(''),
-    date: yup.date().required().max(moment().add(1, 'day').toDate()),
-    type: yup.mixed<SuccessType>().required().oneOf(Object.values(SuccessType)).default(SuccessType.Epic),
-    usersIds: yup.array(yup.string().required()).required().default([]),
-  });
-
-  const initialValues = data ?? validationSchema.initialValues;
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     const mutation = data?.id ? updateSuccess({ ...values, id: data.id }) : createSuccess(values);
@@ -53,7 +56,7 @@ const useSuccessModal = ({ data, ...modalProps }: SuccessModalProps) => {
       okText: data?.id ? 'Update success' : 'Add success',
     },
     form: {
-      initialValues,
+      initialValues: data ?? initialValues,
       validationSchema,
       onSubmit: handleSubmit,
     },
@@ -66,25 +69,25 @@ export const SuccessModal = createDataModal<SuccessModalProps>(props => {
   return (
     <FormikModal form={form} modal={modal}>
       <Form layout="vertical" colon>
-        <Form.Item name="name" label="Success name" required>
-          <Input name="name" placeholder="Enter position name..." />
+        <Form.Item {...fields.name}>
+          <Input name={fields.name.name} placeholder="Enter position name..." />
         </Form.Item>
-        <Form.Item name="description" label="Description" required>
-          <Input.TextArea name="description" placeholder="Enter description..." />
+        <Form.Item {...fields.description}>
+          <Input.TextArea name={fields.description.name} placeholder="Enter description..." />
         </Form.Item>
-        <Form.Item name="date" label="Date" required>
+        <Form.Item {...fields.date}>
           <DatePicker
-            name="date"
+            name={fields.date.name}
             placeholder="Choose success date..."
             allowClear={false}
             disabledDate={current => current.isSameOrAfter(moment())}
           />
         </Form.Item>
-        <Form.Item name="type" label="Type of the success" required>
-          <FormikSuccessTypeSelect name="type" />
+        <Form.Item {...fields.type}>
+          <FormikSuccessTypeSelect name={fields.type.name} />
         </Form.Item>
-        <Form.Item name="usersIds" label="Users participating in the success">
-          <FormikUserSelect name="usersIds" mode="multiple" />
+        <Form.Item {...fields.usersIds}>
+          <FormikUserSelect name={fields.usersIds.name} mode="multiple" />
         </Form.Item>
       </Form>
     </FormikModal>

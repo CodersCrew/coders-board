@@ -12,14 +12,22 @@ import { useSquadMembersIds, useSquadPositionMutations } from '@/graphql/squads'
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { CreateSquadPositionInput } from '@/typings/graphql';
-import { createValidationSchema } from '@/utils/forms';
+import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';
 
-type FormValues = Omit<CreateSquadPositionInput, 'squadId'>;
+const { initialValues, validationSchema, fields } = createFormFields({
+  from: yup.date().label('Start date').required(),
+  to: yup.date().label('End date').optional().nullable(),
+  notes: yup.string().label('Notes about position').optional().nullable(),
+  memberId: yup.string().label('Squad member').required(),
+  positionId: yup.string().label('Position').required(),
+  chapterId: yup.string().label('Chapter').optional(),
+});
+
+type FormValues = typeof initialValues;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -37,18 +45,6 @@ const useSquadPositionModal = (props: SquadPositionModalProps) => {
 
   const { squadId } = useSquadContext();
   const { createSquadPosition, updateSquadPosition } = useSquadPositionMutations();
-  const squadMembersIds = useSquadMembersIds({ squadId });
-
-  const validationSchema = createValidationSchema<FormValues>({
-    from: yup.date().required(),
-    to: yup.date().optional().nullable(),
-    notes: yup.string().optional().nullable(),
-    memberId: yup.string().required(),
-    positionId: yup.string().required(),
-    chapterId: yup.string().optional(),
-  });
-
-  const initialValues = data ?? validationSchema.initialValues;
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     const mutation = data?.id
@@ -70,12 +66,10 @@ const useSquadPositionModal = (props: SquadPositionModalProps) => {
       okText: data?.id ? 'Update position' : 'Add position',
     },
     form: {
-      initialValues,
+      initialValues: data ?? initialValues,
       validationSchema,
       onSubmit: handleSubmit,
     },
-    squadMembersIds,
-    squadId,
     isUpdateModal: Boolean(data),
   };
 };
@@ -84,9 +78,9 @@ const FromPicker = () => {
   const { values } = useFormikContext<FormValues>();
 
   return (
-    <Form.Item name="from" label="Start date" required>
+    <Form.Item {...fields.from}>
       <DatePicker
-        name="from"
+        name={fields.from.name}
         allowClear={false}
         placeholder="Choose start date..."
         {...pickerProps}
@@ -103,9 +97,9 @@ const ToPicker = () => {
   const { values } = useFormikContext<FormValues>();
 
   return (
-    <Form.Item name="to" label="End date">
+    <Form.Item {...fields.to}>
       <DatePicker
-        name="to"
+        name={fields.to.name}
         placeholder="Choose end date..."
         {...pickerProps}
         disabledDate={current => {
@@ -117,24 +111,53 @@ const ToPicker = () => {
   );
 };
 
+const UserPicker = (props: { isUpdateModal: boolean }) => {
+  const { squadId } = useSquadContext();
+  const squadMembersIds = useSquadMembersIds({ squadId });
+
+  return (
+    <Form.Item {...fields.memberId}>
+      <FormikUserSelect
+        name={fields.memberId.name}
+        placeholder="Select team member..."
+        ids={squadMembersIds.membersUserIds}
+        idMapper={squadMembersIds.userIdToMemberIdMap}
+        disabled={props.isUpdateModal}
+        showSearch
+      />
+    </Form.Item>
+  );
+};
+
+const ChapterPicker = (props: { isUpdateModal: boolean }) => {
+  const { squadId } = useSquadContext();
+
+  return (
+    <Form.Item {...fields.chapterId}>
+      <FormikChapterSelect
+        squadId={squadId}
+        name={fields.chapterId.name}
+        placeholder="Select chapter for the role..."
+        allowClear
+        disabled={props.isUpdateModal}
+      />
+    </Form.Item>
+  );
+};
+
 export const SquadPositionModal = createDataModal<SquadPositionModalProps>(props => {
-  const { form, modal, squadMembersIds, isUpdateModal, squadId } = useSquadPositionModal(props);
+  const { form, modal, isUpdateModal } = useSquadPositionModal(props);
 
   return (
     <FormikModal form={form} modal={modal}>
       <Form layout="vertical" colon>
-        <Form.Item name="memberId" label="Squad member" required>
-          <FormikUserSelect
-            name="memberId"
-            placeholder="Select team member..."
-            ids={squadMembersIds.membersUserIds}
-            idMapper={squadMembersIds.userIdToMemberIdMap}
+        <UserPicker isUpdateModal={isUpdateModal} />
+        <Form.Item {...fields.positionId}>
+          <FormikPositionSelect
+            name={fields.positionId.name}
+            placeholder="Select position..."
             disabled={isUpdateModal}
-            showSearch
           />
-        </Form.Item>
-        <Form.Item name="positionId" label="Position" required>
-          <FormikPositionSelect name="positionId" placeholder="Select position..." disabled={isUpdateModal} />
         </Form.Item>
         <Box display="flex">
           <Box width={1 / 2}>
@@ -145,18 +168,10 @@ export const SquadPositionModal = createDataModal<SquadPositionModalProps>(props
             <ToPicker />
           </Box>
         </Box>
-        <Form.Item name="notes" label="Notes about position">
-          <Input.TextArea name="notes" placeholder="Enter notes..." />
+        <Form.Item {...fields.notes}>
+          <Input.TextArea name={fields.notes.name} placeholder="Enter notes..." />
         </Form.Item>
-        <Form.Item name="chapterId" label="Chapter">
-          <FormikChapterSelect
-            squadId={squadId}
-            name="chapterId"
-            placeholder="Select chapter for the role..."
-            allowClear
-            disabled={isUpdateModal}
-          />
-        </Form.Item>
+        <ChapterPicker isUpdateModal={isUpdateModal} />
       </Form>
     </FormikModal>
   );

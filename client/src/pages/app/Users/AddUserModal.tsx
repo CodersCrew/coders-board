@@ -1,68 +1,32 @@
 import React from 'react';
-import { Modal } from 'antd';
-import { ModalProps } from 'antd/lib/modal';
-import { Formik, FormikConfig, useFormikContext } from 'formik';
+import { FormikConfig } from 'formik';
 import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
+import { FormikModal } from '@/components/molecules';
 import { useUsersMutations } from '@/graphql/users';
 import { runMutation } from '@/services/graphql';
-import { CFC } from '@/typings/components';
-import { CreateUserInput } from '@/typings/graphql';
-import { createValidationSchema } from '@/utils/forms';
+import { createDataModal, DataModalProps } from '@/services/modals';
+import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
-type FormValues = Omit<CreateUserInput, 'password'>;
+const { initialValues, validationSchema, fields } = createFormFields({
+  firstName: yup.string().label('First name').required().default(''),
+  lastName: yup.string().label('Last name').required().default(''),
+  primaryEmail: yup.string().label('CodersCrew email').required().lowercase().default(''),
+  recoveryEmail: yup.string().label('Private email').required().email().default(''),
+});
+
+type FormValues = typeof initialValues;
 
 type FormConfig = FormikConfig<FormValues>;
 
-type AddUserModalProps = ModalProps & {
-  onCancel: () => void;
-};
-
-type AddUserModalComponentProps = AddUserModalProps;
+type AddUserModalProps = DataModalProps<null>;
 
 const EMAIL_SUFFIX = '@coderscrew.pl';
 
-export const AddUserModalComponent: CFC<AddUserModalComponentProps> = props => {
-  const formik = useFormikContext<FormValues>();
-
-  return (
-    <Modal
-      {...props}
-      destroyOnClose
-      title="Add a new user"
-      okButtonProps={{ onClick: formik.submitForm, children: 'Add user', loading: formik.isSubmitting }}
-    >
-      <Form layout="vertical" colon>
-        <Form.Item name="firstName" label="First name" required>
-          <Input name="firstName" placeholder="Enter first name..." />
-        </Form.Item>
-        <Form.Item name="lastName" label="Last name" required>
-          <Input name="lastName" placeholder="Enter last name..." />
-        </Form.Item>
-        <Form.Item name="primaryEmail" label="CodersCrew email" required>
-          <Input name="primaryEmail" placeholder="Enter CodersCrew email..." addonAfter={EMAIL_SUFFIX} />
-        </Form.Item>
-        <Form.Item name="recoveryEmail" label="Private email" required>
-          <Input name="recoveryEmail" placeholder="Enter private email..." />
-        </Form.Item>
-      </Form>
-    </Modal>
-  );
-};
-
-export const AddUserModal: CFC<AddUserModalProps> = props => {
+const useAddUserModal = (props: AddUserModalProps) => {
   const { createUser } = useUsersMutations();
-
-  const validationSchema = createValidationSchema<FormValues>({
-    firstName: yup.string().required().default(''),
-    lastName: yup.string().required().default(''),
-    primaryEmail: yup.string().required().lowercase().default(''),
-    recoveryEmail: yup.string().required().email().default(''),
-  });
-
-  const { initialValues } = validationSchema;
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     const primaryEmail = values.primaryEmail + EMAIL_SUFFIX;
@@ -81,9 +45,39 @@ export const AddUserModal: CFC<AddUserModalProps> = props => {
     }
   };
 
-  return (
-    <Formik initialValues={initialValues} validationSchema={validationSchema} onSubmit={handleSubmit}>
-      <AddUserModalComponent {...props} />
-    </Formik>
-  );
+  return {
+    modal: {
+      ...props,
+      title: 'Add a new user',
+      okText: 'Add user',
+    },
+    form: {
+      initialValues,
+      validationSchema,
+      onSubmit: handleSubmit,
+    },
+  };
 };
+
+export const AddUserModal = createDataModal<AddUserModalProps>(props => {
+  const { form, modal } = useAddUserModal(props);
+
+  return (
+    <FormikModal form={form} modal={modal}>
+      <Form layout="vertical" colon>
+        <Form.Item {...fields.firstName}>
+          <Input name={fields.firstName.name} placeholder="Enter first name..." />
+        </Form.Item>
+        <Form.Item {...fields.lastName}>
+          <Input name={fields.lastName.name} placeholder="Enter last name..." />
+        </Form.Item>
+        <Form.Item {...fields.primaryEmail}>
+          <Input name={fields.primaryEmail.name} placeholder="Enter CodersCrew email..." addonAfter={EMAIL_SUFFIX} />
+        </Form.Item>
+        <Form.Item {...fields.recoveryEmail}>
+          <Input name={fields.recoveryEmail.name} placeholder="Enter private email..." />
+        </Form.Item>
+      </Form>
+    </FormikModal>
+  );
+});

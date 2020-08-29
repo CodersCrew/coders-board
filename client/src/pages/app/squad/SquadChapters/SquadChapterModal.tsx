@@ -9,12 +9,18 @@ import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
 import { CreateChapterInput } from '@/typings/graphql';
-import { createValidationSchema } from '@/utils/forms';
+import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useSquadContext } from '../SquadContext';
 
-type FormValues = Omit<CreateChapterInput, 'squadId'>;
+const { initialValues, validationSchema, fields } = createFormFields({
+  name: yup.string().label('Name').required().default(''),
+  description: yup.string().label('E-mail').optional().default(''),
+  email: yup.string().label('Description').required().lowercase().default(''),
+});
+
+type FormValues = typeof initialValues;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -37,16 +43,6 @@ const useSquadChapterModal = (props: SquadChapterModalProps) => {
 
   const chapterPrefix = `${squad.data.name.toLowerCase().replace(/\s/g, '-')}-`;
   const emailRegex = new RegExp(`${chapterPrefix}(.*)${CHAPTER_SUFFIX}`);
-
-  const validationSchema = createValidationSchema<FormValues>({
-    name: yup.string().required().default(''),
-    description: yup.string().optional().default(''),
-    email: yup.string().required().lowercase().default(''),
-  });
-
-  const initialValues = data
-    ? { ...data, email: data.email.match(emailRegex)?.[1] ?? '' }
-    : validationSchema.initialValues;
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     const input: CreateChapterInput = {
@@ -71,7 +67,7 @@ const useSquadChapterModal = (props: SquadChapterModalProps) => {
   return {
     modal: modalProps,
     form: {
-      initialValues,
+      initialValues: data ? { ...data, email: data.email.match(emailRegex)?.[1] ?? '' } : initialValues,
       validationSchema,
       onSubmit: handleSubmit,
     },
@@ -85,19 +81,19 @@ export const SquadChapterModal = createDataModal<SquadChapterModalProps>(props =
   return (
     <FormikModal form={form} modal={modal}>
       <Form layout="vertical" colon>
-        <Form.Item name="name" label="Name" required>
-          <Input name="name" placeholder="Enter chapter name..." />
+        <Form.Item {...fields.name}>
+          <Input name={fields.name.name} placeholder="Enter chapter name..." />
         </Form.Item>
-        <Form.Item name="email" label="E-mail" required>
+        <Form.Item {...fields.email}>
           <Input
-            name="email"
+            name={fields.email.name}
             placeholder="Enter e-mail prefix..."
             addonBefore={chapterPrefix}
             addonAfter={CHAPTER_SUFFIX}
           />
         </Form.Item>
-        <Form.Item name="description" label="Description">
-          <Input.TextArea name="description" placeholder="Enter description..." />
+        <Form.Item {...fields.description}>
+          <Input.TextArea name={fields.description.name} placeholder="Enter description..." />
         </Form.Item>
       </Form>
     </FormikModal>

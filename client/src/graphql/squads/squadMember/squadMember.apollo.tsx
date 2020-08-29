@@ -13,7 +13,7 @@ export type SquadMembersQuery = { __typename?: 'Query' } & {
         user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName' | 'image'>;
         positions: Array<
           { __typename?: 'SquadPosition' } & Pick<Types.SquadPosition, 'id'> & {
-              position: { __typename?: 'Position' } & Pick<Types.Position, 'id' | 'name'>;
+              position: { __typename?: 'Chapter' } & Pick<Types.Chapter, 'id' | 'name'>;
               chapter?: Types.Maybe<{ __typename?: 'Chapter' } & Pick<Types.Chapter, 'id' | 'name'>>;
             }
         >;

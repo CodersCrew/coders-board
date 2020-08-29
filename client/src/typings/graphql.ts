@@ -128,7 +128,7 @@ export type SquadPosition = {
   memberId: Scalars['String'];
   chapter?: Maybe<Chapter>;
   chapterId: Scalars['String'];
-  position: Position;
+  position: Chapter;
   positionId: Scalars['String'];
   clan?: Maybe<Chapter>;
 };

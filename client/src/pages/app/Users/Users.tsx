@@ -5,7 +5,6 @@ import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Page, Table, TableActions } from '@/components/molecules';
 import { RoleSelect } from '@/components/selects';
 import { useAuthorizedUser, UseUsers, useUsers } from '@/graphql/users';
-import { useToggle } from '@/hooks/useToggle';
 import { useDataModal } from '@/services/modals';
 import { UserRole } from '@/typings/graphql';
 import { pick } from '@/utils/objects';
@@ -18,7 +17,7 @@ import { useUsersColumns } from './useUsersColumns';
 type User = UseUsers['item'];
 
 const Users = () => {
-  const userModalToggle = useToggle(false);
+  const addUserModal = useDataModal<null>();
   const syncSlackModal = useDataModal<SyncSlackModalData>();
   const [search, setSearch] = useState('');
   const [role, setRole] = useState<UserRole | undefined>();
@@ -58,7 +57,7 @@ const Users = () => {
       <Page.Content>
         <FiltersCard
           search={{ onSearch: setSearch, value: search, loading: users.loading }}
-          addButton={isAdmin && { label: 'Add user', onClick: userModalToggle.setOn }}
+          addButton={isAdmin && { label: 'Add user', onClick: () => addUserModal.open(null) }}
           leftNode={filtersLeftNode}
         />
         <Box maxWidth="100%" overflow="auto" mt={32}>
@@ -67,7 +66,7 @@ const Users = () => {
           </Card>
         </Box>
       </Page.Content>
-      <AddUserModal visible={userModalToggle.on} onCancel={userModalToggle.setOff} />
+      <AddUserModal {...addUserModal} />
       <SyncSlackModal {...syncSlackModal} />
     </Page>
   );

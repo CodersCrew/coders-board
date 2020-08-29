@@ -12,7 +12,7 @@ export type ChaptersQuery = { __typename?: 'Query' } & {
     { __typename?: 'Chapter' } & Pick<Types.Chapter, 'id' | 'name' | 'email' | 'description'> & {
         positions: Array<
           { __typename?: 'SquadPosition' } & Pick<Types.SquadPosition, 'id' | 'from' | 'to' | 'notes'> & {
-              position: { __typename?: 'Position' } & Pick<Types.Position, 'id' | 'name' | 'description'>;
+              position: { __typename?: 'Chapter' } & Pick<Types.Chapter, 'id' | 'name' | 'description'>;
               member: { __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id'> & {
                   user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName' | 'image'>;
                 };
