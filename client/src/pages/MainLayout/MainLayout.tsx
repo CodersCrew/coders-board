@@ -1,21 +1,24 @@
-import React, { useEffect, useState } from 'react';
+import React from 'react';
 import { Outlet } from 'react-router-dom';
 
 import { useAuth } from '@/graphql/users';
+import { useInitialized } from '@/hooks/useInitialized';
 
+import { AuthCheck } from './AuthCheck';
 import { LoadingScreen } from './LoadingScreen';
 
 const MainLayout = () => {
-  const [initialized, setInitialized] = useState(false);
   const auth = useAuth();
+  const initialized = useInitialized(!auth.loading);
 
-  useEffect(() => {
-    if (!auth.loading && !initialized) {
-      setInitialized(true);
-    }
-  }, [auth.loading]);
-
-  return initialized ? <Outlet /> : <LoadingScreen />;
+  return initialized ? (
+    <>
+      <AuthCheck />
+      <Outlet />
+    </>
+  ) : (
+    <LoadingScreen />
+  );
 };
 
 export default MainLayout;

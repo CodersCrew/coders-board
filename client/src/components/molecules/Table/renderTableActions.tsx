@@ -1,6 +1,6 @@
 import React from 'react';
 
-import { notEmpty } from '@/utils/arrays';
+import { isNotNil } from '@/utils/arrays';
 
 import { ActionsDropdown, ActionsDropdownProps } from '../ActionsDropdown';
 import { TableAction, TableRecord } from './Table.types';
@@ -72,7 +72,7 @@ function tableActionsToActions<T extends TableRecord>(record: T) {
 
 export function renderTableActions<T extends TableRecord>(actions: TableAction<T>[]) {
   return (_: unknown, record: T) => {
-    const parsedActions = actions.map(tableActionsToActions(record)).filter(notEmpty);
+    const parsedActions = actions.map(tableActionsToActions(record)).filter(isNotNil);
 
     return <ActionsDropdown actions={parsedActions} />;
   };

@@ -4,13 +4,13 @@ import React from 'react';
 import ReactDOM from 'react-dom';
 
 import Providers from './Providers';
-import Routing from './Routing';
+import { CurrentPage } from './services/routing';
 import * as serviceWorker from './serviceWorker';
 
 ReactDOM.render(
   // <React.StrictMode>
   <Providers>
-    <Routing />
+    <CurrentPage />
   </Providers>,
   // </React.StrictMode>,
   document.getElementById('root'),

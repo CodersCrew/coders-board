@@ -1,5 +1,10 @@
 import { useEffect } from 'react';
 
+/**
+ * Runs a callback when someone types the specified letter sequence.
+ * @param sequence Sequence of letters that will run the callback.
+ * @param callback Function invoked when someone types the sequence.
+ */
 export const useKeySequence = (sequence: string, callback: () => void) => {
   const pressed: string[] = [];
 

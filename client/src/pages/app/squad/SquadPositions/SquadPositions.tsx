@@ -1,11 +1,11 @@
 import React from 'react';
 import { List } from 'antd';
 import { get } from 'lodash';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 import { Box, Spin, Title } from '@/components/atoms';
 import { Card, FiltersCard } from '@/components/molecules';
 import { UseSquadPositions, useSquadPositions } from '@/graphql/squads';
-import { useQueryParam } from '@/hooks/useQueryParam';
 import { useDataModal } from '@/services/modals';
 import { groupBy } from '@/utils/arrays';
 
@@ -29,7 +29,7 @@ const SquadPositions = () => {
   const { squadId } = useSquadContext();
   const squadPositions = useSquadPositions({ squadId });
   const squadPositionModal = useDataModal<SquadPositionModalData>();
-  const [search, setSearch] = useQueryParam('search', false);
+  const [search, setSearch] = useQueryParam('search', withDefault(StringParam, ''));
 
   const filteredPositionItems = filterPositions(squadPositions.data, search);
 

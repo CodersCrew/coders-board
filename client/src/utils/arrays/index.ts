@@ -1,2 +1,2 @@
-export * from './notEmpty';
+export * from './isNotNil';
 export * from './groupBy';

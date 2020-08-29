@@ -1,18 +1,18 @@
 import React from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { List } from 'antd';
+import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 import { Button } from '@/components/atoms';
 import { Card, FiltersCard, Page } from '@/components/molecules';
 import { usePositions } from '@/graphql/positions';
-import { useQueryParam } from '@/hooks/useQueryParam';
 import { useDataModal } from '@/services/modals';
 
 import { Position } from './Position';
 import { PositionModal, PositionModalData } from './PositionModal';
 
 const Positions = () => {
-  const [search, setSearch] = useQueryParam('search', false);
+  const [search, setSearch] = useQueryParam('search', withDefault(StringParam, ''));
   const positions = usePositions({ search });
   const positionModal = useDataModal<PositionModalData>();
 

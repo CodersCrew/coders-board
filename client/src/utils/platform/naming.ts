@@ -11,6 +11,11 @@ const kindName = {
   [GuildPositionKind.Member]: 'Member',
 };
 
+/**
+ * Parses GuildPositionKind enum into a text.
+ * @param kind One of the GuildPositionKind values.
+ * @param options Options for transforming function output.
+ */
 export const parseGuildPositionKind = (kind: GuildPositionKind, options?: Options) => {
   let name = kindName[kind];
 

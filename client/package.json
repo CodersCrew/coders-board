@@ -9,9 +9,7 @@
     "test": "craco test",
     "lint": "cross-env TIMING=1 eslint \"src/*.{js,ts,tsx}\" --fix",
     "typecheck": "tsc --noEmit",
-    "codegen": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml",
-    "storybook": "start-storybook -p 6006 -s public",
-    "build-storybook": "build-storybook -s public"
+    "codegen": "cross-env NODE_TLS_REJECT_UNAUTHORIZED=0 graphql-codegen --config codegen.yml"
   },
   "dependencies": {
     "@ant-design/icons": "^4.2.2",
@@ -43,6 +41,7 @@
     "react-use": "^15.3.3",
     "styled-system": "^5.1.5",
     "unstated-next": "^1.1.0",
+    "use-query-params": "^1.1.6",
     "yup": "^0.29.3"
   },
   "devDependencies": {
