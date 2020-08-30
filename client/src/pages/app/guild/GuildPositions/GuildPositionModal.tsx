@@ -73,7 +73,7 @@ const useGuildPositionModal = (props: GuildPositionModalProps) => {
       validationSchema,
       onSubmit: handleSubmit,
     },
-    isUpdateModal: !!data,
+    isUpdateModal: Boolean(data),
   };
 };
 

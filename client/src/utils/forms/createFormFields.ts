@@ -19,7 +19,7 @@ export const createFormFields = <V extends Record<string, unknown>>(fieldsConfig
   const fieldsArr = map(schema.describe().fields as Record<keyof V, SchemaDescription>, (field, key) => ({
     name: key,
     label: field.label,
-    required: !!field.tests.find(({ name }) => name === 'required'),
+    required: Boolean(field.tests.find(({ name }) => name === 'required')),
   }));
 
   const fields = keyBy(fieldsArr, field => field.name) as Record<keyof V & string, ItemProps>;

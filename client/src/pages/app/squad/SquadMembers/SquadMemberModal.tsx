@@ -58,7 +58,7 @@ const useSquadMemberModal = (props: SquadMemberModalProps) => {
       validationSchema,
       onSubmit: handleSubmit,
     },
-    isUpdateModal: !!data,
+    isUpdateModal: Boolean(data),
   };
 };
 

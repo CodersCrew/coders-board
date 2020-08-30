@@ -19,7 +19,7 @@ export const DatePicker = ({ name, validate, onChange, fast, ...restProps }: Dat
   <Field name={name} validate={validate} fast={fast}>
     {({ field: { value }, form: { setFieldValue, setFieldTouched } }: FieldProps) => (
       <$DatePicker
-        value={value ? new Date(value) : undefined}
+        value={value}
         onChange={(date, dateString) => {
           setFieldValue(name, date);
           setFieldTouched(name, true, false);
@@ -36,7 +36,7 @@ DatePicker.MonthPicker = ({ name, validate, onChange, ...restProps }: MonthPicke
   <Field name={name} validate={validate}>
     {({ field: { value }, form: { setFieldValue, setFieldTouched } }: FieldProps) => (
       <$MonthPicker
-        value={value ? new Date(value) : undefined}
+        value={value}
         onChange={(date, dateString) => {
           setFieldValue(name, date);
           setFieldTouched(name, true, false);

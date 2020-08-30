@@ -37,14 +37,14 @@ const GuildMembers = () => {
     {
       label: 'Manage positions',
       icon: PartitionOutlined,
-      visible: member => !!member.positions.length,
+      visible: member => Boolean(member.positions.length),
       onClick: member => navigate(`../positions?search=${encodeURI(member.user.fullName)}`),
     },
     {
       label: 'Delete member',
       icon: DeleteOutlined,
       itemProps: member => ({ danger: !member.positions.length }),
-      disabled: member => !!member.positions.length,
+      disabled: member => Boolean(member.positions.length),
       onClick: member => deleteGuildMemberConfirm({ id: member.id, fullName: member.user.fullName }),
     },
   ];

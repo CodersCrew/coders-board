@@ -1,4 +1,5 @@
 import React from 'react';
+import { isBoolean, isFunction, isNil } from 'lodash-es';
 
 import { isNotNil } from '@/utils/arrays';
 
@@ -6,39 +7,19 @@ import { ActionsDropdown, ActionsDropdownProps } from '../ActionsDropdown';
 import { TableAction, TableRecord } from './Table.types';
 
 function getIsDisabled<T extends TableRecord>(disabled: TableAction<T>['disabled'], record: T) {
-  if (typeof disabled === 'undefined') {
-    return false;
-  }
-
-  if (typeof disabled === 'boolean') {
-    return disabled;
-  }
-
-  return disabled(record);
+  return isFunction(disabled) ? disabled(record) : disabled;
 }
 
 function getIsVisible<T extends TableRecord>(visible: TableAction<T>['visible'], record: T) {
-  if (typeof visible === 'undefined') {
-    return true;
-  }
+  if (isNil(visible)) return true;
 
-  if (typeof visible === 'boolean') {
-    return visible;
-  }
+  if (isBoolean(visible)) return visible;
 
   return visible(record);
 }
 
 function getClassName<T extends TableRecord>(className: TableAction<T>['className'], record: T) {
-  if (typeof className === 'undefined') {
-    return undefined;
-  }
-
-  if (typeof className === 'string') {
-    return className;
-  }
-
-  return className(record);
+  return isFunction(className) ? className(record) : className;
 }
 
 function tableActionsToActions<T extends TableRecord>(record: T) {
@@ -55,9 +36,7 @@ function tableActionsToActions<T extends TableRecord>(record: T) {
     const labelText = typeof label === 'string' ? label : label(record);
     const customItemProps = 'apply' in itemProps ? itemProps(record) : itemProps;
 
-    if (!getIsVisible(visible, record)) {
-      return null;
-    }
+    if (!getIsVisible(visible, record)) return null;
 
     return {
       label: labelText,

@@ -16,8 +16,8 @@ import { useSquadContext } from '../SquadContext';
 
 const { getInitialValues, validationSchema, fields } = createFormFields({
   name: yup.string().label('Name').required().default(''),
-  description: yup.string().label('E-mail').optional().default(''),
-  email: yup.string().label('Description').required().lowercase().default(''),
+  description: yup.string().label('Description').optional().default(''),
+  email: yup.string().label('E-mail').required().lowercase().default(''),
 });
 
 type FormValues = ReturnType<typeof getInitialValues>;
