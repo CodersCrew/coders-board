@@ -15,12 +15,12 @@ import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useGuildContext } from '../GuildContext';
 
-const { initialValues, validationSchema, fields } = createFormFields({
+const { getInitialValues, validationSchema, fields } = createFormFields({
   userId: yup.string().label('User').required(),
   role: yup.mixed<TeamRole>().label('Role').required().default(TeamRole.Member),
 });
 
-type FormValues = typeof initialValues;
+type FormValues = ReturnType<typeof getInitialValues>;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -53,7 +53,7 @@ const useGuildMemberModal = (props: GuildMemberModalProps) => {
       okText: data ? 'Update member' : 'Add member',
     },
     form: {
-      initialValues: props.data ?? initialValues,
+      initialValues: getInitialValues(props.data),
       validationSchema,
       onSubmit: handleSubmit,
     },

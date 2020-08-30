@@ -2,6 +2,7 @@ export * from './AppLogo';
 export * from './Avatar';
 export * from './Box';
 export * from './Button';
+export * from './DatePicker';
 export * from './Icon';
 export * from './Paragraph';
 export * from './Spin';

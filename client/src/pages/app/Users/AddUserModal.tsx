@@ -10,14 +10,14 @@ import { createDataModal, DataModalProps } from '@/services/modals';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
-const { initialValues, validationSchema, fields } = createFormFields({
+const { getInitialValues, validationSchema, fields } = createFormFields({
   firstName: yup.string().label('First name').required().default(''),
   lastName: yup.string().label('Last name').required().default(''),
   primaryEmail: yup.string().label('CodersCrew email').required().lowercase().default(''),
   recoveryEmail: yup.string().label('Private email').required().email().default(''),
 });
 
-type FormValues = typeof initialValues;
+type FormValues = ReturnType<typeof getInitialValues>;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -52,7 +52,7 @@ const useAddUserModal = (props: AddUserModalProps) => {
       okText: 'Add user',
     },
     form: {
-      initialValues,
+      initialValues: getInitialValues(),
       validationSchema,
       onSubmit: handleSubmit,
     },

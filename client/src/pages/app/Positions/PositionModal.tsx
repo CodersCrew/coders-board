@@ -12,7 +12,7 @@ import { WithId } from '@/typings/enhancers';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
-const { initialValues, validationSchema, fields } = createFormFields({
+const { getInitialValues, validationSchema, fields } = createFormFields({
   name: yup.string().label('Position name').required().default(''),
   description: yup.string().label('Description').optional().nullable(),
   image: yup.string().label('').optional().nullable(),
@@ -20,7 +20,7 @@ const { initialValues, validationSchema, fields } = createFormFields({
   guildId: yup.string().label('Related guild').optional().nullable(),
 });
 
-type FormValues = typeof initialValues;
+type FormValues = ReturnType<typeof getInitialValues>;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -51,7 +51,7 @@ const usePositionModal = (props: PositionModalProps) => {
       okText: data?.id ? 'Update position' : 'Create',
     },
     form: {
-      initialValues: data ?? initialValues,
+      initialValues: getInitialValues(data),
       validationSchema,
       onSubmit: handleSubmit,
     },

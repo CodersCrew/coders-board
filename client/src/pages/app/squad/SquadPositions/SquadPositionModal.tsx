@@ -1,10 +1,11 @@
 import React from 'react';
+import { addMonths, isAfter, isBefore, isFuture } from 'date-fns';
 import { FormikConfig, useFormikContext } from 'formik';
-import { DatePicker, DatePickerProps, Form, Input } from 'formik-antd';
-import moment from 'moment';
+import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
 import { Box } from '@/components/atoms';
+import { DatePicker, DatePickerProps } from '@/components/formik';
 import { FormikModal } from '@/components/molecules';
 import { FormikChapterSelect, FormikPositionSelect } from '@/components/selects';
 import { FormikUserSelect } from '@/components/selects/UserSelect';
@@ -18,7 +19,7 @@ import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';
 
-const { initialValues, validationSchema, fields } = createFormFields({
+const { getInitialValues, validationSchema, fields } = createFormFields({
   from: yup.date().label('Start date').required(),
   to: yup.date().label('End date').optional().nullable(),
   notes: yup.string().label('Notes about position').optional().nullable(),
@@ -27,7 +28,7 @@ const { initialValues, validationSchema, fields } = createFormFields({
   chapterId: yup.string().label('Chapter').optional(),
 });
 
-type FormValues = typeof initialValues;
+type FormValues = ReturnType<typeof getInitialValues>;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -66,7 +67,7 @@ const useSquadPositionModal = (props: SquadPositionModalProps) => {
       okText: data?.id ? 'Update position' : 'Add position',
     },
     form: {
-      initialValues: data ?? initialValues,
+      initialValues: getInitialValues(data),
       validationSchema,
       onSubmit: handleSubmit,
     },
@@ -85,8 +86,8 @@ const FromPicker = () => {
         placeholder="Choose start date..."
         {...pickerProps}
         disabledDate={current => {
-          if (current.isAfter(moment())) return true;
-          return values.to ? current.isAfter(values.to) : false;
+          if (isFuture(current)) return true;
+          return values.to ? isAfter(current, values.to) : false;
         }}
       />
     </Form.Item>
@@ -103,8 +104,8 @@ const ToPicker = () => {
         placeholder="Choose end date..."
         {...pickerProps}
         disabledDate={current => {
-          if (current.isAfter(moment())) return true;
-          return values.from ? current.isBefore(moment(values.from).add(1, 'month')) : false;
+          if (isFuture(current)) return true;
+          return values.from ? isBefore(current, addMonths(values.from, 1)) : false;
         }}
       />
     </Form.Item>

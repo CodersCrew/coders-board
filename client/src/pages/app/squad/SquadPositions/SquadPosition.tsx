@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, List } from 'antd';
-import moment from 'moment';
+import { format } from 'date-fns';
 
 import { Button } from '@/components/atoms';
 import { UseSquadPositions } from '@/graphql/squads';
@@ -16,7 +16,7 @@ type SquadPositionProps = UseSquadPositions['item'] & {
   closeModal: () => void;
 };
 
-const formaDate = (date: Date) => moment(date).format('MMMM YYYY');
+const formaDate = (date: Date) => format(date, 'MMMM yyyy');
 
 export const SquadPosition: CFC<SquadPositionProps> = props => {
   const { squadRole } = useSquadContext();

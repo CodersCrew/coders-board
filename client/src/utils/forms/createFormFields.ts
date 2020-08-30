@@ -24,9 +24,11 @@ export const createFormFields = <V extends Record<string, unknown>>(fieldsConfig
 
   const fields = keyBy(fieldsArr, field => field.name) as Record<keyof V & string, ItemProps>;
 
+  const getInitialValues = (values?: any) => (values ? schema.cast(values) : schema.cast()) as UndefinedOptional<V>;
+
   return {
     validationSchema: schema,
-    initialValues: schema.cast() as UndefinedOptional<V>,
     fields,
+    getInitialValues,
   };
 };

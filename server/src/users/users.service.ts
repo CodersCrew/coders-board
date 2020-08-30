@@ -33,7 +33,7 @@ export class UsersService {
   findAll({ role, search, ids }: GetUsersArgs) {
     const query = this.userRepository.createQueryBuilder('user');
 
-    if (ids) {
+    if (ids && ids.length) {
       query.andWhereInIds(ids);
     }
 

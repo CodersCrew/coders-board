@@ -10,7 +10,7 @@ import { createDataModal, DataModalProps } from '@/services/modals';
 import { SyncSlackUserInput } from '@/typings/graphql';
 import { createFormFields } from '@/utils/forms';
 
-const { initialValues, validationSchema, fields } = createFormFields({
+const { getInitialValues, validationSchema, fields } = createFormFields({
   slackId: yup.string().label('Slack Member ID').required().default(''),
 });
 
@@ -45,7 +45,7 @@ const useSyncSlackModal = ({ data, ...modalProps }: SyncSlackModalProps) => {
       okText: 'Sync user',
     },
     form: {
-      initialValues,
+      initialValues: getInitialValues(),
       validationSchema,
       onSubmit: handleSubmit,
     },

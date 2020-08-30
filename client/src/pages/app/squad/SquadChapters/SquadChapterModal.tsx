@@ -14,13 +14,13 @@ import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useSquadContext } from '../SquadContext';
 
-const { initialValues, validationSchema, fields } = createFormFields({
+const { getInitialValues, validationSchema, fields } = createFormFields({
   name: yup.string().label('Name').required().default(''),
   description: yup.string().label('E-mail').optional().default(''),
   email: yup.string().label('Description').required().lowercase().default(''),
 });
 
-type FormValues = typeof initialValues;
+type FormValues = ReturnType<typeof getInitialValues>;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -67,7 +67,9 @@ const useSquadChapterModal = (props: SquadChapterModalProps) => {
   return {
     modal: modalProps,
     form: {
-      initialValues: data ? { ...data, email: data.email.match(emailRegex)?.[1] ?? '' } : initialValues,
+      initialValues: data
+        ? getInitialValues({ ...data, email: data.email.match(emailRegex)?.[1] ?? '' })
+        : getInitialValues(),
       validationSchema,
       onSubmit: handleSubmit,
     },

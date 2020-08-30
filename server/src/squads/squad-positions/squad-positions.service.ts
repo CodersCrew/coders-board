@@ -44,10 +44,7 @@ export class SquadPositionsService {
       query.andWhere('squadPosition.memberId = :memberId', { memberId });
     }
 
-    const x = await query.getMany();
-    console.log(x);
-
-    return x;
+    return query.getMany();
   }
 
   async create({ squadId: _squadId, ...input }: CreateSquadPositionInput) {

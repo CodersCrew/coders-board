@@ -1,9 +1,10 @@
 import React from 'react';
+import { addDays, isFuture } from 'date-fns';
 import { FormikConfig } from 'formik';
-import { DatePicker, Form, Input } from 'formik-antd';
-import moment from 'moment';
+import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
+import { DatePicker } from '@/components/formik';
 import { FormikModal } from '@/components/molecules';
 import { FormikSuccessTypeSelect, FormikUserSelect } from '@/components/selects';
 import { useSuccessMutations } from '@/graphql/successes';
@@ -14,10 +15,10 @@ import { SuccessType } from '@/typings/graphql';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
-const { initialValues, validationSchema, fields } = createFormFields({
+const { getInitialValues, validationSchema, fields } = createFormFields({
   name: yup.string().label('Success name').required().default(''),
   description: yup.string().label('Description').required().default(''),
-  date: yup.date().required().label('Date').max(moment().add(1, 'day').toDate()),
+  date: yup.date().required().label('Date').max(addDays(new Date(), 1)),
   type: yup
     .mixed<SuccessType>()
     .label('Type of the success')
@@ -27,7 +28,7 @@ const { initialValues, validationSchema, fields } = createFormFields({
   usersIds: yup.array(yup.string().required()).label('Users participating in the success').required().default([]),
 });
 
-type FormValues = typeof initialValues;
+type FormValues = ReturnType<typeof getInitialValues>;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -56,7 +57,7 @@ const useSuccessModal = ({ data, ...modalProps }: SuccessModalProps) => {
       okText: data?.id ? 'Update success' : 'Add success',
     },
     form: {
-      initialValues: data ?? initialValues,
+      initialValues: getInitialValues(data),
       validationSchema,
       onSubmit: handleSubmit,
     },
@@ -80,7 +81,7 @@ export const SuccessModal = createDataModal<SuccessModalProps>(props => {
             name={fields.date.name}
             placeholder="Choose success date..."
             allowClear={false}
-            disabledDate={current => current.isSameOrAfter(moment())}
+            disabledDate={isFuture}
           />
         </Form.Item>
         <Form.Item {...fields.type}>

@@ -3,7 +3,7 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Timeline } from 'antd';
-import moment from 'moment';
+import { format } from 'date-fns';
 
 import { Box, Paragraph, Tag, Title } from '@/components/atoms';
 import { ActionsDropdown, Card, DropdownAction } from '@/components/molecules';
@@ -83,7 +83,7 @@ export const Success = ({ success, openEditModal }: SuccessProps) => {
     <TimelineItem color={successColor}>
       <Box>
         <Tag mt={4} mb={16} color={successColor}>
-          {moment(success.date).format('DD MMMM YYYY')}
+          {format(success.date, 'DD MMMM yyyy')}
         </Tag>
         <Card mb={16} px={24} py={16}>
           <Box display="flex" justifyContent="space-between">

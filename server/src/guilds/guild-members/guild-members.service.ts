@@ -48,11 +48,7 @@ export class GuildMembersService {
   }
 
   findAll({ guildId }: GetGuildMembersArgs) {
-    const query = this.guildMemberRepository.createQueryBuilder('guildMember');
-
-    query.where('guildMember.guildId = :guildId', { guildId });
-
-    return query.getMany();
+    return this.guildMemberRepository.find({ where: { guildId } });
   }
 
   async create(input: CreateGuildMemberInput) {

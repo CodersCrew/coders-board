@@ -15,12 +15,12 @@ import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useSquadContext } from '../SquadContext';
 
-const { initialValues, validationSchema, fields } = createFormFields({
+const { getInitialValues, validationSchema, fields } = createFormFields({
   userId: yup.string().required(),
   role: yup.mixed<TeamRole>().required().default(TeamRole.Member),
 });
 
-type FormValues = typeof initialValues;
+type FormValues = ReturnType<typeof getInitialValues>;
 
 type FormConfig = FormikConfig<FormValues>;
 
@@ -54,7 +54,7 @@ const useSquadMemberModal = (props: SquadMemberModalProps) => {
       okText: data ? 'Update member' : 'Add member',
     },
     form: {
-      initialValues: data ?? initialValues,
+      initialValues: getInitialValues(data),
       validationSchema,
       onSubmit: handleSubmit,
     },

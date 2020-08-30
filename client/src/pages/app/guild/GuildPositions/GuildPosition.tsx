@@ -1,6 +1,6 @@
 import React from 'react';
 import { Avatar, List } from 'antd';
-import moment from 'moment';
+import { format } from 'date-fns';
 
 import { Button } from '@/components/atoms';
 import { UseGuildPositions } from '@/graphql/guilds';
@@ -17,7 +17,7 @@ type GuildPositionProps = UseGuildPositions['item'] & {
   closeModal: () => void;
 };
 
-const formaDate = (date: Date) => moment(date).format('MMMM YYYY');
+const formaDate = (date: Date) => format(new Date(date), 'MMMM yyyy');
 
 export const GuildPosition: CFC<GuildPositionProps> = props => {
   const { guildRole } = useGuildContext();
