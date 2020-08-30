@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Spin as AntSpin } from 'antd';
 import { SpinProps as AntSpinProps } from 'antd/lib/spin';
-import { without } from 'lodash';
+import { without } from 'lodash-es';
 import { compose, layout, LayoutProps, space, SpaceProps } from 'styled-system';
 
 import { omitProps } from '@/services/styling';

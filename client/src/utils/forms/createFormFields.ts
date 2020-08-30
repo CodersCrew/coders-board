@@ -1,4 +1,4 @@
-import { keyBy, map } from 'lodash';
+import { keyBy, map } from 'lodash-es';
 import { object, ObjectSchema, ObjectSchemaDefinition, SchemaDescription } from 'yup';
 
 import { UndefinedOptional } from '@/typings/utilityTypes';
@@ -24,7 +24,7 @@ export const createFormFields = <V extends Record<string, unknown>>(fieldsConfig
 
   const fields = keyBy(fieldsArr, field => field.name) as Record<keyof V & string, ItemProps>;
 
-  const getInitialValues = (values?: any) => (values ? schema.cast(values) : schema.cast()) as UndefinedOptional<V>;
+  const getInitialValues = (values?: unknown) => (values ? schema.cast(values) : schema.cast()) as UndefinedOptional<V>;
 
   return {
     validationSchema: schema,

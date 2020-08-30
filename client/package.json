@@ -31,7 +31,7 @@
     "formik-antd": "^2.0.1",
     "graphql": "^15.3.0",
     "history": "^5.0.0",
-    "lodash": "^4.17.20",
+    "lodash-es": "^4.17.15",
     "loglevel": "^1.7.0",
     "polished": "^3.6.5",
     "query-string": "^6.13.1",
@@ -57,7 +57,7 @@
     "@graphql-codegen/typescript-operations": "1.17.8",
     "@graphql-codegen/typescript-react-apollo": "2.0.6",
     "@types/jest": "^26.0.10",
-    "@types/lodash": "^4.14.160",
+    "@types/lodash-es": "^4.17.3",
     "@types/node": "^14.6.1",
     "@types/react": "^16.9.48",
     "@types/react-dom": "^16.9.8",
@@ -85,8 +85,7 @@
     "eslint-plugin-simple-import-sort": "^5.0.3",
     "prettier": "^2.1.1",
     "tsconfig-paths-webpack-plugin": "^3.3.0",
-    "typescript": "~4.0.2",
-    "webpack-bundle-analyzer": "^3.8.0"
+    "typescript": "~4.0.2"
   },
   "eslintConfig": {
     "extends": "react-app"

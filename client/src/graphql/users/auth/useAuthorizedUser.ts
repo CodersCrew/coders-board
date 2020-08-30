@@ -1,5 +1,5 @@
 import { useNavigate } from 'react-router-dom';
-import { keyBy } from 'lodash';
+import { keyBy } from 'lodash-es';
 
 import { NODE_ENV } from '@/config/env';
 import { useKeySequence } from '@/hooks/useKeySequence';

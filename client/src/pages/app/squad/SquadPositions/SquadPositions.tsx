@@ -1,6 +1,6 @@
 import React from 'react';
 import { List } from 'antd';
-import { get } from 'lodash';
+import { get } from 'lodash-es';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
 
 import { Box, Spin, Title } from '@/components/atoms';

@@ -1,7 +1,7 @@
 import styled from '@emotion/styled';
 import { Card as AntCard } from 'antd';
 import { CardProps as AntCardProps } from 'antd/lib/card';
-import { without } from 'lodash';
+import { without } from 'lodash-es';
 import {
   border,
   BorderProps,
