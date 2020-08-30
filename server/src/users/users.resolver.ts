@@ -1,10 +1,11 @@
 import { Args, ID, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
-import { GuildMember } from 'src/guilds/guild-members/guild-member.model';
-import { SquadMember } from 'src/squads/squad-members/squad-member.model';
 
 import { UserId } from '../common/decorators';
 import { AdminGuard } from '../common/guards';
+import { GuildMember } from '../guilds/guild-members/guild-member.model';
+import { SquadMember } from '../squads/squad-members/squad-member.model';
 import { CreateUserInput } from './dto/create-user.input';
+import { GetUserArgs } from './dto/get-user.args';
 import { GetUsersArgs } from './dto/get-users.args';
 import { User } from './user.model';
 import { UsersService } from './users.service';
@@ -24,8 +25,8 @@ export class UsersResolver {
   }
 
   @Query(returns => User, { name: 'user' })
-  getUser(@Args('id') id: string) {
-    return this.usersService.findById(id);
+  getUser(@Args() args: GetUserArgs) {
+    return this.usersService.findById(args.id);
   }
 
   @Query(returns => User, { name: 'me' })

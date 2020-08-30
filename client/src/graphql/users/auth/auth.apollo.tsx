@@ -6,7 +6,7 @@ import * as Types from '../../../typings/graphql';
 export type MeQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
-  me: Pick<Types.User, 'id' | 'image' | 'fullName' | 'role'> & {
+  me: Pick<Types.User, 'id' | 'thumbnail' | 'fullName' | 'role'> & {
     guilds: Array<Pick<Types.GuildMember, 'id' | 'role' | 'guildId'>>;
     squads: Array<Pick<Types.SquadMember, 'id' | 'role' | 'squadId'>>;
   };
@@ -20,7 +20,7 @@ export const MeDocument = gql`
   query me {
     me {
       id
-      image
+      thumbnail
       fullName
       role
       guilds {

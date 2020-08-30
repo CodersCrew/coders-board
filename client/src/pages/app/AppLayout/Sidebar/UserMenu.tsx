@@ -1,11 +1,10 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
 import { LogoutOutlined, UserOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 import { Dropdown, Menu } from 'antd';
 import { lighten } from 'polished';
 
-import { Avatar, Box, Paragraph } from '@/components/atoms';
+import { Avatar, Box, LinkMenuItem, Paragraph } from '@/components/atoms';
 import { useAuthorizedUser } from '@/graphql/users';
 import { CFC } from '@/typings/components';
 
@@ -28,9 +27,9 @@ export const UserMenu: CFC<UserMenuProps> = ({ collapsed }) => {
 
   const menu = (
     <Menu theme="dark">
-      <Menu.Item key="profile" icon={<UserOutlined />}>
-        <Link to={`/app/profile/${authorizedUser.id}`}>My profile</Link>
-      </Menu.Item>
+      <LinkMenuItem key="profile" icon={<UserOutlined />} to={`/app/profile/${authorizedUser.id}`}>
+        My profile
+      </LinkMenuItem>
       <Menu.Item key="logout" onClick={authorizedUser.logout} icon={<LogoutOutlined />}>
         Logout
       </Menu.Item>
@@ -40,7 +39,7 @@ export const UserMenu: CFC<UserMenuProps> = ({ collapsed }) => {
   return (
     <Dropdown overlay={menu} trigger={['click']}>
       <UserDropdownContent justifyContent={collapsed ? 'center' : 'flex-start'}>
-        <Avatar src={authorizedUser.image} size={32} />
+        <Avatar src={authorizedUser.thumbnail} size={32} />
         {!collapsed && (
           <Paragraph ml={12} color="inherit">
             {authorizedUser.fullName}

@@ -233,7 +233,7 @@ export type Query = {
 };
 
 export type QueryUserArgs = {
-  id: Scalars['String'];
+  id: Scalars['ID'];
 };
 
 export type QueryUsersArgs = {
@@ -695,6 +695,7 @@ export const GraphQLOperations = {
     successes: 'successes',
     me: 'me',
     users: 'users',
+    baseUserInfo: 'baseUserInfo',
     simpleUsers: 'simpleUsers',
   },
   Mutation: {

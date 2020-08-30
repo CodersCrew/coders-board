@@ -37,7 +37,7 @@ export const routes: Routes = [
         path: 'app',
         element: <AppLayout />,
         children: [
-          { path: '/', element: <Navigate to="users" /> },
+          { path: '/', element: <Navigate to="users" replace /> },
           { path: 'users', element: <Users /> },
           { path: 'teams', element: <Teams /> },
           { path: 'positions', element: <Positions /> },
@@ -46,7 +46,7 @@ export const routes: Routes = [
             path: 'guild/:id',
             element: <GuildLayout />,
             children: [
-              { path: '/', element: <Navigate to="members" /> },
+              { path: '/', element: <Navigate to="members" replace /> },
               { path: 'members', element: <GuildMembers /> },
               { path: 'clans', element: <GuildClans /> },
               { path: 'positions', element: <GuildPositions /> },
@@ -56,7 +56,7 @@ export const routes: Routes = [
             path: 'profile/:id',
             element: <ProfileLayout />,
             children: [
-              { path: '/', element: <Navigate to="general" /> },
+              { path: '/', element: <Navigate to="general" replace /> },
               { path: 'general', element: <ProfileGeneral /> },
               { path: 'activity', element: <ProfileActivity /> },
             ],
@@ -65,7 +65,7 @@ export const routes: Routes = [
             path: 'squad/:id',
             element: <SquadLayout />,
             children: [
-              { path: '/', element: <Navigate to="members" /> },
+              { path: '/', element: <Navigate to="members" replace /> },
               { path: 'members', element: <SquadMembers /> },
               { path: 'chapters', element: <SquadChapters /> },
               { path: 'positions', element: <SquadPositions /> },

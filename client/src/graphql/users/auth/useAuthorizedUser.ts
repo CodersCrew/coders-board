@@ -34,7 +34,7 @@ export const useAuthorizedUser = () => {
   const teamRoles = { ...keyBy(data.me.squads, 'squadId'), ...keyBy(data.me.guilds, 'guildId') };
 
   return {
-    ...pick(data.me, ['id', 'fullName', 'image']),
+    ...pick(data.me, ['id', 'fullName', 'thumbnail']),
     isAdmin: isAdminToggle.on,
     teamRoles,
     refetch,

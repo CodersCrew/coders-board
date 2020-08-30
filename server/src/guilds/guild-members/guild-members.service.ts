@@ -85,12 +85,10 @@ export class GuildMembersService {
 
   async update({ id, guildId: _guildId, ...input }: UpdateGuildMemberInput) {
     const guildMember = await this.findByIdOrThrow(id);
-    const guild = await this.getGuild(guildMember);
-    const user = await this.getUser(guildMember);
 
     await this.gsuiteService.updateMember({
-      groupId: guild.googleId,
-      userId: user.googleId,
+      groupId: guildMember.guild.googleId,
+      userId: guildMember.user.googleId,
       role: input.role,
     });
 
@@ -109,10 +107,7 @@ export class GuildMembersService {
       throw new ConflictException('You cannot remove guild member with active positions');
     }
 
-    const guild = await this.getGuild(guildMember);
-    const user = await this.getUser(guildMember);
-
-    await this.gsuiteService.deleteMember({ groupId: guild.googleId, userId: user.googleId });
+    await this.gsuiteService.deleteMember({ groupId: guildMember.guild.googleId, userId: guildMember.user.googleId });
 
     if (positions.length) {
       await this.guildMemberRepository.softRemove(guildMember);

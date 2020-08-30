@@ -1,13 +1,38 @@
 query users($search: String $role: UserRole) {
 	users(search: $search role: $role) {
 		id
-    image
     thumbnail
     fullName
     primaryEmail
     recoveryEmail
     role
     slackId
+  }
+}
+
+query baseUserInfo($id: ID!) {
+	user(id: $id) {
+		id
+    image
+    fullName
+    primaryEmail
+    phone
+    guilds {
+      id
+      guild {
+        id
+        name
+        image
+      }
+    }
+    squads {
+      id
+      squad {
+        id
+        name
+        image
+      }
+    }
   }
 }
 

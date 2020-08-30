@@ -10,8 +10,19 @@ export type UsersQueryVariables = Types.Exact<{
 
 export type UsersQuery = {
   users: Array<
-    Pick<Types.User, 'id' | 'image' | 'thumbnail' | 'fullName' | 'primaryEmail' | 'recoveryEmail' | 'role' | 'slackId'>
+    Pick<Types.User, 'id' | 'thumbnail' | 'fullName' | 'primaryEmail' | 'recoveryEmail' | 'role' | 'slackId'>
   >;
+};
+
+export type BaseUserInfoQueryVariables = Types.Exact<{
+  id: Types.Scalars['ID'];
+}>;
+
+export type BaseUserInfoQuery = {
+  user: Pick<Types.User, 'id' | 'image' | 'fullName' | 'primaryEmail' | 'phone'> & {
+    guilds: Array<Pick<Types.GuildMember, 'id'> & { guild: Pick<Types.Guild, 'id' | 'name' | 'image'> }>;
+    squads: Array<Pick<Types.SquadMember, 'id'> & { squad: Pick<Types.Squad, 'id' | 'name' | 'image'> }>;
+  };
 };
 
 export type SimpleUsersQueryVariables = Types.Exact<{
@@ -36,7 +47,6 @@ export const UsersDocument = gql`
   query users($search: String, $role: UserRole) {
     users(search: $search, role: $role) {
       id
-      image
       thumbnail
       fullName
       primaryEmail
@@ -73,6 +83,63 @@ export function useUsersLazyQuery(baseOptions?: Apollo.LazyQueryHookOptions<User
 export type UsersQueryHookResult = ReturnType<typeof useUsersQuery>;
 export type UsersLazyQueryHookResult = ReturnType<typeof useUsersLazyQuery>;
 export type UsersQueryResult = Apollo.QueryResult<UsersQuery, UsersQueryVariables>;
+export const BaseUserInfoDocument = gql`
+  query baseUserInfo($id: ID!) {
+    user(id: $id) {
+      id
+      image
+      fullName
+      primaryEmail
+      phone
+      guilds {
+        id
+        guild {
+          id
+          name
+          image
+        }
+      }
+      squads {
+        id
+        squad {
+          id
+          name
+          image
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useBaseUserInfoQuery__
+ *
+ * To run a query within a React component, call `useBaseUserInfoQuery` and pass it any options that fit your needs.
+ * When your component renders, `useBaseUserInfoQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useBaseUserInfoQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useBaseUserInfoQuery(
+  baseOptions?: Apollo.QueryHookOptions<BaseUserInfoQuery, BaseUserInfoQueryVariables>,
+) {
+  return Apollo.useQuery<BaseUserInfoQuery, BaseUserInfoQueryVariables>(BaseUserInfoDocument, baseOptions);
+}
+export function useBaseUserInfoLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<BaseUserInfoQuery, BaseUserInfoQueryVariables>,
+) {
+  return Apollo.useLazyQuery<BaseUserInfoQuery, BaseUserInfoQueryVariables>(BaseUserInfoDocument, baseOptions);
+}
+export type BaseUserInfoQueryHookResult = ReturnType<typeof useBaseUserInfoQuery>;
+export type BaseUserInfoLazyQueryHookResult = ReturnType<typeof useBaseUserInfoLazyQuery>;
+export type BaseUserInfoQueryResult = Apollo.QueryResult<BaseUserInfoQuery, BaseUserInfoQueryVariables>;
 export const SimpleUsersDocument = gql`
   query simpleUsers($ids: [ID!]) {
     users(ids: $ids) {

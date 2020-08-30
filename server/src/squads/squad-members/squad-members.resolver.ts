@@ -3,9 +3,7 @@ import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/g
 import { TeamKind } from '../../common/decorators';
 import { TeamRole } from '../../common/enums';
 import { TeamRoleGuard } from '../../common/guards';
-import { User } from '../../users/user.model';
 import { SquadPosition } from '../squad-positions/squad-position.model';
-import { Squad } from '../squad.model';
 import { CreateSquadMemberInput } from './dto/create-squad-member.input';
 import { DeleteSquadMemberArgs } from './dto/delete-squad-member.args';
 import { GetSquadMembersArgs } from './dto/get-squad-members.args';
@@ -17,16 +15,6 @@ import { SquadMembersService } from './squad-members.service';
 @TeamKind('squad')
 export class SquadMembersResolver {
   constructor(private readonly squadMembersService: SquadMembersService) {}
-
-  @ResolveField('user', returns => User)
-  async getUser(@Parent() squadMember: SquadMember) {
-    return this.squadMembersService.getUser(squadMember);
-  }
-
-  @ResolveField('squad', returns => Squad)
-  async getSquad(@Parent() squadMember: SquadMember) {
-    return this.squadMembersService.getSquad(squadMember);
-  }
 
   @ResolveField('positions', returns => [SquadPosition])
   async getPositions(@Parent() squadMember: SquadMember, @Args('active', { nullable: true }) active?: boolean) {

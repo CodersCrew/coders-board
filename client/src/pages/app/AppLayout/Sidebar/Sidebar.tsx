@@ -1,11 +1,11 @@
 import React from 'react';
-import { Link, useLocation } from 'react-router-dom';
+import { useLocation } from 'react-router-dom';
 import { ContactsOutlined, PartitionOutlined, TeamOutlined, TrophyOutlined } from '@ant-design/icons';
 import styled from '@emotion/styled';
 import { Layout, Menu } from 'antd';
 import { SiderProps } from 'antd/lib/layout';
 
-import { Box } from '@/components/atoms';
+import { Box, LinkMenuItem } from '@/components/atoms';
 import { useMediaQuery } from '@/services/styling';
 import { CFC } from '@/typings/components';
 
@@ -73,9 +73,9 @@ export const Sidebar: CFC<SidebarProps> = props => {
       <Logo src={logoSrc} alt="CodersBoard logo" />
       <Menu theme="dark" mode="inline" selectedKeys={selectedKeys}>
         {menuItems.map(({ key, label, icon }) => (
-          <Menu.Item key={key} icon={icon}>
-            <Link to={`/app/${key}`}>{label}</Link>
-          </Menu.Item>
+          <LinkMenuItem key={key} icon={icon} to={`/app/${key}`}>
+            {label}
+          </LinkMenuItem>
         ))}
       </Menu>
       <Box mt="auto">

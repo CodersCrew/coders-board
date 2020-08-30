@@ -71,6 +71,7 @@ const UserPicker = () => {
         name={fields.userId.name}
         placeholder="Choose user to add..."
         showSearch
+        autoFocus
         virtual
         idsToOmit={guildMembersIds.userIds}
       />

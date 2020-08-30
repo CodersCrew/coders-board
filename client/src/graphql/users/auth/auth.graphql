@@ -1,7 +1,7 @@
 query me {
 	me {
 		id
-    image
+    thumbnail
   	fullName
     role
 		guilds {

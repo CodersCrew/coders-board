@@ -73,6 +73,7 @@ const MemberPicker = () => {
         placeholder="Choose user to add..."
         showSearch
         virtual
+        autoFocus
         idsToOmit={squadMembersIds.membersUserIds}
       />
     </Form.Item>

@@ -1,23 +1,20 @@
 import React from 'react';
 import { Outlet } from 'react-router-dom';
 
-import { Box } from '@/components/atoms';
 import { Page } from '@/components/molecules';
 
 import { ProfileContextProvider } from '../ProfileContext';
-import { BaseInfoCard } from './BaseInfoCard';
 import { DetailsCard } from './DetailsCard';
+import { ProfileHeader } from './ProfileHeader';
 
 const ProfileLayout = () => {
   return (
     <Page>
+      <ProfileHeader />
       <Page.Content>
-        <Box display="grid" gridTemplateColumns={{ default: '1fr', xl: '400px 1fr' }} gridGap={24}>
-          <BaseInfoCard />
-          <DetailsCard>
-            <Outlet />
-          </DetailsCard>
-        </Box>
+        <DetailsCard>
+          <Outlet />
+        </DetailsCard>
       </Page.Content>
     </Page>
   );

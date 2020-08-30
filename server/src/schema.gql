@@ -197,7 +197,7 @@ type SlackUser {
 type Query {
   gsuiteUsers: [GsuiteUser!]!
   slackUsers: [SlackUser!]!
-  user(id: String!): User!
+  user(id: ID!): User!
   me: User!
   users(search: String, role: UserRole, ids: [ID!]): [User!]!
   clans(search: String, guildId: ID): [Clan!]!

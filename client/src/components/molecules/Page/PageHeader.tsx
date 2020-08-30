@@ -6,7 +6,7 @@ import { BreadcrumbProps } from 'antd/lib/breadcrumb';
 import { Route } from 'antd/lib/breadcrumb/Breadcrumb';
 import { PageHeaderProps as AntPageHeaderProps } from 'antd/lib/page-header';
 
-import { CFC } from '@/typings/components';
+import { FC } from '@/typings/components';
 
 type PageHeaderProps = AntPageHeaderProps;
 
@@ -29,7 +29,7 @@ const StyledPageHeader = styled(AntPageHeader)<PageHeaderProps>(({ theme }) => (
   },
 }));
 
-export const PageHeader: CFC<PageHeaderProps> = props => {
+export const PageHeader: FC<PageHeaderProps> = props => {
   const breadcrumb: BreadcrumbProps | undefined = props.breadcrumb
     ? { ...props.breadcrumb, itemRender: breadcrumbItemRender }
     : undefined;

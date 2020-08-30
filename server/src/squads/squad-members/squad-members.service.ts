@@ -70,12 +70,10 @@ export class SquadMembersService {
 
   async update({ id, squadId, ...input }: UpdateSquadMemberInput) {
     const squadMember = await this.squadMemberRepository.findOneOrFail({ where: { id, squadId } });
-    const squad = await this.getSquad(squadMember);
-    const user = await this.getUser(squadMember);
 
     await this.gsuiteService.updateMember({
-      groupId: squad.googleId,
-      userId: user.googleId,
+      groupId: squadMember.squad.googleId,
+      userId: squadMember.user.googleId,
       role: input.role,
     });
 
@@ -93,10 +91,7 @@ export class SquadMembersService {
       throw new ConflictException('You cannot remove squad member with attached positions');
     }
 
-    const squad = await this.getSquad(squadMember);
-    const user = await this.getUser(squadMember);
-
-    await this.gsuiteService.deleteMember({ groupId: squad.googleId, userId: user.googleId });
+    await this.gsuiteService.deleteMember({ groupId: squadMember.squad.googleId, userId: squadMember.user.googleId });
     await this.squadMemberRepository.remove(squadMember);
 
     return true;
