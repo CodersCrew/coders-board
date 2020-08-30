@@ -8,7 +8,9 @@ export type UseSuccesses = {
 export const useSuccesses = (variables?: UseSuccesses['variables']) => {
   const { data, loading, error, refetch } = useSuccessesQuery({ variables });
 
-  const successes = data?.successes ?? [];
+  let successes = data?.successes ?? [];
+
+  successes = successes.map(success => ({ ...success, date: new Date(success.date) }));
 
   return {
     loading,

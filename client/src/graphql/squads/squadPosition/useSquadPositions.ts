@@ -8,7 +8,13 @@ export type UseSquadPositions = {
 export const useSquadPositions = (variables: UseSquadPositions['variables']) => {
   const { data, loading, error, refetch } = useSquadPositionsQuery({ variables });
 
-  const squadPositions = data?.squadPositions ?? [];
+  let squadPositions = data?.squadPositions ?? [];
+
+  squadPositions = squadPositions.map(squadPosition => ({
+    ...squadPosition,
+    from: new Date(squadPosition.from),
+    to: squadPosition.to ? new Date(squadPosition.to) : squadPosition.to,
+  }));
 
   return {
     loading,
