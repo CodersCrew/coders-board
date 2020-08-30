@@ -9,42 +9,36 @@ export type PositionsQueryVariables = Types.Exact<{
   clanId?: Types.Maybe<Types.Scalars['ID']>;
 }>;
 
-export type PositionsQuery = { __typename?: 'Query' } & {
+export type PositionsQuery = {
   positions: Array<
-    { __typename?: 'Position' } & Pick<Types.Position, 'id' | 'name' | 'description' | 'image'> & {
-        clan?: Types.Maybe<{ __typename?: 'Clan' } & Pick<Types.Clan, 'id' | 'name' | 'image'>>;
-        guild?: Types.Maybe<{ __typename?: 'Guild' } & Pick<Types.Guild, 'id' | 'name' | 'image'>>;
-      }
+    Pick<Types.Position, 'id' | 'name' | 'description' | 'image'> & {
+      clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name' | 'image'>>;
+      guild?: Types.Maybe<Pick<Types.Guild, 'id' | 'name' | 'image'>>;
+    }
   >;
 };
 
 export type SimplePositionsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type SimplePositionsQuery = { __typename?: 'Query' } & {
-  positions: Array<{ __typename?: 'Position' } & Pick<Types.Position, 'id' | 'name'>>;
-};
+export type SimplePositionsQuery = { positions: Array<Pick<Types.Position, 'id' | 'name'>> };
 
 export type CreatePositionMutationVariables = Types.Exact<{
   data: Types.CreatePositionInput;
 }>;
 
-export type CreatePositionMutation = { __typename?: 'Mutation' } & {
-  createPosition: { __typename?: 'Position' } & Pick<Types.Position, 'id'>;
-};
+export type CreatePositionMutation = { createPosition: Pick<Types.Position, 'id'> };
 
 export type UpdatePositionMutationVariables = Types.Exact<{
   data: Types.UpdatePositionInput;
 }>;
 
-export type UpdatePositionMutation = { __typename?: 'Mutation' } & {
-  updatePosition: { __typename?: 'Position' } & Pick<Types.Position, 'id'>;
-};
+export type UpdatePositionMutation = { updatePosition: Pick<Types.Position, 'id'> };
 
 export type DeletePositionMutationVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
-export type DeletePositionMutation = { __typename?: 'Mutation' } & Pick<Types.Mutation, 'deletePosition'>;
+export type DeletePositionMutation = Pick<Types.Mutation, 'deletePosition'>;
 
 export const PositionsDocument = gql`
   query positions($search: String, $guildId: ID, $clanId: ID) {

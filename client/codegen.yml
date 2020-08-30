@@ -10,6 +10,7 @@ generates:
       - "typescript"
       - "named-operations-object"
     config:
+      skipTypename: true
       identifierName: GraphQLOperations
       scalars:
         DateTime: Date
@@ -22,6 +23,7 @@ generates:
       - "typescript-operations"
       - "typescript-react-apollo"
     config:
+      skipTypename: true
       withHOC: false
       withComponent: false
       withHooks: true

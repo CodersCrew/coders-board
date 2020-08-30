@@ -5,19 +5,15 @@ import * as Types from '../../../typings/graphql';
 
 export type SlackUsersQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type SlackUsersQuery = { __typename?: 'Query' } & {
-  slackUsers: Array<
-    { __typename?: 'SlackUser' } & Pick<Types.SlackUser, 'id' | 'fullName' | 'primaryEmail' | 'image' | 'thumbnail'>
-  >;
+export type SlackUsersQuery = {
+  slackUsers: Array<Pick<Types.SlackUser, 'id' | 'fullName' | 'primaryEmail' | 'image' | 'thumbnail'>>;
 };
 
 export type SyncSlackUserMutationVariables = Types.Exact<{
   data: Types.SyncSlackUserInput;
 }>;
 
-export type SyncSlackUserMutation = { __typename?: 'Mutation' } & {
-  syncSlackUser: { __typename?: 'User' } & Pick<Types.User, 'id'>;
-};
+export type SyncSlackUserMutation = { syncSlackUser: Pick<Types.User, 'id'> };
 
 export const SlackUsersDocument = gql`
   query slackUsers {

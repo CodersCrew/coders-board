@@ -5,13 +5,8 @@ import * as Types from '../../../typings/graphql';
 
 export type GsuiteUsersQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type GsuiteUsersQuery = { __typename?: 'Query' } & {
-  gsuiteUsers: Array<
-    { __typename?: 'GsuiteUser' } & Pick<
-      Types.GsuiteUser,
-      'id' | 'firstName' | 'lastName' | 'primaryEmail' | 'recoveryEmail'
-    >
-  >;
+export type GsuiteUsersQuery = {
+  gsuiteUsers: Array<Pick<Types.GsuiteUser, 'id' | 'firstName' | 'lastName' | 'primaryEmail' | 'recoveryEmail'>>;
 };
 
 export const GsuiteUsersDocument = gql`

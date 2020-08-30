@@ -7,15 +7,11 @@ export type SquadQueryVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
-export type SquadQuery = { __typename?: 'Query' } & {
-  squad: { __typename?: 'Squad' } & Pick<Types.Squad, 'id' | 'name' | 'description' | 'image'>;
-};
+export type SquadQuery = { squad: Pick<Types.Squad, 'id' | 'name' | 'description' | 'image'> };
 
 export type SquadsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type SquadsQuery = { __typename?: 'Query' } & {
-  squads: Array<{ __typename?: 'Squad' } & Pick<Types.Squad, 'id' | 'name' | 'color' | 'description' | 'image'>>;
-};
+export type SquadsQuery = { squads: Array<Pick<Types.Squad, 'id' | 'name' | 'color' | 'description' | 'image'>> };
 
 export const SquadDocument = gql`
   query squad($id: ID!) {

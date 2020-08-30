@@ -1,10 +1,10 @@
 import React from 'react';
 import { Avatar, List } from 'antd';
-import { format } from 'date-fns';
 
 import { Button } from '@/components/atoms';
 import { UseGuildPositions } from '@/graphql/guilds';
 import { CFC } from '@/typings/components';
+import { formatDate } from '@/utils/dates';
 import { pick } from '@/utils/objects';
 import { parseGuildPositionKind } from '@/utils/platform';
 
@@ -17,7 +17,7 @@ type GuildPositionProps = UseGuildPositions['item'] & {
   closeModal: () => void;
 };
 
-const formaDate = (date: Date) => format(new Date(date), 'MMMM yyyy');
+const format = formatDate('MMMM yyyy');
 
 export const GuildPosition: CFC<GuildPositionProps> = props => {
   const { guildRole } = useGuildContext();
@@ -55,7 +55,7 @@ export const GuildPosition: CFC<GuildPositionProps> = props => {
         description={props.member.user.fullName}
       />
       <div>
-        {formaDate(props.from)} - {props.to ? formaDate(props.to) : 'Now'}
+        {format(props.from)} - {props.to ? format(props.to) : 'Now'}
       </div>
     </List.Item>
   );

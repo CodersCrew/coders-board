@@ -1,10 +1,10 @@
 import React from 'react';
 import { Avatar, List } from 'antd';
-import { format } from 'date-fns';
 
 import { Button } from '@/components/atoms';
 import { UseSquadPositions } from '@/graphql/squads';
 import { CFC } from '@/typings/components';
+import { formatDate } from '@/utils/dates';
 import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';
@@ -16,7 +16,7 @@ type SquadPositionProps = UseSquadPositions['item'] & {
   closeModal: () => void;
 };
 
-const formaDate = (date: Date) => format(date, 'MMMM yyyy');
+const format = formatDate('MMMM yyyy');
 
 export const SquadPosition: CFC<SquadPositionProps> = props => {
   const { squadRole } = useSquadContext();
@@ -58,7 +58,7 @@ export const SquadPosition: CFC<SquadPositionProps> = props => {
         description={props.member.user.fullName}
       />
       <div>
-        {formaDate(props.from)} - {props.to ? formaDate(props.to) : 'Now'}
+        {format(props.from)} - {props.to ? format(props.to) : 'Now'}
       </div>
     </List.Item>
   );

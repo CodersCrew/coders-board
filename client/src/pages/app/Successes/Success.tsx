@@ -3,13 +3,13 @@ import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
 import { useTheme } from '@emotion/react';
 import styled from '@emotion/styled';
 import { Timeline } from 'antd';
-import { format } from 'date-fns';
 
 import { Box, Paragraph, Tag, Title } from '@/components/atoms';
 import { ActionsDropdown, Card, DropdownAction } from '@/components/molecules';
 import { UseSuccesses } from '@/graphql/successes';
 import { useAuthorizedUser } from '@/graphql/users';
 import { SuccessType } from '@/typings/graphql';
+import { formatDate } from '@/utils/dates';
 import { pick } from '@/utils/objects';
 
 import { SuccessFooter } from './SuccessFooter';
@@ -83,7 +83,7 @@ export const Success = ({ success, openEditModal }: SuccessProps) => {
     <TimelineItem color={successColor}>
       <Box>
         <Tag mt={4} mb={16} color={successColor}>
-          {format(success.date, 'DD MMMM yyyy')}
+          {formatDate('d MMMM yyyy')(success.date)}
         </Tag>
         <Card mb={16} px={24} py={16}>
           <Box display="flex" justifyContent="space-between">

@@ -7,15 +7,15 @@ export type GuildPositionsQueryVariables = Types.Exact<{
   guildId: Types.Scalars['ID'];
 }>;
 
-export type GuildPositionsQuery = { __typename?: 'Query' } & {
+export type GuildPositionsQuery = {
   guildPositions: Array<
-    { __typename?: 'GuildPosition' } & Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes' | 'kind'> & {
-        member: { __typename?: 'GuildMember' } & Pick<Types.GuildMember, 'id'> & {
-            user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName' | 'image'>;
-            guild: { __typename?: 'Guild' } & Pick<Types.Guild, 'id'>;
-          };
-        clan?: Types.Maybe<{ __typename?: 'Clan' } & Pick<Types.Clan, 'id' | 'name'>>;
-      }
+    Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes' | 'kind'> & {
+      member: Pick<Types.GuildMember, 'id'> & {
+        user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
+        guild: Pick<Types.Guild, 'id'>;
+      };
+      clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>>;
+    }
   >;
 };
 
@@ -23,24 +23,20 @@ export type CreateGuildPositionMutationVariables = Types.Exact<{
   data: Types.CreateGuildPositionInput;
 }>;
 
-export type CreateGuildPositionMutation = { __typename?: 'Mutation' } & {
-  createGuildPosition: { __typename?: 'GuildPosition' } & Pick<Types.GuildPosition, 'id'>;
-};
+export type CreateGuildPositionMutation = { createGuildPosition: Pick<Types.GuildPosition, 'id'> };
 
 export type UpdateGuildPositionMutationVariables = Types.Exact<{
   data: Types.UpdateGuildPositionInput;
 }>;
 
-export type UpdateGuildPositionMutation = { __typename?: 'Mutation' } & {
-  updateGuildPosition: { __typename?: 'GuildPosition' } & Pick<Types.GuildPosition, 'id'>;
-};
+export type UpdateGuildPositionMutation = { updateGuildPosition: Pick<Types.GuildPosition, 'id'> };
 
 export type DeleteGuildPositionMutationVariables = Types.Exact<{
   id: Types.Scalars['ID'];
   guildId: Types.Scalars['ID'];
 }>;
 
-export type DeleteGuildPositionMutation = { __typename?: 'Mutation' } & Pick<Types.Mutation, 'deleteGuildPosition'>;
+export type DeleteGuildPositionMutation = Pick<Types.Mutation, 'deleteGuildPosition'>;
 
 export const GuildPositionsDocument = gql`
   query guildPositions($guildId: ID!) {

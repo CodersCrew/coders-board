@@ -3,18 +3,16 @@ import * as Apollo from '@apollo/client';
 
 import * as Types from '../../typings/graphql';
 
-export type SuccessUserFragment = { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName' | 'thumbnail'>;
+export type SuccessUserFragment = Pick<Types.User, 'id' | 'fullName' | 'thumbnail'>;
 
 export type SuccessesQueryVariables = Types.Exact<{
   search?: Types.Maybe<Types.Scalars['String']>;
   type?: Types.Maybe<Types.SuccessType>;
 }>;
 
-export type SuccessesQuery = { __typename?: 'Query' } & {
+export type SuccessesQuery = {
   successes: Array<
-    { __typename?: 'Success' } & Pick<Types.Success, 'id' | 'name' | 'description' | 'date' | 'type'> & {
-        users: Array<{ __typename?: 'User' } & SuccessUserFragment>;
-      }
+    Pick<Types.Success, 'id' | 'name' | 'description' | 'date' | 'type'> & { users: Array<SuccessUserFragment> }
   >;
 };
 
@@ -22,23 +20,19 @@ export type CreateSuccessMutationVariables = Types.Exact<{
   data: Types.CreateSuccessInput;
 }>;
 
-export type CreateSuccessMutation = { __typename?: 'Mutation' } & {
-  createSuccess: { __typename?: 'Success' } & Pick<Types.Success, 'id'>;
-};
+export type CreateSuccessMutation = { createSuccess: Pick<Types.Success, 'id'> };
 
 export type UpdateSuccessMutationVariables = Types.Exact<{
   data: Types.UpdateSuccessInput;
 }>;
 
-export type UpdateSuccessMutation = { __typename?: 'Mutation' } & {
-  updateSuccess: { __typename?: 'Success' } & Pick<Types.Success, 'id'>;
-};
+export type UpdateSuccessMutation = { updateSuccess: Pick<Types.Success, 'id'> };
 
 export type DeleteSuccessMutationVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
-export type DeleteSuccessMutation = { __typename?: 'Mutation' } & Pick<Types.Mutation, 'deleteSuccess'>;
+export type DeleteSuccessMutation = Pick<Types.Mutation, 'deleteSuccess'>;
 
 export const SuccessUserFragmentDoc = gql`
   fragment SuccessUser on User {

@@ -12,7 +12,6 @@ export type Scalars = {
 };
 
 export type Guild = {
-  __typename?: 'Guild';
   id: Scalars['ID'];
   name: Scalars['String'];
   description: Scalars['String'];
@@ -25,7 +24,6 @@ export type Guild = {
 };
 
 export type Clan = {
-  __typename?: 'Clan';
   id: Scalars['ID'];
   name: Scalars['String'];
   description: Scalars['String'];
@@ -38,7 +36,6 @@ export type Clan = {
 };
 
 export type GuildPosition = {
-  __typename?: 'GuildPosition';
   id: Scalars['ID'];
   from: Scalars['DateTime'];
   to?: Maybe<Scalars['DateTime']>;
@@ -57,7 +54,6 @@ export enum GuildPositionKind {
 }
 
 export type GuildMember = {
-  __typename?: 'GuildMember';
   id: Scalars['ID'];
   role: TeamRole;
   user: User;
@@ -78,7 +74,6 @@ export enum TeamRole {
 }
 
 export type Position = {
-  __typename?: 'Position';
   id: Scalars['ID'];
   name: Scalars['String'];
   description: Scalars['String'];
@@ -90,7 +85,6 @@ export type Position = {
 };
 
 export type Squad = {
-  __typename?: 'Squad';
   id: Scalars['ID'];
   name: Scalars['String'];
   description: Scalars['String'];
@@ -103,7 +97,6 @@ export type Squad = {
 };
 
 export type Chapter = {
-  __typename?: 'Chapter';
   id: Scalars['ID'];
   name: Scalars['String'];
   description: Scalars['String'];
@@ -119,7 +112,6 @@ export type ChapterPositionsArgs = {
 };
 
 export type SquadPosition = {
-  __typename?: 'SquadPosition';
   id: Scalars['ID'];
   from: Scalars['DateTime'];
   to?: Maybe<Scalars['DateTime']>;
@@ -134,7 +126,6 @@ export type SquadPosition = {
 };
 
 export type SquadMember = {
-  __typename?: 'SquadMember';
   id: Scalars['ID'];
   role: TeamRole;
   positions: Array<SquadPosition>;
@@ -149,7 +140,6 @@ export type SquadMemberPositionsArgs = {
 };
 
 export type Success = {
-  __typename?: 'Success';
   id: Scalars['ID'];
   name: Scalars['String'];
   description: Scalars['String'];
@@ -167,7 +157,6 @@ export enum SuccessType {
 }
 
 export type User = {
-  __typename?: 'User';
   id: Scalars['ID'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
@@ -199,7 +188,6 @@ export enum UserRole {
 }
 
 export type GsuiteUser = {
-  __typename?: 'GsuiteUser';
   id: Scalars['String'];
   firstName: Scalars['String'];
   lastName: Scalars['String'];
@@ -208,7 +196,6 @@ export type GsuiteUser = {
 };
 
 export type SlackMessage = {
-  __typename?: 'SlackMessage';
   text: Scalars['String'];
   user: Scalars['String'];
   botId: Scalars['String'];
@@ -216,7 +203,6 @@ export type SlackMessage = {
 };
 
 export type SlackUser = {
-  __typename?: 'SlackUser';
   id: Scalars['String'];
   fullName: Scalars['String'];
   primaryEmail: Scalars['String'];
@@ -225,7 +211,6 @@ export type SlackUser = {
 };
 
 export type Query = {
-  __typename?: 'Query';
   gsuiteUsers: Array<GsuiteUser>;
   slackUsers: Array<SlackUser>;
   user: User;
@@ -321,7 +306,6 @@ export type QuerySuccessesArgs = {
 };
 
 export type Mutation = {
-  __typename?: 'Mutation';
   deleteGsuiteUser: Scalars['Boolean'];
   syncSlackUser: User;
   sendSlackMessage: SlackMessage;

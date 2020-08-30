@@ -8,12 +8,9 @@ export type UsersQueryVariables = Types.Exact<{
   role?: Types.Maybe<Types.UserRole>;
 }>;
 
-export type UsersQuery = { __typename?: 'Query' } & {
+export type UsersQuery = {
   users: Array<
-    { __typename?: 'User' } & Pick<
-      Types.User,
-      'id' | 'image' | 'thumbnail' | 'fullName' | 'primaryEmail' | 'recoveryEmail' | 'role' | 'slackId'
-    >
+    Pick<Types.User, 'id' | 'image' | 'thumbnail' | 'fullName' | 'primaryEmail' | 'recoveryEmail' | 'role' | 'slackId'>
   >;
 };
 
@@ -21,23 +18,19 @@ export type SimpleUsersQueryVariables = Types.Exact<{
   ids?: Types.Maybe<Array<Types.Scalars['ID']>>;
 }>;
 
-export type SimpleUsersQuery = { __typename?: 'Query' } & {
-  users: Array<{ __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName'>>;
-};
+export type SimpleUsersQuery = { users: Array<Pick<Types.User, 'id' | 'fullName'>> };
 
 export type CreateUserMutationVariables = Types.Exact<{
   data: Types.CreateUserInput;
 }>;
 
-export type CreateUserMutation = { __typename?: 'Mutation' } & {
-  createUser: { __typename?: 'User' } & Pick<Types.User, 'id'>;
-};
+export type CreateUserMutation = { createUser: Pick<Types.User, 'id'> };
 
 export type DeleteUserMutationVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
-export type DeleteUserMutation = { __typename?: 'Mutation' } & Pick<Types.Mutation, 'deleteUser'>;
+export type DeleteUserMutation = Pick<Types.Mutation, 'deleteUser'>;
 
 export const UsersDocument = gql`
   query users($search: String, $role: UserRole) {

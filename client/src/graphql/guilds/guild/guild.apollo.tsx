@@ -7,21 +7,15 @@ export type GuildQueryVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
-export type GuildQuery = { __typename?: 'Query' } & {
-  guild: { __typename?: 'Guild' } & Pick<Types.Guild, 'id' | 'name' | 'description' | 'image'>;
-};
+export type GuildQuery = { guild: Pick<Types.Guild, 'id' | 'name' | 'description' | 'image'> };
 
 export type SimpleGuildsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type SimpleGuildsQuery = { __typename?: 'Query' } & {
-  guilds: Array<{ __typename?: 'Guild' } & Pick<Types.Guild, 'id' | 'name'>>;
-};
+export type SimpleGuildsQuery = { guilds: Array<Pick<Types.Guild, 'id' | 'name'>> };
 
 export type GuildsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type GuildsQuery = { __typename?: 'Query' } & {
-  guilds: Array<{ __typename?: 'Guild' } & Pick<Types.Guild, 'id' | 'name' | 'description' | 'color' | 'image'>>;
-};
+export type GuildsQuery = { guilds: Array<Pick<Types.Guild, 'id' | 'name' | 'description' | 'color' | 'image'>> };
 
 export const GuildDocument = gql`
   query guild($id: ID!) {

@@ -7,16 +7,16 @@ export type SquadPositionsQueryVariables = Types.Exact<{
   squadId: Types.Scalars['ID'];
 }>;
 
-export type SquadPositionsQuery = { __typename?: 'Query' } & {
+export type SquadPositionsQuery = {
   squadPositions: Array<
-    { __typename?: 'SquadPosition' } & Pick<Types.SquadPosition, 'id' | 'from' | 'to' | 'notes'> & {
-        position: { __typename?: 'Chapter' } & Pick<Types.Chapter, 'id' | 'name'>;
-        member: { __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id'> & {
-            user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName' | 'image'>;
-            squad: { __typename?: 'Squad' } & Pick<Types.Squad, 'id'>;
-          };
-        chapter?: Types.Maybe<{ __typename?: 'Chapter' } & Pick<Types.Chapter, 'id' | 'name'>>;
-      }
+    Pick<Types.SquadPosition, 'id' | 'from' | 'to' | 'notes'> & {
+      position: Pick<Types.Chapter, 'id' | 'name'>;
+      member: Pick<Types.SquadMember, 'id'> & {
+        user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
+        squad: Pick<Types.Squad, 'id'>;
+      };
+      chapter?: Types.Maybe<Pick<Types.Chapter, 'id' | 'name'>>;
+    }
   >;
 };
 
@@ -24,24 +24,20 @@ export type CreateSquadPositionMutationVariables = Types.Exact<{
   data: Types.CreateSquadPositionInput;
 }>;
 
-export type CreateSquadPositionMutation = { __typename?: 'Mutation' } & {
-  createSquadPosition: { __typename?: 'SquadPosition' } & Pick<Types.SquadPosition, 'id'>;
-};
+export type CreateSquadPositionMutation = { createSquadPosition: Pick<Types.SquadPosition, 'id'> };
 
 export type UpdateSquadPositionMutationVariables = Types.Exact<{
   data: Types.UpdateSquadPositionInput;
 }>;
 
-export type UpdateSquadPositionMutation = { __typename?: 'Mutation' } & {
-  updateSquadPosition: { __typename?: 'SquadPosition' } & Pick<Types.SquadPosition, 'id'>;
-};
+export type UpdateSquadPositionMutation = { updateSquadPosition: Pick<Types.SquadPosition, 'id'> };
 
 export type DeleteSquadPositionMutationVariables = Types.Exact<{
   id: Types.Scalars['ID'];
   squadId: Types.Scalars['ID'];
 }>;
 
-export type DeleteSquadPositionMutation = { __typename?: 'Mutation' } & Pick<Types.Mutation, 'deleteSquadPosition'>;
+export type DeleteSquadPositionMutation = Pick<Types.Mutation, 'deleteSquadPosition'>;
 
 export const SquadPositionsDocument = gql`
   query squadPositions($squadId: ID!) {

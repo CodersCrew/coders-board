@@ -14,6 +14,10 @@ export type PositionProps = UsePositions['item'] & {
   openEditModal: (data?: PositionModalData) => void;
 };
 
+function getArea<T extends Record<string, unknown> | null | undefined>(suffix: string, area: T) {
+  return area ? { ...area, suffix } : null;
+}
+
 export const Position: CFC<PositionProps> = props => {
   const { isAdmin } = useAuthorizedUser();
   const deletePositionConfirm = useDeletePositionConfirm(pick(props, ['id', 'name']));
@@ -26,10 +30,11 @@ export const Position: CFC<PositionProps> = props => {
     });
   };
 
-  const area = props.clan ?? props.guild ?? null;
-  const image = props.image || area?.image || undefined;
-  // eslint-disable-next-line no-underscore-dangle
-  const tooltipTitle = area ? `Related to ${area.name} ${area.__typename === 'Clan' ? 'clan' : 'guild'}` : 'Unrelated';
+  const clan = getArea('clan', props.clan);
+  const guild = getArea('guild', props.guild);
+  const area = clan ?? guild ?? null;
+  const image = props.image ?? area?.image ?? undefined;
+  const tooltipTitle = area ? `Related to ${area.name} ${area.suffix}` : 'Unrelated';
 
   const actions = isAdmin
     ? [

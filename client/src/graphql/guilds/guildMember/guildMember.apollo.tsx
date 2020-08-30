@@ -7,16 +7,14 @@ export type GuildMembersQueryVariables = Types.Exact<{
   guildId: Types.Scalars['ID'];
 }>;
 
-export type GuildMembersQuery = { __typename?: 'Query' } & {
+export type GuildMembersQuery = {
   guildMembers: Array<
-    { __typename?: 'GuildMember' } & Pick<Types.GuildMember, 'id' | 'role'> & {
-        user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName' | 'image'>;
-        positions: Array<
-          { __typename?: 'GuildPosition' } & Pick<Types.GuildPosition, 'id' | 'kind'> & {
-              clan?: Types.Maybe<{ __typename?: 'Clan' } & Pick<Types.Clan, 'id' | 'name'>>;
-            }
-        >;
-      }
+    Pick<Types.GuildMember, 'id' | 'role'> & {
+      user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
+      positions: Array<
+        Pick<Types.GuildPosition, 'id' | 'kind'> & { clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>> }
+      >;
+    }
   >;
 };
 
@@ -24,36 +22,28 @@ export type GuildMembersIdsQueryVariables = Types.Exact<{
   guildId: Types.Scalars['ID'];
 }>;
 
-export type GuildMembersIdsQuery = { __typename?: 'Query' } & {
-  guildMembers: Array<
-    { __typename?: 'GuildMember' } & Pick<Types.GuildMember, 'id'> & {
-        user: { __typename?: 'User' } & Pick<Types.User, 'id'>;
-      }
-  >;
+export type GuildMembersIdsQuery = {
+  guildMembers: Array<Pick<Types.GuildMember, 'id'> & { user: Pick<Types.User, 'id'> }>;
 };
 
 export type CreateGuildMemberMutationVariables = Types.Exact<{
   data: Types.CreateGuildMemberInput;
 }>;
 
-export type CreateGuildMemberMutation = { __typename?: 'Mutation' } & {
-  createGuildMember: { __typename?: 'GuildMember' } & Pick<Types.GuildMember, 'id'>;
-};
+export type CreateGuildMemberMutation = { createGuildMember: Pick<Types.GuildMember, 'id'> };
 
 export type UpdateGuildMemberMutationVariables = Types.Exact<{
   data: Types.UpdateGuildMemberInput;
 }>;
 
-export type UpdateGuildMemberMutation = { __typename?: 'Mutation' } & {
-  updateGuildMember: { __typename?: 'GuildMember' } & Pick<Types.GuildMember, 'id'>;
-};
+export type UpdateGuildMemberMutation = { updateGuildMember: Pick<Types.GuildMember, 'id'> };
 
 export type DeleteGuildMemberMutationVariables = Types.Exact<{
   id: Types.Scalars['ID'];
   guildId: Types.Scalars['ID'];
 }>;
 
-export type DeleteGuildMemberMutation = { __typename?: 'Mutation' } & Pick<Types.Mutation, 'deleteGuildMember'>;
+export type DeleteGuildMemberMutation = Pick<Types.Mutation, 'deleteGuildMember'>;
 
 export const GuildMembersDocument = gql`
   query guildMembers($guildId: ID!) {

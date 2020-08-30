@@ -7,17 +7,17 @@ export type SquadMembersQueryVariables = Types.Exact<{
   squadId: Types.Scalars['ID'];
 }>;
 
-export type SquadMembersQuery = { __typename?: 'Query' } & {
+export type SquadMembersQuery = {
   squadMembers: Array<
-    { __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id' | 'role'> & {
-        user: { __typename?: 'User' } & Pick<Types.User, 'id' | 'fullName' | 'image'>;
-        positions: Array<
-          { __typename?: 'SquadPosition' } & Pick<Types.SquadPosition, 'id'> & {
-              position: { __typename?: 'Chapter' } & Pick<Types.Chapter, 'id' | 'name'>;
-              chapter?: Types.Maybe<{ __typename?: 'Chapter' } & Pick<Types.Chapter, 'id' | 'name'>>;
-            }
-        >;
-      }
+    Pick<Types.SquadMember, 'id' | 'role'> & {
+      user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
+      positions: Array<
+        Pick<Types.SquadPosition, 'id'> & {
+          position: Pick<Types.Chapter, 'id' | 'name'>;
+          chapter?: Types.Maybe<Pick<Types.Chapter, 'id' | 'name'>>;
+        }
+      >;
+    }
   >;
 };
 
@@ -25,36 +25,28 @@ export type SquadMembersIdsQueryVariables = Types.Exact<{
   squadId: Types.Scalars['ID'];
 }>;
 
-export type SquadMembersIdsQuery = { __typename?: 'Query' } & {
-  squadMembers: Array<
-    { __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id'> & {
-        user: { __typename?: 'User' } & Pick<Types.User, 'id'>;
-      }
-  >;
+export type SquadMembersIdsQuery = {
+  squadMembers: Array<Pick<Types.SquadMember, 'id'> & { user: Pick<Types.User, 'id'> }>;
 };
 
 export type CreateSquadMemberMutationVariables = Types.Exact<{
   data: Types.CreateSquadMemberInput;
 }>;
 
-export type CreateSquadMemberMutation = { __typename?: 'Mutation' } & {
-  createSquadMember: { __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id'>;
-};
+export type CreateSquadMemberMutation = { createSquadMember: Pick<Types.SquadMember, 'id'> };
 
 export type UpdateSquadMemberMutationVariables = Types.Exact<{
   data: Types.UpdateSquadMemberInput;
 }>;
 
-export type UpdateSquadMemberMutation = { __typename?: 'Mutation' } & {
-  updateSquadMember: { __typename?: 'SquadMember' } & Pick<Types.SquadMember, 'id'>;
-};
+export type UpdateSquadMemberMutation = { updateSquadMember: Pick<Types.SquadMember, 'id'> };
 
 export type DeleteSquadMemberMutationVariables = Types.Exact<{
   id: Types.Scalars['ID'];
   squadId: Types.Scalars['ID'];
 }>;
 
-export type DeleteSquadMemberMutation = { __typename?: 'Mutation' } & Pick<Types.Mutation, 'deleteSquadMember'>;
+export type DeleteSquadMemberMutation = Pick<Types.Mutation, 'deleteSquadMember'>;
 
 export const SquadMembersDocument = gql`
   query squadMembers($squadId: ID!) {
