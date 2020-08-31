@@ -2,7 +2,7 @@ import Joi from '@hapi/joi';
 import dotenv from 'dotenv';
 
 import { EnvVariables } from './env.types';
-import { requiredInProduction } from './env.utils';
+import { requiredIn } from './env.utils';
 
 dotenv.config();
 
@@ -25,8 +25,8 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
     TOKEN_PREFIX: Joi.string().required(),
 
     // heroku variables
-    NPM_CONFIG_PRODUCTION: requiredInProduction({ joiType: Joi.boolean(), defaultValue: false }),
-    PROJECT_PATH: requiredInProduction({ joiType: Joi.string(), defaultValue: 'server' }),
+    NPM_CONFIG_PRODUCTION: requiredIn('production', { joiType: Joi.boolean(), defaultValue: false }),
+    PROJECT_PATH: requiredIn('production', { joiType: Joi.string(), defaultValue: 'server' }),
 
     // google auth
     GOOGLE_CLIENT_ID: Joi.string().required(),
