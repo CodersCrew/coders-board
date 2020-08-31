@@ -13,7 +13,7 @@ query users($search: String $role: UserRole) {
 query baseUserInfo($id: ID!) {
 	user(id: $id) {
 		id
-    image
+    thumbnail
     fullName
     primaryEmail
     phone

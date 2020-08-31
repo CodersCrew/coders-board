@@ -27,8 +27,8 @@ export const useAuthorizedUser = () => {
 
   const logout = async () => {
     await signOut();
-    client.clearStore();
-    navigate('/login');
+    await client.clearStore();
+    navigate('/login', { state: { logout: true } });
   };
 
   const teamRoles = { ...keyBy(data.me.squads, 'squadId'), ...keyBy(data.me.guilds, 'guildId') };

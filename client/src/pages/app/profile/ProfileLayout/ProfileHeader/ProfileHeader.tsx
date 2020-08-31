@@ -3,6 +3,7 @@ import { useLocation, useNavigate } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Tabs } from 'antd';
 
+import { Box, Paragraph, Title } from '@/components/atoms';
 import { Page } from '@/components/molecules';
 import { useBaseUserInfo } from '@/graphql/users';
 
@@ -35,10 +36,19 @@ export const ProfileHeader = () => {
     return null;
   }
 
+  const title = (
+    <Box>
+      <Title level={4} mb={-4}>
+        {data.fullName}
+      </Title>
+      <Paragraph type="secondary">{data.primaryEmail}</Paragraph>
+    </Box>
+  );
+
   return (
     <PageHeader
-      title={data.fullName}
-      avatar={{ src: data.image }}
+      title={title}
+      avatar={{ src: data.thumbnail, size: 'large' }}
       footer={footer}
       extra={<UserTeams guilds={data.guilds} squads={data.squads} />}
     />

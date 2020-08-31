@@ -19,7 +19,7 @@ export type BaseUserInfoQueryVariables = Types.Exact<{
 }>;
 
 export type BaseUserInfoQuery = {
-  user: Pick<Types.User, 'id' | 'image' | 'fullName' | 'primaryEmail' | 'phone'> & {
+  user: Pick<Types.User, 'id' | 'thumbnail' | 'fullName' | 'primaryEmail' | 'phone'> & {
     guilds: Array<Pick<Types.GuildMember, 'id'> & { guild: Pick<Types.Guild, 'id' | 'name' | 'image'> }>;
     squads: Array<Pick<Types.SquadMember, 'id'> & { squad: Pick<Types.Squad, 'id' | 'name' | 'image'> }>;
   };
@@ -87,7 +87,7 @@ export const BaseUserInfoDocument = gql`
   query baseUserInfo($id: ID!) {
     user(id: $id) {
       id
-      image
+      thumbnail
       fullName
       primaryEmail
       phone

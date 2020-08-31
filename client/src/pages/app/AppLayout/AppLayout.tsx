@@ -1,5 +1,5 @@
 import React from 'react';
-import { Outlet, useNavigate } from 'react-router-dom';
+import { Navigate, Outlet } from 'react-router-dom';
 import styled from '@emotion/styled';
 import { Layout } from 'antd';
 
@@ -17,11 +17,9 @@ const StyledContent = styled(Content)(({ theme }) => ({
 
 const AppLayout = () => {
   const auth = useAuth();
-  const navigate = useNavigate();
 
   if (!auth.isAuthorized) {
-    navigate('/login');
-    return null;
+    return <Navigate to="/login" />;
   }
 
   return (

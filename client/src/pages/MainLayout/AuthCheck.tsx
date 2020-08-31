@@ -7,5 +7,9 @@ export const AuthCheck = () => {
   const auth = useAuth();
   const location = useLocation();
 
+  if (location?.state && 'logout' in location.state) {
+    return null;
+  }
+
   return auth.isAuthorized && !location.pathname.includes('/app') ? <Navigate to="/app" /> : null;
 };
