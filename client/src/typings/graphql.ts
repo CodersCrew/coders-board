@@ -310,6 +310,7 @@ export type Mutation = {
   syncSlackUser: User;
   sendSlackMessage: SlackMessage;
   createUser: User;
+  updateUser: User;
   deleteUser: Scalars['Boolean'];
   signOut: Scalars['Boolean'];
   createClan: Clan;
@@ -358,6 +359,10 @@ export type MutationSendSlackMessageArgs = {
 
 export type MutationCreateUserArgs = {
   data: CreateUserInput;
+};
+
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput;
 };
 
 export type MutationDeleteUserArgs = {
@@ -504,6 +509,14 @@ export type CreateUserInput = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   password: Scalars['String'];
+  primaryEmail: Scalars['String'];
+  recoveryEmail: Scalars['String'];
+};
+
+export type UpdateUserInput = {
+  id: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
   primaryEmail: Scalars['String'];
   recoveryEmail: Scalars['String'];
 };
@@ -723,6 +736,7 @@ export const GraphQLOperations = {
     deleteSuccess: 'deleteSuccess',
     signOut: 'signOut',
     createUser: 'createUser',
+    updateUser: 'updateUser',
     deleteUser: 'deleteUser',
   },
   Fragment: {

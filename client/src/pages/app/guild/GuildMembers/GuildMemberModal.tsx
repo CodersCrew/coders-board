@@ -28,22 +28,20 @@ export type GuildMemberModalData = WithId<FormValues> | null;
 
 type GuildMemberModalProps = DataModalProps<GuildMemberModalData>;
 
-const useGuildMemberModal = (props: GuildMemberModalProps) => {
-  const { data, ...modalProps } = props;
-
+const useGuildMemberModal = ({ data, ...modalProps }: GuildMemberModalProps) => {
   const { guildId } = useGuildContext();
   const { createGuildMember, updateGuildMember } = useGuildMemberMutations();
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    const mutation = props.data
-      ? updateGuildMember({ role: values.role, id: props.data.id, guildId })
+    const mutation = data
+      ? updateGuildMember({ role: values.role, id: data.id, guildId })
       : createGuildMember({ ...values, guildId });
 
     runMutation({
       mutation,
-      success: () => props.onCancel(),
+      success: () => modalProps.onCancel(),
       finally: () => helpers.setSubmitting(false),
-      messages: getGenericMessages('guild member', props.data ? 'update' : 'create'),
+      messages: getGenericMessages('guild member', data ? 'update' : 'create'),
     });
   };
   return {
@@ -53,7 +51,7 @@ const useGuildMemberModal = (props: GuildMemberModalProps) => {
       okText: data ? 'Update member' : 'Add member',
     },
     form: {
-      initialValues: getInitialValues(props.data),
+      initialValues: getInitialValues(data),
       validationSchema,
       onSubmit: handleSubmit,
     },

@@ -48,7 +48,7 @@ const useSquadPositionModal = (props: SquadPositionModalProps) => {
   const { createSquadPosition, updateSquadPosition } = useSquadPositionMutations();
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    const mutation = data?.id
+    const mutation = data
       ? updateSquadPosition({ ...pick(values, ['from', 'to', 'notes']), id: data.id, squadId })
       : createSquadPosition({ ...values, squadId });
 
@@ -63,8 +63,8 @@ const useSquadPositionModal = (props: SquadPositionModalProps) => {
   return {
     modal: {
       ...modalProps,
-      title: data?.id ? 'Edit position' : 'Add position',
-      okText: data?.id ? 'Update position' : 'Add position',
+      title: data ? 'Edit position' : 'Add position',
+      okText: data ? 'Update position' : 'Add position',
     },
     form: {
       initialValues: getInitialValues(data),

@@ -40,7 +40,7 @@ const useSuccessModal = ({ data, ...modalProps }: SuccessModalProps) => {
   const { createSuccess, updateSuccess } = useSuccessMutations();
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    const mutation = data?.id ? updateSuccess({ ...values, id: data.id }) : createSuccess(values);
+    const mutation = data ? updateSuccess({ ...values, id: data.id }) : createSuccess(values);
 
     runMutation({
       mutation,
@@ -53,8 +53,8 @@ const useSuccessModal = ({ data, ...modalProps }: SuccessModalProps) => {
   return {
     modal: {
       ...modalProps,
-      title: data?.id ? 'Edit success' : 'Add a new success',
-      okText: data?.id ? 'Update success' : 'Add success',
+      title: data ? 'Edit success' : 'Add a new success',
+      okText: data ? 'Update success' : 'Add success',
     },
     form: {
       initialValues: getInitialValues(data),

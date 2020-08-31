@@ -221,6 +221,7 @@ type Mutation {
   syncSlackUser(data: SyncSlackUserInput!): User!
   sendSlackMessage(data: SendSlackMessageInput!): SlackMessage!
   createUser(data: CreateUserInput!): User!
+  updateUser(data: UpdateUserInput!): User!
   deleteUser(id: ID!): Boolean!
   signOut: Boolean!
   createClan(data: CreateClanInput!): Clan!
@@ -269,6 +270,14 @@ input CreateUserInput {
   firstName: String!
   lastName: String!
   password: String!
+  primaryEmail: String!
+  recoveryEmail: String!
+}
+
+input UpdateUserInput {
+  id: String!
+  firstName: String!
+  lastName: String!
   primaryEmail: String!
   recoveryEmail: String!
 }

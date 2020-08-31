@@ -4,6 +4,7 @@ import { brackets, resolveAsyncRelation } from '../common/utils';
 import { CloudinaryService, GsuiteService, SlackService } from '../integrations';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
+import { UpdateUserInput } from './dto/update-user.input';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -67,6 +68,17 @@ export class UsersService {
       await this.gsuiteService.deleteUser({ id: googleId });
       throw ex;
     }
+  }
+
+  async update({ id, ...input }: UpdateUserInput) {
+    const rawUser = await this.findByIdOrThrow(id);
+    const fullName = `${input.firstName} ${input.lastName}`;
+    const user = await this.userRepository.save({ ...rawUser, ...input, fullName });
+
+    await this.gsuiteService.updateUser({ ...user, googleId: user.googleId });
+    await this.slackService.updateUser({ ...user, slackId: user.slackId });
+
+    return user;
   }
 
   async delete(userId: string) {

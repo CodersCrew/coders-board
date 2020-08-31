@@ -5,9 +5,7 @@ import fetch from 'node-fetch';
 
 import { env } from '../../common/env';
 import { pick, transformAndValidate } from '../../common/utils';
-import { CreateUserInput } from './dto/create-user.input';
-import { UpdateUserImageInput } from './dto/update-user-image.input';
-import { UpdateUserInput } from './dto/update-user.input';
+import { CreateGoogleUserInput, UpdateGoogleUserImageInput, UpdateGoogleUserInput } from './dto';
 import { GsuiteUser } from './gsuite-user.model';
 import { CreateGroupParams } from './interfaces/create-group.params';
 import { CreateMemberParams } from './interfaces/create-member.params';
@@ -79,15 +77,15 @@ export class GsuiteService {
       );
   }
 
-  async createUser(input: CreateUserInput) {
-    const googleUserInput = await transformAndValidate(CreateUserInput, input);
+  async createUser(input: CreateGoogleUserInput) {
+    const googleUserInput = await transformAndValidate(CreateGoogleUserInput, input);
     const password = createHash('md5').update(googleUserInput.password).digest('hex');
 
     const response = await this.admin.users.insert({
       requestBody: {
         name: {
-          familyName: googleUserInput.firstName,
-          givenName: googleUserInput.lastName,
+          familyName: googleUserInput.lastName,
+          givenName: googleUserInput.firstName,
           fullName: `${googleUserInput.firstName} ${googleUserInput.lastName}`,
         },
         primaryEmail: googleUserInput.primaryEmail,
@@ -104,10 +102,21 @@ export class GsuiteService {
     });
   }
 
-  async updateUser(input: UpdateUserInput): Promise<boolean> {
-    const { id, ...googleUserInput } = await transformAndValidate(UpdateUserInput, input);
+  async updateUser(input: UpdateGoogleUserInput): Promise<boolean> {
+    const { googleId, ...googleUserInput } = await transformAndValidate(UpdateGoogleUserInput, input);
 
-    await this.admin.users.update({ userKey: id, requestBody: googleUserInput });
+    await this.admin.users.update({
+      userKey: googleId,
+      requestBody: {
+        name: {
+          familyName: googleUserInput.lastName,
+          givenName: googleUserInput.firstName,
+          fullName: `${googleUserInput.firstName} ${googleUserInput.lastName}`,
+        },
+        primaryEmail: googleUserInput.primaryEmail,
+        recoveryEmail: googleUserInput.recoveryEmail,
+      },
+    });
 
     return true;
   }
@@ -118,11 +127,11 @@ export class GsuiteService {
     return true;
   }
 
-  async updateUserImage(input: UpdateUserImageInput): Promise<boolean> {
-    const { id, imageUrl } = await transformAndValidate(UpdateUserImageInput, input);
+  async updateUserImage(input: UpdateGoogleUserImageInput): Promise<boolean> {
+    const { googleId, imageUrl } = await transformAndValidate(UpdateGoogleUserImageInput, input);
     const photoData = await imageToBase64(imageUrl);
 
-    await this.admin.users.photos.update({ userKey: id, requestBody: { photoData } });
+    await this.admin.users.photos.update({ userKey: googleId, requestBody: { photoData } });
 
     return true;
   }

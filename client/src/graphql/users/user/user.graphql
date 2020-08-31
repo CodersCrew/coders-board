@@ -2,6 +2,8 @@ query users($search: String $role: UserRole) {
 	users(search: $search role: $role) {
 		id
     thumbnail
+    firstName
+    lastName
     fullName
     primaryEmail
     recoveryEmail
@@ -45,6 +47,12 @@ query simpleUsers($ids: [ID!]) {
 
 mutation createUser($data: CreateUserInput!) {
   createUser(data: $data) {
+    id
+  }
+}
+
+mutation updateUser($data: UpdateUserInput!) {
+  updateUser(data: $data) {
     id
   }
 }

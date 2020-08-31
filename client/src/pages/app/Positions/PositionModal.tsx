@@ -34,7 +34,7 @@ const usePositionModal = (props: PositionModalProps) => {
   const { createPosition, updatePosition } = usePositionMutations();
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    const mutation = data?.id ? updatePosition({ ...values, id: data.id }) : createPosition(values);
+    const mutation = data ? updatePosition({ ...values, id: data.id }) : createPosition(values);
 
     runMutation({
       mutation,
@@ -47,8 +47,8 @@ const usePositionModal = (props: PositionModalProps) => {
   return {
     modal: {
       ...modalProps,
-      title: data?.id ? 'Edit position' : 'Create position',
-      okText: data?.id ? 'Update position' : 'Create',
+      title: data ? 'Edit position' : 'Create position',
+      okText: data ? 'Update position' : 'Create',
     },
     form: {
       initialValues: getInitialValues(data),

@@ -7,6 +7,7 @@ import { FormikModal } from '@/components/molecules';
 import { useUsersMutations } from '@/graphql/users';
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
+import { WithId } from '@/typings/enhancers';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
@@ -21,12 +22,14 @@ type FormValues = ReturnType<typeof getInitialValues>;
 
 type FormConfig = FormikConfig<FormValues>;
 
-type AddUserModalProps = DataModalProps<null>;
+export type UserModalData = WithId<FormValues> | null;
+
+type UserModalProps = DataModalProps<UserModalData>;
 
 const EMAIL_SUFFIX = '@coderscrew.pl';
 
-const useAddUserModal = (props: AddUserModalProps) => {
-  const { createUser } = useUsersMutations();
+const useUserModal = ({ data, ...modalProps }: UserModalProps) => {
+  const { createUser, updateUser } = useUsersMutations();
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     const primaryEmail = values.primaryEmail + EMAIL_SUFFIX;
@@ -36,31 +39,39 @@ const useAddUserModal = (props: AddUserModalProps) => {
     if (!isEmailValid) {
       helpers.setFieldError('primaryEmail', 'Invalid email format');
     } else {
+      const mutation = data
+        ? updateUser({ ...values, primaryEmail, id: data.id })
+        : createUser({ ...values, primaryEmail, password: 'Li837jdk3JKP' });
+
       runMutation({
-        mutation: createUser({ ...values, primaryEmail, password: 'Li837jdk3JKP' }),
-        success: () => props.onCancel(),
+        mutation,
+        success: () => modalProps.onCancel(),
         finally: () => helpers.setSubmitting(false),
-        messages: getGenericMessages('user', 'create'),
+        messages: getGenericMessages('user', data ? 'update' : 'create'),
       });
     }
   };
 
+  const initialData: FormValues | undefined = data
+    ? { ...data, primaryEmail: data.primaryEmail.replace(EMAIL_SUFFIX, '') }
+    : undefined;
+
   return {
     modal: {
-      ...props,
-      title: 'Add a new user',
-      okText: 'Add user',
+      ...modalProps,
+      title: data ? 'Update user' : 'Add a new user',
+      okText: data ? 'Update user' : 'Add user',
     },
     form: {
-      initialValues: getInitialValues(),
+      initialValues: getInitialValues(initialData),
       validationSchema,
       onSubmit: handleSubmit,
     },
   };
 };
 
-export const AddUserModal = createDataModal<AddUserModalProps>(props => {
-  const { form, modal } = useAddUserModal(props);
+export const UserModal = createDataModal<UserModalProps>(props => {
+  const { form, modal } = useUserModal(props);
 
   return (
     <FormikModal form={form} modal={modal}>

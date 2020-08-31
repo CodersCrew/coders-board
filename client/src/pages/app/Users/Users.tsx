@@ -1,5 +1,5 @@
 import React, { useState } from 'react';
-import { DeleteOutlined, SlackOutlined } from '@ant-design/icons';
+import { DeleteOutlined, EditOutlined, SlackOutlined } from '@ant-design/icons';
 
 import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Page, Table, TableActions } from '@/components/molecules';
@@ -9,15 +9,15 @@ import { useDataModal } from '@/services/modals';
 import { UserRole } from '@/typings/graphql';
 import { pick } from '@/utils/objects';
 
-import { AddUserModal } from './AddUserModal';
 import { SyncSlackModal, SyncSlackModalData } from './SyncSlackModal';
 import { useDeleteUserConfirm } from './useDeleteUserConfirm';
+import { UserModal, UserModalData } from './UserModal';
 import { useUsersColumns } from './useUsersColumns';
 
 type User = UseUsers['item'];
 
 const Users = () => {
-  const addUserModal = useDataModal<null>();
+  const userModal = useDataModal<UserModalData>();
   const syncSlackModal = useDataModal<SyncSlackModalData>();
   const [search, setSearch] = useState('');
   const [role, setRole] = useState<UserRole | undefined>();
@@ -44,6 +44,11 @@ const Users = () => {
       onClick: user => syncSlackModal.open({ userId: user.id }),
     },
     {
+      label: 'Edit user',
+      icon: EditOutlined,
+      onClick: user => userModal.open(pick(user, ['id', 'firstName', 'lastName', 'primaryEmail', 'recoveryEmail'])),
+    },
+    {
       label: 'Remove user',
       icon: DeleteOutlined,
       onClick: user => deleteUserConfirm(pick(user, ['id', 'fullName'])),
@@ -57,7 +62,7 @@ const Users = () => {
       <Page.Content>
         <FiltersCard
           search={{ onSearch: setSearch, value: search, loading: users.loading }}
-          addButton={isAdmin && { label: 'Add user', onClick: () => addUserModal.open(null) }}
+          addButton={isAdmin && { label: 'Add user', onClick: () => userModal.open(null) }}
           leftNode={filtersLeftNode}
         />
         <Box maxWidth="100%" overflow="auto" mt={32}>
@@ -66,7 +71,7 @@ const Users = () => {
           </Card>
         </Box>
       </Page.Content>
-      <AddUserModal {...addUserModal} />
+      <UserModal {...userModal} />
       <SyncSlackModal {...syncSlackModal} />
     </Page>
   );

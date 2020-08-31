@@ -7,6 +7,7 @@ import { SquadMember } from '../squads/squad-members/squad-member.model';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUserArgs } from './dto/get-user.args';
 import { GetUsersArgs } from './dto/get-users.args';
+import { UpdateUserInput } from './dto/update-user.input';
 import { User } from './user.model';
 import { UsersService } from './users.service';
 
@@ -43,6 +44,12 @@ export class UsersResolver {
   @AdminGuard()
   createUser(@Args('data') input: CreateUserInput) {
     return this.usersService.create(input);
+  }
+
+  @Mutation(returns => User)
+  @AdminGuard()
+  updateUser(@Args('data') input: UpdateUserInput) {
+    return this.usersService.update(input);
   }
 
   @Mutation(returns => Boolean)

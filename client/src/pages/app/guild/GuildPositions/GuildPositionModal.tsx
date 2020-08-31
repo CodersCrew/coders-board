@@ -42,34 +42,32 @@ const pickerProps: Partial<DatePickerProps> = {
   style: { width: '100%' },
 };
 
-const useGuildPositionModal = (props: GuildPositionModalProps) => {
-  const { data, ...modalProps } = props;
-
+const useGuildPositionModal = ({ data, ...modalProps }: GuildPositionModalProps) => {
   const { guildId } = useGuildContext();
 
   const { createGuildPosition, updateGuildPosition } = useGuildPositionMutations();
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    const mutation = props.data?.id
-      ? updateGuildPosition({ ...values, id: props.data.id, guildId })
+    const mutation = data
+      ? updateGuildPosition({ ...values, id: data.id, guildId })
       : createGuildPosition({ ...values, guildId });
 
     runMutation({
       mutation,
-      success: () => props.onCancel(),
+      success: () => modalProps.onCancel(),
       finally: () => helpers.setSubmitting(false),
-      messages: getGenericMessages('guild position', props.data ? 'update' : 'create'),
+      messages: getGenericMessages('guild position', data ? 'update' : 'create'),
     });
   };
 
   return {
     modal: {
       ...modalProps,
-      title: data?.id ? 'Edit position' : 'Add position',
-      okText: data?.id ? 'Update position' : 'Add position',
+      title: data ? 'Edit position' : 'Add position',
+      okText: data ? 'Update position' : 'Add position',
     },
     form: {
-      initialValues: getInitialValues(props.data),
+      initialValues: getInitialValues(data),
       validationSchema,
       onSubmit: handleSubmit,
     },

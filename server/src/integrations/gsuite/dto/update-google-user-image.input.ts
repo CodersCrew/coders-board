@@ -1,13 +1,16 @@
 import { Field, InputType } from '@nestjs/graphql';
+import { Expose } from 'class-transformer';
 import { IsNotEmpty, IsString, IsUrl } from 'class-validator';
 
 @InputType()
-export class UpdateUserImageInput {
+export class UpdateGoogleUserImageInput {
+  @Expose()
   @Field()
   @IsString()
   @IsNotEmpty()
-  id: string;
+  googleId: string;
 
+  @Expose()
   @Field()
   @IsUrl()
   @IsNotEmpty()

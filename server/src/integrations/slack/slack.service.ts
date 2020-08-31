@@ -2,11 +2,11 @@ import { Injectable } from '@nestjs/common';
 import { WebClient } from '@slack/web-api';
 
 import { env } from '../../common/env';
-import { pick } from '../../common/utils';
+import { pick, transformAndValidate } from '../../common/utils';
 import { UserRepository } from '../../users/user.repository';
 import { CloudinaryService } from '../cloudinary/cloudinary.service';
 import { GsuiteService } from '../gsuite/gsuite.service';
-import { GetSlackUserInput, SendSlackMessageInput, SyncSlackUserInput } from './dto';
+import { GetSlackUserInput, SendSlackMessageInput, SyncSlackUserInput, UpdateSlackUserInput } from './dto';
 import { ChatPostMessageResult } from './interfaces/chat-post-message-result.interface';
 import { UsersInfoResult } from './interfaces/user-info-result.interface';
 import { UsersListResult } from './interfaces/users-list-result.interface';
@@ -42,7 +42,8 @@ export class SlackService {
       );
   }
 
-  async syncUser({ slackId, userId }: SyncSlackUserInput) {
+  async syncUser(input: SyncSlackUserInput) {
+    const { slackId, userId } = await transformAndValidate(SyncSlackUserInput, input);
     const slackUser = await this.getUser({ slackId });
 
     const user = await this.userRepository.findOneOrFail(userId);
@@ -58,7 +59,7 @@ export class SlackService {
     const image = await this.cloudinaryService.uploadUserImage(slackUser.profile.image_192, user.id);
     const thumbnail = await this.cloudinaryService.uploadUserThumbnail(slackUser.profile.image_48, user.id);
 
-    await this.gsuiteService.updateUserImage({ id: user.googleId, imageUrl: image });
+    await this.gsuiteService.updateUserImage({ googleId: user.googleId, imageUrl: image });
 
     return this.userRepository.save({
       ...user,
@@ -68,13 +69,33 @@ export class SlackService {
     });
   }
 
-  async getUser({ slackId }: GetSlackUserInput) {
+  async getUser(input: GetSlackUserInput) {
+    const { slackId } = await transformAndValidate(GetSlackUserInput, input);
     const { user: slackUser } = await slackRequest<UsersInfoResult>(this.slackBot.users.info({ user: slackId }));
 
     return slackUser;
   }
 
-  async sendMessage({ channelId, text }: SendSlackMessageInput): Promise<SlackMessage> {
+  async updateUser(input: UpdateSlackUserInput) {
+    const { slackId, ...slackUserInput } = await transformAndValidate(UpdateSlackUserInput, input);
+
+    await slackRequest<UsersInfoResult>(
+      this.slackAdmin.users.profile.set({
+        user: slackId,
+        profile: JSON.stringify({
+          first_name: slackUserInput.firstName,
+          last_name: slackUserInput.lastName,
+          email: slackUserInput.primaryEmail,
+        }),
+      }),
+    );
+
+    return true;
+  }
+
+  async sendMessage(input: SendSlackMessageInput): Promise<SlackMessage> {
+    const { channelId, text } = await transformAndValidate(SendSlackMessageInput, input);
+
     const { message } = await slackRequest<ChatPostMessageResult>(
       this.slackBot.chat.postMessage({ channel: channelId, text }),
     );
