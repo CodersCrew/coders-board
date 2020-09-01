@@ -3,6 +3,7 @@ import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/g
 import { TeamKind } from '../../common/decorators';
 import { TeamRole } from '../../common/enums';
 import { TeamRoleGuard } from '../../common/guards';
+import { Position } from '../../positions/position.model';
 import { Chapter } from '../chapters/chapter.model';
 import { SquadMember } from '../squad-members/squad-member.model';
 import { CreateSquadPositionInput } from './dto/create-squad-position.input';
@@ -22,12 +23,12 @@ export class SquadPositionsResolver {
     return this.squadPositionsService.getMember(squadPosition);
   }
 
-  @ResolveField('clan', returns => Chapter, { nullable: true })
+  @ResolveField('chapter', returns => Chapter, { nullable: true })
   async getChapter(@Parent() squadPosition: SquadPosition) {
     return this.squadPositionsService.getChapter(squadPosition);
   }
 
-  @ResolveField('position', returns => Chapter)
+  @ResolveField('position', returns => Position)
   async getPosition(@Parent() squadPosition: SquadPosition) {
     return this.squadPositionsService.getPosition(squadPosition);
   }

@@ -4,5 +4,5 @@ import { Card } from '@/components/molecules';
 import { FC } from '@/typings/components';
 
 export const DetailsCard: FC = ({ children }) => {
-  return <Card>{children}</Card>;
+  return <Card p={24}>{children}</Card>;
 };

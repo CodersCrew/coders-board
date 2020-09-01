@@ -38,6 +38,53 @@ query baseUserInfo($id: ID!) {
   }
 }
 
+query userActivity($id: ID!) {
+  user(id: $id) {
+    id
+    guilds {
+      id
+      guild {
+        id
+        name
+        image
+      }
+      positions {
+        id
+        from
+        to
+        notes
+        kind
+        clan {
+          id
+          name
+        }
+      }
+    }
+    squads {
+      id
+      squad {
+        id
+        name
+        image
+      }
+      positions {
+        id
+        from
+        to
+        notes
+        position {
+          id
+          name
+        }
+        chapter {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
 query simpleUsers($ids: [ID!]) {
   users(ids: $ids) {
     id

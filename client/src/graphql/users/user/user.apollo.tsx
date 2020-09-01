@@ -28,6 +28,36 @@ export type BaseUserInfoQuery = {
   };
 };
 
+export type UserActivityQueryVariables = Types.Exact<{
+  id: Types.Scalars['ID'];
+}>;
+
+export type UserActivityQuery = {
+  user: Pick<Types.User, 'id'> & {
+    guilds: Array<
+      Pick<Types.GuildMember, 'id'> & {
+        guild: Pick<Types.Guild, 'id' | 'name' | 'image'>;
+        positions: Array<
+          Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes' | 'kind'> & {
+            clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>>;
+          }
+        >;
+      }
+    >;
+    squads: Array<
+      Pick<Types.SquadMember, 'id'> & {
+        squad: Pick<Types.Squad, 'id' | 'name' | 'image'>;
+        positions: Array<
+          Pick<Types.SquadPosition, 'id' | 'from' | 'to' | 'notes'> & {
+            position: Pick<Types.Position, 'id' | 'name'>;
+            chapter?: Types.Maybe<Pick<Types.Chapter, 'id' | 'name'>>;
+          }
+        >;
+      }
+    >;
+  };
+};
+
 export type SimpleUsersQueryVariables = Types.Exact<{
   ids?: Types.Maybe<Array<Types.Scalars['ID']>>;
 }>;
@@ -151,6 +181,84 @@ export function useBaseUserInfoLazyQuery(
 export type BaseUserInfoQueryHookResult = ReturnType<typeof useBaseUserInfoQuery>;
 export type BaseUserInfoLazyQueryHookResult = ReturnType<typeof useBaseUserInfoLazyQuery>;
 export type BaseUserInfoQueryResult = Apollo.QueryResult<BaseUserInfoQuery, BaseUserInfoQueryVariables>;
+export const UserActivityDocument = gql`
+  query userActivity($id: ID!) {
+    user(id: $id) {
+      id
+      guilds {
+        id
+        guild {
+          id
+          name
+          image
+        }
+        positions {
+          id
+          from
+          to
+          notes
+          kind
+          clan {
+            id
+            name
+          }
+        }
+      }
+      squads {
+        id
+        squad {
+          id
+          name
+          image
+        }
+        positions {
+          id
+          from
+          to
+          notes
+          position {
+            id
+            name
+          }
+          chapter {
+            id
+            name
+          }
+        }
+      }
+    }
+  }
+`;
+
+/**
+ * __useUserActivityQuery__
+ *
+ * To run a query within a React component, call `useUserActivityQuery` and pass it any options that fit your needs.
+ * When your component renders, `useUserActivityQuery` returns an object from Apollo Client that contains loading, error, and data properties
+ * you can use to render your UI.
+ *
+ * @param baseOptions options that will be passed into the query, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options;
+ *
+ * @example
+ * const { data, loading, error } = useUserActivityQuery({
+ *   variables: {
+ *      id: // value for 'id'
+ *   },
+ * });
+ */
+export function useUserActivityQuery(
+  baseOptions?: Apollo.QueryHookOptions<UserActivityQuery, UserActivityQueryVariables>,
+) {
+  return Apollo.useQuery<UserActivityQuery, UserActivityQueryVariables>(UserActivityDocument, baseOptions);
+}
+export function useUserActivityLazyQuery(
+  baseOptions?: Apollo.LazyQueryHookOptions<UserActivityQuery, UserActivityQueryVariables>,
+) {
+  return Apollo.useLazyQuery<UserActivityQuery, UserActivityQueryVariables>(UserActivityDocument, baseOptions);
+}
+export type UserActivityQueryHookResult = ReturnType<typeof useUserActivityQuery>;
+export type UserActivityLazyQueryHookResult = ReturnType<typeof useUserActivityLazyQuery>;
+export type UserActivityQueryResult = Apollo.QueryResult<UserActivityQuery, UserActivityQueryVariables>;
 export const SimpleUsersDocument = gql`
   query simpleUsers($ids: [ID!]) {
     users(ids: $ids) {

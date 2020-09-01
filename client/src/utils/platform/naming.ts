@@ -5,7 +5,7 @@ type Options = {
   lowercase?: boolean;
 };
 
-const kindName = {
+const kindNames = {
   [GuildPositionKind.Expert]: 'Expert',
   [GuildPositionKind.Leader]: 'Leader',
   [GuildPositionKind.Member]: 'Member',
@@ -17,7 +17,7 @@ const kindName = {
  * @param options Options for transforming function output.
  */
 export const parseGuildPositionKind = (kind: GuildPositionKind, options?: Options) => {
-  let name = kindName[kind];
+  let name = kindNames[kind];
 
   if (options?.lowercase) {
     name = name.toLowerCase();
@@ -28,4 +28,9 @@ export const parseGuildPositionKind = (kind: GuildPositionKind, options?: Option
   }
 
   return name;
+};
+
+export const getPositionInGuild = (kind: GuildPositionKind, clanName?: string) => {
+  const kindName = parseGuildPositionKind(kind);
+  return clanName ? `${kindName} in ${clanName} clan` : `${kindName} of the guild`;
 };

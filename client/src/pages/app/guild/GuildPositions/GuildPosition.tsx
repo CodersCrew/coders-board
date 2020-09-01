@@ -6,7 +6,7 @@ import { UseGuildPositions } from '@/graphql/guilds';
 import { CFC } from '@/typings/components';
 import { formatDate } from '@/utils/dates';
 import { pick } from '@/utils/objects';
-import { parseGuildPositionKind } from '@/utils/platform';
+import { getPositionInGuild } from '@/utils/platform';
 
 import { useGuildContext } from '../GuildContext';
 import { GuildPositionModalData } from './GuildPositionModal';
@@ -31,8 +31,7 @@ export const GuildPosition: CFC<GuildPositionProps> = props => {
     });
   };
 
-  const kindName = parseGuildPositionKind(props.kind);
-  const positionName = props.clan ? `${kindName} in ${props.clan.name} Clan` : `${kindName} of the guild`;
+  const positionName = getPositionInGuild(props.kind, props?.clan?.name);
 
   return (
     <List.Item

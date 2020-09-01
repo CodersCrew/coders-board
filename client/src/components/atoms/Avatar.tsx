@@ -12,9 +12,11 @@ const styledSystem = compose(space, layout);
 const shouldForwardProp = omitProps(styledSystem.propNames);
 
 export const Avatar = styled(AntAvatar, { shouldForwardProp })<AvatarProps>(props => ({
-  ...styledSystem(props),
-  minWidth: props.width || props.size,
-  minHeight: props.height || props.size,
+  '&.ant-avatar': {
+    ...styledSystem(props),
+    minWidth: props.width || props.size,
+    minHeight: props.height || props.size,
+  },
 }));
 
 export const AvatarGroup = AntAvatar.Group;

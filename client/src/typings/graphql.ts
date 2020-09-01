@@ -120,9 +120,8 @@ export type SquadPosition = {
   memberId: Scalars['String'];
   chapter?: Maybe<Chapter>;
   chapterId: Scalars['String'];
-  position: Chapter;
+  position: Position;
   positionId: Scalars['String'];
-  clan?: Maybe<Chapter>;
 };
 
 export type SquadMember = {
@@ -709,6 +708,7 @@ export const GraphQLOperations = {
     me: 'me',
     users: 'users',
     baseUserInfo: 'baseUserInfo',
+    userActivity: 'userActivity',
     simpleUsers: 'simpleUsers',
   },
   Mutation: {

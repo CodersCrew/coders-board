@@ -13,7 +13,7 @@ export type SquadMembersQuery = {
       user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
       positions: Array<
         Pick<Types.SquadPosition, 'id'> & {
-          position: Pick<Types.Chapter, 'id' | 'name'>;
+          position: Pick<Types.Position, 'id' | 'name'>;
           chapter?: Types.Maybe<Pick<Types.Chapter, 'id' | 'name'>>;
         }
       >;

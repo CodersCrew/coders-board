@@ -10,7 +10,7 @@ export type SquadPositionsQueryVariables = Types.Exact<{
 export type SquadPositionsQuery = {
   squadPositions: Array<
     Pick<Types.SquadPosition, 'id' | 'from' | 'to' | 'notes'> & {
-      position: Pick<Types.Chapter, 'id' | 'name'>;
+      position: Pick<Types.Position, 'id' | 'name'>;
       member: Pick<Types.SquadMember, 'id'> & {
         user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
         squad: Pick<Types.Squad, 'id'>;
