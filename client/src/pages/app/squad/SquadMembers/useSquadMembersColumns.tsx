@@ -41,12 +41,12 @@ export const useSquadMembersColumns = () => {
     },
     {
       title: 'Position',
-      key: 'position',
-      render: (_, { positions }) => (
+      key: 'activePositions',
+      render: (_, { activePositions }) => (
         <Paragraph whiteSpace="pre-line">
-          {positions
+          {activePositions
             .map(({ chapter, position: { name: positionName } }) => {
-              return chapter ? `${positionName} in ${chapter.name} Chapter` : positionName;
+              return chapter ? `${positionName} in ${chapter.name} chapter` : positionName;
             })
             .join('\n')}
         </Paragraph>

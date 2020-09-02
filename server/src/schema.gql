@@ -4,6 +4,9 @@
 
 type Guild {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   name: String!
   description: String!
   email: String!
@@ -14,8 +17,16 @@ type Guild {
   members: [GuildMember!]!
 }
 
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
 type Clan {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   name: String!
   description: String!
   email: String!
@@ -28,6 +39,9 @@ type Clan {
 
 type GuildPosition {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   from: DateTime!
   to: DateTime
   notes: String
@@ -38,11 +52,6 @@ type GuildPosition {
   clanId: String!
 }
 
-"""
-A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
-"""
-scalar DateTime
-
 enum GuildPositionKind {
   MEMBER
   LEADER
@@ -51,6 +60,9 @@ enum GuildPositionKind {
 
 type GuildMember {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   role: TeamRole!
   user: User!
   userId: String!
@@ -67,6 +79,9 @@ enum TeamRole {
 
 type Position {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   name: String!
   description: String!
   image: String
@@ -78,6 +93,9 @@ type Position {
 
 type Squad {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   name: String!
   description: String!
   email: String!
@@ -90,6 +108,9 @@ type Squad {
 
 type Chapter {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   name: String!
   description: String!
   email: String!
@@ -101,6 +122,9 @@ type Chapter {
 
 type SquadPosition {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   from: DateTime!
   to: DateTime
   notes: String
@@ -114,6 +138,9 @@ type SquadPosition {
 
 type SquadMember {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   role: TeamRole!
   positions(active: Boolean): [SquadPosition!]!
   squad: Squad!
@@ -124,6 +151,9 @@ type SquadMember {
 
 type Success {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   name: String!
   description: String!
   date: DateTime!
@@ -141,6 +171,9 @@ enum SuccessType {
 
 type User {
   id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
   firstName: String!
   lastName: String!
   fullName: String!
@@ -208,7 +241,7 @@ type Query {
   positions(search: String, guildId: ID, clanId: ID): [Position!]!
   chapters(search: String, squadId: ID): [Chapter!]!
   chapter(id: ID!): Chapter!
-  squadMembers(squadId: ID!): [SquadMember!]!
+  squadMembers(squadId: ID!, archived: Boolean): [SquadMember!]!
   squadPositions(squadId: ID!, memberId: String): [SquadPosition!]!
   squads(search: String): [Squad!]!
   squad(id: ID!): Squad!
@@ -243,6 +276,7 @@ type Mutation {
   deleteChapter(id: ID!, squadId: ID!): Boolean!
   createSquadMember(data: CreateSquadMemberInput!): SquadMember!
   updateSquadMember(data: UpdateSquadMemberInput!): SquadMember!
+  archiveSquadMember(id: ID!, squadId: ID!): Boolean!
   deleteSquadMember(id: ID!, squadId: ID!): Boolean!
   createSquadPosition(data: CreateSquadPositionInput!): SquadPosition!
   updateSquadPosition(data: UpdateSquadPositionInput!): SquadPosition!

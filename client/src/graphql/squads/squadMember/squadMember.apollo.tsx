@@ -5,18 +5,20 @@ import * as Types from '../../../typings/graphql';
 
 export type SquadMembersQueryVariables = Types.Exact<{
   squadId: Types.Scalars['ID'];
+  archived?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
 
 export type SquadMembersQuery = {
   squadMembers: Array<
-    Pick<Types.SquadMember, 'id' | 'role'> & {
+    Pick<Types.SquadMember, 'id' | 'role' | 'deletedAt'> & {
       user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
-      positions: Array<
+      activePositions: Array<
         Pick<Types.SquadPosition, 'id'> & {
           position: Pick<Types.Position, 'id' | 'name'>;
           chapter?: Types.Maybe<Pick<Types.Chapter, 'id' | 'name'>>;
         }
       >;
+      pastPositions: Array<Pick<Types.SquadPosition, 'id'>>;
     }
   >;
 };
@@ -41,6 +43,13 @@ export type UpdateSquadMemberMutationVariables = Types.Exact<{
 
 export type UpdateSquadMemberMutation = { updateSquadMember: Pick<Types.SquadMember, 'id'> };
 
+export type ArchiveSquadMemberMutationVariables = Types.Exact<{
+  id: Types.Scalars['ID'];
+  squadId: Types.Scalars['ID'];
+}>;
+
+export type ArchiveSquadMemberMutation = Pick<Types.Mutation, 'archiveSquadMember'>;
+
 export type DeleteSquadMemberMutationVariables = Types.Exact<{
   id: Types.Scalars['ID'];
   squadId: Types.Scalars['ID'];
@@ -49,8 +58,8 @@ export type DeleteSquadMemberMutationVariables = Types.Exact<{
 export type DeleteSquadMemberMutation = Pick<Types.Mutation, 'deleteSquadMember'>;
 
 export const SquadMembersDocument = gql`
-  query squadMembers($squadId: ID!) {
-    squadMembers(squadId: $squadId) {
+  query squadMembers($squadId: ID!, $archived: Boolean) {
+    squadMembers(squadId: $squadId, archived: $archived) {
       id
       role
       user {
@@ -58,7 +67,7 @@ export const SquadMembersDocument = gql`
         fullName
         image
       }
-      positions(active: true) {
+      activePositions: positions(active: true) {
         id
         position {
           id
@@ -69,6 +78,10 @@ export const SquadMembersDocument = gql`
           name
         }
       }
+      pastPositions: positions(active: false) {
+        id
+      }
+      deletedAt
     }
   }
 `;
@@ -86,6 +99,7 @@ export const SquadMembersDocument = gql`
  * const { data, loading, error } = useSquadMembersQuery({
  *   variables: {
  *      squadId: // value for 'squadId'
+ *      archived: // value for 'archived'
  *   },
  * });
  */
@@ -227,6 +241,48 @@ export type UpdateSquadMemberMutationResult = Apollo.MutationResult<UpdateSquadM
 export type UpdateSquadMemberMutationOptions = Apollo.BaseMutationOptions<
   UpdateSquadMemberMutation,
   UpdateSquadMemberMutationVariables
+>;
+export const ArchiveSquadMemberDocument = gql`
+  mutation archiveSquadMember($id: ID!, $squadId: ID!) {
+    archiveSquadMember(id: $id, squadId: $squadId)
+  }
+`;
+export type ArchiveSquadMemberMutationFn = Apollo.MutationFunction<
+  ArchiveSquadMemberMutation,
+  ArchiveSquadMemberMutationVariables
+>;
+
+/**
+ * __useArchiveSquadMemberMutation__
+ *
+ * To run a mutation, you first call `useArchiveSquadMemberMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useArchiveSquadMemberMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [archiveSquadMemberMutation, { data, loading, error }] = useArchiveSquadMemberMutation({
+ *   variables: {
+ *      id: // value for 'id'
+ *      squadId: // value for 'squadId'
+ *   },
+ * });
+ */
+export function useArchiveSquadMemberMutation(
+  baseOptions?: Apollo.MutationHookOptions<ArchiveSquadMemberMutation, ArchiveSquadMemberMutationVariables>,
+) {
+  return Apollo.useMutation<ArchiveSquadMemberMutation, ArchiveSquadMemberMutationVariables>(
+    ArchiveSquadMemberDocument,
+    baseOptions,
+  );
+}
+export type ArchiveSquadMemberMutationHookResult = ReturnType<typeof useArchiveSquadMemberMutation>;
+export type ArchiveSquadMemberMutationResult = Apollo.MutationResult<ArchiveSquadMemberMutation>;
+export type ArchiveSquadMemberMutationOptions = Apollo.BaseMutationOptions<
+  ArchiveSquadMemberMutation,
+  ArchiveSquadMemberMutationVariables
 >;
 export const DeleteSquadMemberDocument = gql`
   mutation deleteSquadMember($id: ID!, $squadId: ID!) {

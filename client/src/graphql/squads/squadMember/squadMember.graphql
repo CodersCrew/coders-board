@@ -1,5 +1,5 @@
-query squadMembers($squadId: ID!) {
-  squadMembers(squadId: $squadId) {
+query squadMembers($squadId: ID! $archived: Boolean) {
+  squadMembers(squadId: $squadId, archived: $archived) {
     id
     role
     user {
@@ -7,7 +7,7 @@ query squadMembers($squadId: ID!) {
       fullName
       image
     }
-    positions(active: true) {
+    activePositions: positions(active: true) {
       id
       position {
         id
@@ -18,6 +18,10 @@ query squadMembers($squadId: ID!) {
         name
       }
     }
+    pastPositions: positions(active: false) {
+      id
+    }
+    deletedAt
   }
 }
 
@@ -39,6 +43,10 @@ mutation updateSquadMember($data: UpdateSquadMemberInput!) {
   updateSquadMember(data: $data) {
     id
   }
+}
+
+mutation archiveSquadMember($id: ID! $squadId: ID!) {
+  archiveSquadMember(id: $id squadId: $squadId)
 }
 
 mutation deleteSquadMember($id: ID! $squadId: ID!) {

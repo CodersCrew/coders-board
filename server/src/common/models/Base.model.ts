@@ -7,12 +7,15 @@ export class BaseModel {
   @PrimaryGeneratedColumn('uuid')
   id: string;
 
+  @Field()
   @CreateDateColumn()
   createdAt: Date;
 
+  @Field()
   @UpdateDateColumn()
   updatedAt: Date;
 
+  @Field({ nullable: true })
   @DeleteDateColumn()
-  deletedAt: Date;
+  deletedAt?: Date;
 }

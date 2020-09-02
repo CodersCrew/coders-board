@@ -34,7 +34,7 @@ export class SquadPositionsResolver {
   }
 
   @Query(returns => [SquadPosition], { name: 'squadPositions' })
-  getSquadPositions(@Args() args?: GetSquadPositionsArgs) {
+  getSquadPositions(@Args() args: GetSquadPositionsArgs) {
     return this.squadPositionsService.findAll(args);
   }
 

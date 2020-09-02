@@ -35,12 +35,12 @@ export const SquadPosition: CFC<SquadPositionProps> = props => {
     });
   };
 
-  const positionName = props.chapter ? `${props.position.name} in ${props.chapter.name} Chapter` : props.position.name;
+  const positionName = props.chapter ? `${props.position.name} in ${props.chapter.name} chapter` : props.position.name;
 
   return (
     <List.Item
       actions={
-        squadRole
+        squadRole && !props.member.deletedAt
           ? [
               <Button key="update" type="link" onClick={openUpdateModal}>
                 Update

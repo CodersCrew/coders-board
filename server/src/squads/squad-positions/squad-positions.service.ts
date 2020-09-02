@@ -1,4 +1,4 @@
-import { BadRequestException, Injectable } from '@nestjs/common';
+import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 
 import { TeamRole } from '../../common/enums';
 import { resolveAsyncRelation } from '../../common/utils';
@@ -61,7 +61,11 @@ export class SquadPositionsService {
   }
 
   async update({ id, squadId: _squadId, ...input }: UpdateSquadPositionInput) {
-    const squadPosition = await this.findByIdOrThrow(id);
+    const squadPosition = await this.squadPositionRepository.findOne({ id }, { relations: ['member'] });
+
+    if (squadPosition.member.deletedAt) {
+      throw new ConflictException(' You cannot update role of archived member');
+    }
 
     const updatedSquadPosition = await this.squadPositionRepository.save({
       ...squadPosition,
@@ -83,13 +87,15 @@ export class SquadPositionsService {
       where: { id },
       relations: ['member', 'chapter'],
     });
-    const chapter = await this.getChapter(squadPosition);
-    const member = await this.getMember(squadPosition);
+
+    if (squadPosition.member.deletedAt) {
+      throw new ConflictException(' You cannot delete role of archived member');
+    }
 
     await this.squadPositionRepository.delete(id);
 
     try {
-      await this.updateInGoogle(squadPosition, chapter, member);
+      await this.updateInGoogle(squadPosition, squadPosition.chapter, squadPosition.member);
     } catch (ex) {
       await this.squadPositionRepository.save(squadPosition);
       throw ex;

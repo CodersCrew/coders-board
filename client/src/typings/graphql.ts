@@ -13,6 +13,9 @@ export type Scalars = {
 
 export type Guild = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
   email: Scalars['String'];
@@ -25,6 +28,9 @@ export type Guild = {
 
 export type Clan = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
   email: Scalars['String'];
@@ -37,6 +43,9 @@ export type Clan = {
 
 export type GuildPosition = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   from: Scalars['DateTime'];
   to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
@@ -55,6 +64,9 @@ export enum GuildPositionKind {
 
 export type GuildMember = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   role: TeamRole;
   user: User;
   userId: Scalars['String'];
@@ -75,6 +87,9 @@ export enum TeamRole {
 
 export type Position = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
   image?: Maybe<Scalars['String']>;
@@ -86,6 +101,9 @@ export type Position = {
 
 export type Squad = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
   email: Scalars['String'];
@@ -98,6 +116,9 @@ export type Squad = {
 
 export type Chapter = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
   email: Scalars['String'];
@@ -113,6 +134,9 @@ export type ChapterPositionsArgs = {
 
 export type SquadPosition = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   from: Scalars['DateTime'];
   to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
@@ -126,6 +150,9 @@ export type SquadPosition = {
 
 export type SquadMember = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   role: TeamRole;
   positions: Array<SquadPosition>;
   squad: Squad;
@@ -140,6 +167,9 @@ export type SquadMemberPositionsArgs = {
 
 export type Success = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
   date: Scalars['DateTime'];
@@ -157,6 +187,9 @@ export enum SuccessType {
 
 export type User = {
   id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
   firstName: Scalars['String'];
   lastName: Scalars['String'];
   fullName: Scalars['String'];
@@ -284,6 +317,7 @@ export type QueryChapterArgs = {
 
 export type QuerySquadMembersArgs = {
   squadId: Scalars['ID'];
+  archived?: Maybe<Scalars['Boolean']>;
 };
 
 export type QuerySquadPositionsArgs = {
@@ -332,6 +366,7 @@ export type Mutation = {
   deleteChapter: Scalars['Boolean'];
   createSquadMember: SquadMember;
   updateSquadMember: SquadMember;
+  archiveSquadMember: Scalars['Boolean'];
   deleteSquadMember: Scalars['Boolean'];
   createSquadPosition: SquadPosition;
   updateSquadPosition: SquadPosition;
@@ -450,6 +485,11 @@ export type MutationCreateSquadMemberArgs = {
 
 export type MutationUpdateSquadMemberArgs = {
   data: UpdateSquadMemberInput;
+};
+
+export type MutationArchiveSquadMemberArgs = {
+  id: Scalars['ID'];
+  squadId: Scalars['ID'];
 };
 
 export type MutationDeleteSquadMemberArgs = {
@@ -727,6 +767,7 @@ export const GraphQLOperations = {
     deleteChapter: 'deleteChapter',
     createSquadMember: 'createSquadMember',
     updateSquadMember: 'updateSquadMember',
+    archiveSquadMember: 'archiveSquadMember',
     deleteSquadMember: 'deleteSquadMember',
     createSquadPosition: 'createSquadPosition',
     updateSquadPosition: 'updateSquadPosition',

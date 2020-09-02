@@ -18,6 +18,7 @@ query squadPositions($squadId: ID!) {
       squad {
         id
       }
+      deletedAt
     }
     chapter {
       id

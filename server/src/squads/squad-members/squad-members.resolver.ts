@@ -22,7 +22,7 @@ export class SquadMembersResolver {
   }
 
   @Query(returns => [SquadMember], { name: 'squadMembers' })
-  getSquadMembers(@Args() args?: GetSquadMembersArgs) {
+  getSquadMembers(@Args() args: GetSquadMembersArgs) {
     return this.squadMembersService.findAll(args);
   }
 
@@ -36,6 +36,12 @@ export class SquadMembersResolver {
   @TeamRoleGuard(TeamRole.MANAGER, 'data.squadId')
   updateSquadMember(@Args('data') input: UpdateSquadMemberInput) {
     return this.squadMembersService.update(input);
+  }
+
+  @Mutation(returns => Boolean)
+  @TeamRoleGuard(TeamRole.MANAGER, 'squadId')
+  archiveSquadMember(@Args() args: DeleteSquadMemberArgs) {
+    return this.squadMembersService.archive(args.id);
   }
 
   @Mutation(returns => Boolean)

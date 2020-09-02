@@ -40,10 +40,15 @@ export class SquadMembersService {
     return this.squadMemberRepository.findOneOrFail(id);
   }
 
-  findAll({ squadId }: GetSquadMembersArgs) {
+  async findAll({ squadId, archived }: GetSquadMembersArgs) {
     const query = this.squadMemberRepository.createQueryBuilder('squadMember');
 
     query.where('squadMember.squadId = :squadId', { squadId });
+
+    if (archived) {
+      query.withDeleted();
+    }
+
     query.leftJoinAndSelect('squadMember.user', 'user');
     query.orderBy('user.fullName');
 
@@ -81,6 +86,20 @@ export class SquadMembersService {
       ...squadMember,
       ...input,
     });
+  }
+
+  async archive(id: string) {
+    const squadMember = await this.findByIdOrThrow(id);
+    const positions = await this.getPositions(squadMember, true);
+
+    if (positions.length) {
+      throw new ConflictException('You cannot archive squad member with active positions');
+    }
+
+    await this.gsuiteService.deleteMember({ groupId: squadMember.squad.googleId, userId: squadMember.user.googleId });
+    await this.squadMemberRepository.softRemove(squadMember);
+
+    return true;
   }
 
   async delete(id: string) {

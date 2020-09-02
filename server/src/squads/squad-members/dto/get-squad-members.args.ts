@@ -1,5 +1,5 @@
 import { ArgsType, Field, ID } from '@nestjs/graphql';
-import { IsNotEmpty, IsUUID } from 'class-validator';
+import { IsBoolean, IsNotEmpty, IsOptional, IsUUID } from 'class-validator';
 
 @ArgsType()
 export class GetSquadMembersArgs {
@@ -7,4 +7,9 @@ export class GetSquadMembersArgs {
   @IsNotEmpty()
   @IsUUID()
   squadId: string;
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsBoolean()
+  archived?: boolean;
 }
