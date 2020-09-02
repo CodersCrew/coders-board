@@ -72,23 +72,23 @@ const fonts = {
 };
 
 const fontSizes = {
-  h1: 38,
-  h2: 30,
-  h3: 24,
-  h4: 20,
+  h1: 28,
+  h2: 24,
+  h3: 20,
+  h4: 16,
   large: 16,
   normal: 14,
   small: 12,
 };
 
 const lineHeights = {
-  h1: 1.23,
-  h2: 1.35,
-  h3: 1.35,
-  h4: 1.4,
-  large: 1.5715,
-  normal: 1.5715,
-  small: 1.5715,
+  h1: '32px',
+  h2: '28px',
+  h3: '24px',
+  h4: '20px',
+  large: '20px',
+  normal: '20px',
+  small: '16px',
 };
 
 const fontWeights = {

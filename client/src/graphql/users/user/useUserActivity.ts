@@ -1,5 +1,5 @@
 import arraySort from 'array-sort';
-import { compareAsc, compareDesc } from 'date-fns';
+import { compareDesc } from 'date-fns';
 
 import { pick } from '@/utils/objects';
 import { parseGuildPositionKind } from '@/utils/platform';
@@ -8,8 +8,9 @@ import { UserActivityQuery, UserActivityQueryVariables, useUserActivityQuery } f
 
 type Activity = {
   id: string;
-  type: 'squad' | 'guild';
   team: {
+    id: string;
+    type: 'squad' | 'guild';
     name: string;
     image: string;
   };
@@ -33,15 +34,12 @@ export type UseUserActivity = {
 const parseUserActivity = (data: UserActivityQuery['user']): Activity[] => {
   const guilds = data.guilds.flatMap(({ guild, positions }) => {
     return positions.map<Activity>(position => {
-      const positionKind = parseGuildPositionKind(position.kind);
-      const positionName = position.clan
-        ? `${positionKind} in the ${position.clan.name} clan`
-        : `${positionKind} of the ${guild.name} guild`;
+      const positionKind = parseGuildPositionKind(position.kind, { lowercase: true });
+      const positionName = position.clan ? `${position.clan.name} clan ${positionKind}` : `Guild ${positionKind}`;
 
       return {
         id: position.id,
-        type: 'guild',
-        team: pick(guild, ['name', 'image']),
+        team: { type: 'guild', ...pick(guild, ['id', 'name', 'image']) },
         subTeam: position.clan ? { type: 'clan', name: position.clan.name } : undefined,
         position: {
           name: positionName,
@@ -57,8 +55,7 @@ const parseUserActivity = (data: UserActivityQuery['user']): Activity[] => {
     return positions.map<Activity>(position => {
       return {
         id: position.id,
-        type: 'squad',
-        team: pick(squad, ['name', 'image']),
+        team: { type: 'squad', ...pick(squad, ['id', 'name', 'image']) },
         subTeam: position.chapter ? { type: 'chapter', name: position.chapter.name } : undefined,
         position: {
           name: position.position.name,
