@@ -24,7 +24,9 @@ export const toBase64 = file => `data:${file.mimetype};base64,${file.buffer.toSt
 @Injectable()
 export class GsuiteService {
   constructor(private readonly userRepository: UserRepository) {
-    this.initialize();
+    if (env.NODE_ENV === 'production') {
+      this.initialize();
+    }
   }
 
   admin: admin_directory_v1.Admin;

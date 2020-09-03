@@ -1,5 +1,6 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
 import { generate as generatePassword } from 'generate-password';
+import { env } from 'src/common/env';
 
 import { brackets, resolveAsyncRelation } from '../common/utils';
 import { CloudinaryService, GsuiteService, SlackService } from '../integrations';
@@ -7,6 +8,7 @@ import { MailerService } from '../services/mailer/mailer.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
 import { UpdateUserInput } from './dto/update-user.input';
+import { User } from './user.model';
 import { UserRepository } from './user.repository';
 
 @Injectable()
@@ -62,11 +64,17 @@ export class UsersService {
 
   async create(input: CreateUserInput) {
     const password = generatePassword({ numbers: true });
-
-    const { id: googleId } = await this.gsuiteService.createGsuiteUser({ ...input, password });
-
     const fullName = `${input.firstName} ${input.lastName}`;
-    const user = await this.userRepository.save({ ...input, fullName, googleId });
+
+    let user: User;
+
+    if (env.NODE_ENV === 'production') {
+      const { id: googleId } = await this.gsuiteService.createGsuiteUser({ ...input, password });
+
+      user = await this.userRepository.save({ ...input, fullName, googleId });
+    } else {
+      user = await this.userRepository.save({ ...input, fullName });
+    }
 
     await this.mailerService.sendInvitationEmail({
       to: input.recoveryEmail,
@@ -82,10 +90,14 @@ export class UsersService {
     const fullName = `${input.firstName} ${input.lastName}`;
     const user = await this.userRepository.save({ ...rawUser, ...input, fullName });
 
-    await this.gsuiteService.syncGsuiteUser({ googleId: user.googleId });
+    if (env.NODE_ENV === 'production') {
+      if (user.googleId) {
+        await this.gsuiteService.syncGsuiteUser({ googleId: user.googleId });
+      }
 
-    if (user.slackId) {
-      await this.slackService.syncSlackUser({ slackId: user.slackId });
+      if (user.slackId) {
+        await this.slackService.syncSlackUser({ slackId: user.slackId });
+      }
     }
 
     return user;
@@ -93,16 +105,19 @@ export class UsersService {
 
   async delete(userId: string) {
     const user = await this.userRepository.findOneOrFail(userId);
-    const slackUser = await this.slackService.getSlackUser({ slackId: user.slackId });
 
-    if (slackUser && !slackUser.deleted) {
-      throw new ConflictException('You cannot delete user with active Slack account');
-    }
+    if (env.NODE_ENV === 'production') {
+      const slackUser = await this.slackService.getSlackUser({ slackId: user.slackId });
 
-    const gsuiteUser = await this.slackService.getSlackUser({ slackId: user.slackId });
+      if (slackUser && !slackUser.deleted) {
+        throw new ConflictException('You cannot delete user with active Slack account');
+      }
 
-    if (gsuiteUser?.id) {
-      throw new ConflictException('You cannot delete user with active Google account');
+      const gsuiteUser = await this.slackService.getSlackUser({ slackId: user.slackId });
+
+      if (gsuiteUser?.id) {
+        throw new ConflictException('You cannot delete user with active Google account');
+      }
     }
 
     if (user.image.includes('cloudinary')) {

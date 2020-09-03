@@ -63,7 +63,7 @@ export class User extends BaseModel {
 
   @Field({ nullable: true })
   @Column({ unique: true })
-  googleId: string;
+  googleId?: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true, unique: true })

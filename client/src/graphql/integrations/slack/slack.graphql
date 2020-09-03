@@ -8,8 +8,14 @@ query slackUsers {
   }
 }
 
-mutation syncSlackUser($data: InitialSyncSlackUserInput!) {
+mutation initialSyncSlackUser($data: InitialSyncSlackUserInput!) {
   initialSyncSlackUser(data: $data) {
+    id
+  }
+}
+
+mutation syncSlackUser($data: SyncSlackUserInput!) {
+  syncSlackUser(data: $data) {
     id
   }
 }

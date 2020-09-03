@@ -355,7 +355,7 @@ export type Mutation = {
 };
 
 export type MutationSyncGsuiteUserArgs = {
-  data: SyncGoogleUserInput;
+  data: SyncGsuiteUserInput;
 };
 
 export type MutationInitialSyncSlackUserArgs = {
@@ -509,7 +509,7 @@ export type MutationDeleteSuccessArgs = {
   id: Scalars['ID'];
 };
 
-export type SyncGoogleUserInput = {
+export type SyncGsuiteUserInput = {
   googleId: Scalars['String'];
 };
 
@@ -702,7 +702,6 @@ export const GraphQLOperations = {
     guildMembers: 'guildMembers',
     guildMembersIds: 'guildMembersIds',
     guildPositions: 'guildPositions',
-    gsuiteUsers: 'gsuiteUsers',
     slackUsers: 'slackUsers',
     positions: 'positions',
     simplePositions: 'simplePositions',
@@ -727,6 +726,7 @@ export const GraphQLOperations = {
     createGuildPosition: 'createGuildPosition',
     updateGuildPosition: 'updateGuildPosition',
     deleteGuildPosition: 'deleteGuildPosition',
+    initialSyncSlackUser: 'initialSyncSlackUser',
     syncSlackUser: 'syncSlackUser',
     createPosition: 'createPosition',
     updatePosition: 'updatePosition',

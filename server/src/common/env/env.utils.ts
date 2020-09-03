@@ -20,3 +20,5 @@ const NODE_ENV = process.env.NODE_ENV || 'development';
 
 export const requiredIn = (env: EnvVariables['NODE_ENV'], { joiType, defaultValue }: RequiredInProductionParams) =>
   NODE_ENV === env ? joiType.required() : joiType.optional().default(defaultValue);
+
+export const productionRequiredString = requiredIn('production', { joiType: Joi.string(), defaultValue: '' });

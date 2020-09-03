@@ -9,11 +9,17 @@ export type SlackUsersQuery = {
   slackUsers: Array<Pick<Types.SlackUser, 'id' | 'fullName' | 'primaryEmail' | 'image' | 'thumbnail'>>;
 };
 
-export type SyncSlackUserMutationVariables = Types.Exact<{
+export type InitialSyncSlackUserMutationVariables = Types.Exact<{
   data: Types.InitialSyncSlackUserInput;
 }>;
 
-export type SyncSlackUserMutation = { initialSyncSlackUser: Pick<Types.User, 'id'> };
+export type InitialSyncSlackUserMutation = { initialSyncSlackUser: Pick<Types.User, 'id'> };
+
+export type SyncSlackUserMutationVariables = Types.Exact<{
+  data: Types.SyncSlackUserInput;
+}>;
+
+export type SyncSlackUserMutation = { syncSlackUser: Pick<Types.User, 'id'> };
 
 export const SlackUsersDocument = gql`
   query slackUsers {
@@ -53,9 +59,52 @@ export function useSlackUsersLazyQuery(
 export type SlackUsersQueryHookResult = ReturnType<typeof useSlackUsersQuery>;
 export type SlackUsersLazyQueryHookResult = ReturnType<typeof useSlackUsersLazyQuery>;
 export type SlackUsersQueryResult = Apollo.QueryResult<SlackUsersQuery, SlackUsersQueryVariables>;
-export const SyncSlackUserDocument = gql`
-  mutation syncSlackUser($data: InitialSyncSlackUserInput!) {
+export const InitialSyncSlackUserDocument = gql`
+  mutation initialSyncSlackUser($data: InitialSyncSlackUserInput!) {
     initialSyncSlackUser(data: $data) {
+      id
+    }
+  }
+`;
+export type InitialSyncSlackUserMutationFn = Apollo.MutationFunction<
+  InitialSyncSlackUserMutation,
+  InitialSyncSlackUserMutationVariables
+>;
+
+/**
+ * __useInitialSyncSlackUserMutation__
+ *
+ * To run a mutation, you first call `useInitialSyncSlackUserMutation` within a React component and pass it any options that fit your needs.
+ * When your component renders, `useInitialSyncSlackUserMutation` returns a tuple that includes:
+ * - A mutate function that you can call at any time to execute the mutation
+ * - An object with fields that represent the current status of the mutation's execution
+ *
+ * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
+ *
+ * @example
+ * const [initialSyncSlackUserMutation, { data, loading, error }] = useInitialSyncSlackUserMutation({
+ *   variables: {
+ *      data: // value for 'data'
+ *   },
+ * });
+ */
+export function useInitialSyncSlackUserMutation(
+  baseOptions?: Apollo.MutationHookOptions<InitialSyncSlackUserMutation, InitialSyncSlackUserMutationVariables>,
+) {
+  return Apollo.useMutation<InitialSyncSlackUserMutation, InitialSyncSlackUserMutationVariables>(
+    InitialSyncSlackUserDocument,
+    baseOptions,
+  );
+}
+export type InitialSyncSlackUserMutationHookResult = ReturnType<typeof useInitialSyncSlackUserMutation>;
+export type InitialSyncSlackUserMutationResult = Apollo.MutationResult<InitialSyncSlackUserMutation>;
+export type InitialSyncSlackUserMutationOptions = Apollo.BaseMutationOptions<
+  InitialSyncSlackUserMutation,
+  InitialSyncSlackUserMutationVariables
+>;
+export const SyncSlackUserDocument = gql`
+  mutation syncSlackUser($data: SyncSlackUserInput!) {
+    syncSlackUser(data: $data) {
       id
     }
   }

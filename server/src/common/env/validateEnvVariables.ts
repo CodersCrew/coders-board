@@ -2,7 +2,7 @@ import Joi from '@hapi/joi';
 import dotenv from 'dotenv';
 
 import { EnvVariables } from './env.types';
-import { requiredIn } from './env.utils';
+import { productionRequiredString, requiredIn } from './env.utils';
 
 dotenv.config();
 
@@ -31,17 +31,17 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
     // google auth
     GOOGLE_CLIENT_ID: Joi.string().required(),
     GOOGLE_CLIENT_SECRET: Joi.string().required(),
-    GOOGLE_CLIENT_EMAIL: Joi.string().required(),
-    GOOGLE_PRIVATE_KEY: Joi.string().required(),
-    GOOGLE_PROJECT_ID: Joi.string().required(),
 
     // gsuite
-    GSUITE_CUSTOMER_ID: Joi.string().required(),
-    GSUITE_SUBJECT: Joi.string().required(),
+    GOOGLE_CLIENT_EMAIL: productionRequiredString,
+    GOOGLE_PRIVATE_KEY: productionRequiredString,
+    GOOGLE_PROJECT_ID: productionRequiredString,
+    GSUITE_CUSTOMER_ID: productionRequiredString,
+    GSUITE_SUBJECT: productionRequiredString,
 
     // slack
-    SLACK_BOT_TOKEN: Joi.string().required(),
-    SLACK_USER_TOKEN: Joi.string().required(),
+    SLACK_BOT_TOKEN: productionRequiredString,
+    SLACK_USER_TOKEN: productionRequiredString,
 
     // cloudinary
     CLOUDINARY_URL: Joi.string().required(),

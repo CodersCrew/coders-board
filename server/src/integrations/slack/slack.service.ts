@@ -20,10 +20,15 @@ import { slackRequest } from './slack.utils';
 
 @Injectable()
 export class SlackService {
-  constructor(private readonly userRepository: UserRepository) {}
+  constructor(private readonly userRepository: UserRepository) {
+    if (env.NODE_ENV === 'production') {
+      this.slackBot = new WebClient(env.SLACK_BOT_TOKEN);
+      this.slackAdmin = new WebClient(env.SLACK_USER_TOKEN);
+    }
+  }
 
-  slackBot = new WebClient(env.SLACK_BOT_TOKEN);
-  slackAdmin = new WebClient(env.SLACK_USER_TOKEN);
+  slackBot: WebClient;
+  slackAdmin: WebClient;
 
   async findAllSlackUsers(): Promise<SlackUser[]> {
     const response = await slackRequest<UsersListResult>(this.slackBot.users.list({ limit: 500 }));
