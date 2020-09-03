@@ -1,5 +1,7 @@
 import { Expose } from 'class-transformer';
-import { IsEmail, IsLowercase, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+
+import { IsOrganizationEmail } from '../../../common/validation';
 
 export class InvitationEmailDto {
   @Expose()
@@ -10,10 +12,8 @@ export class InvitationEmailDto {
 
   @Expose()
   @IsString()
-  @IsEmail()
   @IsNotEmpty()
-  @IsLowercase()
-  @Matches(/.*@coderscrew\.pl/)
+  @IsOrganizationEmail()
   email: string;
 
   @Expose()

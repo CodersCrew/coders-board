@@ -1,5 +1,7 @@
 import { Expose } from 'class-transformer';
-import { IsEmail, IsLowercase, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsEmail, IsNotEmpty, IsString } from 'class-validator';
+
+import { IsOrganizationEmail } from '../../../common/validation';
 
 export class UpdateGsuiteUserDto {
   @Expose()
@@ -19,14 +21,11 @@ export class UpdateGsuiteUserDto {
 
   @Expose()
   @IsNotEmpty()
-  @IsEmail()
-  @IsLowercase()
-  @Matches(/.*@coderscrew\.pl/)
+  @IsOrganizationEmail()
   primaryEmail: string;
 
   @Expose()
   @IsNotEmpty()
   @IsEmail()
-  @IsLowercase()
   recoveryEmail: string;
 }

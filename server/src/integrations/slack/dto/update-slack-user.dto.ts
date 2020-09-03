@@ -1,5 +1,7 @@
 import { Expose } from 'class-transformer';
-import { IsEmail, IsLowercase, IsNotEmpty, IsString, Matches } from 'class-validator';
+import { IsNotEmpty, IsString } from 'class-validator';
+
+import { IsOrganizationEmail } from '../../../common/validation';
 
 export class UpdateSlackUserDto {
   @Expose()
@@ -19,8 +21,6 @@ export class UpdateSlackUserDto {
 
   @Expose()
   @IsNotEmpty()
-  @IsEmail()
-  @IsLowercase()
-  @Matches(/.*@coderscrew\.pl/)
+  @IsOrganizationEmail()
   primaryEmail: string;
 }

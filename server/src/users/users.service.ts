@@ -113,7 +113,7 @@ export class UsersService {
       await this.cloudinaryService.deleteUserThumbnail(user.id);
     }
 
-    await this.userRepository.delete(userId);
+    await this.userRepository.remove(user);
 
     return true;
   }
