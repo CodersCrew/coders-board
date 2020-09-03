@@ -58,33 +58,35 @@ export class UsersService {
   }
 
   async create(input: CreateUserInput) {
-    const { id: googleId } = await this.gsuiteService.createUser(input);
+    const { id: googleId } = await this.gsuiteService.createGoogleUser(input);
 
     try {
       const fullName = `${input.firstName} ${input.lastName}`;
       const user = await this.userRepository.save({ ...input, fullName, googleId });
       return user;
     } catch (ex) {
-      await this.gsuiteService.deleteUser({ id: googleId });
+      await this.gsuiteService.deleteGoogleUser({ googleId });
       throw ex;
     }
   }
 
   async update({ id, ...input }: UpdateUserInput) {
-    const rawUser = await this.findByIdOrThrow(id);
+    const rawUser = await this.userRepository.findOneOrFail(id);
     const fullName = `${input.firstName} ${input.lastName}`;
     const user = await this.userRepository.save({ ...rawUser, ...input, fullName });
 
-    await this.gsuiteService.updateUser({ ...user, googleId: user.googleId });
-    await this.slackService.updateUser({ ...user, slackId: user.slackId });
+    await this.gsuiteService.syncGoogleUser({ googleId: user.googleId });
+
+    if (user.slackId) {
+      await this.slackService.syncSlackUser({ slackId: user.slackId });
+    }
 
     return user;
   }
 
   async delete(userId: string) {
-    const user = await this.findByIdOrThrow(userId);
-
-    const slackUser = await this.slackService.getUser({ slackId: user.slackId });
+    const user = await this.userRepository.findOneOrFail(userId);
+    const slackUser = await this.slackService.getSlackUser({ slackId: user.slackId });
 
     if (slackUser && !slackUser.deleted) {
       throw new ConflictException('You cannot delete user with active Slack account');
@@ -98,7 +100,7 @@ export class UsersService {
       await this.cloudinaryService.deleteUserThumbnail(user.id);
     }
 
-    await this.gsuiteService.deleteUser({ id: user.googleId });
+    await this.gsuiteService.deleteGoogleUser({ googleId: user.googleId });
     await this.userRepository.delete(userId);
 
     return true;

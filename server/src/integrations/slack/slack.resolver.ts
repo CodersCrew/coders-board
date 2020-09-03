@@ -2,9 +2,8 @@ import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { AdminGuard } from '../../common/guards';
 import { User } from '../../users/user.model';
-import { SendSlackMessageInput } from './dto/send-slack-message.input';
+import { InitialSyncSlackUserInput } from './dto';
 import { SyncSlackUserInput } from './dto/sync-slack-user.input';
-import { SlackMessage } from './slack-message.model';
 import { SlackUser } from './slack-user.model';
 import { SlackService } from './slack.service';
 
@@ -15,16 +14,16 @@ export class SlackResolver {
 
   @Query(returns => [SlackUser], { name: 'slackUsers' })
   getSlackUsers(): Promise<SlackUser[]> {
-    return this.slackService.findAllUsers();
+    return this.slackService.findAllSlackUsers();
+  }
+
+  @Mutation(returns => User, { name: 'initialSyncSlackUser' })
+  initialSyncUser(@Args('data') input: InitialSyncSlackUserInput): Promise<User> {
+    return this.slackService.initialSyncSlackUser(input);
   }
 
   @Mutation(returns => User, { name: 'syncSlackUser' })
-  syncUser(@Args('data') input: SyncSlackUserInput): Promise<User> {
-    return this.slackService.syncUser(input);
-  }
-
-  @Mutation(returns => SlackMessage, { name: 'sendSlackMessage' })
-  sendMessage(@Args('data') input: SendSlackMessageInput): Promise<SlackMessage> {
-    return this.slackService.sendMessage(input);
+  syncUser(@Args('data') input: SyncSlackUserInput): Promise<boolean> {
+    return this.slackService.syncSlackUser(input);
   }
 }

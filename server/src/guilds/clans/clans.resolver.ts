@@ -9,7 +9,6 @@ import { Clan } from './clan.model';
 import { ClansService } from './clans.service';
 import { CreateClanInput } from './dto/create-clan.input';
 import { DeleteClanArgs } from './dto/delete-clan.args';
-import { GetClanArgs } from './dto/get-clan.args';
 import { GetClansArgs } from './dto/get-clans.args';
 import { UpdateClanInput } from './dto/update-clan.input';
 
@@ -31,11 +30,6 @@ export class ClansResolver {
   @Query(returns => [Clan], { name: 'clans' })
   getClans(@Args() args?: GetClansArgs) {
     return this.clansService.findAll(args);
-  }
-
-  @Query(returns => Clan, { name: 'clan' })
-  getClan(@Args() args: GetClanArgs) {
-    return this.clansService.findByIdOrThrow(args.id);
   }
 
   @Mutation(returns => Clan)

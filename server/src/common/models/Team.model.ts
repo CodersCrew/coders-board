@@ -13,12 +13,4 @@ export class TeamModel extends BaseModel {
   @Field()
   @Column({ type: 'text' })
   description: string;
-
-  @Field()
-  @Column({ unique: true })
-  email: string;
-
-  @Field()
-  @Column({ unique: true })
-  googleId: string;
 }

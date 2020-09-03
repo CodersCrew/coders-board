@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsEmail, IsLowercase, IsNotEmpty, IsOptional, IsString, IsUUID, Matches } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
 import { Chapter } from '../chapter.model';
 
@@ -9,13 +9,6 @@ export class CreateChapterInput implements Partial<Chapter> {
   @IsNotEmpty()
   @IsString()
   name: string;
-
-  @Field()
-  @IsNotEmpty()
-  @IsEmail()
-  @IsLowercase()
-  @Matches(/.*-chapter@coderscrew\.pl/)
-  email: string;
 
   @Field(type => ID)
   @IsNotEmpty()

@@ -27,7 +27,7 @@ const useSyncSlackModal = ({ data, ...modalProps }: SyncSlackModalProps) => {
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     runMutation({
-      mutation: syncSlackUser({ userId: data.userId, slackId: values.slackId }),
+      mutation: syncSlackUser({ slackId: values.slackId }),
       success: () => modalProps.onCancel(),
       finally: () => helpers.setSubmitting(false),
       messages: {

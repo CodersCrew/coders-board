@@ -1,8 +1,6 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
-import { isEqual, pick } from 'lodash';
+import { ConflictException, Injectable } from '@nestjs/common';
 
 import { brackets, resolveAsyncRelation } from '../../common/utils';
-import { GsuiteService, UpdateGroupParams } from '../../integrations';
 import { Chapter } from './chapter.model';
 import { ChapterRepository } from './chapter.repository';
 import { CreateChapterInput } from './dto/create-chapter.input';
@@ -11,7 +9,7 @@ import { UpdateChapterInput } from './dto/update-chapter.input';
 
 @Injectable()
 export class ChaptersService {
-  constructor(private readonly chapterRepository: ChapterRepository, private readonly gsuiteService: GsuiteService) {}
+  constructor(private readonly chapterRepository: ChapterRepository) {}
 
   getSquad = resolveAsyncRelation(this.chapterRepository, 'squad');
 
@@ -23,18 +21,6 @@ export class ChaptersService {
     }
 
     return positions;
-  }
-
-  findById(id: string) {
-    if (!id) return null;
-
-    return this.chapterRepository.findOne(id);
-  }
-
-  findByIdOrThrow(id: string) {
-    if (!id) throw new BadRequestException();
-
-    return this.chapterRepository.findOneOrFail(id);
   }
 
   findAll({ search, squadId }: GetChaptersArgs) {
@@ -55,41 +41,24 @@ export class ChaptersService {
     return query.getMany();
   }
 
-  async create(input: CreateChapterInput) {
-    const googleId = await this.gsuiteService.createGroup(input);
-    const chapter = await this.chapterRepository.save({ ...input, googleId });
-    const squad = await this.getSquad(chapter);
-
-    await this.gsuiteService.updateGroup({ ...input, name: `${squad.name} | ${chapter.name}`, id: googleId });
-
-    return chapter;
+  create(input: CreateChapterInput) {
+    return this.chapterRepository.save(input);
   }
 
   async update({ id, ...input }: UpdateChapterInput) {
-    const chapter = await this.findByIdOrThrow(id);
-
-    const googlePropNames: (keyof Omit<UpdateGroupParams, 'id'>)[] = ['name', 'description', 'email'];
-
-    if (!isEqual(pick(input, googlePropNames), pick(chapter, googlePropNames))) {
-      const squad = await this.getSquad(chapter);
-
-      await this.gsuiteService.updateGroup({ ...input, id: chapter.googleId, name: `${squad.name} | ${input.name}` });
-    }
+    const chapter = await this.chapterRepository.findOneOrFail(id);
 
     return this.chapterRepository.save({ ...chapter, ...input });
   }
 
   async delete(id: string) {
-    const chapter = await this.findByIdOrThrow(id);
+    const chapter = await this.chapterRepository.findOneOrFail(id, { relations: ['positions'] });
 
-    const positions = await chapter.positions;
-
-    if (positions.length) {
+    if (chapter.positions.length) {
       throw new ConflictException('You cannot remove a chapter with positions');
     }
 
-    await this.gsuiteService.deleteGroup({ id: chapter.googleId });
-    await this.chapterRepository.delete(id);
+    await this.chapterRepository.remove(chapter);
 
     return true;
   }

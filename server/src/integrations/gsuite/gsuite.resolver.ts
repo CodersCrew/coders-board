@@ -1,6 +1,7 @@
 import { Args, Mutation, Query, Resolver } from '@nestjs/graphql';
 
 import { AdminGuard } from '../../common/guards';
+import { SyncGoogleUserInput } from './dto/sync-google-user.input';
 import { GsuiteUser } from './gsuite-user.model';
 import { GsuiteService } from './gsuite.service';
 
@@ -11,11 +12,11 @@ export class GsuiteResolver {
 
   @Query(returns => [GsuiteUser], { name: 'gsuiteUsers' })
   getGsuiteUsers() {
-    return this.gsuiteService.findAllUsers();
+    return this.gsuiteService.findAllGoogleUsers();
   }
 
-  @Mutation(returns => Boolean)
-  deleteGsuiteUser(@Args('id') id: string) {
-    return this.gsuiteService.deleteUser({ id });
+  @Mutation(returns => Boolean, { name: 'syncGsuiteUser' })
+  syncUser(@Args('data') input: SyncGoogleUserInput): Promise<boolean> {
+    return this.gsuiteService.syncGoogleUser(input);
   }
 }

@@ -20,9 +20,7 @@ const Chapter = ({ chapter, openModal }: ChapterProps) => {
 
   const overlay = (
     <Menu>
-      <Menu.Item onClick={() => openModal(pick(chapter, ['id', 'name', 'description', 'email']))}>
-        Edit chapter
-      </Menu.Item>
+      <Menu.Item onClick={() => openModal(pick(chapter, ['id', 'name', 'description']))}>Edit chapter</Menu.Item>
       <Menu.Item danger onClick={() => deleteChapterConfirm(pick(chapter, ['id', 'name']))}>
         Delete chapter
       </Menu.Item>

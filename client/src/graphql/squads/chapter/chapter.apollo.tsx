@@ -9,7 +9,7 @@ export type ChaptersQueryVariables = Types.Exact<{
 
 export type ChaptersQuery = {
   chapters: Array<
-    Pick<Types.Chapter, 'id' | 'name' | 'email' | 'description'> & {
+    Pick<Types.Chapter, 'id' | 'name' | 'description'> & {
       positions: Array<
         Pick<Types.SquadPosition, 'id' | 'from' | 'to' | 'notes'> & {
           position: Pick<Types.Position, 'id' | 'name' | 'description'>;
@@ -50,7 +50,6 @@ export const ChaptersDocument = gql`
     chapters(squadId: $squadId) {
       id
       name
-      email
       description
       positions(active: true) {
         id

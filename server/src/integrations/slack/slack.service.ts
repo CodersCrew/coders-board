@@ -1,12 +1,16 @@
-import { Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 import { WebClient } from '@slack/web-api';
 
 import { env } from '../../common/env';
 import { pick, transformAndValidate } from '../../common/utils';
 import { UserRepository } from '../../users/user.repository';
-import { CloudinaryService } from '../cloudinary/cloudinary.service';
-import { GsuiteService } from '../gsuite/gsuite.service';
-import { GetSlackUserInput, SendSlackMessageInput, SyncSlackUserInput, UpdateSlackUserInput } from './dto';
+import {
+  GetSlackUserInput,
+  InitialSyncSlackUserInput,
+  SendSlackMessageInput,
+  SyncSlackUserInput,
+  UpdateSlackUserInput,
+} from './dto';
 import { ChatPostMessageResult } from './interfaces/chat-post-message-result.interface';
 import { UsersInfoResult } from './interfaces/user-info-result.interface';
 import { UsersListResult } from './interfaces/users-list-result.interface';
@@ -16,16 +20,12 @@ import { slackRequest } from './slack.utils';
 
 @Injectable()
 export class SlackService {
-  constructor(
-    private readonly userRepository: UserRepository,
-    private readonly cloudinaryService: CloudinaryService,
-    private readonly gsuiteService: GsuiteService,
-  ) {}
+  constructor(private readonly userRepository: UserRepository) {}
 
   slackBot = new WebClient(env.SLACK_BOT_TOKEN);
   slackAdmin = new WebClient(env.SLACK_USER_TOKEN);
 
-  async findAllUsers(): Promise<SlackUser[]> {
+  async findAllSlackUsers(): Promise<SlackUser[]> {
     const response = await slackRequest<UsersListResult>(this.slackBot.users.list({ limit: 500 }));
 
     return response.members
@@ -42,41 +42,50 @@ export class SlackService {
       );
   }
 
-  async syncUser(input: SyncSlackUserInput) {
-    const { slackId, userId } = await transformAndValidate(SyncSlackUserInput, input);
-    const slackUser = await this.getUser({ slackId });
+  async initialSyncSlackUser(input: InitialSyncSlackUserInput) {
+    const { slackId, userId } = await transformAndValidate(InitialSyncSlackUserInput, input);
+    const slackUser = await this.getSlackUser({ slackId });
+
+    if (slackUser.deleted) {
+      throw new ConflictException('You cannot sync a deleted user');
+    }
 
     const user = await this.userRepository.findOneOrFail(userId);
 
-    await slackRequest(
-      this.slackAdmin.users.profile.set({
-        name: 'email',
-        value: user.primaryEmail,
-        user: slackId,
-      }),
-    );
+    if (user.slackId) {
+      throw new ConflictException('This user is already synced');
+    }
 
-    const image = await this.cloudinaryService.uploadUserImage(slackUser.profile.image_192, user.id);
-    const thumbnail = await this.cloudinaryService.uploadUserThumbnail(slackUser.profile.image_48, user.id);
-
-    await this.gsuiteService.updateUserImage({ googleId: user.googleId, imageUrl: image });
+    await this.updateSlackUser({ ...pick(user, ['firstName', 'lastName', 'primaryEmail']), slackId });
 
     return this.userRepository.save({
       ...user,
-      image,
-      thumbnail,
       slackId,
     });
   }
 
-  async getUser(input: GetSlackUserInput) {
+  async syncSlackUser(input: SyncSlackUserInput) {
+    const { slackId } = await transformAndValidate(SyncSlackUserInput, input);
+    const user = await this.userRepository.findOneOrFail({ slackId });
+    const slackUser = await this.getSlackUser({ slackId: user.slackId });
+
+    if (slackUser.deleted) {
+      throw new ConflictException('You cannot sync a deleted user');
+    }
+
+    await this.updateSlackUser({ ...pick(user, ['firstName', 'lastName', 'primaryEmail']), slackId });
+
+    return true;
+  }
+
+  async getSlackUser(input: GetSlackUserInput) {
     const { slackId } = await transformAndValidate(GetSlackUserInput, input);
     const { user: slackUser } = await slackRequest<UsersInfoResult>(this.slackBot.users.info({ user: slackId }));
 
     return slackUser;
   }
 
-  async updateUser(input: UpdateSlackUserInput) {
+  private async updateSlackUser(input: UpdateSlackUserInput) {
     const { slackId, ...slackUserInput } = await transformAndValidate(UpdateSlackUserInput, input);
 
     await slackRequest<UsersInfoResult>(
@@ -93,7 +102,7 @@ export class SlackService {
     return true;
   }
 
-  async sendMessage(input: SendSlackMessageInput): Promise<SlackMessage> {
+  async sendSlackMessage(input: SendSlackMessageInput): Promise<SlackMessage> {
     const { channelId, text } = await transformAndValidate(SendSlackMessageInput, input);
 
     const { message } = await slackRequest<ChatPostMessageResult>(

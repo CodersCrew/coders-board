@@ -9,7 +9,6 @@ import { Chapter } from './chapter.model';
 import { ChaptersService } from './chapters.service';
 import { CreateChapterInput } from './dto/create-chapter.input';
 import { DeleteChapterArgs } from './dto/delete-chapter.args';
-import { GetChapterArgs } from './dto/get-chapter.args';
 import { GetChaptersArgs } from './dto/get-chapters.args';
 import { UpdateChapterInput } from './dto/update-chapter.input';
 
@@ -31,11 +30,6 @@ export class ChaptersResolver {
   @Query(returns => [Chapter], { name: 'chapters' })
   getChapters(@Args() args?: GetChaptersArgs) {
     return this.chaptersService.findAll(args);
-  }
-
-  @Query(returns => Chapter, { name: 'chapter' })
-  getChapter(@Args() args: GetChapterArgs) {
-    return this.chaptersService.findByIdOrThrow(args.id);
   }
 
   @Mutation(returns => Chapter)

@@ -17,7 +17,6 @@ import { useSquadContext } from '../SquadContext';
 const { getInitialValues, validationSchema, fields } = createFormFields({
   name: yup.string().label('Name').required().default(''),
   description: yup.string().label('Description').optional().default(''),
-  email: yup.string().label('E-mail').required().lowercase().default(''),
 });
 
 type FormValues = ReturnType<typeof getInitialValues>;
@@ -27,8 +26,6 @@ type FormConfig = FormikConfig<FormValues>;
 export type SquadChapterModalData = WithId<FormValues> | null;
 
 type SquadChapterModalProps = DataModalProps<SquadChapterModalData>;
-
-const CHAPTER_SUFFIX = '-chapter@coderscrew.pl';
 
 const useSquadChapterModal = (props: SquadChapterModalProps) => {
   const { data, ...modalProps } = props;
@@ -41,14 +38,10 @@ const useSquadChapterModal = (props: SquadChapterModalProps) => {
     throw new Error('SquadChapterModal must be used in a scope of the particular squad');
   }
 
-  const chapterPrefix = `${squad.data.name.toLowerCase().replace(/\s/g, '-')}-`;
-  const emailRegex = new RegExp(`${chapterPrefix}(.*)${CHAPTER_SUFFIX}`);
-
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
     const input: CreateChapterInput = {
       ...values,
       squadId,
-      email: `${chapterPrefix}${values.email}${CHAPTER_SUFFIX}`,
     };
 
     const mutation = data ? updateChapter({ ...input, id: data.id }) : createChapter(input);
@@ -67,32 +60,21 @@ const useSquadChapterModal = (props: SquadChapterModalProps) => {
   return {
     modal: modalProps,
     form: {
-      initialValues: data
-        ? getInitialValues({ ...data, email: data.email.match(emailRegex)?.[1] ?? '' })
-        : getInitialValues(),
+      initialValues: getInitialValues(data),
       validationSchema,
       onSubmit: handleSubmit,
     },
-    chapterPrefix,
   };
 };
 
 export const SquadChapterModal = createDataModal<SquadChapterModalProps>(props => {
-  const { form, modal, chapterPrefix } = useSquadChapterModal(props);
+  const { form, modal } = useSquadChapterModal(props);
 
   return (
     <FormikModal form={form} modal={modal}>
       <Form layout="vertical" colon>
         <Form.Item {...fields.name}>
           <Input name={fields.name.name} placeholder="Enter chapter name..." />
-        </Form.Item>
-        <Form.Item {...fields.email}>
-          <Input
-            name={fields.email.name}
-            placeholder="Enter e-mail prefix..."
-            addonBefore={chapterPrefix}
-            addonAfter={CHAPTER_SUFFIX}
-          />
         </Form.Item>
         <Form.Item {...fields.description}>
           <Input.TextArea name={fields.description.name} placeholder="Enter description..." />

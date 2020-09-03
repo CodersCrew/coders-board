@@ -18,8 +18,6 @@ export type Guild = {
   deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
-  email: Scalars['String'];
-  googleId: Scalars['String'];
   color: Scalars['String'];
   image: Scalars['String'];
   clans: Array<Clan>;
@@ -33,8 +31,6 @@ export type Clan = {
   deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
-  email: Scalars['String'];
-  googleId: Scalars['String'];
   image: Scalars['String'];
   guild: Array<Guild>;
   guildId: Scalars['String'];
@@ -106,8 +102,6 @@ export type Squad = {
   deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
-  email: Scalars['String'];
-  googleId: Scalars['String'];
   color: Scalars['String'];
   image: Scalars['String'];
   members: Array<SquadMember>;
@@ -121,8 +115,6 @@ export type Chapter = {
   deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
-  email: Scalars['String'];
-  googleId: Scalars['String'];
   squad: Array<Squad>;
   squadId: Scalars['String'];
   positions: Array<SquadPosition>;
@@ -227,13 +219,6 @@ export type GsuiteUser = {
   recoveryEmail?: Maybe<Scalars['String']>;
 };
 
-export type SlackMessage = {
-  text: Scalars['String'];
-  user: Scalars['String'];
-  botId: Scalars['String'];
-  type: Scalars['String'];
-};
-
 export type SlackUser = {
   id: Scalars['String'];
   fullName: Scalars['String'];
@@ -249,14 +234,12 @@ export type Query = {
   me: User;
   users: Array<User>;
   clans: Array<Clan>;
-  clan: Clan;
-  guildPositions: Array<GuildPosition>;
   guildMembers: Array<GuildMember>;
+  guildPositions: Array<GuildPosition>;
   guilds: Array<Guild>;
   guild: Guild;
   positions: Array<Position>;
   chapters: Array<Chapter>;
-  chapter: Chapter;
   squadMembers: Array<SquadMember>;
   squadPositions: Array<SquadPosition>;
   squads: Array<Squad>;
@@ -279,17 +262,13 @@ export type QueryClansArgs = {
   guildId?: Maybe<Scalars['ID']>;
 };
 
-export type QueryClanArgs = {
-  id: Scalars['ID'];
+export type QueryGuildMembersArgs = {
+  guildId: Scalars['ID'];
 };
 
 export type QueryGuildPositionsArgs = {
   guildId: Scalars['ID'];
   memberId?: Maybe<Scalars['String']>;
-};
-
-export type QueryGuildMembersArgs = {
-  guildId: Scalars['ID'];
 };
 
 export type QueryGuildsArgs = {
@@ -309,10 +288,6 @@ export type QueryPositionsArgs = {
 export type QueryChaptersArgs = {
   search?: Maybe<Scalars['String']>;
   squadId?: Maybe<Scalars['ID']>;
-};
-
-export type QueryChapterArgs = {
-  id: Scalars['ID'];
 };
 
 export type QuerySquadMembersArgs = {
@@ -339,9 +314,9 @@ export type QuerySuccessesArgs = {
 };
 
 export type Mutation = {
-  deleteGsuiteUser: Scalars['Boolean'];
+  syncGsuiteUser: Scalars['Boolean'];
+  initialSyncSlackUser: User;
   syncSlackUser: User;
-  sendSlackMessage: SlackMessage;
   createUser: User;
   updateUser: User;
   deleteUser: Scalars['Boolean'];
@@ -349,12 +324,12 @@ export type Mutation = {
   createClan: Clan;
   updateClan: Clan;
   deleteClan: Scalars['Boolean'];
-  createGuildPosition: GuildPosition;
-  updateGuildPosition: GuildPosition;
-  deleteGuildPosition: Scalars['Boolean'];
   createGuildMember: GuildMember;
   updateGuildMember: GuildMember;
   deleteGuildMember: Scalars['Boolean'];
+  createGuildPosition: GuildPosition;
+  updateGuildPosition: GuildPosition;
+  deleteGuildPosition: Scalars['Boolean'];
   createGuild: Guild;
   updateGuild: Guild;
   deleteGuild: Scalars['Boolean'];
@@ -379,16 +354,16 @@ export type Mutation = {
   deleteSuccess: Scalars['Boolean'];
 };
 
-export type MutationDeleteGsuiteUserArgs = {
-  id: Scalars['String'];
+export type MutationSyncGsuiteUserArgs = {
+  data: SyncGoogleUserInput;
+};
+
+export type MutationInitialSyncSlackUserArgs = {
+  data: InitialSyncSlackUserInput;
 };
 
 export type MutationSyncSlackUserArgs = {
   data: SyncSlackUserInput;
-};
-
-export type MutationSendSlackMessageArgs = {
-  data: SendSlackMessageInput;
 };
 
 export type MutationCreateUserArgs = {
@@ -416,19 +391,6 @@ export type MutationDeleteClanArgs = {
   guildId: Scalars['ID'];
 };
 
-export type MutationCreateGuildPositionArgs = {
-  data: CreateGuildPositionInput;
-};
-
-export type MutationUpdateGuildPositionArgs = {
-  data: UpdateGuildPositionInput;
-};
-
-export type MutationDeleteGuildPositionArgs = {
-  id: Scalars['ID'];
-  guildId: Scalars['ID'];
-};
-
 export type MutationCreateGuildMemberArgs = {
   data: CreateGuildMemberInput;
 };
@@ -438,6 +400,19 @@ export type MutationUpdateGuildMemberArgs = {
 };
 
 export type MutationDeleteGuildMemberArgs = {
+  id: Scalars['ID'];
+  guildId: Scalars['ID'];
+};
+
+export type MutationCreateGuildPositionArgs = {
+  data: CreateGuildPositionInput;
+};
+
+export type MutationUpdateGuildPositionArgs = {
+  data: UpdateGuildPositionInput;
+};
+
+export type MutationDeleteGuildPositionArgs = {
   id: Scalars['ID'];
   guildId: Scalars['ID'];
 };
@@ -534,14 +509,17 @@ export type MutationDeleteSuccessArgs = {
   id: Scalars['ID'];
 };
 
-export type SyncSlackUserInput = {
+export type SyncGoogleUserInput = {
+  googleId: Scalars['String'];
+};
+
+export type InitialSyncSlackUserInput = {
   userId: Scalars['String'];
   slackId: Scalars['String'];
 };
 
-export type SendSlackMessageInput = {
-  channelId: Scalars['String'];
-  text: Scalars['String'];
+export type SyncSlackUserInput = {
+  slackId: Scalars['String'];
 };
 
 export type CreateUserInput = {
@@ -562,7 +540,6 @@ export type UpdateUserInput = {
 
 export type CreateClanInput = {
   name: Scalars['String'];
-  email: Scalars['String'];
   image: Scalars['String'];
   guildId: Scalars['ID'];
   description?: Maybe<Scalars['String']>;
@@ -570,11 +547,22 @@ export type CreateClanInput = {
 
 export type UpdateClanInput = {
   name: Scalars['String'];
-  email: Scalars['String'];
   image: Scalars['String'];
   guildId: Scalars['ID'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+};
+
+export type CreateGuildMemberInput = {
+  role: TeamRole;
+  userId: Scalars['ID'];
+  guildId: Scalars['ID'];
+};
+
+export type UpdateGuildMemberInput = {
+  id: Scalars['ID'];
+  role: TeamRole;
+  guildId: Scalars['ID'];
 };
 
 export type CreateGuildPositionInput = {
@@ -598,21 +586,8 @@ export type UpdateGuildPositionInput = {
   id: Scalars['ID'];
 };
 
-export type CreateGuildMemberInput = {
-  role: TeamRole;
-  userId: Scalars['ID'];
-  guildId: Scalars['ID'];
-};
-
-export type UpdateGuildMemberInput = {
-  id: Scalars['ID'];
-  role: TeamRole;
-  guildId: Scalars['ID'];
-};
-
 export type CreateGuildInput = {
   name: Scalars['String'];
-  email: Scalars['String'];
   image: Scalars['String'];
   color: Scalars['String'];
   description?: Maybe<Scalars['String']>;
@@ -620,7 +595,6 @@ export type CreateGuildInput = {
 
 export type UpdateGuildInput = {
   name: Scalars['String'];
-  email: Scalars['String'];
   image: Scalars['String'];
   color: Scalars['String'];
   description?: Maybe<Scalars['String']>;
@@ -646,14 +620,12 @@ export type UpdatePositionInput = {
 
 export type CreateChapterInput = {
   name: Scalars['String'];
-  email: Scalars['String'];
   squadId: Scalars['ID'];
   description?: Maybe<Scalars['String']>;
 };
 
 export type UpdateChapterInput = {
   name: Scalars['String'];
-  email: Scalars['String'];
   squadId: Scalars['ID'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
@@ -691,7 +663,6 @@ export type UpdateSquadPositionInput = {
 
 export type CreateSquadInput = {
   name: Scalars['String'];
-  email: Scalars['String'];
   image: Scalars['String'];
   color: Scalars['String'];
   description?: Maybe<Scalars['String']>;
@@ -699,7 +670,6 @@ export type CreateSquadInput = {
 
 export type UpdateSquadInput = {
   name: Scalars['String'];
-  email: Scalars['String'];
   image: Scalars['String'];
   color: Scalars['String'];
   description?: Maybe<Scalars['String']>;

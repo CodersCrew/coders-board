@@ -5,16 +5,11 @@ import fetch from 'node-fetch';
 
 import { env } from '../../common/env';
 import { pick, transformAndValidate } from '../../common/utils';
+import { UserRepository } from '../../users/user.repository';
 import { CreateGoogleUserInput, UpdateGoogleUserImageInput, UpdateGoogleUserInput } from './dto';
+import { DeleteGoogleUserInput } from './dto/delete-google-user.input';
+import { SyncGoogleUserInput } from './dto/sync-google-user.input';
 import { GsuiteUser } from './gsuite-user.model';
-import { CreateGroupParams } from './interfaces/create-group.params';
-import { CreateMemberParams } from './interfaces/create-member.params';
-import { DeleteGroupParams } from './interfaces/delete-group.params';
-import { DeleteMemberParams } from './interfaces/delete-member.params';
-import { DeleteUserParams } from './interfaces/delete-user.params';
-import { HasMemberParams } from './interfaces/has-member.params';
-import { UpdateGroupParams } from './interfaces/update-group.params';
-import { UpdateMemberParams } from './interfaces/update-member.params';
 
 const imageToBase64 = async (url: string) => {
   const response = await fetch(url);
@@ -29,7 +24,7 @@ export const toBase64 = file => `data:${file.mimetype};base64,${file.buffer.toSt
 
 @Injectable()
 export class GsuiteService {
-  constructor() {
+  constructor(private readonly userRepository: UserRepository) {
     this.initialize();
   }
 
@@ -57,7 +52,7 @@ export class GsuiteService {
     });
   }
 
-  async findAllUsers() {
+  async findAllGoogleUsers() {
     const response = await this.admin.users.list({
       customer: env.GSUITE_CUSTOMER_ID,
       maxResults: 500,
@@ -77,7 +72,7 @@ export class GsuiteService {
       );
   }
 
-  async createUser(input: CreateGoogleUserInput) {
+  async createGoogleUser(input: CreateGoogleUserInput) {
     const googleUserInput = await transformAndValidate(CreateGoogleUserInput, input);
     const password = createHash('md5').update(googleUserInput.password).digest('hex');
 
@@ -102,7 +97,19 @@ export class GsuiteService {
     });
   }
 
-  async updateUser(input: UpdateGoogleUserInput): Promise<boolean> {
+  async syncGoogleUser(input: SyncGoogleUserInput) {
+    const { googleId } = await transformAndValidate(SyncGoogleUserInput, input);
+    const user = await this.userRepository.findOneOrFail({ googleId });
+
+    await this.updateGoogleUser({
+      ...pick(user, ['firstName', 'lastName', 'primaryEmail', 'recoveryEmail']),
+      googleId,
+    });
+
+    return true;
+  }
+
+  private async updateGoogleUser(input: UpdateGoogleUserInput) {
     const { googleId, ...googleUserInput } = await transformAndValidate(UpdateGoogleUserInput, input);
 
     await this.admin.users.update({
@@ -121,79 +128,18 @@ export class GsuiteService {
     return true;
   }
 
-  async deleteUser({ id }: DeleteUserParams): Promise<boolean> {
-    await this.admin.users.delete({ userKey: id });
+  async deleteGoogleUser(input: DeleteGoogleUserInput) {
+    const { googleId } = await transformAndValidate(DeleteGoogleUserInput, input);
+    await this.admin.users.delete({ userKey: googleId });
 
     return true;
   }
 
-  async updateUserImage(input: UpdateGoogleUserImageInput): Promise<boolean> {
+  async updateGoogleUserImage(input: UpdateGoogleUserImageInput) {
     const { googleId, imageUrl } = await transformAndValidate(UpdateGoogleUserImageInput, input);
     const photoData = await imageToBase64(imageUrl);
 
     await this.admin.users.photos.update({ userKey: googleId, requestBody: { photoData } });
-
-    return true;
-  }
-
-  async createGroup(input: CreateGroupParams): Promise<string> {
-    const response = await this.admin.groups.insert({
-      requestBody: {
-        name: input.name,
-        description: input.description,
-        email: input.email,
-      },
-    });
-
-    return response.data.id;
-  }
-
-  async updateGroup({ id, ...input }: UpdateGroupParams): Promise<boolean> {
-    await this.admin.groups.update({
-      groupKey: id,
-      requestBody: {
-        name: input.name,
-        description: input.description,
-        email: input.email,
-      },
-    });
-
-    return true;
-  }
-
-  async deleteGroup({ id }: DeleteGroupParams): Promise<boolean> {
-    await this.admin.groups.delete({ groupKey: id });
-
-    return true;
-  }
-
-  async hasMember({ groupId, userId }: HasMemberParams): Promise<boolean> {
-    const { data } = await this.admin.members.hasMember({ groupKey: groupId, memberKey: userId });
-
-    return data.isMember;
-  }
-
-  async createMember({ groupId, userId, role }: CreateMemberParams): Promise<boolean> {
-    await this.admin.members.insert({
-      groupKey: groupId,
-      requestBody: { id: userId, role },
-    });
-
-    return true;
-  }
-
-  async updateMember({ groupId, userId, role }: UpdateMemberParams): Promise<boolean> {
-    await this.admin.members.update({
-      groupKey: groupId,
-      memberKey: userId,
-      requestBody: { role },
-    });
-
-    return true;
-  }
-
-  async deleteMember({ groupId, userId }: DeleteMemberParams): Promise<boolean> {
-    await this.admin.members.delete({ groupKey: groupId, memberKey: userId });
 
     return true;
   }

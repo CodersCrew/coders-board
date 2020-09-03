@@ -3,10 +3,10 @@ import { Expose } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
 
 @InputType()
-export class SyncSlackUserInput {
+export class SyncGoogleUserInput {
   @Expose()
   @Field()
   @IsString()
   @IsNotEmpty()
-  slackId: string;
+  googleId: string;
 }

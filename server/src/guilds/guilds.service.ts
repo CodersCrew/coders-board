@@ -1,8 +1,6 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
-import { isEqual, pick } from 'lodash';
 
 import { brackets, resolveAsyncRelation } from '../common/utils';
-import { GsuiteService, UpdateGroupParams } from '../integrations';
 import { CreateGuildInput } from './dto/create-guild.input';
 import { GetGuildsArgs } from './dto/get-guilds.args';
 import { UpdateGuildInput } from './dto/update-guild.input';
@@ -10,16 +8,10 @@ import { GuildRepository } from './guild.repository';
 
 @Injectable()
 export class GuildsService {
-  constructor(private readonly guildRepository: GuildRepository, private readonly gsuiteService: GsuiteService) {}
+  constructor(private readonly guildRepository: GuildRepository) {}
 
   getClans = resolveAsyncRelation(this.guildRepository, 'clans');
   getMembers = resolveAsyncRelation(this.guildRepository, 'members');
-
-  findById(id: string) {
-    if (!id) return null;
-
-    return this.guildRepository.findOne(id);
-  }
 
   findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
@@ -41,41 +33,28 @@ export class GuildsService {
     return query.getMany();
   }
 
-  async create(input: CreateGuildInput) {
-    const googleId = await this.gsuiteService.createGroup(input);
-
-    return this.guildRepository.save({ ...input, googleId });
+  create(input: CreateGuildInput) {
+    return this.guildRepository.save(input);
   }
 
   async update({ id, ...input }: UpdateGuildInput) {
-    const guild = await this.findByIdOrThrow(id);
-
-    const googlePropNames: (keyof Omit<UpdateGroupParams, 'id'>)[] = ['name', 'description', 'email'];
-
-    if (!isEqual(pick(input, googlePropNames), pick(guild, googlePropNames))) {
-      await this.gsuiteService.updateGroup({ ...input, id: guild.googleId });
-    }
+    const guild = await this.guildRepository.findOneOrFail(id);
 
     return this.guildRepository.save({ ...guild, ...input });
   }
 
   async delete(id: string) {
-    const guild = await this.findByIdOrThrow(id);
+    const guild = await this.guildRepository.findOneOrFail(id, { relations: ['members', 'clans'] });
 
-    const members = await guild.members;
-
-    if (members.length) {
+    if (guild.members.length) {
       throw new ConflictException('You cannot remove a guild with members');
     }
 
-    const clans = await guild.clans;
-
-    if (clans.length) {
+    if (guild.clans.length) {
       throw new ConflictException('You cannot remove a guild with clans');
     }
 
-    await this.gsuiteService.deleteGroup({ id: guild.googleId });
-    await this.guildRepository.delete(id);
+    await this.guildRepository.remove(guild);
 
     return true;
   }

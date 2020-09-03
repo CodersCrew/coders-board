@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Contains, IsEmail, IsHexColor, IsLowercase, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import { Contains, IsHexColor, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { Squad } from '../squad.model';
 
@@ -9,13 +9,6 @@ export class CreateSquadInput implements Partial<Squad> {
   @IsNotEmpty()
   @IsString()
   name: string;
-
-  @Field()
-  @IsNotEmpty()
-  @IsEmail()
-  @IsLowercase()
-  @Matches(/.*-squad@coderscrew\.pl/)
-  email: string;
 
   @Field()
   @IsNotEmpty()

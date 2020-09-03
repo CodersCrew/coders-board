@@ -1,5 +1,5 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsEmail, IsLowercase, IsNotEmpty, IsOptional, IsString, IsUUID, Matches } from 'class-validator';
+import { IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
 import { Clan } from '../clan.model';
 
@@ -9,13 +9,6 @@ export class CreateClanInput implements Partial<Clan> {
   @IsNotEmpty()
   @IsString()
   name: string;
-
-  @Field()
-  @IsNotEmpty()
-  @IsEmail()
-  @IsLowercase()
-  @Matches(/.*-clan@coderscrew\.pl/)
-  email: string;
 
   @Field()
   @IsNotEmpty()

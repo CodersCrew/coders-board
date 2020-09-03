@@ -9,8 +9,6 @@ type Guild {
   deletedAt: DateTime
   name: String!
   description: String!
-  email: String!
-  googleId: String!
   color: String!
   image: String!
   clans: [Clan!]!
@@ -29,8 +27,6 @@ type Clan {
   deletedAt: DateTime
   name: String!
   description: String!
-  email: String!
-  googleId: String!
   image: String!
   guild: [Guild!]!
   guildId: String!
@@ -98,8 +94,6 @@ type Squad {
   deletedAt: DateTime
   name: String!
   description: String!
-  email: String!
-  googleId: String!
   color: String!
   image: String!
   members: [SquadMember!]!
@@ -113,8 +107,6 @@ type Chapter {
   deletedAt: DateTime
   name: String!
   description: String!
-  email: String!
-  googleId: String!
   squad: [Squad!]!
   squadId: String!
   positions(active: Boolean): [SquadPosition!]!
@@ -211,13 +203,6 @@ type GsuiteUser {
   recoveryEmail: String
 }
 
-type SlackMessage {
-  text: String!
-  user: String!
-  botId: String!
-  type: String!
-}
-
 type SlackUser {
   id: String!
   fullName: String!
@@ -233,14 +218,12 @@ type Query {
   me: User!
   users(search: String, role: UserRole, ids: [ID!]): [User!]!
   clans(search: String, guildId: ID): [Clan!]!
-  clan(id: ID!): Clan!
-  guildPositions(guildId: ID!, memberId: String): [GuildPosition!]!
   guildMembers(guildId: ID!): [GuildMember!]!
+  guildPositions(guildId: ID!, memberId: String): [GuildPosition!]!
   guilds(search: String): [Guild!]!
   guild(id: ID!): Guild!
   positions(search: String, guildId: ID, clanId: ID): [Position!]!
   chapters(search: String, squadId: ID): [Chapter!]!
-  chapter(id: ID!): Chapter!
   squadMembers(squadId: ID!, archived: Boolean): [SquadMember!]!
   squadPositions(squadId: ID!, memberId: String): [SquadPosition!]!
   squads(search: String): [Squad!]!
@@ -249,9 +232,9 @@ type Query {
 }
 
 type Mutation {
-  deleteGsuiteUser(id: String!): Boolean!
+  syncGsuiteUser(data: SyncGoogleUserInput!): Boolean!
+  initialSyncSlackUser(data: InitialSyncSlackUserInput!): User!
   syncSlackUser(data: SyncSlackUserInput!): User!
-  sendSlackMessage(data: SendSlackMessageInput!): SlackMessage!
   createUser(data: CreateUserInput!): User!
   updateUser(data: UpdateUserInput!): User!
   deleteUser(id: ID!): Boolean!
@@ -259,12 +242,12 @@ type Mutation {
   createClan(data: CreateClanInput!): Clan!
   updateClan(data: UpdateClanInput!): Clan!
   deleteClan(id: ID!, guildId: ID!): Boolean!
-  createGuildPosition(data: CreateGuildPositionInput!): GuildPosition!
-  updateGuildPosition(data: UpdateGuildPositionInput!): GuildPosition!
-  deleteGuildPosition(id: ID!, guildId: ID!): Boolean!
   createGuildMember(data: CreateGuildMemberInput!): GuildMember!
   updateGuildMember(data: UpdateGuildMemberInput!): GuildMember!
   deleteGuildMember(id: ID!, guildId: ID!): Boolean!
+  createGuildPosition(data: CreateGuildPositionInput!): GuildPosition!
+  updateGuildPosition(data: UpdateGuildPositionInput!): GuildPosition!
+  deleteGuildPosition(id: ID!, guildId: ID!): Boolean!
   createGuild(data: CreateGuildInput!): Guild!
   updateGuild(data: UpdateGuildInput!): Guild!
   deleteGuild(id: ID!): Boolean!
@@ -289,14 +272,17 @@ type Mutation {
   deleteSuccess(id: ID!): Boolean!
 }
 
-input SyncSlackUserInput {
+input SyncGoogleUserInput {
+  googleId: String!
+}
+
+input InitialSyncSlackUserInput {
   userId: String!
   slackId: String!
 }
 
-input SendSlackMessageInput {
-  channelId: String!
-  text: String!
+input SyncSlackUserInput {
+  slackId: String!
 }
 
 input CreateUserInput {
@@ -317,7 +303,6 @@ input UpdateUserInput {
 
 input CreateClanInput {
   name: String!
-  email: String!
   image: String!
   guildId: ID!
   description: String = ""
@@ -325,11 +310,22 @@ input CreateClanInput {
 
 input UpdateClanInput {
   name: String!
-  email: String!
   image: String!
   guildId: ID!
   description: String = ""
   id: ID!
+}
+
+input CreateGuildMemberInput {
+  role: TeamRole!
+  userId: ID!
+  guildId: ID!
+}
+
+input UpdateGuildMemberInput {
+  id: ID!
+  role: TeamRole!
+  guildId: ID!
 }
 
 input CreateGuildPositionInput {
@@ -353,21 +349,8 @@ input UpdateGuildPositionInput {
   id: ID!
 }
 
-input CreateGuildMemberInput {
-  role: TeamRole!
-  userId: ID!
-  guildId: ID!
-}
-
-input UpdateGuildMemberInput {
-  id: ID!
-  role: TeamRole!
-  guildId: ID!
-}
-
 input CreateGuildInput {
   name: String!
-  email: String!
   image: String!
   color: String!
   description: String = ""
@@ -375,7 +358,6 @@ input CreateGuildInput {
 
 input UpdateGuildInput {
   name: String!
-  email: String!
   image: String!
   color: String!
   description: String = ""
@@ -401,14 +383,12 @@ input UpdatePositionInput {
 
 input CreateChapterInput {
   name: String!
-  email: String!
   squadId: ID!
   description: String = ""
 }
 
 input UpdateChapterInput {
   name: String!
-  email: String!
   squadId: ID!
   description: String = ""
   id: ID!
@@ -446,7 +426,6 @@ input UpdateSquadPositionInput {
 
 input CreateSquadInput {
   name: String!
-  email: String!
   image: String!
   color: String!
   description: String = ""
@@ -454,7 +433,6 @@ input CreateSquadInput {
 
 input UpdateSquadInput {
   name: String!
-  email: String!
   image: String!
   color: String!
   description: String = ""

@@ -2,7 +2,6 @@ query chapters($squadId: ID!) {
   chapters(squadId: $squadId) {
     id
     name
-    email
     description
     positions(active: true) {
 			id

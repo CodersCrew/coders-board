@@ -1,8 +1,6 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
-import { isEqual, pick } from 'lodash';
 
 import { brackets, resolveAsyncRelation } from '../common/utils';
-import { GsuiteService, UpdateGroupParams } from '../integrations';
 import { CreateSquadInput } from './dto/create-squad.input';
 import { GetSquadsArgs } from './dto/get-squads.args';
 import { UpdateSquadInput } from './dto/update-squad.input';
@@ -10,16 +8,10 @@ import { SquadRepository } from './squad.repository';
 
 @Injectable()
 export class SquadsService {
-  constructor(private readonly squadRepository: SquadRepository, private readonly gsuiteService: GsuiteService) {}
+  constructor(private readonly squadRepository: SquadRepository) {}
 
   getChapters = resolveAsyncRelation(this.squadRepository, 'chapters');
   getMembers = resolveAsyncRelation(this.squadRepository, 'members');
-
-  findById(id: string) {
-    if (!id) return null;
-
-    return this.squadRepository.findOne(id);
-  }
 
   findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
@@ -41,41 +33,28 @@ export class SquadsService {
     return query.getMany();
   }
 
-  async create(input: CreateSquadInput) {
-    const googleId = await this.gsuiteService.createGroup(input);
-
-    return this.squadRepository.save({ ...input, googleId });
+  create(input: CreateSquadInput) {
+    return this.squadRepository.save(input);
   }
 
   async update({ id, ...input }: UpdateSquadInput) {
-    const squad = await this.findByIdOrThrow(id);
-
-    const googlePropNames: (keyof Omit<UpdateGroupParams, 'id'>)[] = ['name', 'description', 'email'];
-
-    if (!isEqual(pick(input, googlePropNames), pick(squad, googlePropNames))) {
-      await this.gsuiteService.updateGroup({ ...input, id: squad.googleId });
-    }
+    const squad = await this.squadRepository.findOneOrFail(id);
 
     return this.squadRepository.save({ ...squad, ...input });
   }
 
   async delete(id: string) {
-    const squad = await this.findByIdOrThrow(id);
+    const squad = await this.squadRepository.findOneOrFail(id, { relations: ['members', 'chapters'] });
 
-    const members = await this.getMembers(squad);
-
-    if (members.length) {
+    if (squad.members.length) {
       throw new ConflictException('You cannot remove a squad with members');
     }
 
-    const chapters = await this.getChapters(squad);
-
-    if (chapters.length) {
+    if (squad.chapters.length) {
       throw new ConflictException('You cannot remove a squad with chapters');
     }
 
-    await this.gsuiteService.deleteGroup({ id: squad.googleId });
-    await this.squadRepository.delete(id);
+    await this.squadRepository.remove(squad);
 
     return true;
   }

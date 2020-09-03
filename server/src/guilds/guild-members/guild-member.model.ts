@@ -32,6 +32,6 @@ export class GuildMember extends BaseModel {
   guildId: string;
 
   @Field(type => [GuildPosition])
-  @OneToMany(type => GuildPosition, guildPosition => guildPosition.member)
+  @OneToMany(type => GuildPosition, guildPosition => guildPosition.member, { cascade: true })
   positions: GuildPosition[];
 }

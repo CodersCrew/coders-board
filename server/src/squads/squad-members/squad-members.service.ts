@@ -1,7 +1,6 @@
-import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { ConflictException, Injectable } from '@nestjs/common';
 
 import { resolveAsyncRelation } from '../../common/utils';
-import { GsuiteService } from '../../integrations';
 import { CreateSquadMemberInput } from './dto/create-squad-member.input';
 import { GetSquadMembersArgs } from './dto/get-squad-members.args';
 import { UpdateSquadMemberInput } from './dto/update-squad-member.input';
@@ -10,10 +9,7 @@ import { SquadMemberRepository } from './squad-member.repository';
 
 @Injectable()
 export class SquadMembersService {
-  constructor(
-    private readonly squadMemberRepository: SquadMemberRepository,
-    private readonly gsuiteService: GsuiteService,
-  ) {}
+  constructor(private readonly squadMemberRepository: SquadMemberRepository) {}
 
   getUser = resolveAsyncRelation(this.squadMemberRepository, 'user');
   getSquad = resolveAsyncRelation(this.squadMemberRepository, 'squad');
@@ -26,18 +22,6 @@ export class SquadMembersService {
     }
 
     return positions;
-  }
-
-  findById(id: string) {
-    if (!id) return null;
-
-    return this.squadMemberRepository.findOne(id);
-  }
-
-  findByIdOrThrow(id: string) {
-    if (!id) throw new BadRequestException();
-
-    return this.squadMemberRepository.findOneOrFail(id);
   }
 
   async findAll({ squadId, archived }: GetSquadMembersArgs) {
@@ -55,32 +39,12 @@ export class SquadMembersService {
     return query.getMany();
   }
 
-  async create(input: CreateSquadMemberInput) {
-    const squadMember = await this.squadMemberRepository.save(input);
-    const squad = await this.getSquad(squadMember);
-    const user = await this.getUser(squadMember);
-
-    try {
-      await this.gsuiteService.createMember({
-        groupId: squad.googleId,
-        userId: user.googleId,
-        role: input.role,
-      });
-    } catch {
-      this.squadMemberRepository.delete(squadMember.id);
-    }
-
-    return squadMember;
+  create(input: CreateSquadMemberInput) {
+    return this.squadMemberRepository.save(input);
   }
 
   async update({ id, squadId, ...input }: UpdateSquadMemberInput) {
     const squadMember = await this.squadMemberRepository.findOneOrFail({ where: { id, squadId } });
-
-    await this.gsuiteService.updateMember({
-      groupId: squadMember.squad.googleId,
-      userId: squadMember.user.googleId,
-      role: input.role,
-    });
 
     return this.squadMemberRepository.save({
       ...squadMember,
@@ -89,28 +53,26 @@ export class SquadMembersService {
   }
 
   async archive(id: string) {
-    const squadMember = await this.findByIdOrThrow(id);
+    const squadMember = await this.squadMemberRepository.findOneOrFail(id);
     const positions = await this.getPositions(squadMember, true);
 
     if (positions.length) {
       throw new ConflictException('You cannot archive squad member with active positions');
     }
 
-    await this.gsuiteService.deleteMember({ groupId: squadMember.squad.googleId, userId: squadMember.user.googleId });
     await this.squadMemberRepository.softRemove(squadMember);
 
     return true;
   }
 
   async delete(id: string) {
-    const squadMember = await this.findByIdOrThrow(id);
+    const squadMember = await this.squadMemberRepository.findOneOrFail(id);
     const positions = await this.getPositions(squadMember);
 
     if (positions.length) {
       throw new ConflictException('You cannot remove squad member with attached positions');
     }
 
-    await this.gsuiteService.deleteMember({ groupId: squadMember.squad.googleId, userId: squadMember.user.googleId });
     await this.squadMemberRepository.remove(squadMember);
 
     return true;

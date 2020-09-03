@@ -1,5 +1,5 @@
 import { Field, InputType } from '@nestjs/graphql';
-import { Contains, IsEmail, IsHexColor, IsLowercase, IsNotEmpty, IsOptional, IsString, Matches } from 'class-validator';
+import { Contains, IsHexColor, IsNotEmpty, IsOptional, IsString } from 'class-validator';
 
 import { Guild } from '../guild.model';
 
@@ -9,13 +9,6 @@ export class CreateGuildInput implements Partial<Guild> {
   @IsNotEmpty()
   @IsString()
   name: string;
-
-  @Field()
-  @IsNotEmpty()
-  @IsEmail()
-  @IsLowercase()
-  @Matches(/.*-guild@coderscrew\.pl/)
-  email: string;
 
   @Field()
   @IsNotEmpty()
