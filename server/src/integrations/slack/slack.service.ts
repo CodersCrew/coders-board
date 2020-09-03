@@ -5,7 +5,7 @@ import { env } from '../../common/env';
 import { pick, transformAndValidate } from '../../common/utils';
 import { UserRepository } from '../../users/user.repository';
 import {
-  GetSlackUserInput,
+  GetSlackUserDto,
   InitialSyncSlackUserInput,
   SendSlackMessageDto,
   SyncSlackUserInput,
@@ -78,8 +78,8 @@ export class SlackService {
     return true;
   }
 
-  async getSlackUser(input: GetSlackUserInput) {
-    const { slackId } = await transformAndValidate(GetSlackUserInput, input);
+  async getSlackUser(input: GetSlackUserDto) {
+    const { slackId } = await transformAndValidate(GetSlackUserDto, input);
     const { user: slackUser } = await slackRequest<UsersInfoResult>(this.slackBot.users.info({ user: slackId }));
 
     return slackUser;

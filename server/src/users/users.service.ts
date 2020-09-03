@@ -63,7 +63,7 @@ export class UsersService {
   async create(input: CreateUserInput) {
     const password = generatePassword({ numbers: true });
 
-    const { id: googleId } = await this.gsuiteService.createGoogleUser({ ...input, password });
+    const { id: googleId } = await this.gsuiteService.createGsuiteUser({ ...input, password });
 
     const fullName = `${input.firstName} ${input.lastName}`;
     const user = await this.userRepository.save({ ...input, fullName, googleId });
@@ -82,7 +82,7 @@ export class UsersService {
     const fullName = `${input.firstName} ${input.lastName}`;
     const user = await this.userRepository.save({ ...rawUser, ...input, fullName });
 
-    await this.gsuiteService.syncGoogleUser({ googleId: user.googleId });
+    await this.gsuiteService.syncGsuiteUser({ googleId: user.googleId });
 
     if (user.slackId) {
       await this.slackService.syncSlackUser({ slackId: user.slackId });
@@ -99,6 +99,12 @@ export class UsersService {
       throw new ConflictException('You cannot delete user with active Slack account');
     }
 
+    const gsuiteUser = await this.slackService.getSlackUser({ slackId: user.slackId });
+
+    if (gsuiteUser?.id) {
+      throw new ConflictException('You cannot delete user with active Google account');
+    }
+
     if (user.image.includes('cloudinary')) {
       await this.cloudinaryService.deleteUserImage(user.id);
     }
@@ -107,7 +113,6 @@ export class UsersService {
       await this.cloudinaryService.deleteUserThumbnail(user.id);
     }
 
-    await this.gsuiteService.deleteGoogleUser({ googleId: user.googleId });
     await this.userRepository.delete(userId);
 
     return true;

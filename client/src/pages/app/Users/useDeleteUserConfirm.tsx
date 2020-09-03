@@ -26,7 +26,10 @@ export const useDeleteUserConfirm = () => {
       onOk: () =>
         runMutation({
           mutation: deleteUser({ id }),
-          messages: getGenericMessages('user', 'delete'),
+          messages: {
+            ...getGenericMessages('user', 'delete'),
+            failure: ({ graphQLErrors }) => graphQLErrors[0].message,
+          },
         }),
       okButtonProps: { danger: true },
       icon: <Icon icon={DeleteOutlined} color={colors.error.main} />,

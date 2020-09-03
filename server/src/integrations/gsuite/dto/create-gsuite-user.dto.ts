@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { IsEmail, IsNotEmpty, IsString, Matches } from 'class-validator';
 
-export class CreateGoogleUserDto {
+export class CreateGsuiteUserDto {
   @Expose()
   @IsString()
   @IsNotEmpty()

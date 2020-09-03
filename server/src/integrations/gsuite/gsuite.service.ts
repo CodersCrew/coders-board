@@ -6,8 +6,8 @@ import fetch from 'node-fetch';
 import { env } from '../../common/env';
 import { pick, transformAndValidate } from '../../common/utils';
 import { UserRepository } from '../../users/user.repository';
-import { CreateGoogleUserDto, DeleteGoogleUserDto, UpdateGoogleUserDto, UpdateGoogleUserImageDto } from './dto';
-import { SyncGoogleUserInput } from './dto/sync-google-user.input';
+import { CreateGsuiteUserDto, GetGsuiteUserDto, UpdateGsuiteUserDto, UpdateGsuiteUserImageDto } from './dto';
+import { SyncGsuiteUserInput } from './dto/sync-gsuite-user.input';
 import { GsuiteUser } from './gsuite-user.model';
 
 const imageToBase64 = async (url: string) => {
@@ -51,7 +51,7 @@ export class GsuiteService {
     });
   }
 
-  async findAllGoogleUsers() {
+  async findAllGsuiteUsers() {
     const response = await this.admin.users.list({
       customer: env.GSUITE_CUSTOMER_ID,
       maxResults: 500,
@@ -71,8 +71,8 @@ export class GsuiteService {
       );
   }
 
-  async createGoogleUser(input: CreateGoogleUserDto) {
-    const googleUserInput = await transformAndValidate(CreateGoogleUserDto, input);
+  async createGsuiteUser(input: CreateGsuiteUserDto) {
+    const googleUserInput = await transformAndValidate(CreateGsuiteUserDto, input);
     const password = createHash('md5').update(googleUserInput.password).digest('hex');
 
     const response = await this.admin.users.insert({
@@ -96,11 +96,11 @@ export class GsuiteService {
     });
   }
 
-  async syncGoogleUser(input: SyncGoogleUserInput) {
-    const { googleId } = await transformAndValidate(SyncGoogleUserInput, input);
+  async syncGsuiteUser(input: SyncGsuiteUserInput) {
+    const { googleId } = await transformAndValidate(SyncGsuiteUserInput, input);
     const user = await this.userRepository.findOneOrFail({ googleId });
 
-    await this.updateGoogleUser({
+    await this.updateGsuiteUser({
       ...pick(user, ['firstName', 'lastName', 'primaryEmail', 'recoveryEmail']),
       googleId,
     });
@@ -108,8 +108,15 @@ export class GsuiteService {
     return true;
   }
 
-  private async updateGoogleUser(input: UpdateGoogleUserDto) {
-    const { googleId, ...googleUserInput } = await transformAndValidate(UpdateGoogleUserDto, input);
+  async getGsuiteUser(input: GetGsuiteUserDto) {
+    const { googleId } = await transformAndValidate(GetGsuiteUserDto, input);
+    const { data } = await this.admin.users.get({ userKey: googleId });
+
+    return data;
+  }
+
+  private async updateGsuiteUser(input: UpdateGsuiteUserDto) {
+    const { googleId, ...googleUserInput } = await transformAndValidate(UpdateGsuiteUserDto, input);
 
     await this.admin.users.update({
       userKey: googleId,
@@ -127,15 +134,8 @@ export class GsuiteService {
     return true;
   }
 
-  async deleteGoogleUser(input: DeleteGoogleUserDto) {
-    const { googleId } = await transformAndValidate(DeleteGoogleUserDto, input);
-    await this.admin.users.delete({ userKey: googleId });
-
-    return true;
-  }
-
-  async updateGoogleUserImage(input: UpdateGoogleUserImageDto) {
-    const { googleId, imageUrl } = await transformAndValidate(UpdateGoogleUserImageDto, input);
+  async updateGsuiteUserImage(input: UpdateGsuiteUserImageDto) {
+    const { googleId, imageUrl } = await transformAndValidate(UpdateGsuiteUserImageDto, input);
     const photoData = await imageToBase64(imageUrl);
 
     await this.admin.users.photos.update({ userKey: googleId, requestBody: { photoData } });

@@ -1,8 +1,11 @@
+import { Field, InputType } from '@nestjs/graphql';
 import { Expose } from 'class-transformer';
 import { IsNotEmpty, IsString } from 'class-validator';
 
-export class DeleteGoogleUserDto {
+@InputType()
+export class SyncGsuiteUserInput {
   @Expose()
+  @Field()
   @IsString()
   @IsNotEmpty()
   googleId: string;

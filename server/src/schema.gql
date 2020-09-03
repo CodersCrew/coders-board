@@ -232,7 +232,7 @@ type Query {
 }
 
 type Mutation {
-  syncGsuiteUser(data: SyncGoogleUserInput!): Boolean!
+  syncGsuiteUser(data: SyncGsuiteUserInput!): Boolean!
   initialSyncSlackUser(data: InitialSyncSlackUserInput!): User!
   syncSlackUser(data: SyncSlackUserInput!): User!
   createUser(data: CreateUserInput!): User!
@@ -272,7 +272,7 @@ type Mutation {
   deleteSuccess(id: ID!): Boolean!
 }
 
-input SyncGoogleUserInput {
+input SyncGsuiteUserInput {
   googleId: String!
 }
 

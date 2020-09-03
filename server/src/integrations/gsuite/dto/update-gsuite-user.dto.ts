@@ -1,7 +1,7 @@
 import { Expose } from 'class-transformer';
 import { IsEmail, IsLowercase, IsNotEmpty, IsString, Matches } from 'class-validator';
 
-export class UpdateGoogleUserDto {
+export class UpdateGsuiteUserDto {
   @Expose()
   @IsString()
   @IsNotEmpty()
