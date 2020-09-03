@@ -1,7 +1,9 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import { generate as generatePassword } from 'generate-password';
 
 import { brackets, resolveAsyncRelation } from '../common/utils';
 import { CloudinaryService, GsuiteService, SlackService } from '../integrations';
+import { MailerService } from '../services/mailer/mailer.service';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
 import { UpdateUserInput } from './dto/update-user.input';
@@ -14,6 +16,7 @@ export class UsersService {
     private readonly gsuiteService: GsuiteService,
     private readonly slackService: SlackService,
     private readonly cloudinaryService: CloudinaryService,
+    private readonly mailerService: MailerService,
   ) {}
 
   getGuilds = resolveAsyncRelation(this.userRepository, 'guilds');
@@ -58,16 +61,20 @@ export class UsersService {
   }
 
   async create(input: CreateUserInput) {
-    const { id: googleId } = await this.gsuiteService.createGoogleUser(input);
+    const password = generatePassword({ numbers: true });
 
-    try {
-      const fullName = `${input.firstName} ${input.lastName}`;
-      const user = await this.userRepository.save({ ...input, fullName, googleId });
-      return user;
-    } catch (ex) {
-      await this.gsuiteService.deleteGoogleUser({ googleId });
-      throw ex;
-    }
+    const { id: googleId } = await this.gsuiteService.createGoogleUser({ ...input, password });
+
+    const fullName = `${input.firstName} ${input.lastName}`;
+    const user = await this.userRepository.save({ ...input, fullName, googleId });
+
+    await this.mailerService.sendInvitationEmail({
+      to: input.recoveryEmail,
+      email: input.primaryEmail,
+      password,
+    });
+
+    return user;
   }
 
   async update({ id, ...input }: UpdateUserInput) {

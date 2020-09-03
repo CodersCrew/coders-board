@@ -7,9 +7,9 @@ import { UserRepository } from '../../users/user.repository';
 import {
   GetSlackUserInput,
   InitialSyncSlackUserInput,
-  SendSlackMessageInput,
+  SendSlackMessageDto,
   SyncSlackUserInput,
-  UpdateSlackUserInput,
+  UpdateSlackUserDto,
 } from './dto';
 import { ChatPostMessageResult } from './interfaces/chat-post-message-result.interface';
 import { UsersInfoResult } from './interfaces/user-info-result.interface';
@@ -85,8 +85,8 @@ export class SlackService {
     return slackUser;
   }
 
-  private async updateSlackUser(input: UpdateSlackUserInput) {
-    const { slackId, ...slackUserInput } = await transformAndValidate(UpdateSlackUserInput, input);
+  private async updateSlackUser(input: UpdateSlackUserDto) {
+    const { slackId, ...slackUserInput } = await transformAndValidate(UpdateSlackUserDto, input);
 
     await slackRequest<UsersInfoResult>(
       this.slackAdmin.users.profile.set({
@@ -102,8 +102,8 @@ export class SlackService {
     return true;
   }
 
-  async sendSlackMessage(input: SendSlackMessageInput): Promise<SlackMessage> {
-    const { channelId, text } = await transformAndValidate(SendSlackMessageInput, input);
+  async sendSlackMessage(input: SendSlackMessageDto): Promise<SlackMessage> {
+    const { channelId, text } = await transformAndValidate(SendSlackMessageDto, input);
 
     const { message } = await slackRequest<ChatPostMessageResult>(
       this.slackBot.chat.postMessage({ channel: channelId, text }),

@@ -36,4 +36,7 @@ export type EnvVariables = {
 
   // cloudinary
   CLOUDINARY_URL: string;
+
+  // sendgrid
+  SENDGRID_KEY: string;
 };

@@ -10,10 +10,10 @@ export type SlackUsersQuery = {
 };
 
 export type SyncSlackUserMutationVariables = Types.Exact<{
-  data: Types.SyncSlackUserInput;
+  data: Types.InitialSyncSlackUserInput;
 }>;
 
-export type SyncSlackUserMutation = { syncSlackUser: Pick<Types.User, 'id'> };
+export type SyncSlackUserMutation = { initialSyncSlackUser: Pick<Types.User, 'id'> };
 
 export const SlackUsersDocument = gql`
   query slackUsers {
@@ -54,8 +54,8 @@ export type SlackUsersQueryHookResult = ReturnType<typeof useSlackUsersQuery>;
 export type SlackUsersLazyQueryHookResult = ReturnType<typeof useSlackUsersLazyQuery>;
 export type SlackUsersQueryResult = Apollo.QueryResult<SlackUsersQuery, SlackUsersQueryVariables>;
 export const SyncSlackUserDocument = gql`
-  mutation syncSlackUser($data: SyncSlackUserInput!) {
-    syncSlackUser(data: $data) {
+  mutation syncSlackUser($data: InitialSyncSlackUserInput!) {
+    initialSyncSlackUser(data: $data) {
       id
     }
   }

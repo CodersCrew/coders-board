@@ -1,4 +1,4 @@
-import { GraphQLOperations, SyncSlackUserInput } from '@/typings/graphql';
+import { GraphQLOperations, InitialSyncSlackUserInput } from '@/typings/graphql';
 
 import { useSyncSlackUserMutation } from './slack.apollo';
 
@@ -7,9 +7,9 @@ export const useSlackMutations = () => {
     refetchQueries: [GraphQLOperations.Query.users],
   };
 
-  const [syncSlackUser] = useSyncSlackUserMutation(mutationConfig);
+  const [initialSyncSlackUser] = useSyncSlackUserMutation(mutationConfig);
 
   return {
-    syncSlackUser: (data: SyncSlackUserInput) => syncSlackUser({ variables: { data } }),
+    initialSyncSlackUser: (data: InitialSyncSlackUserInput) => initialSyncSlackUser({ variables: { data } }),
   };
 };

@@ -15,8 +15,8 @@ export class GsuiteResolver {
     return this.gsuiteService.findAllGoogleUsers();
   }
 
-  @Mutation(returns => Boolean, { name: 'syncGsuiteUser' })
-  syncUser(@Args('data') input: SyncGoogleUserInput): Promise<boolean> {
+  @Mutation(returns => Boolean)
+  syncGsuiteUser(@Args('data') input: SyncGoogleUserInput): Promise<boolean> {
     return this.gsuiteService.syncGoogleUser(input);
   }
 }

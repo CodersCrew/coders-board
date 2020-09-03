@@ -41,7 +41,7 @@ const useUserModal = ({ data, ...modalProps }: UserModalProps) => {
     } else {
       const mutation = data
         ? updateUser({ ...values, primaryEmail, id: data.id })
-        : createUser({ ...values, primaryEmail, password: 'Li837jdk3JKP' });
+        : createUser({ ...values, primaryEmail });
 
       runMutation({
         mutation,

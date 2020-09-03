@@ -1,3 +1,4 @@
-export * from './create-google-user.input';
-export * from './update-google-user-image.input';
-export * from './update-google-user.input';
+export * from './create-google-user.dto';
+export * from './update-google-user-image.dto';
+export * from './delete-google-user.dto';
+export * from './update-google-user.dto';

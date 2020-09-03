@@ -6,8 +6,7 @@ import fetch from 'node-fetch';
 import { env } from '../../common/env';
 import { pick, transformAndValidate } from '../../common/utils';
 import { UserRepository } from '../../users/user.repository';
-import { CreateGoogleUserInput, UpdateGoogleUserImageInput, UpdateGoogleUserInput } from './dto';
-import { DeleteGoogleUserInput } from './dto/delete-google-user.input';
+import { CreateGoogleUserDto, DeleteGoogleUserDto, UpdateGoogleUserDto, UpdateGoogleUserImageDto } from './dto';
 import { SyncGoogleUserInput } from './dto/sync-google-user.input';
 import { GsuiteUser } from './gsuite-user.model';
 
@@ -72,8 +71,8 @@ export class GsuiteService {
       );
   }
 
-  async createGoogleUser(input: CreateGoogleUserInput) {
-    const googleUserInput = await transformAndValidate(CreateGoogleUserInput, input);
+  async createGoogleUser(input: CreateGoogleUserDto) {
+    const googleUserInput = await transformAndValidate(CreateGoogleUserDto, input);
     const password = createHash('md5').update(googleUserInput.password).digest('hex');
 
     const response = await this.admin.users.insert({
@@ -109,8 +108,8 @@ export class GsuiteService {
     return true;
   }
 
-  private async updateGoogleUser(input: UpdateGoogleUserInput) {
-    const { googleId, ...googleUserInput } = await transformAndValidate(UpdateGoogleUserInput, input);
+  private async updateGoogleUser(input: UpdateGoogleUserDto) {
+    const { googleId, ...googleUserInput } = await transformAndValidate(UpdateGoogleUserDto, input);
 
     await this.admin.users.update({
       userKey: googleId,
@@ -128,15 +127,15 @@ export class GsuiteService {
     return true;
   }
 
-  async deleteGoogleUser(input: DeleteGoogleUserInput) {
-    const { googleId } = await transformAndValidate(DeleteGoogleUserInput, input);
+  async deleteGoogleUser(input: DeleteGoogleUserDto) {
+    const { googleId } = await transformAndValidate(DeleteGoogleUserDto, input);
     await this.admin.users.delete({ userKey: googleId });
 
     return true;
   }
 
-  async updateGoogleUserImage(input: UpdateGoogleUserImageInput) {
-    const { googleId, imageUrl } = await transformAndValidate(UpdateGoogleUserImageInput, input);
+  async updateGoogleUserImage(input: UpdateGoogleUserImageDto) {
+    const { googleId, imageUrl } = await transformAndValidate(UpdateGoogleUserImageDto, input);
     const photoData = await imageToBase64(imageUrl);
 
     await this.admin.users.photos.update({ userKey: googleId, requestBody: { photoData } });

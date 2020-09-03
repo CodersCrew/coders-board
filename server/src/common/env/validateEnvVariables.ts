@@ -45,6 +45,9 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
 
     // cloudinary
     CLOUDINARY_URL: Joi.string().required(),
+
+    // sendgrid
+    SENDGRID_KEY: Joi.string().required(),
   });
 
   const { error, value: validatedEnvConfig } = envVarsSchema.validate(env, {

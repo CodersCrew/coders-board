@@ -525,7 +525,6 @@ export type SyncSlackUserInput = {
 export type CreateUserInput = {
   firstName: Scalars['String'];
   lastName: Scalars['String'];
-  password: Scalars['String'];
   primaryEmail: Scalars['String'];
   recoveryEmail: Scalars['String'];
 };
