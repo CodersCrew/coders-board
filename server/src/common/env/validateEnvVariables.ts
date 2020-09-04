@@ -8,7 +8,7 @@ dotenv.config();
 
 export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
   const envVarsSchema: Joi.ObjectSchema<EnvVariables> = Joi.object({
-    NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
+    NODE_ENV: Joi.string().valid('development', 'test', 'staging', 'production').default('development'),
 
     PORT: Joi.number().required(),
     CLIENT_URL: Joi.string().allow('').default(''),
@@ -16,7 +16,6 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
     // database
     DATABASE_SYNC: Joi.boolean().required(),
     DATABASE_URL: Joi.string().required(),
-    DATABASE_SSL: Joi.boolean().required(),
 
     // jwt
     JWT_SECRET: Joi.string().required(),
@@ -26,7 +25,6 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
 
     // heroku variables
     NPM_CONFIG_PRODUCTION: requiredIn('production', { joiType: Joi.boolean(), defaultValue: false }),
-    PROJECT_PATH: requiredIn('production', { joiType: Joi.string(), defaultValue: 'server' }),
 
     // google auth
     GOOGLE_CLIENT_ID: Joi.string().required(),
@@ -50,9 +48,7 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
     SENDGRID_KEY: Joi.string().required(),
   });
 
-  const { error, value: validatedEnvConfig } = envVarsSchema.validate(env, {
-    stripUnknown: true,
-  });
+  const { error, value: validatedEnvConfig } = envVarsSchema.validate(env, { stripUnknown: true });
 
   if (error) {
     throw new Error(`Config validation error: ${error.message}`);

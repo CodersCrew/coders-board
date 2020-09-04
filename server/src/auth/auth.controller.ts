@@ -26,7 +26,7 @@ export class AuthController {
 
       res
         .status(200)
-        .cookie(TOKEN_COOKIE_NAME, TOKEN_PREFIX + token, {
+        .cookie(TOKEN_COOKIE_NAME, TOKEN_PREFIX + ' ' + token, {
           expires: new Date(Date.now() + 24 * 3600000),
           httpOnly: true,
           secure: true,

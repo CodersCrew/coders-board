@@ -1,5 +1,5 @@
 export type EnvVariables = {
-  NODE_ENV: 'development' | 'test' | 'production';
+  NODE_ENV: 'development' | 'test' | 'staging' | 'production';
 
   PORT: number;
   CLIENT_URL: string;
@@ -7,7 +7,6 @@ export type EnvVariables = {
   // database
   DATABASE_SYNC: boolean;
   DATABASE_URL: string;
-  DATABASE_SSL: boolean;
 
   // jwt
   JWT_SECRET: string;
@@ -17,7 +16,6 @@ export type EnvVariables = {
 
   // heroku variables
   NPM_CONFIG_PRODUCTION: boolean;
-  PROJECT_PATH: string;
 
   // google auth
   GOOGLE_CLIENT_ID: string;

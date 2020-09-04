@@ -1,6 +1,7 @@
 import { ValidationPipe } from '@nestjs/common';
 import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.interface';
 import { NestFactory, Reflector } from '@nestjs/core';
+import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
 import { readFileSync } from 'fs';
 import path from 'path';
@@ -9,7 +10,7 @@ import { AppModule } from './app.module';
 import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { env } from './common/env';
 import { IsAuthorized } from './common/guards';
-import { helmetMiddleware } from './common/middlewares';
+import { helmetMiddleware, rateLimitMiddleware } from './common/middlewares';
 
 const httpsOptions: HttpsOptions =
   env.NODE_ENV === 'development'
@@ -29,11 +30,14 @@ const validationPipe = new ValidationPipe({
 });
 
 async function bootstrap() {
-  const app = await NestFactory.create(AppModule, { httpsOptions });
+  const app = await NestFactory.create<NestExpressApplication>(AppModule, { httpsOptions });
 
+  app.set('trust proxy', 1);
   app.enableCors({ credentials: true, origin: false });
+
   app.use(cookieParser(env.COOKIE_SECRET));
   app.use(helmetMiddleware);
+  app.use(rateLimitMiddleware);
 
   const reflector = app.get(Reflector);
 

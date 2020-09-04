@@ -9,14 +9,14 @@ export type JWTPayload = {
 };
 
 const cookieExtractor = req => {
-  let token = null;
+  let token: string | null = null;
 
   if (req && req.signedCookies) {
     token = req.signedCookies[env.TOKEN_COOKIE_NAME];
   }
 
   if (token) {
-    token = token.replace(env.TOKEN_PREFIX, '');
+    token = token.replace(env.TOKEN_PREFIX, '').trim();
   }
 
   return token;
