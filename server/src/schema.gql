@@ -175,7 +175,7 @@ type User {
   phone: String
   image: String!
   thumbnail: String!
-  googleId: String
+  googleId: String!
   slackId: String
   status: UserStatus!
   role: UserRole!
@@ -196,30 +196,12 @@ enum UserRole {
   USER
 }
 
-type GsuiteUser {
-  id: String!
-  firstName: String!
-  lastName: String!
-  primaryEmail: String!
-  recoveryEmail: String
-}
-
-type SlackUser {
-  id: String!
-  fullName: String!
-  primaryEmail: String!
-  image: String!
-  thumbnail: String!
-}
-
 type Query {
   clans(search: String, guildId: ID): [Clan!]!
   guildMembers(guildId: ID!): [GuildMember!]!
   guildPositions(guildId: ID!, memberId: String): [GuildPosition!]!
   guilds(search: String): [Guild!]!
   guild(id: ID!): Guild!
-  gsuiteUsers: [GsuiteUser!]!
-  slackUsers: [SlackUser!]!
   positions(search: String, guildId: ID, clanId: ID): [Position!]!
   chapters(search: String, squadId: ID): [Chapter!]!
   squadMembers(squadId: ID!, archived: Boolean): [SquadMember!]!
@@ -247,9 +229,7 @@ type Mutation {
   createGuild(data: CreateGuildInput!): Guild!
   updateGuild(data: UpdateGuildInput!): Guild!
   deleteGuild(id: ID!): Boolean!
-  syncGsuiteUser(data: SyncGsuiteUserInput!): Boolean!
   initialSyncSlackUser(data: InitialSyncSlackUserInput!): User!
-  syncSlackUser(data: SyncSlackUserInput!): User!
   createPosition(data: CreatePositionInput!): Position!
   updatePosition(data: UpdatePositionInput!): Position!
   deletePosition(id: ID!): Boolean!
@@ -342,16 +322,8 @@ input UpdateGuildInput {
   id: ID!
 }
 
-input SyncGsuiteUserInput {
-  googleId: String!
-}
-
 input InitialSyncSlackUserInput {
   userId: String!
-  slackId: String!
-}
-
-input SyncSlackUserInput {
   slackId: String!
 }
 

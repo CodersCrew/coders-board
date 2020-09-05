@@ -30,7 +30,7 @@ export const UserMenu: CFC<UserMenuProps> = ({ collapsed }) => {
       <LinkMenuItem key="profile" icon={<UserOutlined />} to={`/app/profile/${authorizedUser.id}`}>
         My profile
       </LinkMenuItem>
-      <Menu.Item key="logout" onClick={authorizedUser.logout} icon={<LogoutOutlined />}>
+      <Menu.Item key="logout" onClick={authorizedUser.signOut} icon={<LogoutOutlined />}>
         Logout
       </Menu.Item>
     </Menu>

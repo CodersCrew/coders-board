@@ -18,8 +18,6 @@ import Successes from '@/pages/app/Successes';
 import Teams from '@/pages/app/Teams';
 import Users from '@/pages/app/Users';
 import Login from '@/pages/Login';
-import LoginFailure from '@/pages/LoginFailure';
-import LoginSuccess from '@/pages/LoginSuccess';
 import MainLayout from '@/pages/MainLayout';
 import NotFound from '@/pages/NotFound';
 
@@ -31,8 +29,8 @@ export const routes: Routes = [
     element: <MainLayout />,
     children: [
       { path: 'login', element: <Login /> },
-      { path: 'login/success', element: <LoginSuccess /> },
-      { path: 'login/failure', element: <LoginFailure /> },
+      { path: 'login/success', element: <Navigate to="/app" /> },
+      { path: 'login/failure', element: <Navigate to="/login" /> },
       {
         path: 'app',
         element: <AppLayout />,

@@ -95,7 +95,7 @@ module.exports = {
         extensions: ['.js', '.ts', '.tsx'],
       },
       typescript: {
-        directory: path.resolve(__dirname, 'tsconfig.json'),
+        project: path.resolve(__dirname, 'tsconfig.json'),
       },
     },
   },

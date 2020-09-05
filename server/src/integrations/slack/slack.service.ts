@@ -49,6 +49,16 @@ export class SlackService {
 
   async initialSyncSlackUser(input: InitialSyncSlackUserInput) {
     const { slackId, userId } = await transformAndValidate(InitialSyncSlackUserInput, input);
+
+    if (env.NODE_ENV !== 'production') {
+      const user = await this.userRepository.findOneOrFail(userId);
+
+      return this.userRepository.save({
+        ...user,
+        slackId: 'mocked',
+      });
+    }
+
     const slackUser = await this.getSlackUser({ slackId });
 
     if (slackUser.deleted) {

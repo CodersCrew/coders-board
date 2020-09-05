@@ -67,26 +67,27 @@ export class UsersService {
     const fullName = `${input.firstName} ${input.lastName}`;
 
     let user: User;
+    let password: string;
 
     if (env.NODE_ENV === 'production') {
-      const password = generatePassword({ numbers: true });
+      password = generatePassword({ numbers: true });
       const { id: googleId } = await this.gsuiteService.createGsuiteUser({ ...input, password });
 
       user = await this.userRepository.save({ ...input, fullName, googleId, password: null });
-
-      await this.mailerService.sendInvitationEmail({
-        to: input.recoveryEmail,
-        email: input.primaryEmail,
-        password,
-      });
     } else {
       if (!input.password?.trim()) {
         throw new BadRequestException('User password is a required field for all non-production environments');
       }
 
-      const password = await bcrypt.hash(input.password, 10);
-      user = await this.userRepository.save({ ...input, fullName, password });
+      password = await bcrypt.hash(input.password, 10);
+      user = await this.userRepository.save({ ...input, fullName, password, googleId: 'mocked' });
     }
+
+    await this.mailerService.sendInvitationEmail({
+      to: input.recoveryEmail,
+      email: input.primaryEmail,
+      password,
+    });
 
     return user;
   }

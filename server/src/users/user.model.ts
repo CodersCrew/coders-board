@@ -67,9 +67,9 @@ export class User extends BaseModel {
   @Column({ default: EMPTY_USER_THUMBNAIL })
   thumbnail: string;
 
-  @Field({ nullable: true })
-  @Column({ unique: true, nullable: true })
-  googleId?: string;
+  @Field()
+  @Column({ unique: true })
+  googleId: string;
 
   @Field({ nullable: true })
   @Column({ nullable: true, unique: true })

@@ -187,10 +187,11 @@ export type User = {
   fullName: Scalars['String'];
   primaryEmail: Scalars['String'];
   recoveryEmail: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
   phone?: Maybe<Scalars['String']>;
   image: Scalars['String'];
   thumbnail: Scalars['String'];
-  googleId?: Maybe<Scalars['String']>;
+  googleId: Scalars['String'];
   slackId?: Maybe<Scalars['String']>;
   status: UserStatus;
   role: UserRole;
@@ -211,28 +212,7 @@ export enum UserRole {
   User = 'USER',
 }
 
-export type GsuiteUser = {
-  id: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  primaryEmail: Scalars['String'];
-  recoveryEmail?: Maybe<Scalars['String']>;
-};
-
-export type SlackUser = {
-  id: Scalars['String'];
-  fullName: Scalars['String'];
-  primaryEmail: Scalars['String'];
-  image: Scalars['String'];
-  thumbnail: Scalars['String'];
-};
-
 export type Query = {
-  gsuiteUsers: Array<GsuiteUser>;
-  slackUsers: Array<SlackUser>;
-  user: User;
-  me: User;
-  users: Array<User>;
   clans: Array<Clan>;
   guildMembers: Array<GuildMember>;
   guildPositions: Array<GuildPosition>;
@@ -245,16 +225,9 @@ export type Query = {
   squads: Array<Squad>;
   squad: Squad;
   successes: Array<Success>;
-};
-
-export type QueryUserArgs = {
-  id: Scalars['ID'];
-};
-
-export type QueryUsersArgs = {
-  search?: Maybe<Scalars['String']>;
-  role?: Maybe<UserRole>;
-  ids?: Maybe<Array<Scalars['ID']>>;
+  user: User;
+  me: User;
+  users: Array<User>;
 };
 
 export type QueryClansArgs = {
@@ -313,13 +286,18 @@ export type QuerySuccessesArgs = {
   type?: Maybe<SuccessType>;
 };
 
+export type QueryUserArgs = {
+  id: Scalars['ID'];
+};
+
+export type QueryUsersArgs = {
+  search?: Maybe<Scalars['String']>;
+  role?: Maybe<UserRole>;
+  ids?: Maybe<Array<Scalars['ID']>>;
+};
+
 export type Mutation = {
-  syncGsuiteUser: Scalars['Boolean'];
-  initialSyncSlackUser: User;
-  syncSlackUser: User;
-  createUser: User;
-  updateUser: User;
-  deleteUser: Scalars['Boolean'];
+  signIn: Scalars['Boolean'];
   signOut: Scalars['Boolean'];
   createClan: Clan;
   updateClan: Clan;
@@ -333,6 +311,7 @@ export type Mutation = {
   createGuild: Guild;
   updateGuild: Guild;
   deleteGuild: Scalars['Boolean'];
+  initialSyncSlackUser: User;
   createPosition: Position;
   updatePosition: Position;
   deletePosition: Scalars['Boolean'];
@@ -352,30 +331,13 @@ export type Mutation = {
   createSuccess: Success;
   updateSuccess: Success;
   deleteSuccess: Scalars['Boolean'];
+  createUser: User;
+  updateUser: User;
+  deleteUser: Scalars['Boolean'];
 };
 
-export type MutationSyncGsuiteUserArgs = {
-  data: SyncGsuiteUserInput;
-};
-
-export type MutationInitialSyncSlackUserArgs = {
-  data: InitialSyncSlackUserInput;
-};
-
-export type MutationSyncSlackUserArgs = {
-  data: SyncSlackUserInput;
-};
-
-export type MutationCreateUserArgs = {
-  data: CreateUserInput;
-};
-
-export type MutationUpdateUserArgs = {
-  data: UpdateUserInput;
-};
-
-export type MutationDeleteUserArgs = {
-  id: Scalars['ID'];
+export type MutationSignInArgs = {
+  data: SignInInput;
 };
 
 export type MutationCreateClanArgs = {
@@ -427,6 +389,10 @@ export type MutationUpdateGuildArgs = {
 
 export type MutationDeleteGuildArgs = {
   id: Scalars['ID'];
+};
+
+export type MutationInitialSyncSlackUserArgs = {
+  data: InitialSyncSlackUserInput;
 };
 
 export type MutationCreatePositionArgs = {
@@ -509,32 +475,21 @@ export type MutationDeleteSuccessArgs = {
   id: Scalars['ID'];
 };
 
-export type SyncGsuiteUserInput = {
-  googleId: Scalars['String'];
+export type MutationCreateUserArgs = {
+  data: CreateUserInput;
 };
 
-export type InitialSyncSlackUserInput = {
-  userId: Scalars['String'];
-  slackId: Scalars['String'];
+export type MutationUpdateUserArgs = {
+  data: UpdateUserInput;
 };
 
-export type SyncSlackUserInput = {
-  slackId: Scalars['String'];
+export type MutationDeleteUserArgs = {
+  id: Scalars['ID'];
 };
 
-export type CreateUserInput = {
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
+export type SignInInput = {
   primaryEmail: Scalars['String'];
-  recoveryEmail: Scalars['String'];
-};
-
-export type UpdateUserInput = {
-  id: Scalars['String'];
-  firstName: Scalars['String'];
-  lastName: Scalars['String'];
-  primaryEmail: Scalars['String'];
-  recoveryEmail: Scalars['String'];
+  password: Scalars['String'];
 };
 
 export type CreateClanInput = {
@@ -598,6 +553,11 @@ export type UpdateGuildInput = {
   color: Scalars['String'];
   description?: Maybe<Scalars['String']>;
   id: Scalars['ID'];
+};
+
+export type InitialSyncSlackUserInput = {
+  userId: Scalars['String'];
+  slackId: Scalars['String'];
 };
 
 export type CreatePositionInput = {
@@ -692,6 +652,22 @@ export type UpdateSuccessInput = {
   id: Scalars['ID'];
 };
 
+export type CreateUserInput = {
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  primaryEmail: Scalars['String'];
+  recoveryEmail: Scalars['String'];
+  password?: Maybe<Scalars['String']>;
+};
+
+export type UpdateUserInput = {
+  id: Scalars['String'];
+  firstName: Scalars['String'];
+  lastName: Scalars['String'];
+  primaryEmail: Scalars['String'];
+  recoveryEmail: Scalars['String'];
+};
+
 export const GraphQLOperations = {
   Query: {
     clans: 'clans',
@@ -702,7 +678,6 @@ export const GraphQLOperations = {
     guildMembers: 'guildMembers',
     guildMembersIds: 'guildMembersIds',
     guildPositions: 'guildPositions',
-    slackUsers: 'slackUsers',
     positions: 'positions',
     simplePositions: 'simplePositions',
     chapters: 'chapters',
@@ -727,7 +702,6 @@ export const GraphQLOperations = {
     updateGuildPosition: 'updateGuildPosition',
     deleteGuildPosition: 'deleteGuildPosition',
     initialSyncSlackUser: 'initialSyncSlackUser',
-    syncSlackUser: 'syncSlackUser',
     createPosition: 'createPosition',
     updatePosition: 'updatePosition',
     deletePosition: 'deletePosition',
@@ -745,6 +719,7 @@ export const GraphQLOperations = {
     updateSuccess: 'updateSuccess',
     deleteSuccess: 'deleteSuccess',
     signOut: 'signOut',
+    signIn: 'signIn',
     createUser: 'createUser',
     updateUser: 'updateUser',
     deleteUser: 'deleteUser',

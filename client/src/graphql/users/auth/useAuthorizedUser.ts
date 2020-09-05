@@ -25,7 +25,7 @@ export const useAuthorizedUser = () => {
     }
   });
 
-  const logout = async () => {
+  const handleSignOut = async () => {
     await signOut();
     await client.clearStore();
     navigate('/login', { state: { logout: true } });
@@ -38,6 +38,6 @@ export const useAuthorizedUser = () => {
     isAdmin: isAdminToggle.on,
     teamRoles,
     refetch,
-    logout,
+    signOut: handleSignOut,
   };
 };

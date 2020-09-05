@@ -1,21 +1,5 @@
-query slackUsers {
-	slackUsers {
-    id
-    fullName
-    primaryEmail
-    image
-    thumbnail
-  }
-}
-
 mutation initialSyncSlackUser($data: InitialSyncSlackUserInput!) {
   initialSyncSlackUser(data: $data) {
-    id
-  }
-}
-
-mutation syncSlackUser($data: SyncSlackUserInput!) {
-  syncSlackUser(data: $data) {
     id
   }
 }
