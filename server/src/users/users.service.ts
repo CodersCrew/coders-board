@@ -4,8 +4,8 @@ import { generate as generatePassword } from 'generate-password';
 
 import { env } from '../common/env';
 import { brackets, resolveAsyncRelation } from '../common/utils';
-import { CloudinaryService, GsuiteService, SlackService } from '../integrations';
-import { MailerService } from '../services/mailer/mailer.service';
+import { GsuiteService, SlackService } from '../integrations';
+import { CloudinaryService, MailerService } from '../services';
 import { CreateUserInput } from './dto/create-user.input';
 import { GetUsersArgs } from './dto/get-users.args';
 import { UpdateUserInput } from './dto/update-user.input';

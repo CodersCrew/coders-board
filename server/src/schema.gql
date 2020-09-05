@@ -213,16 +213,13 @@ type SlackUser {
 }
 
 type Query {
-  gsuiteUsers: [GsuiteUser!]!
-  slackUsers: [SlackUser!]!
-  user(id: ID!): User!
-  me: User!
-  users(search: String, role: UserRole, ids: [ID!]): [User!]!
   clans(search: String, guildId: ID): [Clan!]!
   guildMembers(guildId: ID!): [GuildMember!]!
   guildPositions(guildId: ID!, memberId: String): [GuildPosition!]!
   guilds(search: String): [Guild!]!
   guild(id: ID!): Guild!
+  gsuiteUsers: [GsuiteUser!]!
+  slackUsers: [SlackUser!]!
   positions(search: String, guildId: ID, clanId: ID): [Position!]!
   chapters(search: String, squadId: ID): [Chapter!]!
   squadMembers(squadId: ID!, archived: Boolean): [SquadMember!]!
@@ -230,15 +227,12 @@ type Query {
   squads(search: String): [Squad!]!
   squad(id: ID!): Squad!
   successes(search: String, type: SuccessType): [Success!]!
+  user(id: ID!): User!
+  me: User!
+  users(search: String, role: UserRole, ids: [ID!]): [User!]!
 }
 
 type Mutation {
-  syncGsuiteUser(data: SyncGsuiteUserInput!): Boolean!
-  initialSyncSlackUser(data: InitialSyncSlackUserInput!): User!
-  syncSlackUser(data: SyncSlackUserInput!): User!
-  createUser(data: CreateUserInput!): User!
-  updateUser(data: UpdateUserInput!): User!
-  deleteUser(id: ID!): Boolean!
   signIn(data: SignInInput!): Boolean!
   signOut: Boolean!
   createClan(data: CreateClanInput!): Clan!
@@ -253,6 +247,9 @@ type Mutation {
   createGuild(data: CreateGuildInput!): Guild!
   updateGuild(data: UpdateGuildInput!): Guild!
   deleteGuild(id: ID!): Boolean!
+  syncGsuiteUser(data: SyncGsuiteUserInput!): Boolean!
+  initialSyncSlackUser(data: InitialSyncSlackUserInput!): User!
+  syncSlackUser(data: SyncSlackUserInput!): User!
   createPosition(data: CreatePositionInput!): Position!
   updatePosition(data: UpdatePositionInput!): Position!
   deletePosition(id: ID!): Boolean!
@@ -272,35 +269,9 @@ type Mutation {
   createSuccess(data: CreateSuccessInput!): Success!
   updateSuccess(data: UpdateSuccessInput!): Success!
   deleteSuccess(id: ID!): Boolean!
-}
-
-input SyncGsuiteUserInput {
-  googleId: String!
-}
-
-input InitialSyncSlackUserInput {
-  userId: String!
-  slackId: String!
-}
-
-input SyncSlackUserInput {
-  slackId: String!
-}
-
-input CreateUserInput {
-  firstName: String!
-  lastName: String!
-  primaryEmail: String!
-  recoveryEmail: String!
-  password: String!
-}
-
-input UpdateUserInput {
-  id: String!
-  firstName: String!
-  lastName: String!
-  primaryEmail: String!
-  recoveryEmail: String!
+  createUser(data: CreateUserInput!): User!
+  updateUser(data: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
 }
 
 input SignInInput {
@@ -369,6 +340,19 @@ input UpdateGuildInput {
   color: String!
   description: String = ""
   id: ID!
+}
+
+input SyncGsuiteUserInput {
+  googleId: String!
+}
+
+input InitialSyncSlackUserInput {
+  userId: String!
+  slackId: String!
+}
+
+input SyncSlackUserInput {
+  slackId: String!
 }
 
 input CreatePositionInput {
@@ -461,4 +445,20 @@ input UpdateSuccessInput {
   type: SuccessType!
   usersIds: [ID!]!
   id: ID!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  primaryEmail: String!
+  recoveryEmail: String!
+  password: String
+}
+
+input UpdateUserInput {
+  id: String!
+  firstName: String!
+  lastName: String!
+  primaryEmail: String!
+  recoveryEmail: String!
 }

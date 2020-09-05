@@ -1,11 +1,10 @@
-import { Global, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import sendgridMail from '@sendgrid/mail';
 
 import { env } from '../../common/env';
 import { transformAndValidate } from '../../common/utils';
 import { InvitationEmailDto } from './dto/invitation-email.dto';
 
-@Global()
 @Injectable()
 export class MailerService {
   constructor() {
