@@ -1,7 +1,8 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
+import bcrypt from 'bcryptjs';
 import { generate as generatePassword } from 'generate-password';
-import { env } from 'src/common/env';
 
+import { env } from '../common/env';
 import { brackets, resolveAsyncRelation } from '../common/utils';
 import { CloudinaryService, GsuiteService, SlackService } from '../integrations';
 import { MailerService } from '../services/mailer/mailer.service';
@@ -63,24 +64,29 @@ export class UsersService {
   }
 
   async create(input: CreateUserInput) {
-    const password = generatePassword({ numbers: true });
     const fullName = `${input.firstName} ${input.lastName}`;
 
     let user: User;
 
     if (env.NODE_ENV === 'production') {
+      const password = generatePassword({ numbers: true });
       const { id: googleId } = await this.gsuiteService.createGsuiteUser({ ...input, password });
 
-      user = await this.userRepository.save({ ...input, fullName, googleId });
-    } else {
-      user = await this.userRepository.save({ ...input, fullName });
-    }
+      user = await this.userRepository.save({ ...input, fullName, googleId, password: null });
 
-    await this.mailerService.sendInvitationEmail({
-      to: input.recoveryEmail,
-      email: input.primaryEmail,
-      password,
-    });
+      await this.mailerService.sendInvitationEmail({
+        to: input.recoveryEmail,
+        email: input.primaryEmail,
+        password,
+      });
+    } else {
+      if (!input.password?.trim()) {
+        throw new BadRequestException('User password is a required field for all non-production environments');
+      }
+
+      const password = await bcrypt.hash(input.password, 10);
+      user = await this.userRepository.save({ ...input, fullName, password });
+    }
 
     return user;
   }

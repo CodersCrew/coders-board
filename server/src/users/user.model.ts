@@ -1,4 +1,5 @@
 import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Exclude } from 'class-transformer';
 import { Column, Entity, ManyToMany, OneToMany } from 'typeorm';
 
 import { EMPTY_USER_IMAGE, EMPTY_USER_THUMBNAIL } from '../common/constants';
@@ -51,6 +52,11 @@ export class User extends BaseModel {
 
   @Field({ nullable: true })
   @Column({ nullable: true })
+  @Exclude()
+  password?: string;
+
+  @Field({ nullable: true })
+  @Column({ nullable: true })
   phone?: string;
 
   @Field()
@@ -62,7 +68,7 @@ export class User extends BaseModel {
   thumbnail: string;
 
   @Field({ nullable: true })
-  @Column({ unique: true })
+  @Column({ unique: true, nullable: true })
   googleId?: string;
 
   @Field({ nullable: true })

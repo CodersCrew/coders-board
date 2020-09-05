@@ -40,10 +40,7 @@ export class GsuiteService {
         client_email: env.GOOGLE_CLIENT_EMAIL,
         private_key: env.GOOGLE_PRIVATE_KEY,
       },
-      scopes: [
-        'https://www.googleapis.com/auth/admin.directory.user',
-        'https://www.googleapis.com/auth/admin.directory.group',
-      ],
+      scopes: ['https://www.googleapis.com/auth/admin.directory.user'],
       projectId: env.GOOGLE_PROJECT_ID,
     });
 

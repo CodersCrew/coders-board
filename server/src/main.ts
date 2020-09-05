@@ -7,9 +7,8 @@ import { readFileSync } from 'fs';
 import path from 'path';
 
 import { AppModule } from './app.module';
-import { JwtAuthGuard } from './auth/jwt-auth.guard';
 import { env } from './common/env';
-import { IsAuthorized } from './common/guards';
+import { IsAuthorized, JwtAuthGuard } from './common/guards';
 import { helmetMiddleware, rateLimitMiddleware } from './common/middlewares';
 
 const httpsOptions: HttpsOptions =

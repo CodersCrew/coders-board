@@ -17,7 +17,7 @@ export class CloudinaryService {
     const image = typeof fileOrPath === 'string' ? fileOrPath : toBase64(fileOrPath);
 
     const data = await cloudinary.uploader.upload(image, {
-      folder: `codersboard-development/users/images`,
+      folder: `codersboard-${env.NODE_ENV}/users/images`,
       allowed_formats: ['jpg', 'png'],
       overwrite: true,
       unique_filename: false,
@@ -28,7 +28,7 @@ export class CloudinaryService {
   }
 
   async deleteUserImage(fileName: string): Promise<string> {
-    const path = `codersboard-development/users/images/${fileName}`;
+    const path = `codersboard-${env.NODE_ENV}/users/images/${fileName}`;
 
     await cloudinary.uploader.destroy(path);
 
@@ -39,7 +39,7 @@ export class CloudinaryService {
     const image = typeof fileOrPath === 'string' ? fileOrPath : toBase64(fileOrPath);
 
     const data = await cloudinary.uploader.upload(image, {
-      folder: `codersboard-development/users/thumbnails`,
+      folder: `codersboard-${env.NODE_ENV}/users/thumbnails`,
       allowed_formats: ['jpg', 'png'],
       overwrite: true,
       unique_filename: false,
@@ -50,7 +50,7 @@ export class CloudinaryService {
   }
 
   async deleteUserThumbnail(fileName: string): Promise<string> {
-    const path = `codersboard-development/users/thumbnails/${fileName}`;
+    const path = `codersboard-${env.NODE_ENV}/users/thumbnails/${fileName}`;
 
     await cloudinary.uploader.destroy(path);
 

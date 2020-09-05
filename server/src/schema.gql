@@ -171,6 +171,7 @@ type User {
   fullName: String!
   primaryEmail: String!
   recoveryEmail: String!
+  password: String
   phone: String
   image: String!
   thumbnail: String!
@@ -238,6 +239,7 @@ type Mutation {
   createUser(data: CreateUserInput!): User!
   updateUser(data: UpdateUserInput!): User!
   deleteUser(id: ID!): Boolean!
+  signIn(data: SignInInput!): Boolean!
   signOut: Boolean!
   createClan(data: CreateClanInput!): Clan!
   updateClan(data: UpdateClanInput!): Clan!
@@ -290,6 +292,7 @@ input CreateUserInput {
   lastName: String!
   primaryEmail: String!
   recoveryEmail: String!
+  password: String!
 }
 
 input UpdateUserInput {
@@ -298,6 +301,11 @@ input UpdateUserInput {
   lastName: String!
   primaryEmail: String!
   recoveryEmail: String!
+}
+
+input SignInInput {
+  primaryEmail: String!
+  password: String!
 }
 
 input CreateClanInput {
