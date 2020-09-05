@@ -1,7 +1,5 @@
 import Joi from '@hapi/joi';
 
-import { EnvVariables } from './env.types';
-
 type RequiredInProductionParams =
   | {
       joiType: Joi.StringSchema;
@@ -16,9 +14,7 @@ type RequiredInProductionParams =
       defaultValue: number;
     };
 
-const NODE_ENV = process.env.NODE_ENV || 'development';
+export const requiredInProduction = ({ joiType, defaultValue }: RequiredInProductionParams) =>
+  process.env.IS_PRODUCTION ? joiType.required() : joiType.optional().default(defaultValue);
 
-export const requiredIn = (env: EnvVariables['NODE_ENV'], { joiType, defaultValue }: RequiredInProductionParams) =>
-  NODE_ENV === env ? joiType.required() : joiType.optional().default(defaultValue);
-
-export const productionRequiredString = requiredIn('production', { joiType: Joi.string(), defaultValue: '' });
+export const productionRequiredString = requiredInProduction({ joiType: Joi.string(), defaultValue: '' });

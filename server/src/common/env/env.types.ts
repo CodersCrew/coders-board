@@ -1,8 +1,9 @@
 export type EnvVariables = {
-  NODE_ENV: 'development' | 'test' | 'staging' | 'production';
+  NODE_ENV: 'development' | 'test' | 'production';
 
   PORT: number;
   CLIENT_URL: string;
+  IS_PRODUCTION: boolean;
 
   // database
   DATABASE_SYNC: boolean;

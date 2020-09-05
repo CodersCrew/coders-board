@@ -24,7 +24,7 @@ export const toBase64 = file => `data:${file.mimetype};base64,${file.buffer.toSt
 @Injectable()
 export class GsuiteService {
   constructor(private readonly userRepository: UserRepository) {
-    if (env.NODE_ENV === 'production') {
+    if (env.IS_PRODUCTION) {
       this.initialize();
     }
   }

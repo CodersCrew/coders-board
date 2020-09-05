@@ -21,7 +21,7 @@ export class MailerService {
       from: 'codersboard@coderscrew.pl',
       templateId: 'd-632bcf59ea92429ca0b0884f22d1fe49',
       dynamicTemplateData: { email, password },
-      mailSettings: { sandboxMode: { enable: env.NODE_ENV !== 'production' } },
+      mailSettings: { sandboxMode: { enable: !env.IS_PRODUCTION } },
     });
 
     return true;

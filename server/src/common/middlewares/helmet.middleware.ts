@@ -22,9 +22,5 @@ export const helmetConfig: HelmetOptions = {
 };
 
 export const helmetMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  if (req.path === '/graphql' || req.path.match(/^\/auth/)) {
-    next();
-  } else {
-    helmet(helmetConfig)(req, res, next);
-  }
+  helmet(helmetConfig)(req, res, next);
 };

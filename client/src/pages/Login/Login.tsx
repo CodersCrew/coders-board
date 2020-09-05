@@ -2,7 +2,7 @@ import React from 'react';
 import styled from '@emotion/styled';
 
 import { AppLogo, Box, Paragraph } from '@/components/atoms';
-import { NODE_ENV } from '@/config/env';
+import { IS_PRODUCTION } from '@/config/env';
 
 import { LocalLogin } from './LocalLogin';
 import { ProductionLogin } from './ProductionLogin';
@@ -25,7 +25,7 @@ const Login = () => {
       <Paragraph fontSize="h3" color="inherit" textAlign="center" mb={40}>
         One place for CodersCrew overview and management
       </Paragraph>
-      {NODE_ENV === 'production' ? <ProductionLogin /> : <LocalLogin />}
+      {IS_PRODUCTION ? <ProductionLogin /> : <LocalLogin />}
     </Container>
   );
 };

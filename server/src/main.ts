@@ -3,6 +3,7 @@ import { HttpsOptions } from '@nestjs/common/interfaces/external/https-options.i
 import { NestFactory, Reflector } from '@nestjs/core';
 import { NestExpressApplication } from '@nestjs/platform-express';
 import cookieParser from 'cookie-parser';
+import enforce from 'express-sslify';
 import { readFileSync } from 'fs';
 import path from 'path';
 
@@ -32,7 +33,8 @@ async function bootstrap() {
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { httpsOptions });
 
   app.set('trust proxy', 1);
-  app.enableCors({ credentials: true, origin: false });
+
+  app.use(enforce.HTTPS({ trustProtoHeader: true }));
 
   app.use(cookieParser(env.COOKIE_SECRET));
   app.use(helmetMiddleware);

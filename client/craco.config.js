@@ -2,6 +2,10 @@ const path = require('path');
 const CracoAntDesignPlugin = require('craco-antd');
 const CracoAlias = require('craco-alias');
 
+if (process.env.IS_PRODUCTION) {
+  process.env.REACT_APP_IS_PRODUCTION = true;
+}
+
 module.exports = {
   plugins: [
     {

@@ -2,16 +2,17 @@ import Joi from '@hapi/joi';
 import dotenv from 'dotenv';
 
 import { EnvVariables } from './env.types';
-import { productionRequiredString, requiredIn } from './env.utils';
+import { productionRequiredString, requiredInProduction } from './env.utils';
 
 dotenv.config();
 
 export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
   const envVarsSchema: Joi.ObjectSchema<EnvVariables> = Joi.object({
-    NODE_ENV: Joi.string().valid('development', 'test', 'staging', 'production').default('development'),
+    NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
 
     PORT: Joi.number().required(),
     CLIENT_URL: Joi.string().allow('').default(''),
+    IS_PRODUCTION: Joi.boolean().optional().default(false),
 
     // database
     DATABASE_SYNC: Joi.boolean().required(),
@@ -24,7 +25,7 @@ export const validateEnvVariables = (env: NodeJS.ProcessEnv): EnvVariables => {
     TOKEN_PREFIX: Joi.string().required(),
 
     // heroku variables
-    NPM_CONFIG_PRODUCTION: requiredIn('production', { joiType: Joi.boolean(), defaultValue: false }),
+    NPM_CONFIG_PRODUCTION: requiredInProduction({ joiType: Joi.boolean(), defaultValue: false }),
 
     // google auth
     GOOGLE_CLIENT_ID: Joi.string().required(),
