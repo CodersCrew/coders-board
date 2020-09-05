@@ -5,6 +5,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { join } from 'path';
 
 import { AuthModule } from './auth/auth.module';
+import { env } from './common/env';
 import { GuildsModule } from './guilds/guilds.module';
 import { IntegrationsModule } from './integrations/integrations.module';
 import typeOrmConfig from './ormconfig';
@@ -20,6 +21,7 @@ import { UsersModule } from './users/users.module';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       introspection: true,
+      playground: !env.IS_PRODUCTION,
       context: ({ req }) => ({ req }),
     }),
     ServeStaticModule.forRoot({

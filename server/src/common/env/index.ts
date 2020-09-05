@@ -1,3 +1,5 @@
-import { validateEnvVariables } from './validateEnvVariables';
+import path from 'path';
 
-export const env = validateEnvVariables(process.env);
+import { EnvConfig } from './validateEnvVariables';
+
+export const env = new EnvConfig(path.resolve(__dirname, '../../../.env')).envConfig;

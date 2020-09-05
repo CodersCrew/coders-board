@@ -1,4 +1,4 @@
-export type EnvVariables = {
+export type EnvVariables = Readonly<{
   NODE_ENV: 'development' | 'test' | 'production';
 
   PORT: number;
@@ -38,4 +38,4 @@ export type EnvVariables = {
 
   // sendgrid
   SENDGRID_KEY: string;
-};
+}>;
