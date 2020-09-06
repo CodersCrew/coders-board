@@ -1,27 +1,30 @@
 import Joi from '@hapi/joi';
 import dotenv from 'dotenv';
-import fs from 'fs';
 
 import { EnvVariables } from './env.types';
 import { productionRequiredString, requiredInProduction } from './env.utils';
 
 export class EnvConfig {
-  constructor(envFilePath: string) {
-    const config = dotenv.parse(fs.readFileSync(envFilePath, { encoding: 'utf-8' }));
+  constructor() {
+    dotenv.config();
 
-    this.envConfig = this.validateEnvVariables(config);
+    this.envConfig = this.validateEnvVariables(process.env);
   }
 
   readonly envConfig: EnvVariables;
 
   private validateEnvVariables = (env: dotenv.DotenvParseOutput): EnvVariables => {
-    const isProductionResult = Joi.boolean().optional().default(false).validate(env.IS_PRODUCTION);
+    const appEnvValidation = Joi.string()
+      .valid('local', 'staging', 'production')
+      .default('local')
+      .validate(env.APP_ENV);
 
-    if (isProductionResult.error) {
-      throw new Error(`Config validation error: ${isProductionResult.error.message}`);
+    if (appEnvValidation.error) {
+      throw new Error(`Config validation error: ${appEnvValidation.error.message}`);
     }
 
-    const isProduction: EnvVariables['IS_PRODUCTION'] = isProductionResult.value;
+    const appEnv: EnvVariables['APP_ENV'] = appEnvValidation.value;
+    const isProduction = appEnv === 'production';
 
     const envVarsSchema: Joi.ObjectSchema<EnvVariables> = Joi.object({
       NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
@@ -30,7 +33,6 @@ export class EnvConfig {
       CLIENT_URL: Joi.string().allow('').default(''),
 
       // database
-      DATABASE_SYNC: Joi.boolean().required(),
       DATABASE_URL: Joi.string().required(),
 
       // jwt
@@ -72,7 +74,7 @@ export class EnvConfig {
 
     return {
       ...validatedEnvConfig,
-      IS_PRODUCTION: isProduction,
+      APP_ENV: appEnv,
     };
   };
 }

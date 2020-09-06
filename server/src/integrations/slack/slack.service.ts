@@ -21,7 +21,7 @@ import { slackRequest } from './slack.utils';
 @Injectable()
 export class SlackService {
   constructor(private readonly userRepository: UserRepository) {
-    if (env.IS_PRODUCTION) {
+    if (env.APP_ENV === 'production') {
       this.slackBot = new WebClient(env.SLACK_BOT_TOKEN);
       this.slackAdmin = new WebClient(env.SLACK_USER_TOKEN);
     }
@@ -50,7 +50,7 @@ export class SlackService {
   async initialSyncSlackUser(input: InitialSyncSlackUserInput) {
     const { slackId, userId } = await transformAndValidate(InitialSyncSlackUserInput, input);
 
-    if (!env.IS_PRODUCTION) {
+    if (env.APP_ENV !== 'production') {
       const user = await this.userRepository.findOneOrFail(userId);
 
       return this.userRepository.save({

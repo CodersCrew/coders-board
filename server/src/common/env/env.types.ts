@@ -1,12 +1,11 @@
 export type EnvVariables = Readonly<{
   NODE_ENV: 'development' | 'test' | 'production';
+  APP_ENV: 'local' | 'staging' | 'production';
 
   PORT: number;
   CLIENT_URL: string;
-  IS_PRODUCTION: boolean;
 
   // database
-  DATABASE_SYNC: boolean;
   DATABASE_URL: string;
 
   // jwt

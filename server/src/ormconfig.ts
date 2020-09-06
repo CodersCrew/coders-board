@@ -6,12 +6,12 @@ import { env } from './common/env';
 const typeOrmConfig: ConnectionOptions = {
   type: 'postgres',
   url: env.DATABASE_URL,
-  ssl: { rejectUnauthorized: false },
-  synchronize: env.DATABASE_SYNC,
+  ssl: env.APP_ENV === 'production' ? { rejectUnauthorized: false } : false,
+  synchronize: env.APP_ENV !== 'production',
   entities: [path.resolve(__dirname, '**/*.model{.ts,.js}')],
   migrations: [path.resolve(__dirname, 'common/migrations/*{.ts,.js}')],
   subscribers: [path.resolve(__dirname, '**/*.subscriber{.ts,.js}')],
-  migrationsRun: !env.DATABASE_SYNC,
+  migrationsRun: env.APP_ENV === 'production',
   cli: {
     migrationsDir: 'src/common/migrations',
   },

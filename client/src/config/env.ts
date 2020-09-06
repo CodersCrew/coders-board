@@ -15,10 +15,14 @@ const createEnvVariable = <T extends string>(
 
 export const SERVER_URL = createEnvVariable('REACT_APP_SERVER_URL', { required: false, default: '' });
 
-export const IS_PRODUCTION =
-  createEnvVariable('REACT_APP_IS_PRODUCTION', { required: false, default: 'false' }) !== 'false';
+export const APP_ENV = createEnvVariable<'local' | 'staging' | 'production'>('REACT_APP_APP_ENV', {
+  required: false,
+  default: 'local',
+  oneOf: ['local', 'staging', 'production'],
+});
 
 export const NODE_ENV = createEnvVariable<'development' | 'test' | 'production'>('NODE_ENV', {
-  required: true,
+  required: false,
+  default: 'development',
   oneOf: ['development', 'test', 'production'],
 });

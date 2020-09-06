@@ -24,7 +24,7 @@ export const helmetConfig: HelmetOptions = {
 };
 
 export const helmetMiddleware = (req: Request, res: Response, next: NextFunction) => {
-  if (req.path === '/graphql' && !env.IS_PRODUCTION) {
+  if (req.path === '/graphql' && env.APP_ENV !== 'production') {
     next();
   } else {
     helmet(helmetConfig)(req, res, next);

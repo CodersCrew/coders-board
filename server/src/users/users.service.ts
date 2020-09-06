@@ -69,7 +69,7 @@ export class UsersService {
     let user: User;
     let password: string;
 
-    if (env.IS_PRODUCTION) {
+    if (env.APP_ENV === 'production') {
       password = generatePassword({ numbers: true });
       const { id: googleId } = await this.gsuiteService.createGsuiteUser({ ...input, password });
 
@@ -97,7 +97,7 @@ export class UsersService {
     const fullName = `${input.firstName} ${input.lastName}`;
     const user = await this.userRepository.save({ ...rawUser, ...input, fullName });
 
-    if (env.IS_PRODUCTION) {
+    if (env.APP_ENV === 'production') {
       if (user.googleId) {
         await this.gsuiteService.syncGsuiteUser({ googleId: user.googleId });
       }
@@ -113,7 +113,7 @@ export class UsersService {
   async delete(userId: string) {
     const user = await this.userRepository.findOneOrFail(userId);
 
-    if (env.IS_PRODUCTION) {
+    if (env.APP_ENV === 'production') {
       const slackUser = await this.slackService.getSlackUser({ slackId: user.slackId });
 
       if (slackUser && !slackUser.deleted) {

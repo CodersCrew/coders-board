@@ -21,7 +21,7 @@ import { UsersModule } from './users/users.module';
     GraphQLModule.forRoot({
       autoSchemaFile: join(process.cwd(), 'src/schema.gql'),
       introspection: true,
-      playground: !env.IS_PRODUCTION,
+      playground: env.APP_ENV !== 'production',
       context: ({ req }) => ({ req }),
     }),
     ServeStaticModule.forRoot({
