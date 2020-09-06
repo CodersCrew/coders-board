@@ -3,6 +3,10 @@ import { createConnection } from 'typeorm';
 
 import { env } from '../../common/env';
 import typeOrmConfig from '../../ormconfig';
+import { seedChapters } from './chapters';
+import { seedClans } from './clans';
+import { seedGuilds } from './guilds';
+import { seedsquads } from './squads';
 import { seedUsers } from './users';
 
 const initializeSeed = async () => {
@@ -20,11 +24,45 @@ const seed = async () => {
   const tasks = new Listr([
     {
       title: 'Seed initialization',
-      task: () => initializeSeed(),
+      task: initializeSeed,
     },
     {
-      title: 'Seeding users (0/100)',
-      task: (ctx, task) => seedUsers(task),
+      title: 'Seeding root types',
+      task: () =>
+        new Listr(
+          [
+            {
+              title: 'Seeding users (0/100)',
+              task: seedUsers,
+            },
+            {
+              title: 'Seeding guilds (0/5)',
+              task: seedGuilds,
+            },
+            {
+              title: 'Seeding squads (0/6)',
+              task: seedsquads,
+            },
+          ],
+          { concurrent: true },
+        ),
+    },
+    {
+      title: 'Seeding sub-teams',
+      task: () =>
+        new Listr(
+          [
+            {
+              title: 'Seeding clans',
+              task: seedClans,
+            },
+            {
+              title: 'Seeding chapters',
+              task: seedChapters,
+            },
+          ],
+          { concurrent: true },
+        ),
     },
   ]);
 

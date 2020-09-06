@@ -23,7 +23,7 @@ type RandomUser = {
 
 type RandomUserResponse = { results: RandomUser[] };
 
-export const seedUsers = async (task: Listr.ListrTaskWrapper<any>) => {
+export const seedUsers = async (ctx: any, task: Listr.ListrTaskWrapper<any>) => {
   const userRepository = getCustomRepository(UserRepository);
 
   const randomUserData: AxiosResponse<RandomUserResponse> = await axios.get(
@@ -43,7 +43,7 @@ export const seedUsers = async (task: Listr.ListrTaskWrapper<any>) => {
       image: user.picture.large,
       password: 'test',
       googleId: crypto.randomBytes(12).toString('hex'),
-      slackId: Math.random() > 0.2 ? crypto.randomBytes(12).toString('hex') : null,
+      slackId: Math.random() > 0.1 ? crypto.randomBytes(12).toString('hex') : null,
       status: UserStatus.ACTIVE,
       role: i < 3 ? UserRole.ADMIN : UserRole.USER,
     });
@@ -54,7 +54,5 @@ export const seedUsers = async (task: Listr.ListrTaskWrapper<any>) => {
     return result;
   });
 
-  const users = await Promise.all(userPromises);
-
-  return users;
+  ctx.users = await Promise.all(userPromises);
 };
