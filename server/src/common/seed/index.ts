@@ -6,7 +6,8 @@ import typeOrmConfig from '../../ormconfig';
 import { seedChapters } from './chapters';
 import { seedClans } from './clans';
 import { seedGuilds } from './guilds';
-import { seedsquads } from './squads';
+import { seedPositions } from './positions';
+import { seedSquads } from './squads';
 import { seedUsers } from './users';
 
 const initializeSeed = async () => {
@@ -41,7 +42,7 @@ const seed = async () => {
             },
             {
               title: 'Seeding squads (0/6)',
-              task: seedsquads,
+              task: seedSquads,
             },
           ],
           { concurrent: true },
@@ -63,6 +64,10 @@ const seed = async () => {
           ],
           { concurrent: true },
         ),
+    },
+    {
+      title: 'Seeding positions (0/50)',
+      task: seedPositions,
     },
   ]);
 

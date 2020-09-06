@@ -8,20 +8,10 @@ import { GuildMember } from '../guilds/guild-members/guild-member.model';
 import { SquadMember } from '../squads/squad-members/squad-member.model';
 import { Success } from '../successes/success.model';
 
-export enum UserStatus {
-  PENDING = 'PENDING',
-  ACTIVE = 'ACTIVE',
-  INACTIVE = 'INACTIVE',
-}
-
 export enum UserRole {
   ADMIN = 'ADMIN',
   USER = 'USER',
 }
-
-registerEnumType(UserStatus, {
-  name: 'UserStatus',
-});
 
 registerEnumType(UserRole, {
   name: 'UserRole',
@@ -75,10 +65,6 @@ export class User extends BaseModel {
   @Column({ nullable: true, unique: true })
   slackId?: string;
 
-  @Field(type => UserStatus)
-  @Column({ type: 'enum', enum: UserStatus, default: UserStatus.PENDING })
-  status: UserStatus;
-
   @Field(type => UserRole)
   @Column({ type: 'enum', enum: UserRole, default: UserRole.USER })
   role: UserRole;
@@ -94,8 +80,4 @@ export class User extends BaseModel {
   @Field(type => [Success])
   @ManyToMany(type => Success, success => success.users)
   successes: Success[];
-
-  @Field(type => [Success])
-  @OneToMany(type => Success, success => success.creator)
-  createdSuccesses: Success[];
 }

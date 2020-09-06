@@ -6,4 +6,5 @@ export * from './PositionSelect';
 export * from './RoleSelect';
 export * from './SuccessTypeSelect';
 export * from './TeamRoleSelect';
+export * from './PositionScopeSelect';
 export * from './UserSelect';

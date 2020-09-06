@@ -13,19 +13,13 @@ export class PositionsService {
   getGuild = resolveAsyncRelation(this.positionRepository, 'guild');
   getClan = resolveAsyncRelation(this.positionRepository, 'clan');
 
-  findById(id: string) {
-    if (!id) return null;
-
-    return this.positionRepository.findOne(id);
-  }
-
   findByIdOrThrow(id: string) {
     if (!id) throw new BadRequestException();
 
     return this.positionRepository.findOneOrFail(id);
   }
 
-  findAll({ search, clanId, guildId }: GetPositionsArgs) {
+  findAll({ search, clanId, guildId, scopes }: GetPositionsArgs) {
     const query = this.positionRepository.createQueryBuilder('position');
 
     if (search) {
@@ -40,6 +34,10 @@ export class PositionsService {
 
     if (guildId) {
       query.andWhere('position.guildId = :guildId', { guildId });
+    }
+
+    if (scopes) {
+      query.andWhere('position.scopes @> :scopes', { scopes });
     }
 
     return query.getMany();

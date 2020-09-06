@@ -11,14 +11,16 @@ export type PositionsQueryVariables = Types.Exact<{
 
 export type PositionsQuery = {
   positions: Array<
-    Pick<Types.Position, 'id' | 'name' | 'description' | 'image'> & {
+    Pick<Types.Position, 'id' | 'name' | 'description' | 'image' | 'scopes'> & {
       clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name' | 'image'>>;
       guild?: Types.Maybe<Pick<Types.Guild, 'id' | 'name' | 'image'>>;
     }
   >;
 };
 
-export type SimplePositionsQueryVariables = Types.Exact<{ [key: string]: never }>;
+export type SimplePositionsQueryVariables = Types.Exact<{
+  scopes?: Types.Maybe<Array<Types.PositionScope>>;
+}>;
 
 export type SimplePositionsQuery = { positions: Array<Pick<Types.Position, 'id' | 'name'>> };
 
@@ -47,6 +49,7 @@ export const PositionsDocument = gql`
       name
       description
       image
+      scopes
       clan {
         id
         name
@@ -91,8 +94,8 @@ export type PositionsQueryHookResult = ReturnType<typeof usePositionsQuery>;
 export type PositionsLazyQueryHookResult = ReturnType<typeof usePositionsLazyQuery>;
 export type PositionsQueryResult = Apollo.QueryResult<PositionsQuery, PositionsQueryVariables>;
 export const SimplePositionsDocument = gql`
-  query simplePositions {
-    positions {
+  query simplePositions($scopes: [PositionScope!]) {
+    positions(scopes: $scopes) {
       id
       name
     }
@@ -111,6 +114,7 @@ export const SimplePositionsDocument = gql`
  * @example
  * const { data, loading, error } = useSimplePositionsQuery({
  *   variables: {
+ *      scopes: // value for 'scopes'
  *   },
  * });
  */

@@ -39,7 +39,7 @@ export class Success extends BaseModel {
   users: User[];
 
   @Field(type => User)
-  @ManyToOne(type => User, user => user.createdSuccesses)
+  @ManyToOne(type => User)
   creator: User;
 
   @Field()

@@ -89,11 +89,18 @@ export type Position = {
   name: Scalars['String'];
   description: Scalars['String'];
   image?: Maybe<Scalars['String']>;
+  scopes: Array<PositionScope>;
   clan?: Maybe<Clan>;
   clanId: Scalars['String'];
   guild?: Maybe<Guild>;
   guildId: Scalars['String'];
 };
+
+export enum PositionScope {
+  Organization = 'ORGANIZATION',
+  Guild = 'GUILD',
+  Squad = 'SQUAD',
+}
 
 export type Squad = {
   id: Scalars['ID'];
@@ -193,19 +200,11 @@ export type User = {
   thumbnail: Scalars['String'];
   googleId: Scalars['String'];
   slackId?: Maybe<Scalars['String']>;
-  status: UserStatus;
   role: UserRole;
   guilds: Array<GuildMember>;
   squads: Array<SquadMember>;
   successes: Array<Success>;
-  createdSuccesses: Array<Success>;
 };
-
-export enum UserStatus {
-  Pending = 'PENDING',
-  Active = 'ACTIVE',
-  Inactive = 'INACTIVE',
-}
 
 export enum UserRole {
   Admin = 'ADMIN',
@@ -256,6 +255,7 @@ export type QueryPositionsArgs = {
   search?: Maybe<Scalars['String']>;
   guildId?: Maybe<Scalars['ID']>;
   clanId?: Maybe<Scalars['ID']>;
+  scopes?: Maybe<Array<PositionScope>>;
 };
 
 export type QueryChaptersArgs = {
@@ -563,6 +563,7 @@ export type InitialSyncSlackUserInput = {
 export type CreatePositionInput = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
+  scopes: Array<PositionScope>;
   image?: Maybe<Scalars['String']>;
   clanId?: Maybe<Scalars['ID']>;
   guildId?: Maybe<Scalars['ID']>;
@@ -571,6 +572,7 @@ export type CreatePositionInput = {
 export type UpdatePositionInput = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
+  scopes: Array<PositionScope>;
   image?: Maybe<Scalars['String']>;
   clanId?: Maybe<Scalars['ID']>;
   guildId?: Maybe<Scalars['ID']>;

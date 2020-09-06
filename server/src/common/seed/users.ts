@@ -3,7 +3,7 @@ import crypto from 'crypto';
 import Listr from 'listr';
 import { getCustomRepository } from 'typeorm';
 
-import { UserRole, UserStatus } from '../../users/user.model';
+import { UserRole } from '../../users/user.model';
 import { UserRepository } from '../../users/user.repository';
 
 type RandomUser = {
@@ -44,7 +44,6 @@ export const seedUsers = async (ctx: any, task: Listr.ListrTaskWrapper<any>) => 
       password: 'test',
       googleId: crypto.randomBytes(12).toString('hex'),
       slackId: Math.random() > 0.1 ? crypto.randomBytes(12).toString('hex') : null,
-      status: UserStatus.ACTIVE,
       role: i < 3 ? UserRole.ADMIN : UserRole.USER,
     });
 

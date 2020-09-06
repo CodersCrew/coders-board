@@ -36,7 +36,7 @@ const Positions = () => {
             itemLayout="horizontal"
             loading={positions.loading}
             dataSource={positions.data}
-            renderItem={item => <Position key={item.id} openEditModal={() => positionModal.open(null)} {...item} />}
+            renderItem={item => <Position key={item.id} openEditModal={positionModal.open} {...item} />}
           />
         </Card>
       </Page.Content>

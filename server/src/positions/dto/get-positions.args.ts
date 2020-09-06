@@ -1,5 +1,7 @@
 import { ArgsType, Field, ID } from '@nestjs/graphql';
-import { IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+
+import { PositionScope } from '../position.model';
 
 @ArgsType()
 export class GetPositionsArgs {
@@ -17,4 +19,9 @@ export class GetPositionsArgs {
   @IsOptional()
   @IsUUID()
   clanId?: string;
+
+  @Field(type => [PositionScope], { nullable: true })
+  @IsOptional()
+  @IsEnum(PositionScope, { each: true })
+  scopes?: PositionScope[];
 }

@@ -11,7 +11,7 @@ import { PositionModalData } from './PositionModal';
 import { useDeletePositionConfirm } from './useDeletePositionConfirm';
 
 export type PositionProps = UsePositions['item'] & {
-  openEditModal: (data?: PositionModalData) => void;
+  openEditModal: (data: PositionModalData) => void;
 };
 
 function getArea<T extends Record<string, unknown> | null | undefined>(suffix: string, area: T) {
@@ -24,7 +24,7 @@ export const Position: CFC<PositionProps> = props => {
 
   const openUpdateModal = () => {
     props.openEditModal({
-      ...pick(props, ['id', 'name', 'description', 'image']),
+      ...pick(props, ['id', 'name', 'description', 'image', 'scopes']),
       guildId: props.guild?.id,
       clanId: props.clan?.id,
     });

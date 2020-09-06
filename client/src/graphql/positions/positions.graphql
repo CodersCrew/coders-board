@@ -4,6 +4,7 @@ query positions($search: String $guildId: ID $clanId: ID) {
     name
     description
     image
+    scopes
     clan {
       id
       name
@@ -17,8 +18,8 @@ query positions($search: String $guildId: ID $clanId: ID) {
   }
 }
 
-query simplePositions {
-  positions {
+query simplePositions($scopes: [PositionScope!]) {
+  positions(scopes: $scopes) {
     id
     name
   }

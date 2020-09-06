@@ -1,11 +1,12 @@
-import { SimplePositionsQuery, useSimplePositionsQuery } from './positions.apollo';
+import { SimplePositionsQuery, SimplePositionsQueryVariables, useSimplePositionsQuery } from './positions.apollo';
 
 export type UseSimplePositions = {
+  variables: SimplePositionsQueryVariables;
   item: SimplePositionsQuery['positions'][number];
 };
 
-export const useSimplePositions = () => {
-  const { data, loading, error, refetch } = useSimplePositionsQuery();
+export const useSimplePositions = (variables?: UseSimplePositions['variables']) => {
+  const { data, loading, error, refetch } = useSimplePositionsQuery({ variables });
 
   const positions = data?.positions ?? [];
 

@@ -1,22 +1,10 @@
 import faker from 'faker';
-import { random, shuffle, times } from 'lodash';
+import { random } from 'lodash';
 import { getCustomRepository } from 'typeorm';
 
 import { ChapterRepository } from '../../squads/chapters/chapter.repository';
 import { Squad } from '../../squads/squad.model';
-
-const departments = [
-  'Human Resources',
-  'Sales',
-  'Social Media',
-  'Web Development',
-  'Public Relations',
-  'Security',
-  'Mobile Development',
-  'Finance',
-  'Business Contacts',
-  'Data Analysis',
-];
+import { getDepartmentNames } from './seed.utils';
 
 export const seedChapters = async (ctx: any) => {
   const chapterRepository = getCustomRepository(ChapterRepository);
@@ -28,11 +16,12 @@ export const seedChapters = async (ctx: any) => {
   }
 
   const chapterPromises = squads.flatMap(squad => {
-    const names = shuffle(departments);
+    const departmentsCount = random(2, 6);
+    const departmentNames = getDepartmentNames(departmentsCount);
 
-    return times(random(2, 6), i => {
+    return departmentNames.map(name => {
       return chapterRepository.save({
-        name: names[i],
+        name,
         description: faker.lorem.sentences(4),
         squadId: squad.id,
       });

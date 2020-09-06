@@ -4,17 +4,19 @@ import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
 import { FormikModal } from '@/components/molecules';
-import { FormikClanSelect, FormikGuildSelect } from '@/components/selects';
+import { FormikClanSelect, FormikGuildSelect, FormikPositionScopeSelect } from '@/components/selects';
 import { usePositionMutations } from '@/graphql/positions';
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
+import { PositionScope } from '@/typings/graphql';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
 const { getInitialValues, validationSchema, fields } = createFormFields({
   name: yup.string().label('Position name').required().default(''),
   description: yup.string().label('Description').optional().nullable(),
+  scopes: yup.array<PositionScope>(yup.mixed<PositionScope>()).label('Position scope').required().default([]),
   image: yup.string().label('').optional().nullable(),
   clanId: yup.string().label('Related clan').optional().nullable(),
   guildId: yup.string().label('Related guild').optional().nullable(),
@@ -89,6 +91,13 @@ export const PositionModal = createDataModal<PositionModalProps>(props => {
       <Form layout="vertical" colon>
         <Form.Item {...fields.name}>
           <Input name={fields.name.name} placeholder="Enter position name..." />
+        </Form.Item>
+        <Form.Item {...fields.scopes}>
+          <FormikPositionScopeSelect
+            name={fields.scopes.name}
+            mode="multiple"
+            placeholder="Choose position scopes..."
+          />
         </Form.Item>
         <Form.Item {...fields.description}>
           <Input.TextArea name={fields.description.name} placeholder="Enter description..." />

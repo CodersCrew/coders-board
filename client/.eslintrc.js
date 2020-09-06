@@ -82,6 +82,8 @@ module.exports = {
       rules: {
         '@typescript-eslint/no-explicit-any': 0,
         'import/no-duplicates': 0,
+        'no-use-before-define': 0,
+        'no-shadow': 0,
       },
     },
   ],

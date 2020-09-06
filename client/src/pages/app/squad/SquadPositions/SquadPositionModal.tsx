@@ -13,6 +13,7 @@ import { useSquadMembersIds, useSquadPositionMutations } from '@/graphql/squads'
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
+import { PositionScope } from '@/typings/graphql';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 import { pick } from '@/utils/objects';
@@ -158,6 +159,7 @@ export const SquadPositionModal = createDataModal<SquadPositionModalProps>(props
             name={fields.positionId.name}
             placeholder="Select position..."
             disabled={isUpdateModal}
+            scopes={[PositionScope.Squad]}
           />
         </Form.Item>
         <Box display="flex">

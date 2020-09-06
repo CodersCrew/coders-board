@@ -81,10 +81,17 @@ type Position {
   name: String!
   description: String!
   image: String
+  scopes: [PositionScope!]!
   clan: Clan
   clanId: String!
   guild: Guild
   guildId: String!
+}
+
+enum PositionScope {
+  ORGANIZATION
+  GUILD
+  SQUAD
 }
 
 type Squad {
@@ -177,18 +184,10 @@ type User {
   thumbnail: String!
   googleId: String!
   slackId: String
-  status: UserStatus!
   role: UserRole!
   guilds: [GuildMember!]!
   squads: [SquadMember!]!
   successes: [Success!]!
-  createdSuccesses: [Success!]!
-}
-
-enum UserStatus {
-  PENDING
-  ACTIVE
-  INACTIVE
 }
 
 enum UserRole {
@@ -202,7 +201,7 @@ type Query {
   guildPositions(guildId: ID!, memberId: String): [GuildPosition!]!
   guilds(search: String): [Guild!]!
   guild(id: ID!): Guild!
-  positions(search: String, guildId: ID, clanId: ID): [Position!]!
+  positions(search: String, guildId: ID, clanId: ID, scopes: [PositionScope!]): [Position!]!
   chapters(search: String, squadId: ID): [Chapter!]!
   squadMembers(squadId: ID!, archived: Boolean): [SquadMember!]!
   squadPositions(squadId: ID!, memberId: String): [SquadPosition!]!
@@ -330,6 +329,7 @@ input InitialSyncSlackUserInput {
 input CreatePositionInput {
   name: String!
   description: String = ""
+  scopes: [PositionScope!]!
   image: String = ""
   clanId: ID = null
   guildId: ID = null
@@ -338,6 +338,7 @@ input CreatePositionInput {
 input UpdatePositionInput {
   name: String!
   description: String = ""
+  scopes: [PositionScope!]!
   image: String = ""
   clanId: ID = null
   guildId: ID = null
