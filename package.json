@@ -16,7 +16,8 @@
     "build-client": "cd client && npm run build",
     "build-server": "cd server && npm run build",
     "build": "concurrently npm:build-* --kill-others-on-fail",
-    "start": "cd server && npm run start:prod"
+    "start": "cd server && npm run start:prod",
+    "seed": "cd server && npm run seed"
   },
   "dependencies": {
     "concurrently": "^5.3.0"
