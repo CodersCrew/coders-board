@@ -11,6 +11,11 @@ import { AuthService } from './auth.service';
 import { GoogleStrategy } from './google.strategy';
 import { JwtStrategy } from './jwt.strategy';
 
+const providers =
+  env.APP_ENV === 'production'
+    ? [AuthResolver, AuthService, GoogleStrategy, JwtStrategy]
+    : [AuthResolver, AuthService, JwtStrategy];
+
 @Module({
   imports: [
     TypeOrmModule.forFeature([UserRepository]),
@@ -20,7 +25,7 @@ import { JwtStrategy } from './jwt.strategy';
       signOptions: { expiresIn: '2d' },
     }),
   ],
-  providers: [AuthResolver, AuthService, GoogleStrategy, JwtStrategy],
+  providers,
   controllers: [AuthController],
 })
 export class AuthModule {}

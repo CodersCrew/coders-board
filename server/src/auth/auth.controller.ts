@@ -4,11 +4,13 @@ import { Response } from 'express';
 
 import { Public } from '../common/decorators';
 import { env } from '../common/env';
+import { ProductionGuard } from '../common/guards';
 import { AuthService } from './auth.service';
 import { OAuthRequest } from './auth.types';
 
 @Controller('auth')
 @Public()
+@ProductionGuard()
 export class AuthController {
   constructor(private readonly authService: AuthService) {}
 
