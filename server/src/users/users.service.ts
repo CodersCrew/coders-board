@@ -1,5 +1,5 @@
 import { BadRequestException, ConflictException, Injectable } from '@nestjs/common';
-import bcrypt from 'bcryptjs';
+import crypto from 'crypto';
 import { generate as generatePassword } from 'generate-password';
 
 import { env } from '../common/env';
@@ -64,8 +64,6 @@ export class UsersService {
   }
 
   async create(input: CreateUserInput) {
-    const fullName = `${input.firstName} ${input.lastName}`;
-
     let user: User;
     let password: string;
 
@@ -73,14 +71,15 @@ export class UsersService {
       password = generatePassword({ numbers: true });
       const { id: googleId } = await this.gsuiteService.createGsuiteUser({ ...input, password });
 
-      user = await this.userRepository.save({ ...input, fullName, googleId, password: null });
+      user = await this.userRepository.save({ ...input, googleId, password: null });
     } else {
       if (!input.password?.trim()) {
         throw new BadRequestException('User password is a required field for all non-production environments');
       }
 
-      password = await bcrypt.hash(input.password, 10);
-      user = await this.userRepository.save({ ...input, fullName, password, googleId: 'mocked' });
+      const googleId = crypto.randomBytes(12).toString('hex');
+
+      user = await this.userRepository.save({ ...input, googleId });
     }
 
     await this.mailerService.sendInvitationEmail({
@@ -94,8 +93,7 @@ export class UsersService {
 
   async update({ id, ...input }: UpdateUserInput) {
     const rawUser = await this.userRepository.findOneOrFail(id);
-    const fullName = `${input.firstName} ${input.lastName}`;
-    const user = await this.userRepository.save({ ...rawUser, ...input, fullName });
+    const user = await this.userRepository.save({ ...rawUser, ...input });
 
     if (env.APP_ENV === 'production') {
       if (user.googleId) {

@@ -1,5 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { WebClient } from '@slack/web-api';
+import crypto from 'crypto';
 
 import { env } from '../../common/env';
 import { pick, transformAndValidate } from '../../common/utils';
@@ -52,10 +53,11 @@ export class SlackService {
 
     if (env.APP_ENV !== 'production') {
       const user = await this.userRepository.findOneOrFail(userId);
+      const slackId = crypto.randomBytes(12).toString('hex');
 
       return this.userRepository.save({
         ...user,
-        slackId: 'mocked',
+        slackId,
       });
     }
 
