@@ -23,31 +23,33 @@ const GuildMembers = () => {
   const columns = useGuildMembersColumns();
   const deleteGuildMemberConfirm = useDeleteGuildMemberConfirm();
 
-  const actions: TableActions<Member> = [
-    {
-      label: 'Change role',
-      icon: CrownOutlined,
-      onClick: member => {
-        guildMemberModal.open({
-          ...pick(member, ['id', 'role']),
-          userId: member.user.id,
-        });
-      },
-    },
-    {
-      label: 'Manage positions',
-      icon: PartitionOutlined,
-      visible: member => Boolean(member.positions.length),
-      onClick: member => navigate(`../positions?search=${encodeURI(member.user.fullName)}`),
-    },
-    {
-      label: 'Delete member',
-      icon: DeleteOutlined,
-      itemProps: member => ({ danger: !member.positions.length }),
-      disabled: member => Boolean(member.positions.length),
-      onClick: member => deleteGuildMemberConfirm({ id: member.id, fullName: member.user.fullName }),
-    },
-  ];
+  const actions: TableActions<Member> = guildRole.isOwner
+    ? [
+        {
+          label: 'Change role',
+          icon: CrownOutlined,
+          onClick: member => {
+            guildMemberModal.open({
+              ...pick(member, ['id', 'role']),
+              userId: member.user.id,
+            });
+          },
+        },
+        {
+          label: 'Manage positions',
+          icon: PartitionOutlined,
+          visible: member => Boolean(member.positions.length),
+          onClick: member => navigate(`../positions?search=${encodeURI(member.user.fullName)}`),
+        },
+        {
+          label: 'Delete member',
+          icon: DeleteOutlined,
+          itemProps: member => ({ danger: !member.positions.length }),
+          disabled: member => Boolean(member.positions.length),
+          onClick: member => deleteGuildMemberConfirm({ id: member.id, fullName: member.user.fullName }),
+        },
+      ]
+    : [];
 
   return (
     <>

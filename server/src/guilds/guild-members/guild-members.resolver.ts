@@ -27,19 +27,19 @@ export class GuildMembersResolver {
   }
 
   @Mutation(returns => GuildMember)
-  @TeamRoleGuard(TeamRole.MANAGER, 'data.guildId')
+  @TeamRoleGuard(TeamRole.OWNER, 'data.guildId')
   createGuildMember(@Args('data') input: CreateGuildMemberInput) {
     return this.guildMembersService.create(input);
   }
 
   @Mutation(returns => GuildMember)
-  @TeamRoleGuard(TeamRole.MANAGER, 'data.guildId')
+  @TeamRoleGuard(TeamRole.OWNER, 'data.guildId')
   updateGuildMember(@Args('data') input: UpdateGuildMemberInput) {
     return this.guildMembersService.update(input);
   }
 
   @Mutation(returns => Boolean)
-  @TeamRoleGuard(TeamRole.MANAGER, 'guildId')
+  @TeamRoleGuard(TeamRole.OWNER, 'guildId')
   deleteGuildMember(@Args() args: DeleteGuildMemberArgs) {
     return this.guildMembersService.delete(args.id);
   }

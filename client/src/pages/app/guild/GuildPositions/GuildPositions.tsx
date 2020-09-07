@@ -53,7 +53,11 @@ const GuildPositions = () => {
     <Spin spinning={guildPositions.loading} tip="Loading member actions">
       <FiltersCard
         search={{ value: search, onSearch: setSearch, autoFocus: true }}
-        addButton={guildRole.isManager && { label: 'Add position', onClick: () => guildPositionModal.open(null) }}
+        addButton={{
+          label: 'Add position',
+          visible: guildRole.isManager,
+          onClick: () => guildPositionModal.open(null),
+        }}
       />
       {!guildPositions.loading && (
         <Box maxWidth="100%" overflow="auto" mt={32}>

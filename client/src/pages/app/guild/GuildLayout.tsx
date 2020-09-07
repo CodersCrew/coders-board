@@ -16,7 +16,7 @@ const StyledPageHeader = styled(Page.Header)({
 });
 
 const GuildLayout = () => {
-  const { guildId } = useGuildContext();
+  const { guildId, guildRole } = useGuildContext();
   const location = useLocation();
   const navigate = useNavigate();
   const guild = useGuild({ id: guildId });
@@ -37,10 +37,12 @@ const GuildLayout = () => {
     },
   ]);
 
+  const showClans = guildRole.isOwner || guild?.data?.clans?.length;
+
   const footer = (
     <Tabs activeKey={activeTabKey} onChange={navigate}>
       <Tabs.TabPane tab="Members" key="members" />
-      <Tabs.TabPane tab="Clans" key="clans" />
+      {showClans && <Tabs.TabPane tab="Clans" key="clans" />}
       <Tabs.TabPane tab="Positions" key="positions" />
     </Tabs>
   );

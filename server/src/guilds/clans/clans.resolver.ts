@@ -33,7 +33,7 @@ export class ClansResolver {
   }
 
   @Mutation(returns => Clan)
-  @TeamRoleGuard(TeamRole.MANAGER, 'data.guildId')
+  @TeamRoleGuard(TeamRole.OWNER, 'data.guildId')
   createClan(@Args('data') input: CreateClanInput) {
     return this.clansService.create(input);
   }
@@ -45,7 +45,7 @@ export class ClansResolver {
   }
 
   @Mutation(returns => Boolean)
-  @TeamRoleGuard(TeamRole.MANAGER, 'guildId')
+  @TeamRoleGuard(TeamRole.OWNER, 'guildId')
   deleteClan(@Args() args: DeleteClanArgs) {
     return this.clansService.delete(args.id);
   }

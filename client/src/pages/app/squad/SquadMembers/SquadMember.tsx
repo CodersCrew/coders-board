@@ -9,6 +9,7 @@ import { CFC } from '@/typings/components';
 import { TeamRole } from '@/typings/graphql';
 import { pick } from '@/utils/objects';
 
+import { useSquadContext } from '../SquadContext';
 import { SquadMemberModalData } from './SquadMemberModal';
 import { useArchiveSquadMemberConfirm } from './useArchiveSquadMemberConfirm';
 import { useDeleteSquadMemberConfirm } from './useDeleteSquadMemberConfirm';
@@ -26,35 +27,38 @@ const getRoleTag = (role: TeamRole) => {
 };
 
 const SquadMember: CFC<SquadMemberProps> = ({ member, openSquadMemberModal }) => {
+  const { squadRole } = useSquadContext();
   const deleteSquadMemberConfirm = useDeleteSquadMemberConfirm();
   const archiveSquadMemberConfirm = useArchiveSquadMemberConfirm();
 
-  const actions: DropdownAction[] = [
-    {
-      label: 'Change role',
-      icon: CrownOutlined,
-      onClick: () => {
-        openSquadMemberModal({
-          ...pick(member, ['id', 'role']),
-          userId: member.user.id,
-        });
-      },
-    },
-    {
-      label: 'Archive member',
-      icon: InboxOutlined,
-      disabled: Boolean(member.activePositions.length),
-      visible: !member.deletedAt,
-      onClick: () => archiveSquadMemberConfirm({ id: member.id, fullName: member.user.fullName }),
-    },
-    {
-      label: 'Delete member',
-      icon: DeleteOutlined,
-      danger: !(member.activePositions.length + member.pastPositions.length),
-      disabled: Boolean(member.activePositions.length + member.pastPositions.length),
-      onClick: () => deleteSquadMemberConfirm({ id: member.id, fullName: member.user.fullName }),
-    },
-  ];
+  const actions: DropdownAction[] = squadRole.isOwner
+    ? [
+        {
+          label: 'Change role',
+          icon: CrownOutlined,
+          onClick: () => {
+            openSquadMemberModal({
+              ...pick(member, ['id', 'role']),
+              userId: member.user.id,
+            });
+          },
+        },
+        {
+          label: 'Archive member',
+          icon: InboxOutlined,
+          disabled: Boolean(member.activePositions.length),
+          visible: !member.deletedAt,
+          onClick: () => archiveSquadMemberConfirm({ id: member.id, fullName: member.user.fullName }),
+        },
+        {
+          label: 'Delete member',
+          icon: DeleteOutlined,
+          danger: !(member.activePositions.length + member.pastPositions.length),
+          disabled: Boolean(member.activePositions.length + member.pastPositions.length),
+          onClick: () => deleteSquadMemberConfirm({ id: member.id, fullName: member.user.fullName }),
+        },
+      ]
+    : [];
 
   const title = (
     <Box display="flex" alignItems="center">

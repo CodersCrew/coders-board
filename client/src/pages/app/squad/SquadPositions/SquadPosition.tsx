@@ -40,7 +40,7 @@ export const SquadPosition: CFC<SquadPositionProps> = props => {
   return (
     <List.Item
       actions={
-        squadRole && !props.member.deletedAt
+        squadRole.isManager && !props.member.deletedAt
           ? [
               <Button key="update" type="link" onClick={openUpdateModal}>
                 Update

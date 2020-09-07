@@ -19,11 +19,13 @@ export type ActionsDropdownProps = {
 };
 
 export const ActionsDropdown = ({ actions }: ActionsDropdownProps) => {
-  return (
+  const actionsToDisplay = filter(actions, a => a.visible !== false);
+
+  return actionsToDisplay.length ? (
     <Dropdown
       overlay={
         <Menu>
-          {filter(actions, a => a.visible !== false).map(({ label, icon, visible: _visible, ...action }) => (
+          {actionsToDisplay.map(({ label, icon, visible: _visible, ...action }) => (
             <Menu.Item key={label} {...action}>
               <Icon icon={icon} />
               {label}
@@ -35,5 +37,5 @@ export const ActionsDropdown = ({ actions }: ActionsDropdownProps) => {
     >
       <Button type="link" icon={<Icon icon={MoreOutlined} color="text.secondary" />} />
     </Dropdown>
-  );
+  ) : null;
 };

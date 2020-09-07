@@ -4,6 +4,9 @@ query guild($id: ID!) {
     name
     description
     image
+    clans {
+      id
+    }
   }
 }
 

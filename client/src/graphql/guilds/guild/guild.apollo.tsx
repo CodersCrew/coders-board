@@ -7,7 +7,9 @@ export type GuildQueryVariables = Types.Exact<{
   id: Types.Scalars['ID'];
 }>;
 
-export type GuildQuery = { guild: Pick<Types.Guild, 'id' | 'name' | 'description' | 'image'> };
+export type GuildQuery = {
+  guild: Pick<Types.Guild, 'id' | 'name' | 'description' | 'image'> & { clans: Array<Pick<Types.Clan, 'id'>> };
+};
 
 export type SimpleGuildsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
@@ -24,6 +26,9 @@ export const GuildDocument = gql`
       name
       description
       image
+      clans {
+        id
+      }
     }
   }
 `;

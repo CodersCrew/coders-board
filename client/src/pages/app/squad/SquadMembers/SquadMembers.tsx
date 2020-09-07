@@ -40,7 +40,7 @@ const SquadMembers = () => {
   return (
     <>
       <FiltersCard
-        addButton={squadRole.isManager && { label: 'Add member', onClick: () => squadMemberModal.open(null) }}
+        addButton={{ label: 'Add member', visible: squadRole.isManager, onClick: () => squadMemberModal.open(null) }}
       />
       <Box maxWidth="100%" overflow="auto" mt={32}>
         {current.length > 0 && renderList('Current members', current)}

@@ -26,7 +26,7 @@ const filterPositions = (positions: UseSquadPositions['item'][], search: string)
 };
 
 const SquadPositions = () => {
-  const { squadId } = useSquadContext();
+  const { squadId, squadRole } = useSquadContext();
   const squadPositions = useSquadPositions({ squadId });
   const squadPositionModal = useDataModal<SquadPositionModalData>();
   const [search, setSearch] = useQueryParam('search', withDefault(StringParam, ''));
@@ -53,7 +53,11 @@ const SquadPositions = () => {
     <Spin spinning={squadPositions.loading} tip="Loading member actions">
       <FiltersCard
         search={{ value: search, onSearch: setSearch }}
-        addButton={{ label: 'Add position', onClick: () => squadPositionModal.open(null) }}
+        addButton={{
+          label: 'Add position',
+          visible: squadRole.isManager,
+          onClick: () => squadPositionModal.open(null),
+        }}
       />
       {!squadPositions.loading && (
         <Box maxWidth="100%" overflow="auto" mt={32}>

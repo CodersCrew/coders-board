@@ -1,5 +1,6 @@
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
 
+import { AdminGuard } from '../common/guards';
 import { Clan } from '../guilds/clans/clan.model';
 import { Guild } from '../guilds/guild.model';
 import { CreatePositionInput } from './dto/create-position.input';
@@ -29,16 +30,19 @@ export class PositionsResolver {
   }
 
   @Mutation(returns => Position)
+  @AdminGuard()
   createPosition(@Args('data') input: CreatePositionInput) {
     return this.positionsService.create(input);
   }
 
   @Mutation(returns => Position)
+  @AdminGuard()
   updatePosition(@Args('data') input: UpdatePositionInput) {
     return this.positionsService.update(input);
   }
 
   @Mutation(returns => Boolean)
+  @AdminGuard()
   deletePosition(@Args() args: DeletePositionArgs) {
     return this.positionsService.delete(args.id);
   }

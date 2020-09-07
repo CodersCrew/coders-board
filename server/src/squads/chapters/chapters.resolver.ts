@@ -33,7 +33,7 @@ export class ChaptersResolver {
   }
 
   @Mutation(returns => Chapter)
-  @TeamRoleGuard(TeamRole.MANAGER, 'data.squadId')
+  @TeamRoleGuard(TeamRole.OWNER, 'data.squadId')
   createChapter(@Args('data') input: CreateChapterInput) {
     return this.chaptersService.create(input);
   }
@@ -45,7 +45,7 @@ export class ChaptersResolver {
   }
 
   @Mutation(returns => Boolean)
-  @TeamRoleGuard(TeamRole.MANAGER, 'squadId')
+  @TeamRoleGuard(TeamRole.OWNER, 'squadId')
   deleteChapter(@Args() args: DeleteChapterArgs) {
     return this.chaptersService.delete(args.id);
   }

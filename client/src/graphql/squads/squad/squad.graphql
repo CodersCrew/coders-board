@@ -4,6 +4,9 @@ query squad($id: ID!) {
     name
     description
     image
+    chapters {
+      id
+    }
   }
 }
 

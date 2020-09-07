@@ -16,7 +16,7 @@ const StyledPageHeader = styled(Page.Header)({
 });
 
 const SquadLayout = () => {
-  const { squadId } = useSquadContext();
+  const { squadId, squadRole } = useSquadContext();
   const location = useLocation();
   const navigate = useNavigate();
   const squad = useSquad({ id: squadId });
@@ -37,10 +37,12 @@ const SquadLayout = () => {
     },
   ]);
 
+  const showChapters = squadRole.isOwner || squad?.data?.chapters?.length;
+
   const footer = (
     <Tabs activeKey={activeTabKey} onChange={navigate}>
       <Tabs.TabPane tab="Members" key="members" />
-      <Tabs.TabPane tab="Chapters" key="chapters" />
+      {showChapters && <Tabs.TabPane tab="Chapters" key="chapters" />}
       <Tabs.TabPane tab="Positions" key="positions" />
     </Tabs>
   );

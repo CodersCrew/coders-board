@@ -27,25 +27,25 @@ export class SquadMembersResolver {
   }
 
   @Mutation(returns => SquadMember)
-  @TeamRoleGuard(TeamRole.MANAGER, 'data.squadId')
+  @TeamRoleGuard(TeamRole.OWNER, 'data.squadId')
   createSquadMember(@Args('data') input: CreateSquadMemberInput) {
     return this.squadMembersService.create(input);
   }
 
   @Mutation(returns => SquadMember)
-  @TeamRoleGuard(TeamRole.MANAGER, 'data.squadId')
+  @TeamRoleGuard(TeamRole.OWNER, 'data.squadId')
   updateSquadMember(@Args('data') input: UpdateSquadMemberInput) {
     return this.squadMembersService.update(input);
   }
 
   @Mutation(returns => Boolean)
-  @TeamRoleGuard(TeamRole.MANAGER, 'squadId')
+  @TeamRoleGuard(TeamRole.OWNER, 'squadId')
   archiveSquadMember(@Args() args: DeleteSquadMemberArgs) {
     return this.squadMembersService.archive(args.id);
   }
 
   @Mutation(returns => Boolean)
-  @TeamRoleGuard(TeamRole.MANAGER, 'squadId')
+  @TeamRoleGuard(TeamRole.OWNER, 'squadId')
   deleteSquadMember(@Args() args: DeleteSquadMemberArgs) {
     return this.squadMembersService.delete(args.id);
   }

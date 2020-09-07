@@ -1,11 +1,12 @@
 import React from 'react';
-import { MoreOutlined } from '@ant-design/icons';
-import { Dropdown, List, Menu } from 'antd';
+import { DeleteOutlined, EditOutlined } from '@ant-design/icons';
+import { List } from 'antd';
 
-import { Button, Icon } from '@/components/atoms';
+import { ActionsDropdown, DropdownAction } from '@/components/molecules';
 import { UseChapters } from '@/graphql/squads';
 import { pick } from '@/utils/objects';
 
+import { useSquadContext } from '../SquadContext';
 import { ChapterContent } from './ChapterContent';
 import { SquadChapterModalData } from './SquadChapterModal';
 import { useDeleteChapterConfirm } from './useDeleteChapterConfirm';
@@ -16,25 +17,26 @@ export type ChapterProps = {
 };
 
 const Chapter = ({ chapter, openModal }: ChapterProps) => {
+  const { squadRole } = useSquadContext();
   const deleteChapterConfirm = useDeleteChapterConfirm();
 
-  const overlay = (
-    <Menu>
-      <Menu.Item onClick={() => openModal(pick(chapter, ['id', 'name', 'description']))}>Edit chapter</Menu.Item>
-      <Menu.Item danger onClick={() => deleteChapterConfirm(pick(chapter, ['id', 'name']))}>
-        Delete chapter
-      </Menu.Item>
-    </Menu>
-  );
-
-  const dropdownActions = (
-    <Dropdown overlay={overlay} trigger={['click']}>
-      <Button type="link" icon={<Icon icon={MoreOutlined} color="text.secondary" />} />
-    </Dropdown>
-  );
+  const actions: DropdownAction[] = [
+    {
+      label: 'Edit chapter',
+      icon: EditOutlined,
+      visible: squadRole.isManager,
+      onClick: () => openModal(pick(chapter, ['id', 'name', 'description'])),
+    },
+    {
+      label: 'Delete chapter',
+      icon: DeleteOutlined,
+      visible: squadRole.isOwner,
+      onClick: () => deleteChapterConfirm(pick(chapter, ['id', 'name'])),
+    },
+  ];
 
   return (
-    <List.Item extra={dropdownActions}>
+    <List.Item extra={<ActionsDropdown actions={actions} />}>
       <List.Item.Meta
         title={chapter.name}
         description={

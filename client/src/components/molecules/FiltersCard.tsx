@@ -27,7 +27,7 @@ export type FiltersCardProps = {
 };
 
 export const FiltersCard = ({ addButton, search, leftNode }: FiltersCardProps) => {
-  if (!addButton && !search) return null;
+  if ((!addButton || !addButton.visible) && !search) return null;
 
   return (
     <Card p={24} display="flex" mb={24}>
@@ -42,7 +42,7 @@ export const FiltersCard = ({ addButton, search, leftNode }: FiltersCardProps) =
         </Box>
       )}
       {leftNode}
-      {addButton && (
+      {addButton && addButton.visible && (
         <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={() => addButton.onClick()}>
           {addButton.label}
         </Button>
