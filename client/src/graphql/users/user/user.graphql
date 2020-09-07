@@ -1,0 +1,109 @@
+query users($search: String $role: UserRole) {
+	users(search: $search role: $role) {
+		id
+    thumbnail
+    firstName
+    lastName
+    fullName
+    primaryEmail
+    recoveryEmail
+    role
+    slackId
+  }
+}
+
+query baseUserInfo($id: ID!) {
+	user(id: $id) {
+		id
+    thumbnail
+    fullName
+    primaryEmail
+    phone
+    guilds {
+      id
+      guild {
+        id
+        name
+        image
+      }
+    }
+    squads {
+      id
+      squad {
+        id
+        name
+        image
+      }
+    }
+  }
+}
+
+query userActivity($id: ID!) {
+  user(id: $id) {
+    id
+    guilds {
+      id
+      guild {
+        id
+        name
+        image
+      }
+      positions {
+        id
+        from
+        to
+        notes
+        kind
+        clan {
+          id
+          name
+        }
+      }
+    }
+    squads {
+      id
+      squad {
+        id
+        name
+        image
+      }
+      positions {
+        id
+        from
+        to
+        notes
+        position {
+          id
+          name
+        }
+        chapter {
+          id
+          name
+        }
+      }
+    }
+  }
+}
+
+query simpleUsers($ids: [ID!]) {
+  users(ids: $ids) {
+    id
+    fullName
+  }
+}
+
+mutation createUser($data: CreateUserInput!) {
+  createUser(data: $data) {
+    id
+  }
+}
+
+mutation updateUser($data: UpdateUserInput!) {
+  updateUser(data: $data) {
+    id
+  }
+}
+
+mutation deleteUser($id: ID!) {
+  deleteUser(id: $id)
+}

@@ -1,0 +1,21 @@
+query squad($id: ID!) {
+  squad(id: $id) {
+    id
+    name
+    description
+    image
+    chapters {
+      id
+    }
+  }
+}
+
+query squads {
+  squads {
+    id
+    name
+    color
+    description
+    image
+  }
+}

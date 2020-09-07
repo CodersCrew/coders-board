@@ -1,0 +1,437 @@
+# ------------------------------------------------------
+# THIS FILE WAS AUTOMATICALLY GENERATED (DO NOT MODIFY)
+# ------------------------------------------------------
+
+type Guild {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  name: String!
+  description: String!
+  color: String!
+  image: String!
+  clans: [Clan!]!
+  members: [GuildMember!]!
+}
+
+"""
+A date-time string at UTC, such as 2019-12-03T09:54:33Z, compliant with the date-time format.
+"""
+scalar DateTime
+
+type Clan {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  name: String!
+  description: String!
+  image: String!
+  guild: [Guild!]!
+  guildId: String!
+  positions: [GuildPosition!]!
+}
+
+type GuildPosition {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  from: DateTime!
+  to: DateTime
+  notes: String
+  kind: GuildPositionKind!
+  member: GuildMember!
+  memberId: String!
+  clan: Clan
+  clanId: String!
+}
+
+enum GuildPositionKind {
+  MEMBER
+  LEADER
+  EXPERT
+}
+
+type GuildMember {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  role: TeamRole!
+  user: User!
+  userId: String!
+  guild: Guild!
+  guildId: String!
+  positions(active: Boolean): [GuildPosition!]!
+}
+
+enum TeamRole {
+  OWNER
+  MANAGER
+  MEMBER
+}
+
+type Position {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  name: String!
+  description: String!
+  image: String
+  scopes: [PositionScope!]!
+  clan: Clan
+  clanId: String!
+  guild: Guild
+  guildId: String!
+}
+
+enum PositionScope {
+  ORGANIZATION
+  GUILD
+  SQUAD
+}
+
+type Squad {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  name: String!
+  description: String!
+  color: String!
+  image: String!
+  members: [SquadMember!]!
+  chapters: [Chapter!]!
+}
+
+type Chapter {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  name: String!
+  description: String!
+  squad: [Squad!]!
+  squadId: String!
+  positions(active: Boolean): [SquadPosition!]!
+}
+
+type SquadPosition {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  from: DateTime!
+  to: DateTime
+  notes: String
+  member: SquadMember!
+  memberId: String!
+  chapter: Chapter
+  chapterId: String!
+  position: Position!
+  positionId: String!
+}
+
+type SquadMember {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  role: TeamRole!
+  positions(active: Boolean): [SquadPosition!]!
+  squad: Squad!
+  squadId: String!
+  user: User!
+  userId: String!
+}
+
+type Success {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  name: String!
+  description: String!
+  date: DateTime!
+  type: SuccessType!
+  users: [User!]!
+  creator: User!
+  creatorId: String!
+}
+
+enum SuccessType {
+  EPIC
+  SMALL
+  NEWS
+}
+
+type User {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  firstName: String!
+  lastName: String!
+  fullName: String!
+  primaryEmail: String!
+  recoveryEmail: String!
+  password: String
+  phone: String
+  image: String!
+  thumbnail: String!
+  googleId: String!
+  slackId: String
+  role: UserRole!
+  guilds: [GuildMember!]!
+  squads: [SquadMember!]!
+  successes: [Success!]!
+}
+
+enum UserRole {
+  ADMIN
+  USER
+}
+
+type Query {
+  clans(search: String, guildId: ID): [Clan!]!
+  guildMembers(guildId: ID!): [GuildMember!]!
+  guildPositions(guildId: ID!, memberId: String): [GuildPosition!]!
+  guilds(search: String): [Guild!]!
+  guild(id: ID!): Guild!
+  positions(search: String, guildId: ID, clanId: ID, scopes: [PositionScope!]): [Position!]!
+  chapters(search: String, squadId: ID): [Chapter!]!
+  squadMembers(squadId: ID!, archived: Boolean): [SquadMember!]!
+  squadPositions(squadId: ID!, memberId: String): [SquadPosition!]!
+  squads(search: String): [Squad!]!
+  squad(id: ID!): Squad!
+  successes(search: String, type: SuccessType): [Success!]!
+  user(id: ID!): User!
+  me: User!
+  users(search: String, role: UserRole, ids: [ID!]): [User!]!
+}
+
+type Mutation {
+  signIn(data: SignInInput!): Boolean!
+  signOut: Boolean!
+  createClan(data: CreateClanInput!): Clan!
+  updateClan(data: UpdateClanInput!): Clan!
+  deleteClan(id: ID!, guildId: ID!): Boolean!
+  createGuildMember(data: CreateGuildMemberInput!): GuildMember!
+  updateGuildMember(data: UpdateGuildMemberInput!): GuildMember!
+  deleteGuildMember(id: ID!, guildId: ID!): Boolean!
+  createGuildPosition(data: CreateGuildPositionInput!): GuildPosition!
+  updateGuildPosition(data: UpdateGuildPositionInput!): GuildPosition!
+  deleteGuildPosition(id: ID!, guildId: ID!): Boolean!
+  createGuild(data: CreateGuildInput!): Guild!
+  updateGuild(data: UpdateGuildInput!): Guild!
+  deleteGuild(id: ID!): Boolean!
+  initialSyncSlackUser(data: InitialSyncSlackUserInput!): User!
+  createPosition(data: CreatePositionInput!): Position!
+  updatePosition(data: UpdatePositionInput!): Position!
+  deletePosition(id: ID!): Boolean!
+  createChapter(data: CreateChapterInput!): Chapter!
+  updateChapter(data: UpdateChapterInput!): Chapter!
+  deleteChapter(id: ID!, squadId: ID!): Boolean!
+  createSquadMember(data: CreateSquadMemberInput!): SquadMember!
+  updateSquadMember(data: UpdateSquadMemberInput!): SquadMember!
+  archiveSquadMember(id: ID!, squadId: ID!): Boolean!
+  deleteSquadMember(id: ID!, squadId: ID!): Boolean!
+  createSquadPosition(data: CreateSquadPositionInput!): SquadPosition!
+  updateSquadPosition(data: UpdateSquadPositionInput!): SquadPosition!
+  deleteSquadPosition(id: ID!, squadId: ID!): Boolean!
+  createSquad(data: CreateSquadInput!): Squad!
+  updateSquad(data: UpdateSquadInput!): Squad!
+  deleteSquad(id: ID!): Boolean!
+  createSuccess(data: CreateSuccessInput!): Success!
+  updateSuccess(data: UpdateSuccessInput!): Success!
+  deleteSuccess(id: ID!): Boolean!
+  createUser(data: CreateUserInput!): User!
+  updateUser(data: UpdateUserInput!): User!
+  deleteUser(id: ID!): Boolean!
+}
+
+input SignInInput {
+  primaryEmail: String!
+  password: String!
+}
+
+input CreateClanInput {
+  name: String!
+  image: String!
+  guildId: ID!
+  description: String = ""
+}
+
+input UpdateClanInput {
+  name: String!
+  image: String!
+  guildId: ID!
+  description: String = ""
+  id: ID!
+}
+
+input CreateGuildMemberInput {
+  role: TeamRole!
+  userId: ID!
+  guildId: ID!
+}
+
+input UpdateGuildMemberInput {
+  id: ID!
+  role: TeamRole!
+  guildId: ID!
+}
+
+input CreateGuildPositionInput {
+  from: DateTime!
+  kind: GuildPositionKind!
+  memberId: ID!
+  guildId: ID!
+  to: DateTime
+  notes: String
+  clanId: ID
+}
+
+input UpdateGuildPositionInput {
+  from: DateTime!
+  kind: GuildPositionKind!
+  memberId: ID!
+  guildId: ID!
+  to: DateTime
+  notes: String
+  clanId: ID
+  id: ID!
+}
+
+input CreateGuildInput {
+  name: String!
+  image: String!
+  color: String!
+  description: String = ""
+}
+
+input UpdateGuildInput {
+  name: String!
+  image: String!
+  color: String!
+  description: String = ""
+  id: ID!
+}
+
+input InitialSyncSlackUserInput {
+  userId: String!
+  slackId: String!
+}
+
+input CreatePositionInput {
+  name: String!
+  description: String = ""
+  scopes: [PositionScope!]!
+  image: String = ""
+  clanId: ID = null
+  guildId: ID = null
+}
+
+input UpdatePositionInput {
+  name: String!
+  description: String = ""
+  scopes: [PositionScope!]!
+  image: String = ""
+  clanId: ID = null
+  guildId: ID = null
+  id: ID!
+}
+
+input CreateChapterInput {
+  name: String!
+  squadId: ID!
+  description: String = ""
+}
+
+input UpdateChapterInput {
+  name: String!
+  squadId: ID!
+  description: String = ""
+  id: ID!
+}
+
+input CreateSquadMemberInput {
+  role: TeamRole!
+  userId: ID!
+  squadId: ID!
+}
+
+input UpdateSquadMemberInput {
+  id: ID!
+  role: TeamRole!
+  squadId: ID!
+}
+
+input CreateSquadPositionInput {
+  from: DateTime!
+  memberId: ID!
+  positionId: ID!
+  to: DateTime
+  notes: String
+  chapterId: ID
+  squadId: ID!
+}
+
+input UpdateSquadPositionInput {
+  id: ID!
+  from: DateTime!
+  to: DateTime
+  notes: String
+  squadId: ID!
+}
+
+input CreateSquadInput {
+  name: String!
+  image: String!
+  color: String!
+  description: String = ""
+}
+
+input UpdateSquadInput {
+  name: String!
+  image: String!
+  color: String!
+  description: String = ""
+  id: ID!
+}
+
+input CreateSuccessInput {
+  name: String!
+  description: String!
+  date: DateTime!
+  type: SuccessType!
+  usersIds: [ID!]!
+}
+
+input UpdateSuccessInput {
+  name: String!
+  description: String!
+  date: DateTime!
+  type: SuccessType!
+  usersIds: [ID!]!
+  id: ID!
+}
+
+input CreateUserInput {
+  firstName: String!
+  lastName: String!
+  primaryEmail: String!
+  recoveryEmail: String!
+  password: String
+}
+
+input UpdateUserInput {
+  id: String!
+  firstName: String!
+  lastName: String!
+  primaryEmail: String!
+  recoveryEmail: String!
+}

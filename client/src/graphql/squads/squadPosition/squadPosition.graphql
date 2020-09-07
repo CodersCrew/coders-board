@@ -1,0 +1,44 @@
+query squadPositions($squadId: ID!) {
+  squadPositions(squadId: $squadId) {
+    id
+    from
+    to
+    notes
+    position {
+      id
+      name
+    }
+    member {
+      id
+      user {
+        id
+        fullName
+        image
+      }
+      squad {
+        id
+      }
+      deletedAt
+    }
+    chapter {
+      id
+      name
+    }
+  }
+}
+
+mutation createSquadPosition($data: CreateSquadPositionInput!) {
+  createSquadPosition(data: $data) {
+    id
+  }
+}
+
+mutation updateSquadPosition($data: UpdateSquadPositionInput!) {
+  updateSquadPosition(data: $data) {
+    id
+  }
+}
+
+mutation deleteSquadPosition($id: ID! $squadId: ID!) {
+  deleteSquadPosition(id: $id squadId: $squadId)
+}

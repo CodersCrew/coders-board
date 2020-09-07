@@ -1,0 +1,42 @@
+query positions($search: String $guildId: ID $clanId: ID) {
+	positions(search: $search guildId: $guildId clanId: $clanId) {
+    id
+    name
+    description
+    image
+    scopes
+    clan {
+      id
+      name
+      image
+    }
+    guild {
+      id
+      name
+      image
+    }
+  }
+}
+
+query simplePositions($scopes: [PositionScope!]) {
+  positions(scopes: $scopes) {
+    id
+    name
+  }
+}
+
+mutation createPosition($data: CreatePositionInput!) {
+  createPosition(data: $data) {
+    id
+  }
+}
+
+mutation updatePosition($data: UpdatePositionInput!) {
+  updatePosition(data: $data) {
+    id
+  }
+}
+
+mutation deletePosition($id: ID!) {
+  deletePosition(id: $id)
+}

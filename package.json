@@ -1,0 +1,25 @@
+{
+  "name": "codersboard",
+  "version": "1.0.0",
+  "main": "index.js",
+  "engines": {
+    "node": "12.x",
+    "npm": "6.x"
+  },
+  "repository": "https://github.com/KonradSzwarc/codersboard2.git",
+  "author": "KonradSzwarc <konrad.szwarc.dev@gmail.com>",
+  "license": "MIT",
+  "scripts": {
+    "install-client": "cd client && npm install",
+    "install-server": "cd server && npm install",
+    "postinstall": "concurrently npm:install-* --kill-others-on-fail",
+    "build-client": "cd client && npm run build",
+    "build-server": "cd server && npm run build",
+    "build": "concurrently npm:build-* --kill-others-on-fail",
+    "start": "cd server && npm run start:prod",
+    "seed": "cd server && npm run seed"
+  },
+  "dependencies": {
+    "concurrently": "^5.3.0"
+  }
+}

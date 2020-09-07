@@ -1,0 +1,26 @@
+query me {
+	me {
+		id
+    thumbnail
+  	fullName
+    role
+		guilds {
+			id
+      role
+			guildId
+    }
+    squads {
+			id
+      role
+			squadId
+    }
+  }
+}
+
+mutation signOut {
+	signOut
+}
+
+mutation signIn($data: SignInInput!) {
+	signIn(data: $data)
+}

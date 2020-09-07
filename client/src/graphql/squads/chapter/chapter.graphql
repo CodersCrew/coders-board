@@ -1,0 +1,48 @@
+query chapters($squadId: ID!) {
+  chapters(squadId: $squadId) {
+    id
+    name
+    description
+    positions(active: true) {
+			id
+      from
+      to
+      notes
+      position {
+        id
+        name
+        description
+      }
+      member {
+        id
+        user {
+					id
+          fullName
+          image
+        }
+      }
+    }
+  }
+}
+
+query simpleChapters($squadId: ID!) {
+  chapters(squadId: $squadId) {
+    id
+    name
+  }
+}
+
+mutation createChapter($data: CreateChapterInput!) {
+  createChapter(data: $data) {
+    id
+  }
+}
+mutation updateChapter($data: UpdateChapterInput!) {
+  updateChapter(data: $data) {
+    id
+  }
+}
+
+mutation deleteChapter($id: ID! $squadId: ID!) {
+  deleteChapter(id: $id squadId: $squadId)
+}

@@ -1,0 +1,54 @@
+query squadMembers($squadId: ID! $archived: Boolean) {
+  squadMembers(squadId: $squadId, archived: $archived) {
+    id
+    role
+    user {
+      id
+      fullName
+      image
+    }
+    activePositions: positions(active: true) {
+      id
+      position {
+        id
+        name
+      }
+      chapter {
+        id
+        name
+      }
+    }
+    pastPositions: positions(active: false) {
+      id
+    }
+    deletedAt
+  }
+}
+
+query squadMembersIds($squadId: ID!) {
+  squadMembers(squadId: $squadId) {
+    id
+    user {
+      id
+    }
+  }
+}
+
+mutation createSquadMember($data: CreateSquadMemberInput!) {
+  createSquadMember(data: $data) {
+    id
+  }
+}
+mutation updateSquadMember($data: UpdateSquadMemberInput!) {
+  updateSquadMember(data: $data) {
+    id
+  }
+}
+
+mutation archiveSquadMember($id: ID! $squadId: ID!) {
+  archiveSquadMember(id: $id squadId: $squadId)
+}
+
+mutation deleteSquadMember($id: ID! $squadId: ID!) {
+  deleteSquadMember(id: $id squadId: $squadId)
+}

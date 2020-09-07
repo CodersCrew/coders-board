@@ -1,0 +1,40 @@
+query guildPositions($guildId: ID!) {
+  guildPositions(guildId: $guildId) {
+    id
+    from
+    to
+    notes
+    kind
+    member {
+      id
+      user {
+        id
+        fullName
+        image
+      }
+      guild {
+        id
+      }
+    }
+    clan {
+      id
+      name
+    }
+  }
+}
+
+mutation createGuildPosition($data: CreateGuildPositionInput!) {
+  createGuildPosition(data: $data) {
+    id
+  }
+}
+
+mutation updateGuildPosition($data: UpdateGuildPositionInput!) {
+  updateGuildPosition(data: $data) {
+    id
+  }
+}
+
+mutation deleteGuildPosition($id: ID! $guildId: ID!) {
+  deleteGuildPosition(id: $id guildId: $guildId)
+}

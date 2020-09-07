@@ -1,0 +1,31 @@
+overwrite: true
+schema: "../server/src/schema.gql"
+documents: "src/**/*.graphql"
+hooks:
+  afterAllFileWrite:
+    - eslint --fix
+generates:
+  src/typings/graphql.ts:
+    plugins:
+      - "typescript"
+      - "named-operations-object"
+    config:
+      skipTypename: true
+      identifierName: GraphQLOperations
+      scalars:
+        DateTime: Date
+  src/:
+    preset: near-operation-file
+    presetConfig:
+      extension: .apollo.tsx
+      baseTypesPath: typings/graphql.ts
+    plugins:
+      - "typescript-operations"
+      - "typescript-react-apollo"
+    config:
+      skipTypename: true
+      withHOC: false
+      withComponent: false
+      withHooks: true
+      reactApolloVersion: 3
+      gqlImport: "@apollo/client#gql"

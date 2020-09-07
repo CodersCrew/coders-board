@@ -1,0 +1,28 @@
+query guild($id: ID!) {
+  guild(id: $id) {
+    id
+    name
+    description
+    image
+    clans {
+      id
+    }
+  }
+}
+
+query simpleGuilds {
+  guilds {
+    id
+    name
+  }
+}
+
+query guilds {
+  guilds {
+    id
+    name
+    description
+    color
+    image
+  }
+}

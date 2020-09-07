@@ -1,0 +1,34 @@
+fragment SuccessUser on User {
+  id
+  fullName
+  thumbnail
+}
+
+query successes($search: String $type: SuccessType) {
+  successes(search: $search type: $type) {
+    id
+    name
+    description
+    date
+    type
+    users {
+      ...SuccessUser
+    }
+  }
+}
+
+mutation createSuccess($data: CreateSuccessInput!) {
+  createSuccess(data: $data) {
+    id
+  }
+}
+
+mutation updateSuccess($data: UpdateSuccessInput!) {
+  updateSuccess(data: $data) {
+    id
+  }
+}
+
+mutation deleteSuccess($id: ID!) {
+  deleteSuccess(id: $id)
+}

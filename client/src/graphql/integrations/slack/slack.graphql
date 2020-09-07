@@ -1,0 +1,5 @@
+mutation initialSyncSlackUser($data: InitialSyncSlackUserInput!) {
+  initialSyncSlackUser(data: $data) {
+    id
+  }
+}
