@@ -1,5 +1,6 @@
 import Joi from '@hapi/joi';
 import dotenv from 'dotenv';
+import { replace } from 'lodash';
 
 import { EnvVariables } from './env.types';
 import { productionRequiredString, requiredInProduction } from './env.utils';
@@ -72,9 +73,14 @@ export class EnvConfig {
       throw new Error(`Config validation error: ${error.message}`);
     }
 
+    const config = validatedEnvConfig as EnvVariables;
+
     return {
-      ...validatedEnvConfig,
+      ...config,
       APP_ENV: appEnv,
+      GOOGLE_PRIVATE_KEY: config.GOOGLE_PRIVATE_KEY
+        ? replace(config.GOOGLE_PRIVATE_KEY, new RegExp('\\\\n', 'g'), '\n')
+        : config.GOOGLE_PRIVATE_KEY,
     };
   };
 }

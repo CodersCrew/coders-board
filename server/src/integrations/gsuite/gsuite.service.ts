@@ -109,9 +109,16 @@ export class GsuiteService {
 
   async getGsuiteUser(input: GetGsuiteUserDto) {
     const { googleId } = await transformAndValidate(GetGsuiteUserDto, input);
-    const { data } = await this.admin.users.get({ userKey: googleId });
 
-    return data;
+    try {
+      const { data } = await this.admin.users.get({ userKey: googleId });
+
+      return data;
+    } catch (ex) {
+      if (ex?.response?.status === 404) return null;
+
+      throw ex;
+    }
   }
 
   private async updateGsuiteUser(input: UpdateGsuiteUserDto) {

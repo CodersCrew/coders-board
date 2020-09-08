@@ -118,7 +118,7 @@ export class UsersService {
         throw new ConflictException('You cannot delete user with active Slack account');
       }
 
-      const gsuiteUser = await this.slackService.getSlackUser({ slackId: user.slackId });
+      const gsuiteUser = await this.gsuiteService.getGsuiteUser({ googleId: user.googleId });
 
       if (gsuiteUser?.id) {
         throw new ConflictException('You cannot delete user with active Google account');

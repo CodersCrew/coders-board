@@ -97,9 +97,16 @@ export class SlackService {
 
   async getSlackUser(input: GetSlackUserDto) {
     const { slackId } = await transformAndValidate(GetSlackUserDto, input);
-    const { user: slackUser } = await slackRequest<UsersInfoResult>(this.slackBot.users.info({ user: slackId }));
 
-    return slackUser;
+    try {
+      const { user: slackUser } = await slackRequest<UsersInfoResult>(this.slackBot.users.info({ user: slackId }));
+
+      return slackUser;
+    } catch (ex) {
+      if (ex?.data?.error === 'user_not_found') return null;
+
+      throw ex;
+    }
   }
 
   private async updateSlackUser(input: UpdateSlackUserDto) {
