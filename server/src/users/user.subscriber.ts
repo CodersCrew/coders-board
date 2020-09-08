@@ -11,7 +11,10 @@ export class UserSubscriber implements EntitySubscriberInterface<User> {
 
   async beforeInsert(e: InsertEvent<User>) {
     e.entity.fullName = `${e.entity.firstName} ${e.entity.lastName}`;
-    e.entity.password = await bcrypt.hash(e.entity.password, 10);
+
+    if (e.entity.password) {
+      e.entity.password = await bcrypt.hash(e.entity.password, 10);
+    }
   }
 
   async beforeUpdate(e: UpdateEvent<User>) {

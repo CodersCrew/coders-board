@@ -9,11 +9,7 @@ import {
 
 export const useUsersMutations = () => {
   const mutationConfig = {
-    refetchQueries: [
-      GraphQLOperations.Query.users,
-      GraphQLOperations.Query.simpleUsers,
-      GraphQLOperations.Query.slackUsers,
-    ],
+    refetchQueries: [GraphQLOperations.Query.users, GraphQLOperations.Query.simpleUsers],
   };
 
   const [createUser] = useCreateUserMutation(mutationConfig);
