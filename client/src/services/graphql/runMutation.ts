@@ -11,7 +11,7 @@ type Messages<R> = {
 const displayMessage = <T>(
   type: 'loading' | 'success' | 'error',
   param: T,
-  messageContent?: ((param: T) => string) | string,
+  messageContent?: ((p: T) => string) | string,
 ) => {
   if (!messageContent) return;
 

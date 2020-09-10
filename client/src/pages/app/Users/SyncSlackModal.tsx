@@ -7,14 +7,14 @@ import { FormikModal } from '@/components/molecules';
 import { useSlackMutations } from '@/graphql/integrations';
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
-import { SyncSlackUserInput } from '@/typings/graphql';
+import { InitialSyncSlackUserInput } from '@/typings/graphql';
 import { createFormFields } from '@/utils/forms';
 
 const { getInitialValues, validationSchema, fields } = createFormFields({
   slackId: yup.string().label('Slack Member ID').required().default(''),
 });
 
-type FormValues = Omit<SyncSlackUserInput, 'userId'>;
+type FormValues = Omit<InitialSyncSlackUserInput, 'userId'>;
 
 type FormConfig = FormikConfig<FormValues>;
 
