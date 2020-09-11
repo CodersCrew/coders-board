@@ -10,19 +10,17 @@ export type PositionsQueryVariables = Types.Exact<{
 }>;
 
 export type PositionsQuery = {
-  positions: Array<
-    Pick<Types.Position, 'id' | 'name' | 'description' | 'image' | 'scopes'> & {
-      clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name' | 'image'>>;
-      guild?: Types.Maybe<Pick<Types.Guild, 'id' | 'name' | 'image'>>;
-    }
-  >;
+  positions: (Pick<Types.Position, 'id' | 'name' | 'description' | 'image' | 'scopes'> & {
+    clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name' | 'image'>>;
+    guild?: Types.Maybe<Pick<Types.Guild, 'id' | 'name' | 'image'>>;
+  })[];
 };
 
 export type SimplePositionsQueryVariables = Types.Exact<{
-  scopes?: Types.Maybe<Array<Types.PositionScope>>;
+  scopes?: Types.Maybe<Types.PositionScope[]>;
 }>;
 
-export type SimplePositionsQuery = { positions: Array<Pick<Types.Position, 'id' | 'name'>> };
+export type SimplePositionsQuery = { positions: Pick<Types.Position, 'id' | 'name'>[] };
 
 export type CreatePositionMutationVariables = Types.Exact<{
   data: Types.CreatePositionInput;

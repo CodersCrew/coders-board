@@ -8,15 +8,13 @@ export type GuildPositionsQueryVariables = Types.Exact<{
 }>;
 
 export type GuildPositionsQuery = {
-  guildPositions: Array<
-    Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes' | 'kind'> & {
-      member: Pick<Types.GuildMember, 'id'> & {
-        user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
-        guild: Pick<Types.Guild, 'id'>;
-      };
-      clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>>;
-    }
-  >;
+  guildPositions: (Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes' | 'kind'> & {
+    member: Pick<Types.GuildMember, 'id'> & {
+      user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
+      guild: Pick<Types.Guild, 'id'>;
+    };
+    clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>>;
+  })[];
 };
 
 export type CreateGuildPositionMutationVariables = Types.Exact<{

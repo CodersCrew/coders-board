@@ -11,9 +11,9 @@ export type SuccessesQueryVariables = Types.Exact<{
 }>;
 
 export type SuccessesQuery = {
-  successes: Array<
-    Pick<Types.Success, 'id' | 'name' | 'description' | 'date' | 'type'> & { users: Array<SuccessUserFragment> }
-  >;
+  successes: (Pick<Types.Success, 'id' | 'name' | 'description' | 'date' | 'type'> & {
+    users: SuccessUserFragment[];
+  })[];
 };
 
 export type CreateSuccessMutationVariables = Types.Exact<{

@@ -9,18 +9,14 @@ export type SquadMembersQueryVariables = Types.Exact<{
 }>;
 
 export type SquadMembersQuery = {
-  squadMembers: Array<
-    Pick<Types.SquadMember, 'id' | 'role' | 'deletedAt'> & {
-      user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
-      activePositions: Array<
-        Pick<Types.SquadPosition, 'id'> & {
-          position: Pick<Types.Position, 'id' | 'name'>;
-          chapter?: Types.Maybe<Pick<Types.Chapter, 'id' | 'name'>>;
-        }
-      >;
-      pastPositions: Array<Pick<Types.SquadPosition, 'id'>>;
-    }
-  >;
+  squadMembers: (Pick<Types.SquadMember, 'id' | 'role' | 'deletedAt'> & {
+    user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
+    activePositions: (Pick<Types.SquadPosition, 'id'> & {
+      position: Pick<Types.Position, 'id' | 'name'>;
+      chapter?: Types.Maybe<Pick<Types.Chapter, 'id' | 'name'>>;
+    })[];
+    pastPositions: Pick<Types.SquadPosition, 'id'>[];
+  })[];
 };
 
 export type SquadMembersIdsQueryVariables = Types.Exact<{
@@ -28,7 +24,7 @@ export type SquadMembersIdsQueryVariables = Types.Exact<{
 }>;
 
 export type SquadMembersIdsQuery = {
-  squadMembers: Array<Pick<Types.SquadMember, 'id'> & { user: Pick<Types.User, 'id'> }>;
+  squadMembers: (Pick<Types.SquadMember, 'id'> & { user: Pick<Types.User, 'id'> })[];
 };
 
 export type CreateSquadMemberMutationVariables = Types.Exact<{

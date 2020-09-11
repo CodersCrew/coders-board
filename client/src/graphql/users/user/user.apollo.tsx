@@ -9,12 +9,10 @@ export type UsersQueryVariables = Types.Exact<{
 }>;
 
 export type UsersQuery = {
-  users: Array<
-    Pick<
-      Types.User,
-      'id' | 'thumbnail' | 'firstName' | 'lastName' | 'fullName' | 'primaryEmail' | 'recoveryEmail' | 'role' | 'slackId'
-    >
-  >;
+  users: Pick<
+    Types.User,
+    'id' | 'thumbnail' | 'firstName' | 'lastName' | 'fullName' | 'primaryEmail' | 'recoveryEmail' | 'role' | 'slackId'
+  >[];
 };
 
 export type BaseUserInfoQueryVariables = Types.Exact<{
@@ -23,8 +21,8 @@ export type BaseUserInfoQueryVariables = Types.Exact<{
 
 export type BaseUserInfoQuery = {
   user: Pick<Types.User, 'id' | 'thumbnail' | 'fullName' | 'primaryEmail' | 'phone'> & {
-    guilds: Array<Pick<Types.GuildMember, 'id'> & { guild: Pick<Types.Guild, 'id' | 'name' | 'image'> }>;
-    squads: Array<Pick<Types.SquadMember, 'id'> & { squad: Pick<Types.Squad, 'id' | 'name' | 'image'> }>;
+    guilds: (Pick<Types.GuildMember, 'id'> & { guild: Pick<Types.Guild, 'id' | 'name' | 'image'> })[];
+    squads: (Pick<Types.SquadMember, 'id'> & { squad: Pick<Types.Squad, 'id' | 'name' | 'image'> })[];
   };
 };
 
@@ -34,35 +32,27 @@ export type UserActivityQueryVariables = Types.Exact<{
 
 export type UserActivityQuery = {
   user: Pick<Types.User, 'id'> & {
-    guilds: Array<
-      Pick<Types.GuildMember, 'id'> & {
-        guild: Pick<Types.Guild, 'id' | 'name' | 'image'>;
-        positions: Array<
-          Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes' | 'kind'> & {
-            clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>>;
-          }
-        >;
-      }
-    >;
-    squads: Array<
-      Pick<Types.SquadMember, 'id'> & {
-        squad: Pick<Types.Squad, 'id' | 'name' | 'image'>;
-        positions: Array<
-          Pick<Types.SquadPosition, 'id' | 'from' | 'to' | 'notes'> & {
-            position: Pick<Types.Position, 'id' | 'name'>;
-            chapter?: Types.Maybe<Pick<Types.Chapter, 'id' | 'name'>>;
-          }
-        >;
-      }
-    >;
+    guilds: (Pick<Types.GuildMember, 'id'> & {
+      guild: Pick<Types.Guild, 'id' | 'name' | 'image'>;
+      positions: (Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes' | 'kind'> & {
+        clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>>;
+      })[];
+    })[];
+    squads: (Pick<Types.SquadMember, 'id'> & {
+      squad: Pick<Types.Squad, 'id' | 'name' | 'image'>;
+      positions: (Pick<Types.SquadPosition, 'id' | 'from' | 'to' | 'notes'> & {
+        position: Pick<Types.Position, 'id' | 'name'>;
+        chapter?: Types.Maybe<Pick<Types.Chapter, 'id' | 'name'>>;
+      })[];
+    })[];
   };
 };
 
 export type SimpleUsersQueryVariables = Types.Exact<{
-  ids?: Types.Maybe<Array<Types.Scalars['ID']>>;
+  ids?: Types.Maybe<Types.Scalars['ID'][]>;
 }>;
 
-export type SimpleUsersQuery = { users: Array<Pick<Types.User, 'id' | 'fullName'>> };
+export type SimpleUsersQuery = { users: Pick<Types.User, 'id' | 'fullName'>[] };
 
 export type CreateUserMutationVariables = Types.Exact<{
   data: Types.CreateUserInput;
