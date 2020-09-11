@@ -3,7 +3,7 @@ import { MoreOutlined } from '@ant-design/icons';
 import { AntdIconProps } from '@ant-design/icons/lib/components/AntdIcon';
 import { Dropdown, Menu } from 'antd';
 import { MenuItemProps } from 'antd/lib/menu/MenuItem';
-import { filter } from 'lodash-es';
+import { reject } from 'lodash-es';
 
 import { Button, Icon } from '@/components/atoms';
 import { RFC } from '@/typings/components';
@@ -19,7 +19,7 @@ export type ActionsDropdownProps = {
 };
 
 export const ActionsDropdown = ({ actions }: ActionsDropdownProps) => {
-  const actionsToDisplay = filter(actions, a => a.visible !== false);
+  const actionsToDisplay = reject(actions, { visible: false });
 
   return actionsToDisplay.length ? (
     <Dropdown

@@ -1,5 +1,6 @@
 import { ApolloError } from '@apollo/client';
 import { message } from 'antd';
+import { isString } from 'lodash-es';
 import loglevel from 'loglevel';
 
 type Messages<R> = {
@@ -15,7 +16,7 @@ const displayMessage = <T>(
 ) => {
   if (!messageContent) return;
 
-  if (typeof messageContent === 'string') {
+  if (isString(messageContent)) {
     message[type](messageContent, type === 'loading' ? 0 : undefined);
   } else {
     message[type](messageContent(param));

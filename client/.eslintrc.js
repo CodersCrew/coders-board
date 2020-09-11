@@ -4,12 +4,26 @@ module.exports = {
   parser: '@typescript-eslint/parser',
   extends: [
     'airbnb',
+    'eslint:recommended',
     'plugin:@typescript-eslint/recommended',
     'plugin:import/typescript',
     'plugin:prettier/recommended',
     'prettier/@typescript-eslint',
+    'plugin:jest/recommended',
+    'plugin:jest-dom/recommended',
+    'plugin:react-hooks/recommended',
+    'plugin:lodash/recommended',
   ],
-  plugins: ['react', 'react-hooks', '@typescript-eslint', 'jest', 'prettier', 'simple-import-sort'],
+  plugins: [
+    'react',
+    'react-hooks',
+    '@typescript-eslint',
+    'jest',
+    'jest-dom',
+    'prettier',
+    'simple-import-sort',
+    'lodash',
+  ],
   env: {
     browser: true,
     jest: true,
@@ -25,14 +39,18 @@ module.exports = {
   },
   rules: {
     'no-console': 0,
+    complexity: 2, // prevents from writing too complex functions
     'sort-imports': 0, // turned of as we're using simple-import-sort for sorting
     'spaced-comment': [2, 'always', { markers: ['/'] }], // modified to allow TS references with triple brackets
+    'lodash/import-scope': [2, 'member'], // always expect import { x } from 'lodash' syntax
+    'lodash/prefer-lodash-method': 0, // we always prefer native function implementation if it exists
     'react/jsx-filename-extension': [2, { extensions: ['.ts', '.tsx'] }], // reduces allowed extensions to typescript ones
     'react/jsx-curly-newline': 0, // conflicts with prettier
     'react/jsx-one-expression-per-line': 0, // conflicts with prettier
     'react/jsx-indent': 0, // conflicts with prettier
     'react/jsx-wrap-multilines': 0, // conflicts with prettier
     'react/destructuring-assignment': 0, // in many cases we want to destructure part of the props
+    'react-hooks/exhaustive-deps': 0, // in many cases we want to relate useEffect invocation only to a few of variables used inside
     '@typescript-eslint/explicit-module-boundary-types': 0, // in many cases TS knows return type of the function so we don't need to specify it explicitly
     '@typescript-eslint/no-unused-vars': [2, { argsIgnorePattern: '^_' }],
     'simple-import-sort/sort': 2, // treat unsorted imports as lint errors
@@ -56,7 +74,7 @@ module.exports = {
       {
         groups: [
           ['^\\u0000'], // Side effect imports.
-          ['^react', '^@?\\w'], // Packages. `react` related packages come first.
+          ['^react', '^@?\\w'], // Packages from node_modules. `react` related packages come first.
           ['^[^.]'], // Absolute imports (mostly written as `@/foo`). Anything that does not start with a dot.
           ['^\\.'], // Relative imports. Anything that starts with a dot.
         ],

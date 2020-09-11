@@ -7,7 +7,7 @@
     "start": "craco start",
     "build": "craco build",
     "test": "craco test",
-    "lint": "cross-env TIMING=1 eslint \"src/**/*.{js,ts,tsx}\" --fix",
+    "lint": "cross-env TIMING=1 eslint \"src/**/*.{js,ts,tsx}\"",
     "typecheck": "tsc --noEmit",
     "analyze": "source-map-explorer 'build/static/js/*.js'",
     "codegen": "graphql-codegen --config codegen.yml"
@@ -82,7 +82,9 @@
     "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-import": "^2.22.0",
     "eslint-plugin-jest": "^24.0.0",
+    "eslint-plugin-jest-dom": "^3.2.3",
     "eslint-plugin-jsx-a11y": "^6.3.1",
+    "eslint-plugin-lodash": "^7.1.0",
     "eslint-plugin-prettier": "^3.1.4",
     "eslint-plugin-react": "^7.20.6",
     "eslint-plugin-react-hooks": "^4.1.0",
