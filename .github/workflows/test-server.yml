@@ -1,0 +1,43 @@
+name: Run tests for server
+
+on:
+  pull_request:
+    branches:
+      - master
+
+defaults:
+  run:
+    working-directory: server
+
+jobs:
+  test-server:
+    name: Execute tests
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout repository
+        uses: actions/checkout@v2
+
+      - name: Set up Node.js
+        uses: actions/setup-node@v1
+        with:
+          node-version: 12
+
+      - name: Install dependencies
+        run: npm ci
+
+      - name: Run the tests and generate coverage report
+        run: npm run test:ci
+        env:
+          CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+          COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+          SENDGRID_KEY: ${{ secrets.SENDGRID_KEY }}
+          TOKEN_COOKIE_NAME: ${{ secrets.TOKEN_COOKIE_NAME }}
+          TOKEN_PREFIX: ${{ secrets.TOKEN_PREFIX }}
+
+      - name: Upload coverage to Codecov
+        uses: codecov/codecov-action@v1
+        with:
+          flags: server

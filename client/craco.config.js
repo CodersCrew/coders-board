@@ -35,4 +35,11 @@ module.exports = {
   babel: {
     plugins: ['@emotion/babel-plugin'],
   },
+  jest: {
+    configure: {
+      moduleNameMapper: {
+        '^lodash-es$': 'lodash',
+      },
+    },
+  },
 };
