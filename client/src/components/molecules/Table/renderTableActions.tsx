@@ -1,7 +1,7 @@
 import React from 'react';
 import { isBoolean, isFunction, isNil, isString } from 'lodash-es';
 
-import { isNotNil } from '@/utils/arrays';
+import { isNotNil } from '@/utils/other';
 
 import { ActionsDropdown, ActionsDropdownProps } from '../ActionsDropdown';
 import { TableAction, TableRecord } from './Table.types';
