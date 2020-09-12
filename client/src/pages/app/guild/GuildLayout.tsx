@@ -37,7 +37,7 @@ const GuildLayout = () => {
     },
   ]);
 
-  const showClans = guildRole.isOwner || guild?.data?.clans?.length;
+  const showClans = guildRole.isOwner || guild.data.clans?.length;
 
   const footer = (
     <Tabs activeKey={activeTabKey} onChange={navigate}>
