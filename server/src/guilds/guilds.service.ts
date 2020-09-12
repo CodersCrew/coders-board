@@ -11,6 +11,7 @@ export class GuildsService {
   constructor(private readonly guildRepository: GuildRepository) {}
 
   getClans = resolveAsyncRelation(this.guildRepository, 'clans');
+
   getMembers = resolveAsyncRelation(this.guildRepository, 'members');
 
   findByIdOrThrow(id: string) {

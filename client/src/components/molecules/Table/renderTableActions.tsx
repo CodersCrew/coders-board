@@ -1,5 +1,5 @@
 import React from 'react';
-import { isBoolean, isFunction, isNil } from 'lodash-es';
+import { isBoolean, isFunction, isNil, isString } from 'lodash-es';
 
 import { isNotNil } from '@/utils/arrays';
 
@@ -33,7 +33,7 @@ function tableActionsToActions<T extends TableRecord>(record: T) {
     itemProps = {},
   }: TableAction<T>): ActionsDropdownProps['actions'][number] | null => {
     const handleClick = () => onClick(record);
-    const labelText = typeof label === 'string' ? label : label(record);
+    const labelText = isString(label) ? label : label(record);
     const customItemProps = 'apply' in itemProps ? itemProps(record) : itemProps;
 
     if (!getIsVisible(visible, record)) return null;

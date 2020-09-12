@@ -7,13 +7,13 @@ export type ClansQueryVariables = Types.Exact<{
   guildId: Types.Scalars['ID'];
 }>;
 
-export type ClansQuery = { clans: Array<Pick<Types.Clan, 'id' | 'name' | 'description' | 'image'>> };
+export type ClansQuery = { clans: Pick<Types.Clan, 'id' | 'name' | 'description' | 'image'>[] };
 
 export type SimpleClansQueryVariables = Types.Exact<{
   guildId: Types.Scalars['ID'];
 }>;
 
-export type SimpleClansQuery = { clans: Array<Pick<Types.Clan, 'id' | 'name'>> };
+export type SimpleClansQuery = { clans: Pick<Types.Clan, 'id' | 'name'>[] };
 
 export const ClansDocument = gql`
   query clans($guildId: ID!) {

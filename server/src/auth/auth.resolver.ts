@@ -16,7 +16,7 @@ export class AuthResolver {
     const token = await this.authService.signIn(input);
     const { TOKEN_COOKIE_NAME, TOKEN_PREFIX } = env;
 
-    req.res.status(200).cookie(TOKEN_COOKIE_NAME, TOKEN_PREFIX + ' ' + token, {
+    req.res.status(200).cookie(TOKEN_COOKIE_NAME, `${TOKEN_PREFIX} ${token}`, {
       expires: new Date(Date.now() + 24 * 3600000),
       httpOnly: true,
       secure: true,

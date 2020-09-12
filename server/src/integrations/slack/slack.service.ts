@@ -29,6 +29,7 @@ export class SlackService {
   }
 
   slackBot: WebClient;
+
   slackAdmin: WebClient;
 
   async findAllSlackUsers(): Promise<SlackUser[]> {
@@ -53,11 +54,10 @@ export class SlackService {
 
     if (env.APP_ENV !== 'production') {
       const user = await this.userRepository.findOneOrFail(userId);
-      const slackId = crypto.randomBytes(12).toString('hex');
 
       return this.userRepository.save({
         ...user,
-        slackId,
+        slackId: crypto.randomBytes(12).toString('hex'),
       });
     }
 

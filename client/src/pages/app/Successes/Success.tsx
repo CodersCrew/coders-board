@@ -16,10 +16,8 @@ import { SuccessFooter } from './SuccessFooter';
 import { SuccessModalData } from './SuccessModal';
 import { useDeleteSuccessConfirm } from './useDeleteSuccessConfirm';
 
-type Success = UseSuccesses['item'];
-
 type SuccessProps = {
-  success: Success;
+  success: UseSuccesses['item'];
   openEditModal: (data: SuccessModalData) => void;
 };
 

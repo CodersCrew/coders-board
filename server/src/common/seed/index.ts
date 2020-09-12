@@ -1,8 +1,8 @@
 import Listr from 'listr';
 import { createConnection } from 'typeorm';
 
-import { env } from '../../common/env';
 import typeOrmConfig from '../../ormconfig';
+import { env } from '../env';
 import { seedChapters } from './chapters';
 import { seedClans } from './clans';
 import { seedGuilds } from './guilds';

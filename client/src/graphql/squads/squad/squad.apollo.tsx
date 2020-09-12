@@ -8,12 +8,12 @@ export type SquadQueryVariables = Types.Exact<{
 }>;
 
 export type SquadQuery = {
-  squad: Pick<Types.Squad, 'id' | 'name' | 'description' | 'image'> & { chapters: Array<Pick<Types.Chapter, 'id'>> };
+  squad: Pick<Types.Squad, 'id' | 'name' | 'description' | 'image'> & { chapters: Pick<Types.Chapter, 'id'>[] };
 };
 
 export type SquadsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type SquadsQuery = { squads: Array<Pick<Types.Squad, 'id' | 'name' | 'color' | 'description' | 'image'>> };
+export type SquadsQuery = { squads: Pick<Types.Squad, 'id' | 'name' | 'color' | 'description' | 'image'>[] };
 
 export const SquadDocument = gql`
   query squad($id: ID!) {

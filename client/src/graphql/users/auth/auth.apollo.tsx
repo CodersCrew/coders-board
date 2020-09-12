@@ -7,8 +7,8 @@ export type MeQueryVariables = Types.Exact<{ [key: string]: never }>;
 
 export type MeQuery = {
   me: Pick<Types.User, 'id' | 'thumbnail' | 'fullName' | 'role'> & {
-    guilds: Array<Pick<Types.GuildMember, 'id' | 'role' | 'guildId'>>;
-    squads: Array<Pick<Types.SquadMember, 'id' | 'role' | 'squadId'>>;
+    guilds: Pick<Types.GuildMember, 'id' | 'role' | 'guildId'>[];
+    squads: Pick<Types.SquadMember, 'id' | 'role' | 'squadId'>[];
   };
 };
 

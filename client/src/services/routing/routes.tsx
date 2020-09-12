@@ -1,5 +1,5 @@
 import React from 'react';
-import { Navigate, Routes, useRoutes } from 'react-router-dom';
+import { Navigate, useRoutes } from 'react-router-dom';
 
 import AppLayout from '@/pages/app/AppLayout';
 import GuildClans from '@/pages/app/guild/GuildClans';

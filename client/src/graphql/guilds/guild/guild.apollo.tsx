@@ -8,16 +8,16 @@ export type GuildQueryVariables = Types.Exact<{
 }>;
 
 export type GuildQuery = {
-  guild: Pick<Types.Guild, 'id' | 'name' | 'description' | 'image'> & { clans: Array<Pick<Types.Clan, 'id'>> };
+  guild: Pick<Types.Guild, 'id' | 'name' | 'description' | 'image'> & { clans: Pick<Types.Clan, 'id'>[] };
 };
 
 export type SimpleGuildsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type SimpleGuildsQuery = { guilds: Array<Pick<Types.Guild, 'id' | 'name'>> };
+export type SimpleGuildsQuery = { guilds: Pick<Types.Guild, 'id' | 'name'>[] };
 
 export type GuildsQueryVariables = Types.Exact<{ [key: string]: never }>;
 
-export type GuildsQuery = { guilds: Array<Pick<Types.Guild, 'id' | 'name' | 'description' | 'color' | 'image'>> };
+export type GuildsQuery = { guilds: Pick<Types.Guild, 'id' | 'name' | 'description' | 'color' | 'image'>[] };
 
 export const GuildDocument = gql`
   query guild($id: ID!) {

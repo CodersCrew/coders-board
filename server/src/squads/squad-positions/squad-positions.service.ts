@@ -11,7 +11,9 @@ export class SquadPositionsService {
   constructor(private readonly squadPositionRepository: SquadPositionRepository) {}
 
   getMember = resolveAsyncRelation(this.squadPositionRepository, 'member');
+
   getChapter = resolveAsyncRelation(this.squadPositionRepository, 'chapter');
+
   getPosition = resolveAsyncRelation(this.squadPositionRepository, 'position');
 
   async findAll({ squadId, memberId }: GetSquadPositionsArgs) {

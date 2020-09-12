@@ -8,6 +8,7 @@ import { toBase64 } from './cloudinary.utils';
 @Injectable()
 export class CloudinaryService {
   constructor() {
+    // eslint-disable-next-line @typescript-eslint/naming-convention
     const [, api_key, api_secret, cloud_name] = /cloudinary:\/\/(\d+):(.+)@(\w+)/.exec(env.CLOUDINARY_URL);
 
     cloudinary.config({ api_key, api_secret, cloud_name });

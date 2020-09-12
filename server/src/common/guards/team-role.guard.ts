@@ -14,8 +14,7 @@ import { getRepository } from 'typeorm';
 
 import { GuildMember } from '../../guilds/guild-members/guild-member.model';
 import { SquadMember } from '../../squads/squad-members/squad-member.model';
-import { User } from '../../users/user.model';
-import { UserRole } from '../../users/user.model';
+import { User, UserRole } from '../../users/user.model';
 import { TeamRole } from '../enums/team-role.enum';
 
 const roleValues = {

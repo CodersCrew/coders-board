@@ -8,23 +8,19 @@ export type ChaptersQueryVariables = Types.Exact<{
 }>;
 
 export type ChaptersQuery = {
-  chapters: Array<
-    Pick<Types.Chapter, 'id' | 'name' | 'description'> & {
-      positions: Array<
-        Pick<Types.SquadPosition, 'id' | 'from' | 'to' | 'notes'> & {
-          position: Pick<Types.Position, 'id' | 'name' | 'description'>;
-          member: Pick<Types.SquadMember, 'id'> & { user: Pick<Types.User, 'id' | 'fullName' | 'image'> };
-        }
-      >;
-    }
-  >;
+  chapters: (Pick<Types.Chapter, 'id' | 'name' | 'description'> & {
+    positions: (Pick<Types.SquadPosition, 'id' | 'from' | 'to' | 'notes'> & {
+      position: Pick<Types.Position, 'id' | 'name' | 'description'>;
+      member: Pick<Types.SquadMember, 'id'> & { user: Pick<Types.User, 'id' | 'fullName' | 'image'> };
+    })[];
+  })[];
 };
 
 export type SimpleChaptersQueryVariables = Types.Exact<{
   squadId: Types.Scalars['ID'];
 }>;
 
-export type SimpleChaptersQuery = { chapters: Array<Pick<Types.Chapter, 'id' | 'name'>> };
+export type SimpleChaptersQuery = { chapters: Pick<Types.Chapter, 'id' | 'name'>[] };
 
 export type CreateChapterMutationVariables = Types.Exact<{
   data: Types.CreateChapterInput;

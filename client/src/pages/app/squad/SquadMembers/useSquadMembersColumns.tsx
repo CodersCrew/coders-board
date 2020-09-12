@@ -6,14 +6,8 @@ import { Box, Paragraph } from '@/components/atoms';
 import { UseSquadMembers } from '@/graphql/squads';
 import { TeamRole } from '@/typings/graphql';
 
-import { SquadMemberModalData } from './SquadMemberModal';
-
 type Member = UseSquadMembers['item'];
 type Columns = ColumnsType<Member>;
-
-type Params = {
-  openModal: (data: SquadMemberModalData) => void;
-};
 
 export const useSquadMembersColumns = () => {
   const columns: Columns = [

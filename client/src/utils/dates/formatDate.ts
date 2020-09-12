@@ -1,4 +1,5 @@
 import { format } from 'date-fns';
+import { isString } from 'lodash-es';
 
 /**
  * Return the formatted date string in the given format.
@@ -6,6 +7,6 @@ import { format } from 'date-fns';
  * @param shape The string of tokens.
  */
 export const formatDate = (shape: string) => (date: Date | string) => {
-  if (typeof date === 'string') return format(new Date(date), shape);
+  if (isString(date)) return format(new Date(date), shape);
   return format(date, shape);
 };

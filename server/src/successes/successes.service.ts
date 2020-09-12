@@ -9,6 +9,7 @@ export class SuccessesService {
   constructor(private readonly successRepository: SuccessRepository) {}
 
   getUsers = resolveAsyncRelation(this.successRepository, 'users');
+
   getCreator = resolveAsyncRelation(this.successRepository, 'creator');
 
   findById(id: string) {

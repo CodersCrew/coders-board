@@ -15,6 +15,10 @@ const { MonthPicker: $MonthPicker, RangePicker: $RangePicker, WeekPicker: $WeekP
 
 export type DatePickerProps = $DatePickerProps & FormikFieldProps;
 
+export type WeekPickerProps = FormikFieldProps & $WeekPickerProps;
+export type RangePickerProps = FormikFieldProps & $RangePickerProps;
+export type MonthPickerProps = FormikFieldProps & $MonthPickerProps;
+
 export const DatePicker = ({ name, validate, onChange, fast, ...restProps }: DatePickerProps) => (
   <Field name={name} validate={validate} fast={fast}>
     {({ field: { value }, form: { setFieldValue, setFieldTouched } }: FieldProps) => (
@@ -84,7 +88,3 @@ DatePicker.WeekPicker = ({ name, validate, onChange, ...restProps }: WeekPickerP
     )}
   </Field>
 );
-
-export type WeekPickerProps = FormikFieldProps & $WeekPickerProps;
-export type RangePickerProps = FormikFieldProps & $RangePickerProps;
-export type MonthPickerProps = FormikFieldProps & $MonthPickerProps;

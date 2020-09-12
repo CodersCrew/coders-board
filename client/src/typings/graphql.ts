@@ -20,8 +20,8 @@ export type Guild = {
   description: Scalars['String'];
   color: Scalars['String'];
   image: Scalars['String'];
-  clans: Array<Clan>;
-  members: Array<GuildMember>;
+  clans: Clan[];
+  members: GuildMember[];
 };
 
 export type Clan = {
@@ -32,9 +32,9 @@ export type Clan = {
   name: Scalars['String'];
   description: Scalars['String'];
   image: Scalars['String'];
-  guild: Array<Guild>;
+  guild: Guild[];
   guildId: Scalars['String'];
-  positions: Array<GuildPosition>;
+  positions: GuildPosition[];
 };
 
 export type GuildPosition = {
@@ -68,7 +68,7 @@ export type GuildMember = {
   userId: Scalars['String'];
   guild: Guild;
   guildId: Scalars['String'];
-  positions: Array<GuildPosition>;
+  positions: GuildPosition[];
 };
 
 export type GuildMemberPositionsArgs = {
@@ -89,7 +89,7 @@ export type Position = {
   name: Scalars['String'];
   description: Scalars['String'];
   image?: Maybe<Scalars['String']>;
-  scopes: Array<PositionScope>;
+  scopes: PositionScope[];
   clan?: Maybe<Clan>;
   clanId: Scalars['String'];
   guild?: Maybe<Guild>;
@@ -111,8 +111,8 @@ export type Squad = {
   description: Scalars['String'];
   color: Scalars['String'];
   image: Scalars['String'];
-  members: Array<SquadMember>;
-  chapters: Array<Chapter>;
+  members: SquadMember[];
+  chapters: Chapter[];
 };
 
 export type Chapter = {
@@ -122,9 +122,9 @@ export type Chapter = {
   deletedAt?: Maybe<Scalars['DateTime']>;
   name: Scalars['String'];
   description: Scalars['String'];
-  squad: Array<Squad>;
+  squad: Squad[];
   squadId: Scalars['String'];
-  positions: Array<SquadPosition>;
+  positions: SquadPosition[];
 };
 
 export type ChapterPositionsArgs = {
@@ -153,7 +153,7 @@ export type SquadMember = {
   updatedAt: Scalars['DateTime'];
   deletedAt?: Maybe<Scalars['DateTime']>;
   role: TeamRole;
-  positions: Array<SquadPosition>;
+  positions: SquadPosition[];
   squad: Squad;
   squadId: Scalars['String'];
   user: User;
@@ -173,7 +173,7 @@ export type Success = {
   description: Scalars['String'];
   date: Scalars['DateTime'];
   type: SuccessType;
-  users: Array<User>;
+  users: User[];
   creator: User;
   creatorId: Scalars['String'];
 };
@@ -201,9 +201,9 @@ export type User = {
   googleId: Scalars['String'];
   slackId?: Maybe<Scalars['String']>;
   role: UserRole;
-  guilds: Array<GuildMember>;
-  squads: Array<SquadMember>;
-  successes: Array<Success>;
+  guilds: GuildMember[];
+  squads: SquadMember[];
+  successes: Success[];
 };
 
 export enum UserRole {
@@ -212,21 +212,21 @@ export enum UserRole {
 }
 
 export type Query = {
-  clans: Array<Clan>;
-  guildMembers: Array<GuildMember>;
-  guildPositions: Array<GuildPosition>;
-  guilds: Array<Guild>;
+  clans: Clan[];
+  guildMembers: GuildMember[];
+  guildPositions: GuildPosition[];
+  guilds: Guild[];
   guild: Guild;
-  positions: Array<Position>;
-  chapters: Array<Chapter>;
-  squadMembers: Array<SquadMember>;
-  squadPositions: Array<SquadPosition>;
-  squads: Array<Squad>;
+  positions: Position[];
+  chapters: Chapter[];
+  squadMembers: SquadMember[];
+  squadPositions: SquadPosition[];
+  squads: Squad[];
   squad: Squad;
-  successes: Array<Success>;
+  successes: Success[];
   user: User;
   me: User;
-  users: Array<User>;
+  users: User[];
 };
 
 export type QueryClansArgs = {
@@ -255,7 +255,7 @@ export type QueryPositionsArgs = {
   search?: Maybe<Scalars['String']>;
   guildId?: Maybe<Scalars['ID']>;
   clanId?: Maybe<Scalars['ID']>;
-  scopes?: Maybe<Array<PositionScope>>;
+  scopes?: Maybe<PositionScope[]>;
 };
 
 export type QueryChaptersArgs = {
@@ -293,7 +293,7 @@ export type QueryUserArgs = {
 export type QueryUsersArgs = {
   search?: Maybe<Scalars['String']>;
   role?: Maybe<UserRole>;
-  ids?: Maybe<Array<Scalars['ID']>>;
+  ids?: Maybe<Scalars['ID'][]>;
 };
 
 export type Mutation = {
@@ -563,7 +563,7 @@ export type InitialSyncSlackUserInput = {
 export type CreatePositionInput = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  scopes: Array<PositionScope>;
+  scopes: PositionScope[];
   image?: Maybe<Scalars['String']>;
   clanId?: Maybe<Scalars['ID']>;
   guildId?: Maybe<Scalars['ID']>;
@@ -572,7 +572,7 @@ export type CreatePositionInput = {
 export type UpdatePositionInput = {
   name: Scalars['String'];
   description?: Maybe<Scalars['String']>;
-  scopes: Array<PositionScope>;
+  scopes: PositionScope[];
   image?: Maybe<Scalars['String']>;
   clanId?: Maybe<Scalars['ID']>;
   guildId?: Maybe<Scalars['ID']>;
@@ -642,7 +642,7 @@ export type CreateSuccessInput = {
   description: Scalars['String'];
   date: Scalars['DateTime'];
   type: SuccessType;
-  usersIds: Array<Scalars['ID']>;
+  usersIds: Scalars['ID'][];
 };
 
 export type UpdateSuccessInput = {
@@ -650,7 +650,7 @@ export type UpdateSuccessInput = {
   description: Scalars['String'];
   date: Scalars['DateTime'];
   type: SuccessType;
-  usersIds: Array<Scalars['ID']>;
+  usersIds: Scalars['ID'][];
   id: Scalars['ID'];
 };
 
