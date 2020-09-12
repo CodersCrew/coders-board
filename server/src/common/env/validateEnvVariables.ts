@@ -30,7 +30,7 @@ export class EnvConfig {
     const envVarsSchema: Joi.ObjectSchema<EnvVariables> = Joi.object({
       NODE_ENV: Joi.string().valid('development', 'test', 'production').default('development'),
 
-      PORT: Joi.number().required(),
+      PORT: Joi.number().default(4000),
       CLIENT_URL: Joi.string().allow('').default(''),
 
       // database
