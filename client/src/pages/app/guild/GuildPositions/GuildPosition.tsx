@@ -27,11 +27,11 @@ export const GuildPosition: CFC<GuildPositionProps> = props => {
     props.openModal({
       ...pick(props, ['id', 'from', 'to', 'kind', 'notes']),
       memberId: props.member.id,
-      clanId: props?.clan?.id,
+      clanId: props.clan?.id,
     });
   };
 
-  const positionName = getPositionInGuild(props.kind, props?.clan?.name);
+  const positionName = getPositionInGuild(props.kind, props.clan?.name);
 
   return (
     <List.Item
