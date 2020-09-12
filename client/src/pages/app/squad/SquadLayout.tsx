@@ -37,7 +37,7 @@ const SquadLayout = () => {
     },
   ]);
 
-  const showChapters = squadRole.isOwner || squad?.data?.chapters?.length;
+  const showChapters = squadRole.isOwner || squad.data.chapters?.length;
 
   const footer = (
     <Tabs activeKey={activeTabKey} onChange={navigate}>

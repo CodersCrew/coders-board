@@ -91,7 +91,7 @@ export const Success = ({ success, openEditModal }: SuccessProps) => {
           <Paragraph mt={12} ellipsis={{ rows: 4, expandable: true }}>
             {success.description}
           </Paragraph>
-          {success.users.length && <SuccessFooter users={success.users} />}
+          {success.users.length > 0 && <SuccessFooter users={success.users} />}
         </Card>
       </Box>
     </TimelineItem>

@@ -31,7 +31,7 @@ export const GuildPosition: CFC<GuildPositionProps> = props => {
     });
   };
 
-  const positionName = getPositionInGuild(props.kind, props?.clan?.name);
+  const positionName = getPositionInGuild(props.kind, props.clan?.name);
 
   return (
     <List.Item
