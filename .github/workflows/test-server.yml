@@ -27,6 +27,15 @@ jobs:
 
       - name: Run the tests and generate coverage report
         run: npm run test:ci
+        env:
+          CLOUDINARY_URL: ${{ secrets.CLOUDINARY_URL }}
+          COOKIE_SECRET: ${{ secrets.COOKIE_SECRET }}
+          DATABASE_URL: ${{ secrets.DATABASE_URL }}
+          JWT_SECRET: ${{ secrets.JWT_SECRET }}
+          NODE_ENV: ${{ secrets.NODE_ENV }}
+          SENDGRID_KEY: ${{ secrets.SENDGRID_KEY }}
+          TOKEN_COOKIE_NAME: ${{ secrets.TOKEN_COOKIE_NAME }}
+          TOKEN_PREFIX: ${{ secrets.TOKEN_PREFIX }}
 
       - name: Upload coverage to Codecov
         uses: codecov/codecov-action@v1
