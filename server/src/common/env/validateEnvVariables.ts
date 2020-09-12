@@ -16,7 +16,7 @@ export class EnvConfig {
 
   private validateEnvVariables = (env: dotenv.DotenvParseOutput): EnvVariables => {
     const appEnvValidation = Joi.string()
-      .valid('local', 'staging', 'production')
+      .valid('local', 'review', 'staging', 'production')
       .default('local')
       .validate(env.APP_ENV);
 
