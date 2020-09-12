@@ -1,10 +1,9 @@
 ---
 name: "\U0001F41E Bug report"
-about: Something isn't working like it should
+about: Something isn't working as it should
 title: ''
 labels: 'type: bug'
 assignees: ''
-
 ---
 
 **What did you expect to happen?**

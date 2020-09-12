@@ -1,10 +1,9 @@
 ---
 name: "\U0001F929 Feature request"
-about: I have an idea for new, shiny feature we can have in our app
+about: I have an idea for a new, shiny feature we can implement in our app
 title: ''
 labels: 'type: feature'
 assignees: ''
-
 ---
 
 **Is your feature request related to a problem? If yes, please describe it.**
