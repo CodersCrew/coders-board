@@ -11,6 +11,7 @@ export class GuildPositionsService {
   constructor(private readonly guildPositionRepository: GuildPositionRepository) {}
 
   getMember = resolveAsyncRelation(this.guildPositionRepository, 'member');
+
   getClan = resolveAsyncRelation(this.guildPositionRepository, 'clan');
 
   findAll({ guildId, memberId }: GetGuildPositionsArgs) {

@@ -23,6 +23,7 @@ export class UsersService {
   ) {}
 
   getGuilds = resolveAsyncRelation(this.userRepository, 'guilds');
+
   getSquads = resolveAsyncRelation(this.userRepository, 'squads');
 
   findById(id: string) {

@@ -21,6 +21,7 @@ export class GuildMembersService {
   constructor(private readonly guildMemberRepository: GuildMemberRepository) {}
 
   getUser = resolveAsyncRelation(this.guildMemberRepository, 'user');
+
   getGuild = resolveAsyncRelation(this.guildMemberRepository, 'guild');
 
   async getPositions(guildMember: GuildMember, isActive?: boolean) {

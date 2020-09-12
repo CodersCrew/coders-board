@@ -11,6 +11,7 @@ export class PositionsService {
   constructor(private readonly positionRepository: PositionRepository) {}
 
   getGuild = resolveAsyncRelation(this.positionRepository, 'guild');
+
   getClan = resolveAsyncRelation(this.positionRepository, 'clan');
 
   findByIdOrThrow(id: string) {
