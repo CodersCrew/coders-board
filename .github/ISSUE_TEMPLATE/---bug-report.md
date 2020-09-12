@@ -7,7 +7,7 @@ assignees: ''
 
 ---
 
-**What do you expected to happen?**
+**What did you expect to happen?**
 A clear and concise description of how the application should behave.
 
 **What actually happened?**
@@ -15,13 +15,14 @@ A clear and concise description of how the application behave currently.
 
 **How can we reproduce this problem?**
 Steps to reproduce the behavior:
+
 1. Go to '...'
 2. Click on '....'
 3. Scroll down to '....'
 4. See error
 
-**Where it's happening?**
-Device: [e.g. iPhone6,Desktop]
+**Where is it happening?**
+Device: [e.g. iPhone6, Desktop]
 OS: [e.g. iOS, Windows]
 Browser: [e.g. Google Chrome, Safari]
 
