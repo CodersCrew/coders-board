@@ -17,7 +17,7 @@
     "migration:generate": "npm run typeorm -- migration:generate  --name ",
     "migration:run": "npm run typeorm -- migration:run",
     "migration:revert": "npm run typeorm -- migration:revert",
-    "seed": "ts-node src/common/seed/index.ts",
+    "seed": "ts-node src/common/seed/seedExec.ts",
     "lint": "cross-env TIMING=1 eslint \"src/**/*.{js,ts}\"",
     "typecheck": "tsc",
     "test": "jest",

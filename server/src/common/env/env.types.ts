@@ -1,6 +1,6 @@
 export type EnvVariables = Readonly<{
   NODE_ENV: 'development' | 'test' | 'production';
-  APP_ENV: 'local' | 'staging' | 'production';
+  APP_ENV: 'local' | 'review' | 'staging' | 'production';
 
   PORT: number;
   CLIENT_URL: string;

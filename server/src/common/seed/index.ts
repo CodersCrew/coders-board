@@ -1,5 +1,5 @@
 import Listr from 'listr';
-import { createConnection } from 'typeorm';
+import { Connection, createConnection } from 'typeorm';
 
 import typeOrmConfig from '../../ormconfig';
 import { env } from '../env';
@@ -10,11 +10,17 @@ import { seedPositions } from './positions';
 import { seedSquads } from './squads';
 import { seedUsers } from './users';
 
+let connection: Connection;
+
 const initializeSeed = async () => {
-  const connection = await createConnection(typeOrmConfig);
+  connection = await createConnection(typeOrmConfig);
 
   await connection.dropDatabase();
   await connection.synchronize();
+};
+
+const endConnection = async () => {
+  await connection.close();
 };
 
 const seed = async () => {
@@ -69,11 +75,13 @@ const seed = async () => {
       title: 'Seeding positions (0/50)',
       task: seedPositions,
     },
+    {
+      title: 'Deconnecting database',
+      task: endConnection,
+    },
   ]);
 
-  return tasks.run().then(() => {
-    process.exit(0);
-  });
+  return tasks.run();
 };
 
-seed();
+export default seed;

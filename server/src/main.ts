@@ -11,6 +11,7 @@ import { AppModule } from './app.module';
 import { env } from './common/env';
 import { IsAuthorized, JwtAuthGuard } from './common/guards';
 import { helmetMiddleware, rateLimitMiddleware } from './common/middlewares';
+import seed from './common/seed';
 
 const httpsOptions: HttpsOptions =
   env.NODE_ENV === 'development'
@@ -30,6 +31,10 @@ const validationPipe = new ValidationPipe({
 });
 
 async function bootstrap() {
+  if (env.APP_ENV === 'review' || env.APP_ENV === 'staging') {
+    await seed();
+  }
+
   const app = await NestFactory.create<NestExpressApplication>(AppModule, { httpsOptions });
 
   app.set('trust proxy', 1);
