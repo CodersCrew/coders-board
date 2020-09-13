@@ -29,7 +29,7 @@ const Users = () => {
   const filtersLeftNode = (
     <RoleSelect
       loading={users.loading}
-      placeholder="Select user role"
+      placeholder="Select member role"
       onChange={setRole}
       allowClear
       style={{ width: 240, marginLeft: 24 }}
@@ -44,12 +44,12 @@ const Users = () => {
       onClick: user => syncSlackModal.open({ userId: user.id }),
     },
     {
-      label: 'Edit user',
+      label: 'Edit member',
       icon: EditOutlined,
       onClick: user => userModal.open(pick(user, ['id', 'firstName', 'lastName', 'primaryEmail', 'recoveryEmail'])),
     },
     {
-      label: 'Remove user',
+      label: 'Remove member',
       icon: DeleteOutlined,
       onClick: user => deleteUserConfirm(pick(user, ['id', 'fullName'])),
       itemProps: { danger: true },
@@ -58,11 +58,11 @@ const Users = () => {
 
   return (
     <Page>
-      <Page.Header title="Users" subTitle="Search and filter for all of the CodersCrew users" />
+      <Page.Header title="Members" subTitle="Search and filter for all of the CodersCrew members" />
       <Page.Content>
         <FiltersCard
           search={{ onSearch: setSearch, value: search, loading: users.loading }}
-          addButton={isAdmin && { label: 'Add user', onClick: () => userModal.open(null) }}
+          addButton={isAdmin && { label: 'Add member', onClick: () => userModal.open(null) }}
           leftNode={filtersLeftNode}
         />
         <Box maxWidth="100%" overflow="auto" mt={32}>

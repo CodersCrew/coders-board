@@ -1,7 +1,7 @@
 import React from 'react';
 import styled from '@emotion/styled';
 
-import { Title } from '@/components/atoms';
+import { Paragraph, Title } from '@/components/atoms';
 import { down } from '@/services/styling';
 import { CFC } from '@/typings/components';
 
@@ -11,6 +11,7 @@ import { TeamObject } from './Team.types';
 type TeamsListProps = {
   loading: boolean;
   title: string;
+  subtitle: string;
   data?: TeamObject[];
   type: 'squad' | 'guild';
 };
@@ -43,14 +44,17 @@ const Grid = styled.div({
   },
 });
 
-export const TeamsList: CFC<TeamsListProps> = ({ loading, data = [], title, type }) => {
+export const TeamsList: CFC<TeamsListProps> = ({ loading, data = [], title, subtitle, type }) => {
   if (!loading && !data.length) return null;
 
   return (
     <TeamListWrapper>
-      <Title level={2} mb={16}>
+      <Title level={2} mb={8}>
         {title}
       </Title>
+      <Paragraph large mb={24}>
+        {subtitle}
+      </Paragraph>
       <Grid>
         {data.map(item => (
           <Team key={item.id} type={type} {...item} />

@@ -7,7 +7,7 @@ import { getCustomRepository } from 'typeorm';
 import { ClanRepository } from '../../guilds/clans/clan.repository';
 import { Guild } from '../../guilds/guild.model';
 
-const clansEndpoint = 'https://run.mocky.io/v3/9ebb10c4-a112-40e5-a6d2-dc2a1177251b';
+const clansEndpoint = 'https://run.mocky.io/v3/67626836-51a8-4108-8d60-b532f888c80b';
 
 type MockedClan = { name: string; image: string; guildName: string };
 

@@ -2,11 +2,11 @@ import { transparentize } from 'polished';
 
 const colors = {
   primary: {
-    dark: '#1d39c4',
-    main: '#2f54eb',
-    light: '#597ef7',
-    border: '#adc6ff',
-    background: '#f0f5ff',
+    dark: '#2b7cd9',
+    main: '#409eff',
+    light: '#69b9ff',
+    border: '#bae3ff',
+    background: '#f0faff',
   },
   info: {
     dark: '#08979c',

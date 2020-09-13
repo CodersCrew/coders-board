@@ -6,7 +6,7 @@ import { getCustomRepository } from 'typeorm';
 import { Guild } from '../../guilds/guild.model';
 import { GuildRepository } from '../../guilds/guild.repository';
 
-const guildsEndpoint = 'https://run.mocky.io/v3/d10cddcc-e170-40cf-988e-1edda375cf54';
+const guildsEndpoint = 'https://run.mocky.io/v3/27bfe074-8fd4-476a-b8eb-8fd8c5eafaae';
 
 export const seedGuilds = async (ctx: any, task: Listr.ListrTaskWrapper<any>) => {
   const guildRepository = getCustomRepository(GuildRepository);

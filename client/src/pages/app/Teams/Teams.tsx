@@ -14,8 +14,20 @@ const Teams = () => {
     <Page>
       <Page.Header title="Teams" subTitle="All teams in CodersCrew you can be a part of" />
       <Page.Content>
-        <TeamsList loading={guilds.loading} data={guilds.data} type="guild" title="Guilds" />
-        <TeamsList loading={squads.loading} data={squads.data} type="squad" title="Squads" />
+        <TeamsList
+          loading={guilds.loading}
+          data={guilds.data}
+          type="guild"
+          title="Guilds"
+          subtitle="Areas where you can expand your knowledge and share it with others"
+        />
+        <TeamsList
+          loading={squads.loading}
+          data={squads.data}
+          type="squad"
+          title="Squads"
+          subtitle="Teams where you can apply your knowledge and create something awesome"
+        />
       </Page.Content>
     </Page>
   );
