@@ -6,7 +6,7 @@ import { getCustomRepository } from 'typeorm';
 import { Squad } from '../../squads/squad.model';
 import { SquadRepository } from '../../squads/squad.repository';
 
-const squadsEndpoint = 'https://run.mocky.io/v3/ee4c1ebb-641d-4aeb-853d-42a23cdf4018';
+const squadsEndpoint = 'https://run.mocky.io/v3/2a1eb387-63e9-417f-bf5d-9593621f8a99';
 
 export const seedSquads = async (ctx: any, task: Listr.ListrTaskWrapper<any>) => {
   const squadRepository = getCustomRepository(SquadRepository);
