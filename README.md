@@ -23,3 +23,9 @@ CodersBoard is a CodersCrew internal tool created to centralize information abou
 ![Jest](https://img.shields.io/badge/-Jest-C21325?style=flat-square&logo=jest&logoColor=white)
 ![Heroku](https://img.shields.io/badge/-Heroku-430098?style=flat-square&logo=heroku&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/-GitHub_Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white)
+
+### App state
+[![Known Vulnerabilities](https://snyk.io/test/github/CodersCrew/coders-board/badge.svg)](https://snyk.io/test/github/CodersCrew/coders-board)
+[![Codacy Badge](https://app.codacy.com/project/badge/Grade/eba659df35a147c2ae4d8a812bba581a)](https://www.codacy.com/gh/CodersCrew/coders-board?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CodersCrew/coders-board&amp;utm_campaign=Badge_Grade)
+[![CodeFactor](https://www.codefactor.io/repository/github/coderscrew/coders-board/badge)](https://www.codefactor.io/repository/github/coderscrew/coders-board)
+[![DeepScan grade](https://deepscan.io/api/teams/10880/projects/13786/branches/241875/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=10880&pid=13786&bid=241875)
