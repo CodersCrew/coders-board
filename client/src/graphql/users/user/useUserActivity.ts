@@ -2,7 +2,6 @@ import arraySort from 'array-sort';
 import { compareDesc } from 'date-fns';
 
 import { pick } from '@/utils/objects';
-import { parseGuildPositionKind } from '@/utils/platform';
 
 import { UserActivityQuery, UserActivityQueryVariables, useUserActivityQuery } from './user.apollo';
 
@@ -34,15 +33,12 @@ export type UseUserActivity = {
 const parseUserActivity = (data: UserActivityQuery['user']): Activity[] => {
   const guilds = data.guilds.flatMap(({ guild, positions }) => {
     return positions.map<Activity>(position => {
-      const positionKind = parseGuildPositionKind(position.kind, { lowercase: true });
-      const positionName = position.clan ? `${position.clan.name} clan ${positionKind}` : `Guild ${positionKind}`;
-
       return {
         id: position.id,
         team: { type: 'guild', ...pick(guild, ['id', 'name', 'image']) },
         subTeam: position.clan ? { type: 'clan', name: position.clan.name } : undefined,
         position: {
-          name: positionName,
+          name: position.position.name,
           from: new Date(position.from),
           to: position.to ? new Date(position.to) : null,
           notes: position.notes ?? '',

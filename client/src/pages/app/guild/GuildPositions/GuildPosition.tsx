@@ -6,7 +6,6 @@ import { UseGuildPositions } from '@/graphql/guilds';
 import { CFC } from '@/typings/components';
 import { formatDate } from '@/utils/dates';
 import { pick } from '@/utils/objects';
-import { getPositionInGuild } from '@/utils/platform';
 
 import { useGuildContext } from '../GuildContext';
 import { GuildPositionModalData } from './GuildPositionModal';
@@ -21,17 +20,16 @@ const format = formatDate('MMMM yyyy');
 
 export const GuildPosition: CFC<GuildPositionProps> = props => {
   const { guildRole } = useGuildContext();
-  const deleteGuildPositionConfirm = useDeleteGuildPositionConfirm(pick(props, ['id', 'kind']));
+  const deleteGuildPositionConfirm = useDeleteGuildPositionConfirm({ id: props.id, positionName: props.position.name });
 
   const openUpdateModal = () => {
     props.openModal({
-      ...pick(props, ['id', 'from', 'to', 'kind', 'notes']),
+      ...pick(props, ['id', 'from', 'to', 'notes']),
       memberId: props.member.id,
+      positionId: props.position.id,
       clanId: props.clan?.id,
     });
   };
-
-  const positionName = getPositionInGuild(props.kind, props.clan?.name);
 
   return (
     <List.Item
@@ -50,7 +48,7 @@ export const GuildPosition: CFC<GuildPositionProps> = props => {
     >
       <List.Item.Meta
         avatar={<Avatar src={props.member.user.image} />}
-        title={positionName}
+        title={props.position.name}
         description={props.member.user.fullName}
       />
       <div>

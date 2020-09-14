@@ -1,6 +1,5 @@
 export * from './ChapterSelect';
 export * from './ClanSelect';
-export * from './GuildPositionKindSelect';
 export * from './GuildSelect';
 export * from './PositionSelect';
 export * from './RoleSelect';

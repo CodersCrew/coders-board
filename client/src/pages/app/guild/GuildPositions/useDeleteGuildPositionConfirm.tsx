@@ -6,28 +6,24 @@ import { Icon } from '@/components/atoms';
 import { confirmModal } from '@/components/molecules';
 import { useGuildPositionMutations } from '@/graphql/guilds';
 import { runMutation } from '@/services/graphql';
-import { GuildPositionKind } from '@/typings/graphql';
 import { getGenericMessages } from '@/utils/getGenericMessages';
-import { parseGuildPositionKind } from '@/utils/platform';
 
 import { useGuildContext } from '../GuildContext';
 
 type Params = {
-  kind: GuildPositionKind;
+  positionName: string;
   id: string;
 };
 
-export const useDeleteGuildPositionConfirm = ({ kind, id }: Params) => {
+export const useDeleteGuildPositionConfirm = ({ positionName, id }: Params) => {
   const { colors } = useTheme();
   const { deleteGuildPosition } = useGuildPositionMutations();
   const { guildId } = useGuildContext();
 
   return () => {
-    const position = parseGuildPositionKind(kind);
-
     confirmModal({
       title: 'Are you sure?',
-      content: `Are you sure you want to delete user position "${position}"? This operation will be permanent and cannot be undone.`,
+      content: `Are you sure you want to delete user position "${positionName}"? This operation will be permanent and cannot be undone.`,
       okText: 'Yes, delete position',
       cancelText: 'No, preserve position',
       width: 440,

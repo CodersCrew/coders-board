@@ -1,6 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { resolveAsyncRelation } from '../../common/utils';
+import { PositionRepository } from '../../positions/position.repository';
+import { SquadPosition } from '../squad-positions/squad-position.model';
 import { CreateSquadMemberInput } from './dto/create-squad-member.input';
 import { GetSquadMembersArgs } from './dto/get-squad-members.args';
 import { UpdateSquadMemberInput } from './dto/update-squad-member.input';
@@ -9,7 +12,11 @@ import { SquadMemberRepository } from './squad-member.repository';
 
 @Injectable()
 export class SquadMembersService {
-  constructor(private readonly squadMemberRepository: SquadMemberRepository) {}
+  constructor(
+    @InjectRepository(PositionRepository)
+    private readonly positionRepository: PositionRepository,
+    private readonly squadMemberRepository: SquadMemberRepository,
+  ) {}
 
   getUser = resolveAsyncRelation(this.squadMemberRepository, 'user');
 
@@ -40,8 +47,14 @@ export class SquadMembersService {
     return query.getMany();
   }
 
-  create(input: CreateSquadMemberInput) {
-    return this.squadMemberRepository.save(input);
+  async create({ positionId, ...input }: CreateSquadMemberInput) {
+    const position = await this.positionRepository.findOneOrFail(positionId);
+
+    const squadPosition = new SquadPosition();
+    squadPosition.from = new Date();
+    squadPosition.position = position;
+
+    return this.squadMemberRepository.save({ ...input, positions: [squadPosition] });
   }
 
   async update({ id, squadId, ...input }: UpdateSquadMemberInput) {

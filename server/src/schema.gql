@@ -33,6 +33,27 @@ type Clan {
   positions: [GuildPosition!]!
 }
 
+type Position {
+  id: ID!
+  createdAt: DateTime!
+  updatedAt: DateTime!
+  deletedAt: DateTime
+  name: String!
+  description: String!
+  image: String
+  scopes: [PositionScope!]!
+  clan: Clan
+  clanId: String
+  guild: Guild
+  guildId: String
+}
+
+enum PositionScope {
+  ORGANIZATION
+  GUILD
+  SQUAD
+}
+
 type GuildPosition {
   id: ID!
   createdAt: DateTime!
@@ -41,17 +62,12 @@ type GuildPosition {
   from: DateTime!
   to: DateTime
   notes: String
-  kind: GuildPositionKind!
+  position: Position!
+  positionId: String!
   member: GuildMember!
   memberId: String!
   clan: Clan
   clanId: String!
-}
-
-enum GuildPositionKind {
-  MEMBER
-  LEADER
-  EXPERT
 }
 
 type GuildMember {
@@ -71,27 +87,6 @@ enum TeamRole {
   OWNER
   MANAGER
   MEMBER
-}
-
-type Position {
-  id: ID!
-  createdAt: DateTime!
-  updatedAt: DateTime!
-  deletedAt: DateTime
-  name: String!
-  description: String!
-  image: String
-  scopes: [PositionScope!]!
-  clan: Clan
-  clanId: String!
-  guild: Guild
-  guildId: String!
-}
-
-enum PositionScope {
-  ORGANIZATION
-  GUILD
-  SQUAD
 }
 
 type Squad {
@@ -277,6 +272,7 @@ input CreateGuildMemberInput {
   role: TeamRole!
   userId: ID!
   guildId: ID!
+  positionId: ID!
 }
 
 input UpdateGuildMemberInput {
@@ -287,7 +283,7 @@ input UpdateGuildMemberInput {
 
 input CreateGuildPositionInput {
   from: DateTime!
-  kind: GuildPositionKind!
+  positionId: ID!
   memberId: ID!
   guildId: ID!
   to: DateTime
@@ -297,7 +293,7 @@ input CreateGuildPositionInput {
 
 input UpdateGuildPositionInput {
   from: DateTime!
-  kind: GuildPositionKind!
+  positionId: ID!
   memberId: ID!
   guildId: ID!
   to: DateTime
@@ -362,6 +358,7 @@ input CreateSquadMemberInput {
   role: TeamRole!
   userId: ID!
   squadId: ID!
+  positionId: ID!
 }
 
 input UpdateSquadMemberInput {

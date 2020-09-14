@@ -1,7 +1,7 @@
 import { Field, ID, InputType } from '@nestjs/graphql';
-import { IsDate, IsEnum, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsDate, IsNotEmpty, IsOptional, IsString, IsUUID } from 'class-validator';
 
-import { GuildPosition, GuildPositionKind } from '../guild-position.model';
+import { GuildPosition } from '../guild-position.model';
 
 @InputType()
 export class CreateGuildPositionInput implements Partial<GuildPosition> {
@@ -10,10 +10,10 @@ export class CreateGuildPositionInput implements Partial<GuildPosition> {
   @IsDate()
   from: Date;
 
-  @Field(type => GuildPositionKind)
+  @Field(type => ID)
   @IsNotEmpty()
-  @IsEnum(GuildPositionKind)
-  kind: GuildPositionKind;
+  @IsUUID()
+  positionId: string;
 
   @Field(type => ID)
   @IsNotEmpty()

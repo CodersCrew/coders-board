@@ -11,7 +11,11 @@ import {
 
 export const useSquadMemberMutations = () => {
   const mutationConfig = {
-    refetchQueries: [GraphQLOperations.Query.squadMembers, GraphQLOperations.Query.squadPositions],
+    refetchQueries: [
+      GraphQLOperations.Query.squadMembers,
+      GraphQLOperations.Query.squadMembersIds,
+      GraphQLOperations.Query.squadPositions,
+    ],
   };
 
   const [createSquadMember] = useCreateSquadMemberMutation(mutationConfig);

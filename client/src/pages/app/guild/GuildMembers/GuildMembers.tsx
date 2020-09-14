@@ -5,11 +5,12 @@ import { CrownOutlined, DeleteOutlined, PartitionOutlined } from '@ant-design/ic
 import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Table, TableActions } from '@/components/molecules';
 import { UseGuildMembers, useGuildMembers } from '@/graphql/guilds';
-import { useDataModal } from '@/services/modals';
+import { useDataModal, useSimpleModal } from '@/services/modals';
 import { pick } from '@/utils/objects';
 
 import { useGuildContext } from '../GuildContext';
-import { GuildMemberModal, GuildMemberModalData } from './GuildMemberModal';
+import { CreateGuildMemberModal } from './CreateGuildMemberModal';
+import { UpdateGuildMemberModal, UpdateGuildMemberModalData } from './UpdateGuildMemberModal';
 import { useDeleteGuildMemberConfirm } from './useDeleteGuildMemberConfirm';
 import { useGuildMembersColumns } from './useGuildMembersColumns';
 
@@ -19,7 +20,8 @@ const GuildMembers = () => {
   const navigate = useNavigate();
   const { guildId, guildRole } = useGuildContext();
   const guildMembers = useGuildMembers({ guildId });
-  const guildMemberModal = useDataModal<GuildMemberModalData>();
+  const createGuildMemberModal = useSimpleModal();
+  const updateGuildMemberModal = useDataModal<UpdateGuildMemberModalData>();
   const columns = useGuildMembersColumns();
   const deleteGuildMemberConfirm = useDeleteGuildMemberConfirm();
 
@@ -29,7 +31,7 @@ const GuildMembers = () => {
           label: 'Change role',
           icon: CrownOutlined,
           onClick: member => {
-            guildMemberModal.open({
+            updateGuildMemberModal.open({
               ...pick(member, ['id', 'role']),
               userId: member.user.id,
             });
@@ -38,14 +40,14 @@ const GuildMembers = () => {
         {
           label: 'Manage positions',
           icon: PartitionOutlined,
-          visible: member => Boolean(member.positions.length),
+          visible: member => Boolean(member.activePositions.length),
           onClick: member => navigate(`../positions?search=${encodeURI(member.user.fullName)}`),
         },
         {
           label: 'Delete member',
           icon: DeleteOutlined,
-          itemProps: member => ({ danger: !member.positions.length }),
-          disabled: member => Boolean(member.positions.length),
+          itemProps: member => ({ danger: !member.activePositions.length }),
+          disabled: member => Boolean(member.activePositions.length),
           onClick: member => deleteGuildMemberConfirm({ id: member.id, fullName: member.user.fullName }),
         },
       ]
@@ -54,7 +56,7 @@ const GuildMembers = () => {
   return (
     <>
       <FiltersCard
-        addButton={guildRole.isManager && { label: 'Add member', onClick: () => guildMemberModal.open(null) }}
+        addButton={guildRole.isManager && { label: 'Add member', onClick: () => createGuildMemberModal.open() }}
       />
       <Box maxWidth="100%" overflow="auto">
         <Card>
@@ -67,7 +69,8 @@ const GuildMembers = () => {
           />
         </Card>
       </Box>
-      <GuildMemberModal {...guildMemberModal} />
+      <CreateGuildMemberModal {...createGuildMemberModal} />
+      <UpdateGuildMemberModal {...updateGuildMemberModal} />
     </>
   );
 };

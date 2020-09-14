@@ -1,7 +1,9 @@
 import { ConflictException, Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { resolveAsyncRelation } from '../../common/utils';
-import { GuildPosition, GuildPositionKind } from '../guild-positions/guild-position.model';
+import { PositionRepository } from '../../positions/position.repository';
+import { GuildPosition } from '../guild-positions/guild-position.model';
 import { CreateGuildMemberInput } from './dto/create-guild-member.input';
 import { GetGuildMembersArgs } from './dto/get-guild-members.args';
 import { UpdateGuildMemberInput } from './dto/update-guild-member.input';
@@ -18,7 +20,11 @@ const filterActivePositions = (positions: GuildPosition[], isActive?: boolean) =
 
 @Injectable()
 export class GuildMembersService {
-  constructor(private readonly guildMemberRepository: GuildMemberRepository) {}
+  constructor(
+    @InjectRepository(PositionRepository)
+    private readonly positionRepository: PositionRepository,
+    private readonly guildMemberRepository: GuildMemberRepository,
+  ) {}
 
   getUser = resolveAsyncRelation(this.guildMemberRepository, 'user');
 
@@ -34,12 +40,14 @@ export class GuildMembersService {
     return this.guildMemberRepository.find({ where: { guildId } });
   }
 
-  async create(input: CreateGuildMemberInput) {
-    const position = new GuildPosition();
-    position.from = new Date();
-    position.kind = GuildPositionKind.MEMBER;
+  async create({ positionId, ...input }: CreateGuildMemberInput) {
+    const position = await this.positionRepository.findOneOrFail(positionId);
 
-    return this.guildMemberRepository.save({ ...input, positions: [position] });
+    const guildPosition = new GuildPosition();
+    guildPosition.from = new Date();
+    guildPosition.position = position;
+
+    return this.guildMemberRepository.save({ ...input, positions: [guildPosition] });
   }
 
   async update({ id, guildId: _guildId, ...input }: UpdateGuildMemberInput) {

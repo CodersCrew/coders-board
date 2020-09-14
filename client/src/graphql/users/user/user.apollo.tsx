@@ -34,7 +34,8 @@ export type UserActivityQuery = {
   user: Pick<Types.User, 'id'> & {
     guilds: (Pick<Types.GuildMember, 'id'> & {
       guild: Pick<Types.Guild, 'id' | 'name' | 'image'>;
-      positions: (Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes' | 'kind'> & {
+      positions: (Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes'> & {
+        position: Pick<Types.Position, 'id' | 'name'>;
         clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>>;
       })[];
     })[];
@@ -187,7 +188,10 @@ export const UserActivityDocument = gql`
           from
           to
           notes
-          kind
+          position {
+            id
+            name
+          }
           clan {
             id
             name

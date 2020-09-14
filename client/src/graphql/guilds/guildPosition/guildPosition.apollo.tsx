@@ -8,7 +8,8 @@ export type GuildPositionsQueryVariables = Types.Exact<{
 }>;
 
 export type GuildPositionsQuery = {
-  guildPositions: (Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes' | 'kind'> & {
+  guildPositions: (Pick<Types.GuildPosition, 'id' | 'from' | 'to' | 'notes'> & {
+    position: Pick<Types.Position, 'id' | 'name'>;
     member: Pick<Types.GuildMember, 'id'> & {
       user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
       guild: Pick<Types.Guild, 'id'>;
@@ -43,7 +44,10 @@ export const GuildPositionsDocument = gql`
       from
       to
       notes
-      kind
+      position {
+        id
+        name
+      }
       member {
         id
         user {

@@ -14,6 +14,8 @@ export class GuildPositionsService {
 
   getClan = resolveAsyncRelation(this.guildPositionRepository, 'clan');
 
+  getPosition = resolveAsyncRelation(this.guildPositionRepository, 'position');
+
   findAll({ guildId, memberId }: GetGuildPositionsArgs) {
     const query = this.guildPositionRepository.createQueryBuilder('guildPosition');
 

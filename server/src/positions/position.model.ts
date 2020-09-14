@@ -23,7 +23,7 @@ export class Position extends BaseModel {
   name: string;
 
   @Field()
-  @Column({ default: '' })
+  @Column({ default: '', type: 'text' })
   description: string;
 
   @Field({ nullable: true })
@@ -38,7 +38,7 @@ export class Position extends BaseModel {
   @ManyToOne(type => Clan, { nullable: true })
   clan?: Clan;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   clanId?: string;
 
@@ -46,7 +46,7 @@ export class Position extends BaseModel {
   @ManyToOne(type => Guild, { nullable: true })
   guild?: Guild;
 
-  @Field()
+  @Field({ nullable: true })
   @Column({ nullable: true })
   guildId?: string;
 }

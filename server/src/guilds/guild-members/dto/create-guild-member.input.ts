@@ -20,4 +20,9 @@ export class CreateGuildMemberInput implements Partial<GuildMember> {
   @IsNotEmpty()
   @IsUUID()
   guildId: string;
+
+  @Field(type => ID)
+  @IsNotEmpty()
+  @IsUUID()
+  positionId: string;
 }
