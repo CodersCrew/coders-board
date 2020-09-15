@@ -38,6 +38,7 @@ const useCreateGuildMemberModal = (modalProps: CreateGuildMemberModalProps) => {
       messages: getGenericMessages('guild member', 'create'),
     });
   };
+
   return {
     modal: {
       ...modalProps,

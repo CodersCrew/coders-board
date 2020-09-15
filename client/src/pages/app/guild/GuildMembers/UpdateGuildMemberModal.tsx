@@ -37,9 +37,10 @@ const useUpdateGuildMemberModal = ({ data, ...modalProps }: UpdateGuildMemberMod
       mutation: updateGuildMember({ role: values.role, id: data.id, guildId }),
       success: () => modalProps.onCancel(),
       finally: () => helpers.setSubmitting(false),
-      messages: getGenericMessages('guild member', data ? 'update' : 'create'),
+      messages: getGenericMessages('guild member', 'update'),
     });
   };
+
   return {
     modal: {
       ...modalProps,

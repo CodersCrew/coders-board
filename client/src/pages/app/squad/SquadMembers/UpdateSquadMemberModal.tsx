@@ -39,7 +39,7 @@ const useUpdateSquadMemberModal = (props: UpdateSquadMemberModalProps) => {
       mutation: updateSquadMember({ role: values.role, id: data.id, squadId }),
       success: () => props.onCancel(),
       finally: () => helpers.setSubmitting(false),
-      messages: getGenericMessages('squad member', data ? 'update' : 'create'),
+      messages: getGenericMessages('squad member', 'update'),
     });
   };
 
