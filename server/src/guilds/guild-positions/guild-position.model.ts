@@ -1,18 +1,10 @@
-import { Field, ObjectType, registerEnumType } from '@nestjs/graphql';
+import { Field, ObjectType } from '@nestjs/graphql';
 import { Column, Entity, ManyToOne } from 'typeorm';
 
 import { BaseModel } from '../../common/models';
+import { Position } from '../../positions/position.model';
 import { Clan } from '../clans/clan.model';
 import { GuildMember } from '../guild-members/guild-member.model';
-
-export enum GuildPositionKind {
-  MEMBER = 'MEMBER',
-  LEADER = 'LEADER',
-  EXPERT = 'EXPERT',
-}
-registerEnumType(GuildPositionKind, {
-  name: 'GuildPositionKind',
-});
 
 @ObjectType()
 @Entity()
@@ -29,9 +21,13 @@ export class GuildPosition extends BaseModel {
   @Column({ type: 'text', nullable: true })
   notes?: string;
 
-  @Field(type => GuildPositionKind)
-  @Column({ type: 'enum', enum: GuildPositionKind, default: GuildPositionKind.MEMBER })
-  kind: GuildPositionKind;
+  @Field(type => Position)
+  @ManyToOne(type => Position)
+  position: Position;
+
+  @Field()
+  @Column()
+  positionId: string;
 
   @Field(type => GuildMember)
   @ManyToOne(type => GuildMember, guildMember => guildMember.positions)

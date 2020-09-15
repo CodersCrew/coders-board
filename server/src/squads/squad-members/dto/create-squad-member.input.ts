@@ -20,4 +20,9 @@ export class CreateSquadMemberInput implements Partial<SquadMember> {
   @IsNotEmpty()
   @IsUUID()
   squadId: string;
+
+  @Field(type => ID)
+  @IsNotEmpty()
+  @IsUUID()
+  positionId: string;
 }

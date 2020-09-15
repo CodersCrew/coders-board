@@ -37,6 +37,27 @@ export type Clan = {
   positions: GuildPosition[];
 };
 
+export type Position = {
+  id: Scalars['ID'];
+  createdAt: Scalars['DateTime'];
+  updatedAt: Scalars['DateTime'];
+  deletedAt?: Maybe<Scalars['DateTime']>;
+  name: Scalars['String'];
+  description: Scalars['String'];
+  image?: Maybe<Scalars['String']>;
+  scopes: PositionScope[];
+  clan?: Maybe<Clan>;
+  clanId?: Maybe<Scalars['String']>;
+  guild?: Maybe<Guild>;
+  guildId?: Maybe<Scalars['String']>;
+};
+
+export enum PositionScope {
+  Organization = 'ORGANIZATION',
+  Guild = 'GUILD',
+  Squad = 'SQUAD',
+}
+
 export type GuildPosition = {
   id: Scalars['ID'];
   createdAt: Scalars['DateTime'];
@@ -45,18 +66,13 @@ export type GuildPosition = {
   from: Scalars['DateTime'];
   to?: Maybe<Scalars['DateTime']>;
   notes?: Maybe<Scalars['String']>;
-  kind: GuildPositionKind;
+  position: Position;
+  positionId: Scalars['String'];
   member: GuildMember;
   memberId: Scalars['String'];
   clan?: Maybe<Clan>;
   clanId: Scalars['String'];
 };
-
-export enum GuildPositionKind {
-  Member = 'MEMBER',
-  Leader = 'LEADER',
-  Expert = 'EXPERT',
-}
 
 export type GuildMember = {
   id: Scalars['ID'];
@@ -79,27 +95,6 @@ export enum TeamRole {
   Owner = 'OWNER',
   Manager = 'MANAGER',
   Member = 'MEMBER',
-}
-
-export type Position = {
-  id: Scalars['ID'];
-  createdAt: Scalars['DateTime'];
-  updatedAt: Scalars['DateTime'];
-  deletedAt?: Maybe<Scalars['DateTime']>;
-  name: Scalars['String'];
-  description: Scalars['String'];
-  image?: Maybe<Scalars['String']>;
-  scopes: PositionScope[];
-  clan?: Maybe<Clan>;
-  clanId: Scalars['String'];
-  guild?: Maybe<Guild>;
-  guildId: Scalars['String'];
-};
-
-export enum PositionScope {
-  Organization = 'ORGANIZATION',
-  Guild = 'GUILD',
-  Squad = 'SQUAD',
 }
 
 export type Squad = {
@@ -511,6 +506,7 @@ export type CreateGuildMemberInput = {
   role: TeamRole;
   userId: Scalars['ID'];
   guildId: Scalars['ID'];
+  positionId: Scalars['ID'];
 };
 
 export type UpdateGuildMemberInput = {
@@ -521,7 +517,7 @@ export type UpdateGuildMemberInput = {
 
 export type CreateGuildPositionInput = {
   from: Scalars['DateTime'];
-  kind: GuildPositionKind;
+  positionId: Scalars['ID'];
   memberId: Scalars['ID'];
   guildId: Scalars['ID'];
   to?: Maybe<Scalars['DateTime']>;
@@ -531,7 +527,7 @@ export type CreateGuildPositionInput = {
 
 export type UpdateGuildPositionInput = {
   from: Scalars['DateTime'];
-  kind: GuildPositionKind;
+  positionId: Scalars['ID'];
   memberId: Scalars['ID'];
   guildId: Scalars['ID'];
   to?: Maybe<Scalars['DateTime']>;
@@ -596,6 +592,7 @@ export type CreateSquadMemberInput = {
   role: TeamRole;
   userId: Scalars['ID'];
   squadId: Scalars['ID'];
+  positionId: Scalars['ID'];
 };
 
 export type UpdateSquadMemberInput = {

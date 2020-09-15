@@ -4,7 +4,10 @@ query guildPositions($guildId: ID!) {
     from
     to
     notes
-    kind
+    position {
+      id
+      name
+    }
     member {
       id
       user {
@@ -35,6 +38,6 @@ mutation updateGuildPosition($data: UpdateGuildPositionInput!) {
   }
 }
 
-mutation deleteGuildPosition($id: ID! $guildId: ID!) {
-  deleteGuildPosition(id: $id guildId: $guildId)
+mutation deleteGuildPosition($id: ID!, $guildId: ID!) {
+  deleteGuildPosition(id: $id, guildId: $guildId)
 }

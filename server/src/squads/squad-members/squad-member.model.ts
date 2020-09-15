@@ -16,7 +16,7 @@ export class SquadMember extends BaseModel {
   role: TeamRole;
 
   @Field(type => [SquadPosition])
-  @OneToMany(type => SquadPosition, squadPosition => squadPosition.member)
+  @OneToMany(type => SquadPosition, squadPosition => squadPosition.member, { cascade: true })
   positions: SquadPosition[];
 
   @Field(type => Squad)

@@ -1,4 +1,5 @@
 import { Args, Mutation, Parent, Query, ResolveField, Resolver } from '@nestjs/graphql';
+import { Position } from 'src/positions/position.model';
 
 import { TeamKind } from '../../common/decorators';
 import { TeamRole } from '../../common/enums';
@@ -25,6 +26,11 @@ export class GuildPositionsResolver {
   @ResolveField('clan', returns => Clan, { nullable: true })
   async getClan(@Parent() guildPosition: GuildPosition) {
     return this.guildPositionsService.getClan(guildPosition);
+  }
+
+  @ResolveField('position', returns => Position)
+  async getPosition(@Parent() guildPosition: GuildPosition) {
+    return this.guildPositionsService.getPosition(guildPosition);
   }
 
   @Query(returns => [GuildPosition], { name: 'guildPositions' })

@@ -5,7 +5,6 @@ import { Box, Paragraph } from '@/components/atoms';
 import { TableColumns } from '@/components/molecules';
 import { UseGuildMembers } from '@/graphql/guilds';
 import { TeamRole } from '@/typings/graphql';
-import { getPositionInGuild } from '@/utils/platform';
 
 type Member = UseGuildMembers['item'];
 
@@ -36,7 +35,15 @@ export const useGuildMembersColumns = () => {
     {
       title: 'Position',
       key: 'position',
-      render: (_, { positions }) => positions.map(({ kind, clan }) => getPositionInGuild(kind, clan?.name)).join(', '),
+      render: (_, { activePositions }) => (
+        <Paragraph whiteSpace="pre-line">
+          {activePositions
+            .map(({ clan, position: { name: positionName } }) => {
+              return clan ? `${positionName} in ${clan.name} clan` : positionName;
+            })
+            .join('\n')}
+        </Paragraph>
+      ),
     },
   ];
 

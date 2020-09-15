@@ -7,13 +7,19 @@ query guildMembers($guildId: ID!) {
       fullName
       image
     }
-    positions(active: true) {
+    activePositions: positions(active: true) {
       id
-      kind
+      position {
+        id
+        name
+      }
       clan {
         id
         name
       }
+    }
+    pastPositions: positions(active: false) {
+      id
     }
   }
 }
@@ -32,12 +38,13 @@ mutation createGuildMember($data: CreateGuildMemberInput!) {
     id
   }
 }
+
 mutation updateGuildMember($data: UpdateGuildMemberInput!) {
   updateGuildMember(data: $data) {
     id
   }
 }
 
-mutation deleteGuildMember($id: ID! $guildId: ID!) {
-  deleteGuildMember(id: $id guildId: $guildId)
+mutation deleteGuildMember($id: ID!, $guildId: ID!) {
+  deleteGuildMember(id: $id, guildId: $guildId)
 }

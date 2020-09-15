@@ -7,26 +7,26 @@ import * as yup from 'yup';
 import { Box } from '@/components/atoms';
 import { DatePicker, DatePickerProps } from '@/components/formik';
 import { FormikModal } from '@/components/molecules';
-import { FormikClanSelect, FormikGuildPositionKindSelect } from '@/components/selects';
+import { FormikClanSelect, FormikPositionSelect } from '@/components/selects';
 import { FormikUserSelect } from '@/components/selects/UserSelect';
 import { useGuildPositionMutations } from '@/graphql/guilds';
 import { useGuildMembersIds } from '@/graphql/guilds/guildMember';
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
-import { GuildPositionKind } from '@/typings/graphql';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useGuildContext } from '../GuildContext';
+import { PositionScope } from '@/typings/graphql';
 
 const { getInitialValues, validationSchema, fields } = createFormFields({
   from: yup.date().label('Start date').required(),
   to: yup.date().label('End date').optional().nullable(),
   notes: yup.string().label('Notes about position').optional().nullable(),
-  kind: yup.mixed<GuildPositionKind>().label('').required().default(GuildPositionKind.Member),
   memberId: yup.string().label('Guild member').required(),
   clanId: yup.string().label('Clan').optional().nullable(),
+  positionId: yup.string().label('Position').required(),
 });
 
 type FormValues = ReturnType<typeof getInitialValues>;
@@ -161,8 +161,8 @@ export const GuildPositionModal = createDataModal<GuildPositionModalProps>(props
             <ToDatePicker />
           </Box>
         </Box>
-        <Form.Item {...fields.kind}>
-          <FormikGuildPositionKindSelect name={fields.kind.name} placeholder="Select position..." />
+        <Form.Item {...fields.positionId}>
+          <FormikPositionSelect name={fields.positionId.name} scopes={[PositionScope.Guild]} placeholder="Select position..." />
         </Form.Item>
         <Form.Item {...fields.notes}>
           <Input.TextArea name={fields.notes.name} placeholder="Enter notes..." />

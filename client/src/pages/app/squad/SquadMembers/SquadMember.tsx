@@ -10,13 +10,13 @@ import { TeamRole } from '@/typings/graphql';
 import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';
-import { SquadMemberModalData } from './SquadMemberModal';
+import { UpdateSquadMemberModalData } from './UpdateSquadMemberModal';
 import { useArchiveSquadMemberConfirm } from './useArchiveSquadMemberConfirm';
 import { useDeleteSquadMemberConfirm } from './useDeleteSquadMemberConfirm';
 
 export type SquadMemberProps = {
   member: UseSquadMembers['item'];
-  openSquadMemberModal: (data: SquadMemberModalData) => void;
+  openSquadMemberModal: (data: UpdateSquadMemberModalData) => void;
 };
 
 const getRoleTag = (role: TeamRole) => {

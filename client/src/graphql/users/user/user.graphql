@@ -1,6 +1,6 @@
-query users($search: String $role: UserRole) {
-	users(search: $search role: $role) {
-		id
+query users($search: String, $role: UserRole) {
+  users(search: $search, role: $role) {
+    id
     thumbnail
     firstName
     lastName
@@ -13,8 +13,8 @@ query users($search: String $role: UserRole) {
 }
 
 query baseUserInfo($id: ID!) {
-	user(id: $id) {
-		id
+  user(id: $id) {
+    id
     thumbnail
     fullName
     primaryEmail
@@ -53,7 +53,10 @@ query userActivity($id: ID!) {
         from
         to
         notes
-        kind
+        position {
+          id
+          name
+        }
         clan {
           id
           name

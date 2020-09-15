@@ -10,7 +10,11 @@ export type GuildMembersQueryVariables = Types.Exact<{
 export type GuildMembersQuery = {
   guildMembers: (Pick<Types.GuildMember, 'id' | 'role'> & {
     user: Pick<Types.User, 'id' | 'fullName' | 'image'>;
-    positions: (Pick<Types.GuildPosition, 'id' | 'kind'> & { clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>> })[];
+    activePositions: (Pick<Types.GuildPosition, 'id'> & {
+      position: Pick<Types.Position, 'id' | 'name'>;
+      clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>>;
+    })[];
+    pastPositions: Pick<Types.GuildPosition, 'id'>[];
   })[];
 };
 
@@ -51,13 +55,19 @@ export const GuildMembersDocument = gql`
         fullName
         image
       }
-      positions(active: true) {
+      activePositions: positions(active: true) {
         id
-        kind
+        position {
+          id
+          name
+        }
         clan {
           id
           name
         }
+      }
+      pastPositions: positions(active: false) {
+        id
       }
     }
   }

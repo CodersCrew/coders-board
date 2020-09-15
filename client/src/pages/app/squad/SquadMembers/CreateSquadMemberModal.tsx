@@ -4,61 +4,52 @@ import { Form } from 'formik-antd';
 import * as yup from 'yup';
 
 import { FormikModal } from '@/components/molecules';
-import { FormikTeamRoleSelect, FormikUserSelect } from '@/components/selects';
+import { FormikPositionSelect, FormikTeamRoleSelect, FormikUserSelect } from '@/components/selects';
 import { useSquadMemberMutations, useSquadMembersIds } from '@/graphql/squads';
 import { runMutation } from '@/services/graphql';
-import { createDataModal, DataModalProps } from '@/services/modals';
-import { WithId } from '@/typings/enhancers';
-import { TeamRole } from '@/typings/graphql';
+import { createSimpleModal, SimpleModalProps } from '@/services/modals';
+import { PositionScope, TeamRole } from '@/typings/graphql';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useSquadContext } from '../SquadContext';
 
 const { getInitialValues, validationSchema, fields } = createFormFields({
-  userId: yup.string().required(),
-  role: yup.mixed<TeamRole>().required().default(TeamRole.Member),
+  userId: yup.string().label('User').required(),
+  role: yup.mixed<TeamRole>().label('Role').required().default(TeamRole.Member),
+  positionId: yup.string().label('Position').required(),
 });
 
 type FormValues = ReturnType<typeof getInitialValues>;
 
 type FormConfig = FormikConfig<FormValues>;
 
-export type SquadMemberModalData = WithId<FormValues> | null;
+type CreateSquadMemberModalProps = SimpleModalProps;
 
-type SquadMemberModalProps = DataModalProps<SquadMemberModalData>;
-
-const useSquadMemberModal = (props: SquadMemberModalProps) => {
-  const { data, ...modalProps } = props;
-
+const useCreateSquadMemberModal = (modalProps: CreateSquadMemberModalProps) => {
   const { squadId } = useSquadContext();
-  const { createSquadMember, updateSquadMember } = useSquadMemberMutations();
+  const { createSquadMember } = useSquadMemberMutations();
 
   const handleSubmit: FormConfig['onSubmit'] = (values, helpers) => {
-    const mutation = data
-      ? updateSquadMember({ role: values.role, id: data.id, squadId })
-      : createSquadMember({ ...values, squadId });
-
     runMutation({
-      mutation,
-      success: () => props.onCancel(),
+      mutation: createSquadMember({ ...values, squadId }),
+      success: () => modalProps.onCancel(),
       finally: () => helpers.setSubmitting(false),
-      messages: getGenericMessages('squad member', data ? 'update' : 'create'),
+      messages: getGenericMessages('squad member', 'create'),
     });
   };
 
   return {
     modal: {
       ...modalProps,
-      title: data ? 'Update squad member' : 'Add new squad member',
-      okText: data ? 'Update member' : 'Add member',
+      title: 'Add new squad member',
+      okText: 'Add member',
     },
     form: {
-      initialValues: getInitialValues(data),
+      initialValues: getInitialValues(),
       validationSchema,
       onSubmit: handleSubmit,
     },
-    isUpdateModal: Boolean(data),
   };
 };
 
@@ -80,15 +71,18 @@ const MemberPicker = () => {
   );
 };
 
-export const SquadMemberModal = createDataModal<SquadMemberModalProps>(props => {
-  const { form, modal, isUpdateModal } = useSquadMemberModal(props);
+export const CreateSquadMemberModal = createSimpleModal<CreateSquadMemberModalProps>(props => {
+  const { form, modal } = useCreateSquadMemberModal(props);
 
   return (
     <FormikModal form={form} modal={modal}>
       <Form layout="vertical" colon>
-        {!isUpdateModal && <MemberPicker />}
+        <MemberPicker />
         <Form.Item {...fields.role}>
           <FormikTeamRoleSelect name={fields.role.name} />
+        </Form.Item>
+        <Form.Item {...fields.positionId}>
+          <FormikPositionSelect name={fields.positionId.name} scopes={[PositionScope.Squad]} />
         </Form.Item>
       </Form>
     </FormikModal>

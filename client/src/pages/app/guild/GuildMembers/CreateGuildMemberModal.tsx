@@ -4,12 +4,11 @@ import { Form } from 'formik-antd';
 import * as yup from 'yup';
 
 import { FormikModal } from '@/components/molecules';
-import { FormikTeamRoleSelect, FormikUserSelect } from '@/components/selects';
+import { FormikPositionSelect, FormikTeamRoleSelect, FormikUserSelect } from '@/components/selects';
 import { useGuildMemberMutations, useGuildMembersIds } from '@/graphql/guilds';
 import { runMutation } from '@/services/graphql';
-import { createDataModal, DataModalProps } from '@/services/modals';
-import { WithId } from '@/typings/enhancers';
-import { TeamRole } from '@/typings/graphql';
+import { createSimpleModal, SimpleModalProps } from '@/services/modals';
+import { PositionScope, TeamRole } from '@/typings/graphql';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
@@ -18,44 +17,39 @@ import { useGuildContext } from '../GuildContext';
 const { getInitialValues, validationSchema, fields } = createFormFields({
   userId: yup.string().label('User').required(),
   role: yup.mixed<TeamRole>().label('Role').required().default(TeamRole.Member),
+  positionId: yup.string().label('Position').required(),
 });
 
 type FormValues = ReturnType<typeof getInitialValues>;
 
 type FormConfig = FormikConfig<FormValues>;
 
-export type GuildMemberModalData = WithId<FormValues> | null;
+type CreateGuildMemberModalProps = SimpleModalProps;
 
-type GuildMemberModalProps = DataModalProps<GuildMemberModalData>;
-
-const useGuildMemberModal = ({ data, ...modalProps }: GuildMemberModalProps) => {
+const useCreateGuildMemberModal = (modalProps: CreateGuildMemberModalProps) => {
   const { guildId } = useGuildContext();
-  const { createGuildMember, updateGuildMember } = useGuildMemberMutations();
+  const { createGuildMember } = useGuildMemberMutations();
 
   const handleSubmit: FormConfig['onSubmit'] = async (values, helpers) => {
-    const mutation = data
-      ? updateGuildMember({ role: values.role, id: data.id, guildId })
-      : createGuildMember({ ...values, guildId });
-
     runMutation({
-      mutation,
+      mutation: createGuildMember({ ...values, guildId }),
       success: () => modalProps.onCancel(),
       finally: () => helpers.setSubmitting(false),
-      messages: getGenericMessages('guild member', data ? 'update' : 'create'),
+      messages: getGenericMessages('guild member', 'create'),
     });
   };
+
   return {
     modal: {
       ...modalProps,
-      title: data ? 'Update guild member' : 'Add new guild member',
-      okText: data ? 'Update member' : 'Add member',
+      title: 'Add new guild member',
+      okText: 'Add member',
     },
     form: {
-      initialValues: getInitialValues(data),
+      initialValues: getInitialValues(),
       validationSchema,
       onSubmit: handleSubmit,
     },
-    isUpdateModal: Boolean(data),
   };
 };
 
@@ -77,15 +71,18 @@ const UserPicker = () => {
   );
 };
 
-export const GuildMemberModal = createDataModal<GuildMemberModalProps>(props => {
-  const { form, modal, isUpdateModal } = useGuildMemberModal(props);
+export const CreateGuildMemberModal = createSimpleModal<CreateGuildMemberModalProps>(props => {
+  const { form, modal } = useCreateGuildMemberModal(props);
 
   return (
     <FormikModal form={form} modal={modal}>
       <Form layout="vertical" colon>
-        {!isUpdateModal && <UserPicker />}
+        <UserPicker />
         <Form.Item {...fields.role}>
           <FormikTeamRoleSelect name={fields.role.name} />
+        </Form.Item>
+        <Form.Item {...fields.positionId}>
+          <FormikPositionSelect name={fields.positionId.name} scopes={[PositionScope.Guild]} />
         </Form.Item>
       </Form>
     </FormikModal>

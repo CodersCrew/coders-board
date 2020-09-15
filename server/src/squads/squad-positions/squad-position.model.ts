@@ -18,7 +18,7 @@ export class SquadPosition extends BaseModel {
   to?: Date;
 
   @Field({ nullable: true })
-  @Column({ nullable: true })
+  @Column({ nullable: true, type: 'text' })
   notes?: string;
 
   @Field(type => SquadMember)
