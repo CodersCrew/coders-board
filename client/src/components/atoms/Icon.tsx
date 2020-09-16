@@ -6,7 +6,7 @@ import { color, ColorProps, compose, fontSize, FontSizeProps, space, SpaceProps 
 import { omitProps } from '@/services/styling';
 import { CFC, RFC } from '@/typings/components';
 
-type IconProps = AntdIconProps &
+export type IconProps = AntdIconProps &
   SpaceProps &
   FontSizeProps &
   ColorProps & {
@@ -20,7 +20,7 @@ const shouldForwardProp = omitProps(styledSystem.propNames);
 export const Icon: CFC<IconProps> = ({ icon, ...props }) => {
   const StyledIcon = styled(icon, { shouldForwardProp })(p => ({
     '&.anticon[role="img"][aria-label]': styledSystem(p),
-  }));
+  })) as CFC<Omit<IconProps, 'icon'>>;
 
   return <StyledIcon {...props} />;
 };

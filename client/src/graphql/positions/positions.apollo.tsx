@@ -11,8 +11,8 @@ export type PositionsQueryVariables = Types.Exact<{
 
 export type PositionsQuery = {
   positions: (Pick<Types.Position, 'id' | 'name' | 'description' | 'image' | 'scopes'> & {
-    clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name' | 'image'>>;
-    guild?: Types.Maybe<Pick<Types.Guild, 'id' | 'name' | 'image'>>;
+    clan?: Types.Maybe<Pick<Types.Clan, 'id' | 'name'>>;
+    guild?: Types.Maybe<Pick<Types.Guild, 'id' | 'name' | 'color'>>;
   })[];
 };
 
@@ -51,12 +51,11 @@ export const PositionsDocument = gql`
       clan {
         id
         name
-        image
       }
       guild {
         id
         name
-        image
+        color
       }
     }
   }

@@ -10,10 +10,8 @@ type LinkMenuItemProps = MenuItemProps & {
 // eslint-disable-next-line @typescript-eslint/no-explicit-any
 export const LinkMenuItem = forwardRef<any, LinkMenuItemProps>(({ to, children, ...props }, ref) => {
   return (
-    <Link to={to}>
-      <Menu.Item {...props} ref={ref}>
-        {children}
-      </Menu.Item>
-    </Link>
+    <Menu.Item {...props} ref={ref}>
+      <Link to={to}>{children}</Link>
+    </Menu.Item>
   );
 });
