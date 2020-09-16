@@ -54,9 +54,20 @@ const colors = {
     disabled: transparentize(0.75, '#000'),
     white: '#fff',
   },
-  common: {
-    black: '#000',
-    white: '#fff',
+  gray: {
+    13: '#000000',
+    12: '#141414',
+    11: '#1f1f1f',
+    10: '#262626',
+    9: '#434343',
+    8: '#595959',
+    7: '#8c8c8c',
+    6: '#bfbfbf',
+    5: '#d9d9d9',
+    4: '#f0f0f0',
+    3: '#f5f5f5',
+    2: '#fafafa',
+    1: '#ffffff',
   },
   successes: {
     epic: '#722ed1',
