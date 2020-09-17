@@ -47,6 +47,25 @@ export class GuildMembersService {
     guildPosition.from = new Date();
     guildPosition.position = position;
 
+    const guildMember = await this.guildMemberRepository.findOne({
+      where: { userId: input.userId, guildId: input.guildId },
+      withDeleted: true,
+      relations: ['positions'],
+    });
+
+    if (guildMember?.deletedAt) {
+      return this.guildMemberRepository.save({
+        ...guildMember,
+        ...input,
+        positions: [...guildMember.positions, guildPosition],
+        deletedAt: null,
+      });
+    }
+
+    if (guildMember && !guildMember.deletedAt) {
+      throw new ConflictException('Member already exists');
+    }
+
     return this.guildMemberRepository.save({ ...input, positions: [guildPosition] });
   }
 
@@ -57,18 +76,5 @@ export class GuildMembersService {
       ...guildMember,
       ...input,
     });
-  }
-
-  async delete(id: string) {
-    const guildMember = await this.guildMemberRepository.findOneOrFail(id, { relations: ['positions'] });
-    const activePositions = filterActivePositions(guildMember.positions, true);
-
-    if (activePositions.length) {
-      throw new ConflictException('You cannot remove guild member with active positions');
-    }
-
-    await this.guildMemberRepository.remove(guildMember);
-
-    return true;
   }
 }

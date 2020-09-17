@@ -44,7 +44,3 @@ mutation updateGuildMember($data: UpdateGuildMemberInput!) {
     id
   }
 }
-
-mutation deleteGuildMember($id: ID!, $guildId: ID!) {
-  deleteGuildMember(id: $id, guildId: $guildId)
-}

@@ -299,7 +299,6 @@ export type Mutation = {
   deleteClan: Scalars['Boolean'];
   createGuildMember: GuildMember;
   updateGuildMember: GuildMember;
-  deleteGuildMember: Scalars['Boolean'];
   createGuildPosition: GuildPosition;
   updateGuildPosition: GuildPosition;
   deleteGuildPosition: Scalars['Boolean'];
@@ -354,11 +353,6 @@ export type MutationCreateGuildMemberArgs = {
 
 export type MutationUpdateGuildMemberArgs = {
   data: UpdateGuildMemberInput;
-};
-
-export type MutationDeleteGuildMemberArgs = {
-  id: Scalars['ID'];
-  guildId: Scalars['ID'];
 };
 
 export type MutationCreateGuildPositionArgs = {
@@ -696,7 +690,6 @@ export const GraphQLOperations = {
   Mutation: {
     createGuildMember: 'createGuildMember',
     updateGuildMember: 'updateGuildMember',
-    deleteGuildMember: 'deleteGuildMember',
     createGuildPosition: 'createGuildPosition',
     updateGuildPosition: 'updateGuildPosition',
     deleteGuildPosition: 'deleteGuildPosition',

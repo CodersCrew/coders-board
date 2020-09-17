@@ -16,7 +16,7 @@ export class GuildMember extends BaseModel {
   role: TeamRole;
 
   @Field(type => User)
-  @ManyToOne(type => User, user => user.guilds, { eager: true })
+  @ManyToOne(type => User, user => user.guilds)
   user: User;
 
   @Field()
@@ -24,7 +24,7 @@ export class GuildMember extends BaseModel {
   userId: string;
 
   @Field(type => Guild)
-  @ManyToOne(type => Guild, guild => guild.members, { eager: true })
+  @ManyToOne(type => Guild, guild => guild.members)
   guild: Guild;
 
   @Field()

@@ -1,6 +1,6 @@
 import React from 'react';
 import { useNavigate } from 'react-router-dom';
-import { CrownOutlined, DeleteOutlined, PartitionOutlined } from '@ant-design/icons';
+import { CrownOutlined, PartitionOutlined } from '@ant-design/icons';
 
 import { Box } from '@/components/atoms';
 import { Card, FiltersCard, Table, TableActions } from '@/components/molecules';
@@ -11,7 +11,6 @@ import { pick } from '@/utils/objects';
 import { useGuildContext } from '../GuildContext';
 import { CreateGuildMemberModal } from './CreateGuildMemberModal';
 import { UpdateGuildMemberModal, UpdateGuildMemberModalData } from './UpdateGuildMemberModal';
-import { useDeleteGuildMemberConfirm } from './useDeleteGuildMemberConfirm';
 import { useGuildMembersColumns } from './useGuildMembersColumns';
 
 type Member = UseGuildMembers['item'];
@@ -23,7 +22,6 @@ const GuildMembers = () => {
   const createGuildMemberModal = useSimpleModal();
   const updateGuildMemberModal = useDataModal<UpdateGuildMemberModalData>();
   const columns = useGuildMembersColumns();
-  const deleteGuildMemberConfirm = useDeleteGuildMemberConfirm();
 
   const actions: TableActions<Member> = guildRole.isOwner
     ? [
@@ -42,13 +40,6 @@ const GuildMembers = () => {
           icon: PartitionOutlined,
           visible: member => Boolean(member.activePositions.length),
           onClick: member => navigate(`../positions?search=${encodeURI(member.user.fullName)}`),
-        },
-        {
-          label: 'Delete member',
-          icon: DeleteOutlined,
-          itemProps: member => ({ danger: !member.activePositions.length }),
-          disabled: member => Boolean(member.activePositions.length),
-          onClick: member => deleteGuildMemberConfirm({ id: member.id, fullName: member.user.fullName }),
         },
       ]
     : [];

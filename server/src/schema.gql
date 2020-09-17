@@ -216,7 +216,6 @@ type Mutation {
   deleteClan(id: ID!, guildId: ID!): Boolean!
   createGuildMember(data: CreateGuildMemberInput!): GuildMember!
   updateGuildMember(data: UpdateGuildMemberInput!): GuildMember!
-  deleteGuildMember(id: ID!, guildId: ID!): Boolean!
   createGuildPosition(data: CreateGuildPositionInput!): GuildPosition!
   updateGuildPosition(data: UpdateGuildPositionInput!): GuildPosition!
   deleteGuildPosition(id: ID!, guildId: ID!): Boolean!
