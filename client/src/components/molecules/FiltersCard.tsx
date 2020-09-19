@@ -1,13 +1,15 @@
 import React, { ReactNode } from 'react';
 import { PlusOutlined } from '@ant-design/icons';
 import { Input } from 'antd';
+import { SearchProps as AntSearchProps } from 'antd/lib/input';
+import { debounce } from 'lodash-es';
 
-import { pick } from '@/utils/objects';
+import { CFC } from '@/typings/components';
 
 import { Box, Button } from '../atoms';
 import { Card } from './Card';
 
-type Search = {
+type SearchProps = {
   onSearch: (value: string) => void;
   value: string;
   loading?: boolean;
@@ -21,32 +23,43 @@ type AddButtonProps = {
 };
 
 export type FiltersCardProps = {
-  search?: Search | false;
+  search?: SearchProps | false;
   addButton?: AddButtonProps | false;
   leftNode?: ReactNode;
 };
 
-export const FiltersCard = ({ addButton, search, leftNode }: FiltersCardProps) => {
+const Search: CFC<SearchProps> = ({ value, onSearch, ...props }) => {
+  const debouncedOnSearch = debounce(onSearch, 200);
+
+  const handleChange: AntSearchProps['onChange'] = e => {
+    debouncedOnSearch(e.target.value);
+  };
+
+  return (
+    <Box width={240}>
+      <Input.Search placeholder="Search..." defaultValue={value} onChange={handleChange} allowClear {...props} />
+    </Box>
+  );
+};
+
+const AddButton: CFC<AddButtonProps> = ({ label, onClick, visible }) => {
+  if (visible === false) return null;
+
+  return (
+    <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={onClick}>
+      {label}
+    </Button>
+  );
+};
+
+export const FiltersCard: CFC<FiltersCardProps> = ({ addButton, search, leftNode }) => {
   if ((!addButton || addButton.visible === false) && !search) return null;
 
   return (
     <Card p={24} display="flex" mb={24}>
-      {search && (
-        <Box width={240}>
-          <Input.Search
-            placeholder="Search..."
-            defaultValue={search.value}
-            allowClear
-            {...pick(search, ['onSearch', 'autoFocus', 'loading'])}
-          />
-        </Box>
-      )}
+      {search && <Search {...search} />}
       {leftNode}
-      {addButton && addButton.visible !== false && (
-        <Button icon={<PlusOutlined />} ml="auto" type="primary" onClick={() => addButton.onClick()}>
-          {addButton.label}
-        </Button>
-      )}
+      {addButton && <AddButton {...addButton} />}
     </Card>
   );
 };
