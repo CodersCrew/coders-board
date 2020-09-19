@@ -51,7 +51,7 @@ export class GuildsResolver {
   }
 
   @Mutation(returns => Boolean)
-  @TeamRoleGuard(TeamRole.OWNER, 'id')
+  @AdminGuard()
   deleteGuild(@Args() args: DeleteGuildArgs) {
     return this.guildsService.delete(args.id);
   }

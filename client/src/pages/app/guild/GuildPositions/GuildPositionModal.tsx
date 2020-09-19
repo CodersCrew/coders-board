@@ -14,11 +14,11 @@ import { useGuildMembersIds } from '@/graphql/guilds/guildMember';
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
 import { WithId } from '@/typings/enhancers';
+import { PositionScope } from '@/typings/graphql';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
 import { useGuildContext } from '../GuildContext';
-import { PositionScope } from '@/typings/graphql';
 
 const { getInitialValues, validationSchema, fields } = createFormFields({
   from: yup.date().label('Start date').required(),
@@ -162,7 +162,11 @@ export const GuildPositionModal = createDataModal<GuildPositionModalProps>(props
           </Box>
         </Box>
         <Form.Item {...fields.positionId}>
-          <FormikPositionSelect name={fields.positionId.name} scopes={[PositionScope.Guild]} placeholder="Select position..." />
+          <FormikPositionSelect
+            name={fields.positionId.name}
+            scopes={[PositionScope.Guild]}
+            placeholder="Select position..."
+          />
         </Form.Item>
         <Form.Item {...fields.notes}>
           <Input.TextArea name={fields.notes.name} placeholder="Enter notes..." />

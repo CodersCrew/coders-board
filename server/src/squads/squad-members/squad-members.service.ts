@@ -1,5 +1,6 @@
 import { ConflictException, Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
+import { isUndefined } from 'lodash';
 
 import { resolveAsyncRelation } from '../../common/utils';
 import { PositionRepository } from '../../positions/position.repository';
@@ -25,7 +26,7 @@ export class SquadMembersService {
   async getPositions(squadMember: SquadMember, isActive?: boolean) {
     const positions = await resolveAsyncRelation(this.squadMemberRepository, 'positions')(squadMember);
 
-    if (typeof isActive !== 'undefined') {
+    if (!isUndefined(isActive)) {
       return positions.filter(position => (isActive ? !position.to : position.to));
     }
 
@@ -54,6 +55,25 @@ export class SquadMembersService {
     squadPosition.from = new Date();
     squadPosition.position = position;
 
+    const squadMember = await this.squadMemberRepository.findOne({
+      where: { userId: input.userId, squadId: input.squadId },
+      withDeleted: true,
+      relations: ['positions'],
+    });
+
+    if (squadMember?.deletedAt) {
+      return this.squadMemberRepository.save({
+        ...squadMember,
+        ...input,
+        positions: [...squadMember.positions, squadPosition],
+        deletedAt: null,
+      });
+    }
+
+    if (squadMember && !squadMember.deletedAt) {
+      throw new ConflictException('Member already exists');
+    }
+
     return this.squadMemberRepository.save({ ...input, positions: [squadPosition] });
   }
 
@@ -64,31 +84,5 @@ export class SquadMembersService {
       ...squadMember,
       ...input,
     });
-  }
-
-  async archive(id: string) {
-    const squadMember = await this.squadMemberRepository.findOneOrFail(id);
-    const positions = await this.getPositions(squadMember, true);
-
-    if (positions.length) {
-      throw new ConflictException('You cannot archive squad member with active positions');
-    }
-
-    await this.squadMemberRepository.softRemove(squadMember);
-
-    return true;
-  }
-
-  async delete(id: string) {
-    const squadMember = await this.squadMemberRepository.findOneOrFail(id);
-    const positions = await this.getPositions(squadMember);
-
-    if (positions.length) {
-      throw new ConflictException('You cannot remove squad member with attached positions');
-    }
-
-    await this.squadMemberRepository.remove(squadMember);
-
-    return true;
   }
 }

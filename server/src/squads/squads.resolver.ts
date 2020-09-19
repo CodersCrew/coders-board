@@ -51,7 +51,7 @@ export class SquadsResolver {
   }
 
   @Mutation(returns => Boolean)
-  @TeamRoleGuard(TeamRole.OWNER, 'id')
+  @AdminGuard()
   deleteSquad(@Args() args: DeleteSquadArgs) {
     return this.squadsService.delete(args.id);
   }

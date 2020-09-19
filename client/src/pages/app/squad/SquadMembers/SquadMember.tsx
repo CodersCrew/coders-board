@@ -1,5 +1,5 @@
 import React from 'react';
-import { CrownOutlined, DeleteOutlined, InboxOutlined } from '@ant-design/icons';
+import { CrownOutlined } from '@ant-design/icons';
 import { List } from 'antd';
 
 import { Avatar, Box, Paragraph, Tag, Title } from '@/components/atoms';
@@ -11,8 +11,6 @@ import { pick } from '@/utils/objects';
 
 import { useSquadContext } from '../SquadContext';
 import { UpdateSquadMemberModalData } from './UpdateSquadMemberModal';
-import { useArchiveSquadMemberConfirm } from './useArchiveSquadMemberConfirm';
-import { useDeleteSquadMemberConfirm } from './useDeleteSquadMemberConfirm';
 
 export type SquadMemberProps = {
   member: UseSquadMembers['item'];
@@ -28,8 +26,6 @@ const getRoleTag = (role: TeamRole) => {
 
 const SquadMember: CFC<SquadMemberProps> = ({ member, openSquadMemberModal }) => {
   const { squadRole } = useSquadContext();
-  const deleteSquadMemberConfirm = useDeleteSquadMemberConfirm();
-  const archiveSquadMemberConfirm = useArchiveSquadMemberConfirm();
 
   const actions: DropdownAction[] = squadRole.isOwner
     ? [
@@ -42,20 +38,6 @@ const SquadMember: CFC<SquadMemberProps> = ({ member, openSquadMemberModal }) =>
               userId: member.user.id,
             });
           },
-        },
-        {
-          label: 'Archive member',
-          icon: InboxOutlined,
-          disabled: Boolean(member.activePositions.length),
-          visible: !member.deletedAt,
-          onClick: () => archiveSquadMemberConfirm({ id: member.id, fullName: member.user.fullName }),
-        },
-        {
-          label: 'Delete member',
-          icon: DeleteOutlined,
-          danger: !(member.activePositions.length + member.pastPositions.length),
-          disabled: Boolean(member.activePositions.length + member.pastPositions.length),
-          onClick: () => deleteSquadMemberConfirm({ id: member.id, fullName: member.user.fullName }),
         },
       ]
     : [];

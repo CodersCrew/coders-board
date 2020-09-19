@@ -20,7 +20,7 @@ export class SquadMember extends BaseModel {
   positions: SquadPosition[];
 
   @Field(type => Squad)
-  @ManyToOne(type => Squad, squad => squad.members, { eager: true })
+  @ManyToOne(type => Squad, squad => squad.members)
   squad: Squad;
 
   @Field()
@@ -28,7 +28,7 @@ export class SquadMember extends BaseModel {
   squadId: string;
 
   @Field(type => User)
-  @ManyToOne(type => User, user => user.squads, { eager: true })
+  @ManyToOne(type => User, user => user.squads)
   user: User;
 
   @Field()

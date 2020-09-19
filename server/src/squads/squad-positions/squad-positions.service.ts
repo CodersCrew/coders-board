@@ -1,14 +1,21 @@
-import { ConflictException, Injectable } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
+import { InjectRepository } from '@nestjs/typeorm';
 
 import { resolveAsyncRelation } from '../../common/utils';
+import { SquadMemberRepository } from '../squad-members/squad-member.repository';
 import { CreateSquadPositionInput } from './dto/create-squad-position.input';
 import { GetSquadPositionsArgs } from './dto/get-squad-positions.args';
 import { UpdateSquadPositionInput } from './dto/update-squad-position.input';
+import { SquadPosition } from './squad-position.model';
 import { SquadPositionRepository } from './squad-position.repository';
 
 @Injectable()
 export class SquadPositionsService {
-  constructor(private readonly squadPositionRepository: SquadPositionRepository) {}
+  constructor(
+    @InjectRepository(SquadMemberRepository)
+    private readonly squadMemberRepository: SquadMemberRepository,
+    private readonly squadPositionRepository: SquadPositionRepository,
+  ) {}
 
   getMember = resolveAsyncRelation(this.squadPositionRepository, 'member');
 
@@ -36,28 +43,46 @@ export class SquadPositionsService {
   async update({ id, squadId: _squadId, ...input }: UpdateSquadPositionInput) {
     const squadPosition = await this.squadPositionRepository.findOne({ id }, { relations: ['member'] });
 
-    if (squadPosition.member.deletedAt) {
-      throw new ConflictException(' You cannot update role of archived member');
-    }
-
-    return this.squadPositionRepository.save({
+    const result = await this.squadPositionRepository.save({
       ...squadPosition,
       ...input,
     });
+
+    if (!squadPosition.to && input.to) {
+      this.deleteMemberWithoutPositions(result, Boolean(squadPosition.member.deletedAt));
+    }
+
+    if (squadPosition.to && !input.to && squadPosition.member.deletedAt) {
+      await this.squadMemberRepository.restore(squadPosition.memberId);
+    }
+
+    return result;
   }
 
   async delete(id: string) {
-    const squadPosition = await this.squadPositionRepository.findOneOrFail({
-      where: { id },
-      relations: ['member'],
-    });
-
-    if (squadPosition.member.deletedAt) {
-      throw new ConflictException(' You cannot delete role of archived member');
-    }
+    const squadPosition = await this.squadPositionRepository.findOneOrFail(id, { relations: ['member'] });
 
     await this.squadPositionRepository.remove(squadPosition);
 
+    await this.deleteMemberWithoutPositions(squadPosition, Boolean(squadPosition.member.deletedAt));
+
     return true;
+  }
+
+  private async deleteMemberWithoutPositions(squadPosition: SquadPosition, isMemberSoftDeleted: boolean) {
+    const memberPositions = await this.squadPositionRepository.find({
+      where: { memberId: squadPosition.memberId },
+    });
+
+    const activePositions = memberPositions.filter(p => !p.to);
+
+    if (memberPositions.length === 0) {
+      await this.squadMemberRepository.delete({ id: squadPosition.memberId });
+      return;
+    }
+
+    if (!isMemberSoftDeleted && activePositions.length === 0) {
+      await this.squadMemberRepository.softDelete({ id: squadPosition.memberId });
+    }
   }
 }

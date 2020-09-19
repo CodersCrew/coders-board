@@ -1,11 +1,6 @@
 import { CreateGuildMemberInput, GraphQLOperations, UpdateGuildMemberInput } from '@/typings/graphql';
 
-import {
-  DeleteGuildMemberMutationVariables,
-  useCreateGuildMemberMutation,
-  useDeleteGuildMemberMutation,
-  useUpdateGuildMemberMutation,
-} from './guildMember.apollo';
+import { useCreateGuildMemberMutation, useUpdateGuildMemberMutation } from './guildMember.apollo';
 
 export const useGuildMemberMutations = () => {
   const mutationConfig = {
@@ -18,11 +13,9 @@ export const useGuildMemberMutations = () => {
 
   const [createGuildMember] = useCreateGuildMemberMutation(mutationConfig);
   const [updateGuildMember] = useUpdateGuildMemberMutation(mutationConfig);
-  const [deleteGuildMember] = useDeleteGuildMemberMutation(mutationConfig);
 
   return {
     createGuildMember: (data: CreateGuildMemberInput) => createGuildMember({ variables: { data } }),
     updateGuildMember: (data: UpdateGuildMemberInput) => updateGuildMember({ variables: { data } }),
-    deleteGuildMember: (variables: DeleteGuildMemberMutationVariables) => deleteGuildMember({ variables }),
   };
 };

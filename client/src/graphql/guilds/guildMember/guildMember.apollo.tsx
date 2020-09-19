@@ -38,13 +38,6 @@ export type UpdateGuildMemberMutationVariables = Types.Exact<{
 
 export type UpdateGuildMemberMutation = { updateGuildMember: Pick<Types.GuildMember, 'id'> };
 
-export type DeleteGuildMemberMutationVariables = Types.Exact<{
-  id: Types.Scalars['ID'];
-  guildId: Types.Scalars['ID'];
-}>;
-
-export type DeleteGuildMemberMutation = Pick<Types.Mutation, 'deleteGuildMember'>;
-
 export const GuildMembersDocument = gql`
   query guildMembers($guildId: ID!) {
     guildMembers(guildId: $guildId) {
@@ -227,46 +220,4 @@ export type UpdateGuildMemberMutationResult = Apollo.MutationResult<UpdateGuildM
 export type UpdateGuildMemberMutationOptions = Apollo.BaseMutationOptions<
   UpdateGuildMemberMutation,
   UpdateGuildMemberMutationVariables
->;
-export const DeleteGuildMemberDocument = gql`
-  mutation deleteGuildMember($id: ID!, $guildId: ID!) {
-    deleteGuildMember(id: $id, guildId: $guildId)
-  }
-`;
-export type DeleteGuildMemberMutationFn = Apollo.MutationFunction<
-  DeleteGuildMemberMutation,
-  DeleteGuildMemberMutationVariables
->;
-
-/**
- * __useDeleteGuildMemberMutation__
- *
- * To run a mutation, you first call `useDeleteGuildMemberMutation` within a React component and pass it any options that fit your needs.
- * When your component renders, `useDeleteGuildMemberMutation` returns a tuple that includes:
- * - A mutate function that you can call at any time to execute the mutation
- * - An object with fields that represent the current status of the mutation's execution
- *
- * @param baseOptions options that will be passed into the mutation, supported options are listed on: https://www.apollographql.com/docs/react/api/react-hooks/#options-2;
- *
- * @example
- * const [deleteGuildMemberMutation, { data, loading, error }] = useDeleteGuildMemberMutation({
- *   variables: {
- *      id: // value for 'id'
- *      guildId: // value for 'guildId'
- *   },
- * });
- */
-export function useDeleteGuildMemberMutation(
-  baseOptions?: Apollo.MutationHookOptions<DeleteGuildMemberMutation, DeleteGuildMemberMutationVariables>,
-) {
-  return Apollo.useMutation<DeleteGuildMemberMutation, DeleteGuildMemberMutationVariables>(
-    DeleteGuildMemberDocument,
-    baseOptions,
-  );
-}
-export type DeleteGuildMemberMutationHookResult = ReturnType<typeof useDeleteGuildMemberMutation>;
-export type DeleteGuildMemberMutationResult = Apollo.MutationResult<DeleteGuildMemberMutation>;
-export type DeleteGuildMemberMutationOptions = Apollo.BaseMutationOptions<
-  DeleteGuildMemberMutation,
-  DeleteGuildMemberMutationVariables
 >;
