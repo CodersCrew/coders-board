@@ -1,5 +1,5 @@
 import React from 'react';
-import { addMonths, isAfter, isBefore, isFuture } from 'date-fns';
+import { isAfter, isBefore, isFuture } from 'date-fns';
 import { FormikConfig, useFormikContext } from 'formik';
 import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
@@ -106,7 +106,7 @@ const ToPicker = () => {
         {...pickerProps}
         disabledDate={current => {
           if (isFuture(current)) return true;
-          return values.from ? isBefore(current, addMonths(values.from, 1)) : false;
+          return values.from ? isBefore(current, values.from) : false;
         }}
       />
     </Form.Item>

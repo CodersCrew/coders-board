@@ -231,6 +231,7 @@ export type QueryClansArgs = {
 
 export type QueryGuildMembersArgs = {
   guildId: Scalars['ID'];
+  archived?: Maybe<Scalars['Boolean']>;
 };
 
 export type QueryGuildPositionsArgs = {
@@ -314,8 +315,6 @@ export type Mutation = {
   deleteChapter: Scalars['Boolean'];
   createSquadMember: SquadMember;
   updateSquadMember: SquadMember;
-  archiveSquadMember: Scalars['Boolean'];
-  deleteSquadMember: Scalars['Boolean'];
   createSquadPosition: SquadPosition;
   updateSquadPosition: SquadPosition;
   deleteSquadPosition: Scalars['Boolean'];
@@ -415,16 +414,6 @@ export type MutationCreateSquadMemberArgs = {
 
 export type MutationUpdateSquadMemberArgs = {
   data: UpdateSquadMemberInput;
-};
-
-export type MutationArchiveSquadMemberArgs = {
-  id: Scalars['ID'];
-  squadId: Scalars['ID'];
-};
-
-export type MutationDeleteSquadMemberArgs = {
-  id: Scalars['ID'];
-  squadId: Scalars['ID'];
 };
 
 export type MutationCreateSquadPositionArgs = {
@@ -702,8 +691,6 @@ export const GraphQLOperations = {
     deleteChapter: 'deleteChapter',
     createSquadMember: 'createSquadMember',
     updateSquadMember: 'updateSquadMember',
-    archiveSquadMember: 'archiveSquadMember',
-    deleteSquadMember: 'deleteSquadMember',
     createSquadPosition: 'createSquadPosition',
     updateSquadPosition: 'updateSquadPosition',
     deleteSquadPosition: 'deleteSquadPosition',

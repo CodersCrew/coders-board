@@ -192,7 +192,7 @@ enum UserRole {
 
 type Query {
   clans(search: String, guildId: ID): [Clan!]!
-  guildMembers(guildId: ID!): [GuildMember!]!
+  guildMembers(guildId: ID!, archived: Boolean): [GuildMember!]!
   guildPositions(guildId: ID!, memberId: String): [GuildPosition!]!
   guilds(search: String): [Guild!]!
   guild(id: ID!): Guild!
@@ -231,8 +231,6 @@ type Mutation {
   deleteChapter(id: ID!, squadId: ID!): Boolean!
   createSquadMember(data: CreateSquadMemberInput!): SquadMember!
   updateSquadMember(data: UpdateSquadMemberInput!): SquadMember!
-  archiveSquadMember(id: ID!, squadId: ID!): Boolean!
-  deleteSquadMember(id: ID!, squadId: ID!): Boolean!
   createSquadPosition(data: CreateSquadPositionInput!): SquadPosition!
   updateSquadPosition(data: UpdateSquadPositionInput!): SquadPosition!
   deleteSquadPosition(id: ID!, squadId: ID!): Boolean!

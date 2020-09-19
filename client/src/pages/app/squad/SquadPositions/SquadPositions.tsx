@@ -1,4 +1,5 @@
 import React from 'react';
+import { useEffectOnce } from 'react-use';
 import { List } from 'antd';
 import { get } from 'lodash-es';
 import { StringParam, useQueryParam, withDefault } from 'use-query-params';
@@ -30,6 +31,10 @@ const SquadPositions = () => {
   const squadPositions = useSquadPositions({ squadId });
   const squadPositionModal = useDataModal<SquadPositionModalData>();
   const [search, setSearch] = useQueryParam('search', withDefault(StringParam, ''));
+
+  useEffectOnce(() => {
+    squadPositions.refetch();
+  });
 
   const filteredPositionItems = filterPositions(squadPositions.data, search);
 
