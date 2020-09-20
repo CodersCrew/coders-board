@@ -3,6 +3,8 @@ node_modules
 dist
 build
 coverage
+.cache
+docs/public
 
 # Misc
 .DS_STORE
