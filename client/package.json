@@ -36,9 +36,9 @@
     "history": "^5.0.0",
     "lodash-es": "^4.17.15",
     "loglevel": "^1.7.0",
-    "polished": "^3.6.6",
+    "polished": "^3.6.7",
     "query-string": "^6.13.2",
-    "rc-picker": "^2.0.11",
+    "rc-picker": "^2.1.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^6.0.0-beta.0",
@@ -48,7 +48,7 @@
     "source-map-explorer": "^2.5.0",
     "styled-system": "^5.1.5",
     "unstated-next": "^1.1.0",
-    "use-query-params": "^1.1.7",
+    "use-query-params": "^1.1.8",
     "yup": "^0.29.3"
   },
   "devDependencies": {
@@ -63,7 +63,7 @@
     "@types/dotenv": "^8.2.0",
     "@types/jest": "^26.0.14",
     "@types/lodash-es": "^4.17.3",
-    "@types/node": "^14.10.3",
+    "@types/node": "^14.11.1",
     "@types/react": "^16.9.49",
     "@types/react-dom": "^16.9.8",
     "@types/react-redux": "^7.1.9",
@@ -83,7 +83,7 @@
     "eslint-config-react": "^1.1.7",
     "eslint-import-resolver-typescript": "^2.3.0",
     "eslint-plugin-import": "^2.22.0",
-    "eslint-plugin-jest": "^24.0.1",
+    "eslint-plugin-jest": "^24.0.2",
     "eslint-plugin-jest-dom": "^3.2.3",
     "eslint-plugin-jsx-a11y": "^6.3.1",
     "eslint-plugin-lodash": "^7.1.0",
@@ -93,7 +93,7 @@
     "eslint-plugin-simple-import-sort": "^5.0.3",
     "prettier": "^2.1.2",
     "tsconfig-paths-webpack-plugin": "^3.3.0",
-    "typescript": "~4.0.2"
+    "typescript": "~4.0.3"
   },
   "eslintConfig": {
     "extends": "react-app"
