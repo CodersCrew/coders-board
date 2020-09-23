@@ -1,6 +1,6 @@
 ![CodersBoard heading image](https://i.ibb.co/v1SHJWw/opengraph-descriptive.png "CodersBoard heading image")
 
-# About CodersBoard
+## About CodersBoard
 
 CodersBoard is a CodersCrew internal tool created to centralize information about our activity and make our members' life easier. For now it includes the following functionalities:
 
@@ -9,7 +9,20 @@ CodersBoard is a CodersCrew internal tool created to centralize information abou
 - **Positions** - a list of positions available in the organization.
 - **Successes** - a timeline of organization's activity with a possibility to specify, which members are related to particular events.
 
-### Tech stack
+## Links
+**Documentation:**<br>
+https://codersboard-docs.netlify.app
+
+**GraphQL schema:**<br>
+https://www.plectica.com/maps/HA4ECYBXV
+
+**Demo app:**<br>
+https://codersboard-staging.herokuapp.com
+- The demo is hosted on a free Heroku dyno (sleepy one), so the first load will take around 30 seconds (it needs to wake up).
+- To log in, use email `test[number]@coderscrew.pl` and password `test`, where `[number]` is 1 to 3 for admin users and 4 to 100 for regular users.
+- Feel free to use staging as you want - it will reset its data on each deployment.
+
+## Tech stack
 
 ![TypeScript](https://img.shields.io/badge/-TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)
 ![React](https://img.shields.io/badge/-React-45b8d8?style=flat-square&logo=react&logoColor=white)
@@ -24,8 +37,11 @@ CodersBoard is a CodersCrew internal tool created to centralize information abou
 ![Heroku](https://img.shields.io/badge/-Heroku-430098?style=flat-square&logo=heroku&logoColor=white)
 ![GitHub Actions](https://img.shields.io/badge/-GitHub_Actions-2088FF?style=flat-square&logo=github-actions&logoColor=white)
 
-### App state
+## App state
+Security:
 [![Known Vulnerabilities](https://snyk.io/test/github/CodersCrew/coders-board/badge.svg)](https://snyk.io/test/github/CodersCrew/coders-board)
+
+Code quality:
 [![Codacy Badge](https://app.codacy.com/project/badge/Grade/eba659df35a147c2ae4d8a812bba581a)](https://www.codacy.com/gh/CodersCrew/coders-board?utm_source=github.com&amp;utm_medium=referral&amp;utm_content=CodersCrew/coders-board&amp;utm_campaign=Badge_Grade)
 [![CodeFactor](https://www.codefactor.io/repository/github/coderscrew/coders-board/badge)](https://www.codefactor.io/repository/github/coderscrew/coders-board)
 [![DeepScan grade](https://deepscan.io/api/teams/10880/projects/13786/branches/241875/badge/grade.svg)](https://deepscan.io/dashboard#view=project&tid=10880&pid=13786&bid=241875)
