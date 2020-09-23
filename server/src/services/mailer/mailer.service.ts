@@ -8,21 +8,27 @@ import { InvitationEmailDto } from './dto/invitation-email.dto';
 @Injectable()
 export class MailerService {
   constructor() {
-    this.sendgrid.setApiKey(env.SENDGRID_KEY);
+    if (env.SENDGRID_KEY) {
+      this.sendgrid.setApiKey(env.SENDGRID_KEY);
+    }
   }
 
   sendgrid = sendgridMail;
 
-  async sendInvitationEmail(data: InvitationEmailDto) {
-    const { to, email, password } = await transformAndValidate(InvitationEmailDto, data);
+  active = Boolean(env.SENDGRID_KEY);
 
-    await this.sendgrid.send({
-      to,
-      from: 'codersboard@coderscrew.pl',
-      templateId: 'd-632bcf59ea92429ca0b0884f22d1fe49',
-      dynamicTemplateData: { email, password },
-      mailSettings: { sandboxMode: { enable: env.APP_ENV !== 'production' } },
-    });
+  async sendInvitationEmail(data: InvitationEmailDto) {
+    if (this.active) {
+      const { to, email, password } = await transformAndValidate(InvitationEmailDto, data);
+
+      await this.sendgrid.send({
+        to,
+        from: 'codersboard@coderscrew.pl',
+        templateId: 'd-632bcf59ea92429ca0b0884f22d1fe49',
+        dynamicTemplateData: { email, password },
+        mailSettings: { sandboxMode: { enable: env.APP_ENV !== 'production' } },
+      });
+    }
 
     return true;
   }

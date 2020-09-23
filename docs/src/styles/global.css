@@ -1,3 +1,16 @@
 .sidebar > span:first-child {
   display: none;
 }
+
+:not(pre) > code[class*='language-'],
+.token.property,
+.token.tag,
+.token.boolean,
+.token.number,
+.token.constant,
+.token.symbol,
+.token.deleted,
+.token.class-name,
+.token.function {
+  color: #409eff;
+}
