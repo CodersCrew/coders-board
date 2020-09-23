@@ -1,6 +1,5 @@
 import React from 'react';
-import { ClassNames } from '@emotion/core';
-import { useTheme } from '@emotion/react';
+import { ClassNames, useTheme } from '@emotion/react';
 import { Table as AntTable } from 'antd';
 import { TableProps as AntTableProps } from 'antd/lib/table';
 import clsx from 'clsx';
