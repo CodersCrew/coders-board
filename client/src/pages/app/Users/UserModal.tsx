@@ -4,6 +4,7 @@ import { Form, Input } from 'formik-antd';
 import * as yup from 'yup';
 
 import { FormikModal } from '@/components/molecules';
+import { APP_ENV } from '@/config/env';
 import { useUsersMutations } from '@/graphql/users';
 import { runMutation } from '@/services/graphql';
 import { createDataModal, DataModalProps } from '@/services/modals';
@@ -11,11 +12,17 @@ import { WithId } from '@/typings/enhancers';
 import { createFormFields } from '@/utils/forms';
 import { getGenericMessages } from '@/utils/getGenericMessages';
 
+const passwordSchema =
+  APP_ENV === 'production'
+    ? yup.string().label('Initial password').optional().default('')
+    : yup.string().label('Initial password').required().default('');
+
 const { getInitialValues, validationSchema, fields } = createFormFields({
   firstName: yup.string().label('First name').required().default(''),
   lastName: yup.string().label('Last name').required().default(''),
   primaryEmail: yup.string().label('CodersCrew email').required().lowercase().default(''),
   recoveryEmail: yup.string().label('Private email').required().email().default(''),
+  password: passwordSchema,
 });
 
 type FormValues = ReturnType<typeof getInitialValues>;
@@ -67,11 +74,12 @@ const useUserModal = ({ data, ...modalProps }: UserModalProps) => {
       validationSchema,
       onSubmit: handleSubmit,
     },
+    isUpdateModal: Boolean(data),
   };
 };
 
 export const UserModal = createDataModal<UserModalProps>(props => {
-  const { form, modal } = useUserModal(props);
+  const { form, modal, isUpdateModal } = useUserModal(props);
 
   return (
     <FormikModal form={form} modal={modal}>
@@ -88,6 +96,11 @@ export const UserModal = createDataModal<UserModalProps>(props => {
         <Form.Item {...fields.recoveryEmail}>
           <Input name={fields.recoveryEmail.name} placeholder="Enter private email..." />
         </Form.Item>
+        {APP_ENV !== 'production' && !isUpdateModal && (
+          <Form.Item {...fields.password}>
+            <Input.Password name={fields.password.name} placeholder="Enter initial user pasword..." />
+          </Form.Item>
+        )}
       </Form>
     </FormikModal>
   );

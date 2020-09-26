@@ -6,12 +6,22 @@ import * as Types from '../../../typings/graphql';
 export type UsersQueryVariables = Types.Exact<{
   search?: Types.Maybe<Types.Scalars['String']>;
   role?: Types.Maybe<Types.UserRole>;
+  withDeleted?: Types.Maybe<Types.Scalars['Boolean']>;
 }>;
 
 export type UsersQuery = {
   users: Pick<
     Types.User,
-    'id' | 'thumbnail' | 'firstName' | 'lastName' | 'fullName' | 'primaryEmail' | 'recoveryEmail' | 'role' | 'slackId'
+    | 'id'
+    | 'thumbnail'
+    | 'firstName'
+    | 'lastName'
+    | 'fullName'
+    | 'primaryEmail'
+    | 'recoveryEmail'
+    | 'role'
+    | 'slackId'
+    | 'deletedAt'
   >[];
 };
 
@@ -74,8 +84,8 @@ export type DeleteUserMutationVariables = Types.Exact<{
 export type DeleteUserMutation = Pick<Types.Mutation, 'deleteUser'>;
 
 export const UsersDocument = gql`
-  query users($search: String, $role: UserRole) {
-    users(search: $search, role: $role) {
+  query users($search: String, $role: UserRole, $withDeleted: Boolean) {
+    users(search: $search, role: $role, withDeleted: $withDeleted) {
       id
       thumbnail
       firstName
@@ -85,6 +95,7 @@ export const UsersDocument = gql`
       recoveryEmail
       role
       slackId
+      deletedAt
     }
   }
 `;
@@ -103,6 +114,7 @@ export const UsersDocument = gql`
  *   variables: {
  *      search: // value for 'search'
  *      role: // value for 'role'
+ *      withDeleted: // value for 'withDeleted'
  *   },
  * });
  */

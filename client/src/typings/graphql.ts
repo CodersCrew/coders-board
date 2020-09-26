@@ -290,6 +290,7 @@ export type QueryUsersArgs = {
   search?: Maybe<Scalars['String']>;
   role?: Maybe<UserRole>;
   ids?: Maybe<Scalars['ID'][]>;
+  withDeleted?: Maybe<Scalars['Boolean']>;
 };
 
 export type Mutation = {

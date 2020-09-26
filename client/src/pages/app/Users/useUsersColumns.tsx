@@ -43,6 +43,14 @@ export const useUsersColumns = () => {
         return slackId ? <Tag color="success">Integrated</Tag> : <Tag color="error">Non-integrated</Tag>;
       },
     },
+    {
+      title: 'Account status',
+      dataIndex: 'deletedAt',
+      visible: isAdmin,
+      render: (_, { deletedAt }) => {
+        return deletedAt ? <Tag color="red">Deleted</Tag> : <Tag color="green">Active</Tag>;
+      },
+    },
   ];
 
   return columns;

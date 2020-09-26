@@ -11,36 +11,33 @@
     "project": "./tsconfig.json",
     "sourceType": "module"
   },
-  "plugins": ["@typescript-eslint", "prettier", "simple-import-sort", "lodash"],
+  "plugins": ["@typescript-eslint", "jest", "prettier", "simple-import-sort", "lodash"],
   "extends": [
+    "eslint:recommended",
     "airbnb-typescript/base",
-    "plugin:@typescript-eslint/eslint-recommended",
     "plugin:@typescript-eslint/recommended",
     "plugin:prettier/recommended",
-    "prettier/@typescript-eslint"
+    "prettier/@typescript-eslint",
+    "plugin:jest/recommended"
   ],
   "rules": {
     "class-methods-use-this": 0,
     "lodash/import-scope": [2, "member"],
     "lodash/prefer-lodash-method": 0,
-    "@typescript-eslint/interface-name-prefix": 0,
     "@typescript-eslint/explicit-function-return-type": 0,
     "@typescript-eslint/no-explicit-any": 0,
     "@typescript-eslint/explicit-module-boundary-types": 0,
     "@typescript-eslint/no-unused-vars": [2, { "argsIgnorePattern": "(^_|^of$|^returns$|^type$)" }],
     "import/prefer-default-export": 0,
     "import/no-cycle": 0,
-    "import/no-extraneous-dependencies": [
-      2,
-      { "devDependencies": ["**/seed/*"] } // files where dev dependencies imports are allowed
-    ],
     "simple-import-sort/sort": 2
   },
   "overrides": [
     {
       "files": ["**/seed/*"], // seeding files
       "rules": {
-        "no-param-reassign": 0
+        "no-param-reassign": 0,
+        "import/no-extraneous-dependencies": 0
       }
     }
   ]
