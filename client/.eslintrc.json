@@ -52,10 +52,6 @@
     "@typescript-eslint/prefer-enum-initializers": 2, // enum values should be always specified explicitly
     "import/order": 0, // turned of as we're using simple-import-sort for sorting
     "import/prefer-default-export": 0, // we're using default exports only for pages
-    "import/no-extraneous-dependencies": [
-      2,
-      { "devDependencies": ["**/*.test.tsx", "**/*.stories.tsx", "craco.config.js", "**/test/*"] } // files where dev dependencies imports are allowed
-    ],
     "simple-import-sort/sort": [
       2,
       {
@@ -74,6 +70,19 @@
       "rules": {
         "react/jsx-props-no-spreading": 0,
         "react/prop-types": 0
+      }
+    },
+    {
+      "files": ["**/__tests__/*"], // tests
+      "rules": {
+        "react-hooks/rules-of-hooks": 0,
+        "import/no-extraneous-dependencies": 0
+      }
+    },
+    {
+      "files": ["craco.config.js"], // config files
+      "rules": {
+        "import/no-extraneous-dependencies": 0
       }
     }
   ],

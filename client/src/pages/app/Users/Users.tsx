@@ -38,7 +38,7 @@ const Users = () => {
         allowClear
         style={{ width: 240, marginLeft: 24 }}
       />
-      <Checkbox ml={16} value={withDeleted} onChange={toggleWithDeleted}>
+      <Checkbox ml={16} checked={withDeleted} onChange={toggleWithDeleted}>
         With deleted
       </Checkbox>
     </Box>
