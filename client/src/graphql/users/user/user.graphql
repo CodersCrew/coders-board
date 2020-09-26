@@ -1,5 +1,5 @@
-query users($search: String, $role: UserRole) {
-  users(search: $search, role: $role) {
+query users($search: String, $role: UserRole, $withDeleted: Boolean) {
+  users(search: $search, role: $role, withDeleted: $withDeleted) {
     id
     thumbnail
     firstName
@@ -9,6 +9,7 @@ query users($search: String, $role: UserRole) {
     recoveryEmail
     role
     slackId
+    deletedAt
   }
 }
 

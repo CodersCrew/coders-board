@@ -205,7 +205,7 @@ type Query {
   successes(search: String, type: SuccessType): [Success!]!
   user(id: ID!): User!
   me: User!
-  users(search: String, role: UserRole, ids: [ID!]): [User!]!
+  users(search: String, role: UserRole, ids: [ID!], withDeleted: Boolean): [User!]!
 }
 
 type Mutation {

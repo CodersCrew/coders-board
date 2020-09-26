@@ -1,5 +1,5 @@
 import { ArgsType, Field, ID } from '@nestjs/graphql';
-import { IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
+import { IsBoolean, IsEnum, IsOptional, IsString, IsUUID } from 'class-validator';
 
 import { UserRole } from '../user.model';
 
@@ -19,4 +19,9 @@ export class GetUsersArgs {
   @IsOptional()
   @IsUUID('all', { each: true })
   ids?: string[];
+
+  @Field({ nullable: true })
+  @IsOptional()
+  @IsBoolean()
+  withDeleted?: boolean;
 }

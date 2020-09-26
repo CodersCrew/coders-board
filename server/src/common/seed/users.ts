@@ -1,5 +1,6 @@
 import axios, { AxiosResponse } from 'axios';
 import crypto from 'crypto';
+import faker from 'faker';
 import Listr from 'listr';
 import { getCustomRepository } from 'typeorm';
 
@@ -44,6 +45,7 @@ export const seedUsers = async (ctx: any, task: Listr.ListrTaskWrapper<any>) => 
       password: 'test',
       googleId: crypto.randomBytes(12).toString('hex'),
       slackId: Math.random() > 0.1 ? crypto.randomBytes(12).toString('hex') : null,
+      deletedAt: Math.random() > 0.2 ? null : faker.date.past(1),
       role: i < 3 ? UserRole.ADMIN : UserRole.USER,
     });
 

@@ -38,7 +38,7 @@ export class UsersService {
     return this.userRepository.findOneOrFail(id);
   }
 
-  findAll({ role, search, ids }: GetUsersArgs) {
+  findAll({ role, search, ids, withDeleted }: GetUsersArgs) {
     const query = this.userRepository.createQueryBuilder('user');
 
     if (ids && ids.length) {
@@ -59,12 +59,22 @@ export class UsersService {
       query.andWhere(searchQuery, { search: `%${search}%` });
     }
 
+    if (withDeleted) {
+      query.withDeleted();
+    }
+
     query.orderBy('user.fullName', 'ASC');
 
     return query.getMany();
   }
 
   async create(input: CreateUserInput) {
+    const pastUser = await this.userRepository.findOne({
+      where: { recoveryEmail: input.recoveryEmail },
+      withDeleted: true,
+    });
+    const userData: Partial<User> = pastUser ? { ...pastUser, deletedAt: null } : input;
+
     let user: User;
     let password: string;
 
@@ -72,7 +82,7 @@ export class UsersService {
       password = generatePassword({ numbers: true });
       const { id: googleId } = await this.gsuiteService.createGsuiteUser({ ...input, password });
 
-      user = await this.userRepository.save({ ...input, googleId, password: null });
+      user = await this.userRepository.save({ ...userData, googleId, password: null });
     } else {
       if (!input.password?.trim()) {
         throw new BadRequestException('User password is a required field for all non-production environments');
@@ -80,7 +90,7 @@ export class UsersService {
 
       const googleId = crypto.randomBytes(12).toString('hex');
 
-      user = await this.userRepository.save({ ...input, googleId });
+      user = await this.userRepository.save({ ...userData, googleId });
     }
 
     await this.mailerService.sendInvitationEmail({
@@ -110,7 +120,7 @@ export class UsersService {
   }
 
   async delete(userId: string) {
-    const user = await this.userRepository.findOneOrFail(userId);
+    const user = await this.userRepository.findOneOrFail(userId, { relations: ['guilds', 'squads', 'successes'] });
 
     if (env.APP_ENV === 'production') {
       const slackUser = await this.slackService.getSlackUser({ slackId: user.slackId });
@@ -134,7 +144,11 @@ export class UsersService {
       await this.cloudinaryService.deleteUserThumbnail(user.id);
     }
 
-    await this.userRepository.remove(user);
+    if (user.successes.length || user.guilds.length || user.squads.length) {
+      await this.userRepository.softRemove(user);
+    } else {
+      await this.userRepository.remove(user);
+    }
 
     return true;
   }
