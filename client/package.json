@@ -31,7 +31,7 @@
     "loglevel": "^1.7.0",
     "polished": "^3.6.7",
     "query-string": "^6.13.5",
-    "rc-picker": "^2.2.1",
+    "rc-picker": "^2.3.0",
     "react": "^16.13.1",
     "react-dom": "^16.13.1",
     "react-router-dom": "^6.0.0-beta.0",
