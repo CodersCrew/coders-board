@@ -37,7 +37,7 @@
     "react-router-dom": "^6.0.0-beta.0",
     "react-scripts": "3.4.3",
     "react-use": "^15.3.4",
-    "source-map-explorer": "^2.5.0",
+    "source-map-explorer": "^2.5.1",
     "styled-system": "^5.1.5",
     "unstated-next": "^1.1.0",
     "use-query-params": "^1.1.8",
