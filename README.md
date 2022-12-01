@@ -16,12 +16,6 @@ https://codersboard-docs.netlify.app
 **GraphQL schema:**<br>
 https://www.plectica.com/maps/HA4ECYBXV
 
-**Demo app:**<br>
-https://codersboard-staging.herokuapp.com
-- The demo is hosted on a free Heroku dyno (sleepy one), so the first load will take around 30 seconds (it needs to wake up).
-- To log in, use email `test[number]@coderscrew.pl` and password `test`, where `[number]` is 1 to 3 for admin users and 4 to 100 for regular users.
-- Feel free to use staging as you want - it will reset its data on each deployment.
-
 ## Tech stack
 
 ![TypeScript](https://img.shields.io/badge/-TypeScript-007ACC?style=flat-square&logo=typescript&logoColor=white)
